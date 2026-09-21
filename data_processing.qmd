@@ -1,0 +1,1154 @@
+---
+title: "HPC Demand Analysis and Forecast"
+format: html
+editor: visual
+---
+
+```{r}
+library(tidyverse)
+library(here)
+
+demand_allocation <- read_csv(
+  here("assets", "data", "raw data", "demand_allocation.csv")
+)
+```
+
+```{r}
+demand_allocation <- demand_allocation |>
+  mutate(
+    standardised_requested_ksu = case_when(
+      unit == "kSU" ~ requested_compute,
+
+      unit == "mixed: million hours requested / kSU allocated" ~
+        requested_compute * 1e6 / 500,
+
+      unit %in% c(
+        "million hours",
+        "million core hours",
+        "million CPU-hours"
+      ) ~ requested_compute * 1e6 / 500,
+
+      TRUE ~ NA_real_
+    ),
+
+    standardised_allocated_ksu = case_when(
+      unit == "kSU" ~ allocated_compute,
+
+      unit == "mixed: million hours requested / kSU allocated" ~
+        allocated_compute,
+
+      unit %in% c(
+        "million hours",
+        "million core hours",
+        "million CPU-hours"
+      ) ~ allocated_compute * 1e6 / 500,
+
+      TRUE ~ NA_real_
+    )
+  )
+```
+
+```{r}
+demand_allocation <- demand_allocation |>
+  mutate(
+    conversion_status = case_when(
+      unit == "kSU" ~ "Reported in kSU",
+      TRUE ~ "Converted using interim 500 core-hours per kSU assumption"
+    )
+  )
+```
+
+```{r}
+demand_allocation |>
+  select(
+    source_period,
+    unit,
+    requested_compute,
+    allocated_compute,
+    standardised_requested_ksu,
+    standardised_allocated_ksu
+  )
+```
+
+```{r}
+library(tidyverse)
+library(scales)
+
+demand_allocation |>
+  ggplot(aes(x = source_period)) +
+
+  # Requested
+  geom_line(
+    aes(
+      y = standardised_requested_ksu,
+      colour = "Requested compute",
+      group = 1
+    ),
+    linewidth = 1.2
+  ) +
+
+  geom_point(
+    aes(
+      y = standardised_requested_ksu,
+      colour = "Requested compute"
+    ),
+    size = 3
+  ) +
+
+  geom_text(
+    aes(
+      y = standardised_requested_ksu,
+      label = label_number(
+        scale_cut = cut_short_scale(),
+        accuracy = 0.01
+      )(standardised_requested_ksu)
+    ),
+    vjust = -0.8,
+    size = 3.2,
+    colour = "#2166AC"
+  ) +
+
+  # Allocated
+  geom_line(
+    aes(
+      y = standardised_allocated_ksu,
+      colour = "Allocated compute",
+      group = 1
+    ),
+    linewidth = 1.2
+  ) +
+
+  geom_point(
+    aes(
+      y = standardised_allocated_ksu,
+      colour = "Allocated compute"
+    ),
+    size = 3
+  ) +
+
+  geom_text(
+    aes(
+      y = standardised_allocated_ksu,
+      label = label_number(
+        scale_cut = cut_short_scale(),
+        accuracy = 0.01
+      )(standardised_allocated_ksu)
+    ),
+    vjust = 1.7,
+    size = 3.2,
+    colour = "#2B8C4B"
+  ) +
+
+  # Separation between converted and reported kSU
+  geom_vline(
+    xintercept = 6.5,
+    linetype = "dashed",
+    colour = "grey55",
+    linewidth = 0.7
+  ) +
+
+  annotate(
+    "text",
+    x = 3.5,
+    y = 2300000,
+    label = "Converted historical values",
+    size = 3.5,
+    colour = "grey35"
+  ) +
+
+  annotate(
+    "text",
+    x = 10,
+    y = 2300000,
+    label = "Reported in kSU",
+    size = 3.5,
+    colour = "grey35"
+  ) +
+
+  scale_y_continuous(
+    labels = label_number(
+      scale = 1e-6,
+      suffix = "M",
+      accuracy = 0.1
+    ),
+    limits = c(0, 2500000),
+    expand = expansion(mult = c(0, 0.02))
+  ) +
+
+  scale_colour_manual(
+    values = c(
+      "Requested compute" = "#2166AC",
+      "Allocated compute" = "#2B8C4B"
+    )
+  ) +
+
+  labs(
+    title = "Requested vs Allocated Compute, 2013/14–2025/26",
+    subtitle = "Standardised to kSU (historical hour-based values use an interim conversion assumption)",
+    x = NULL,
+    y = "Compute (million kSU)",
+    colour = NULL,
+    caption = "Historical conversions use an interim 500 core-hours per kSU assumption pending confirmation from NCI and Pawsey."
+  ) +
+
+  theme_minimal(base_size = 13) +
+
+  theme(
+    plot.title = element_text(
+      face = "bold",
+      size = 17
+    ),
+    plot.subtitle = element_text(
+      size = 11,
+      colour = "grey30"
+    ),
+    axis.text.x = element_text(
+      angle = 45,
+      hjust = 1
+    ),
+    legend.position = "bottom",
+    panel.grid.minor = element_blank(),
+    plot.caption = element_text(
+      size = 9,
+      colour = "grey40",
+      hjust = 0
+    )
+  )
+```
+
+```{r}
+for_allocation <- read_csv(
+  here("assets", "data", "raw data", "for_data.csv")
+)
+
+```
+
+```{r}
+for_allocation <- for_allocation |>
+  mutate(
+    standardised_demand_ksu = case_when(
+      compute_unit == "kSU" ~ demand_compute_proxy,
+
+      compute_unit == "mixed: million hours requested / kSU allocated" ~
+        demand_compute_proxy * 1e6 / 500,
+
+      compute_unit %in% c(
+        "million hours",
+        "million core hours",
+        "million CPU-hours"
+      ) ~ demand_compute_proxy * 1e6 / 500,
+
+      TRUE ~ NA_real_
+    ),
+
+    standardised_allocated_ksu = case_when(
+      compute_unit == "kSU" ~ allocated_compute_for,
+
+      compute_unit == "mixed: million hours requested / kSU allocated" ~
+        allocated_compute_for,
+
+      compute_unit %in% c(
+        "million hours",
+        "million core hours",
+        "million CPU-hours"
+      ) ~ allocated_compute_for * 1e6 / 500,
+
+      TRUE ~ NA_real_
+    )
+  )
+```
+
+```{r}
+for_allocation |>
+  filter(
+    is.na(standardised_demand_ksu) |
+      is.na(standardised_allocated_ksu)
+  ) |>
+  distinct(source_period, compute_unit)
+```
+
+```{r}
+for_allocation |>
+  group_by(source_period) |>
+  summarise(
+    total_demand_ksu = sum(standardised_demand_ksu, na.rm = TRUE),
+    total_allocated_ksu = sum(standardised_allocated_ksu, na.rm = TRUE)
+  )
+```
+
+```{r}
+for_allocation |>
+  group_by(source_period, field_of_research) |>
+  summarise(
+    allocated_ksu = sum(standardised_allocated_ksu, na.rm = TRUE),
+    .groups = "drop"
+  )
+```
+
+```{r}
+major_fields <- c(
+  "Physical sciences",
+  "Chemical sciences",
+  "Biological sciences",
+  "Information and computing sciences",
+  "Engineering",
+  "Mathematical sciences"
+)
+
+for_major <- for_allocation |>
+  filter(field_of_research %in% major_fields) |>
+  group_by(source_period, field_of_research) |>
+  summarise(
+    allocated_ksu = sum(standardised_allocated_ksu, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+ggplot(
+  for_major,
+  aes(
+    x = source_period,
+    y = allocated_ksu,
+    colour = field_of_research,
+    linetype = field_of_research,
+    group = field_of_research
+  )
+) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 2.5) +
+
+  scale_colour_viridis_d(
+    option = "D",
+    end = 0.9
+  ) +
+
+  scale_linetype_manual(
+    values = c(
+      "solid",
+      "dashed",
+      "dotted",
+      "dotdash",
+      "longdash",
+      "twodash"
+    )
+  ) +
+
+  scale_y_continuous(
+    labels = scales::label_number(
+      scale = 1e-3,
+      suffix = "K"
+    )
+  ) +
+
+  labs(
+    title = "HPC Allocation Trends for Major Fields of Research",
+    subtitle = "Standardised allocated compute, 2013/14–2025/26",
+    x = NULL,
+    y = "Allocated compute (kSU)",
+    colour = "Field of Research",
+    linetype = "Field of Research"
+  ) +
+
+  theme_minimal(base_size = 12) +
+
+  theme(
+    plot.title = element_text(
+      face = "bold",
+      size = 17
+    ),
+    axis.text.x = element_text(
+      angle = 45,
+      hjust = 1
+    ),
+    legend.position = "right",
+    panel.grid.minor = element_blank()
+  )
+
+```
+
+
+```{r}
+for_stacked <- for_allocation |>
+  group_by(source_period, field_of_research) |>
+  summarise(
+    allocated_ksu = sum(standardised_allocated_ksu, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  group_by(source_period) |>
+  arrange(allocated_ksu, .by_group = TRUE) |>
+  mutate(
+    stack_order = row_number()
+  ) |>
+  ungroup()
+```
+
+```{r}
+ggplot(
+  for_stacked,
+  aes(
+    x = source_period,
+    y = allocated_ksu,
+    fill = field_of_research,
+    order = stack_order
+  )
+) +
+  geom_col(
+    width = 0.8,
+    colour = "white",
+    linewidth = 0.2
+  ) +
+
+  scale_fill_viridis_d(
+    option = "D",
+    end = 0.9
+  ) +
+
+  scale_y_continuous(
+    labels = scales::label_number(
+      scale = 1e-3,
+      suffix = "K",
+      accuracy = 1
+    ),
+    expand = expansion(mult = c(0, 0.08))
+  ) +
+
+  labs(
+    title = "Allocated HPC Compute by Field of Research, 2013/14–2025/26",
+    subtitle = "Fields are ordered from smallest to largest allocation within each year",
+    x = NULL,
+    y = "Allocated compute (kSU)",
+    fill = "Field of Research",
+    caption = "Historical hour-based values use an interim 500 core-hours per kSU conversion assumption."
+  ) +
+
+  theme_minimal(base_size = 12) +
+
+  theme(
+    plot.title = element_text(
+      face = "bold",
+      size = 17
+    ),
+    plot.subtitle = element_text(
+      size = 11,
+      colour = "grey30"
+    ),
+    axis.text.x = element_text(
+      angle = 45,
+      hjust = 1
+    ),
+    legend.position = "right",
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank(),
+    plot.caption = element_text(
+      size = 9,
+      colour = "grey40",
+      hjust = 0
+    )
+  )
+```
+
+```{r}
+for_stacked <- for_allocation |>
+  group_by(source_period, field_of_research) |>
+  summarise(
+    allocated_ksu = sum(standardised_allocated_ksu, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  group_by(source_period) |>
+  
+  # Smallest first, largest last
+  arrange(allocated_ksu, .by_group = TRUE) |>
+  
+  mutate(
+    ymin = lag(cumsum(allocated_ksu), default = 0),
+    ymax = cumsum(allocated_ksu)
+  ) |>
+  
+  ungroup() |>
+  
+  # Numeric position for each year
+  mutate(
+    year_id = as.numeric(factor(
+      source_period,
+      levels = unique(for_allocation$source_period)
+    ))
+  )
+```
+
+```{r}
+ggplot(for_stacked) +
+
+  geom_rect(
+    aes(
+      xmin = year_id - 0.4,
+      xmax = year_id + 0.4,
+      ymin = ymin,
+      ymax = ymax,
+      fill = field_of_research
+    ),
+    colour = "white",
+    linewidth = 0.2
+  ) +
+
+  scale_x_continuous(
+    breaks = seq_along(unique(for_allocation$source_period)),
+    labels = unique(for_allocation$source_period)
+  ) +
+
+  scale_fill_viridis_d(
+    option = "D",
+    end = 0.9
+  ) +
+
+  scale_y_continuous(
+    labels = scales::label_number(
+      scale = 1e-3,
+      suffix = "K",
+      accuracy = 1
+    ),
+    expand = expansion(mult = c(0, 0.08))
+  ) +
+
+  labs(
+    title = "Allocated HPC Compute by Field of Research, 2013/14–2025/26",
+    subtitle = "Fields ordered from smallest at the bottom to largest at the top within each year",
+    x = NULL,
+    y = "Allocated compute (kSU)",
+    fill = "Field of Research",
+    caption = "Historical hour-based values use an interim 500 core-hours per kSU conversion assumption."
+  ) +
+
+  theme_minimal(base_size = 12) +
+
+  theme(
+    plot.title = element_text(
+      face = "bold",
+      size = 17
+    ),
+    plot.subtitle = element_text(
+      size = 11,
+      colour = "grey30"
+    ),
+    axis.text.x = element_text(
+      angle = 45,
+      hjust = 1
+    ),
+    legend.position = "right",
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank(),
+    plot.caption = element_text(
+      size = 9,
+      colour = "grey40",
+      hjust = 0
+    )
+  )
+```
+
+```{r}
+library(tidyverse)
+library(readxl)
+library(here)
+
+ncmas_raw <- read_excel(
+  here("assets", "data", "raw data", "ncmas_raw_data.xlsx"),
+  sheet = "NCMAS"
+)
+```
+
+```{r}
+ncmas_for <- ncmas_raw |>
+  separate_rows(for_as_reported, sep = "\n") |>
+  mutate(
+    for_as_reported = str_trim(for_as_reported)
+  ) |>
+  filter(
+    !is.na(for_as_reported),
+    for_as_reported != ""
+  )
+```
+
+```{r}
+ncmas_for <- ncmas_for |>
+  mutate(
+    for_code = str_extract(for_as_reported, "^\\d{6}"),
+    
+    for_percentage = str_extract(
+      for_as_reported,
+      "\\d+(?:\\.\\d+)?(?=%)"
+    ) |>
+      as.numeric(),
+    
+    for_name = for_as_reported |>
+      str_remove("^\\d{6}\\s*") |>
+      str_remove("\\s*:\\s*\\d+(?:\\.\\d+)?%\\s*$") |>
+      str_trim()
+  )
+```
+
+```{r}
+ncmas_for <- ncmas_for |>
+  mutate(
+    for_division_code = str_sub(for_code, 1, 2),
+    
+    for_classification = case_when(
+      year <= 2022 ~ "ANZSRC 2008",
+      year >= 2023 ~ "ANZSRC 2020",
+      TRUE ~ NA_character_
+    )
+  )
+```
+
+```{r}
+ncmas_for <- ncmas_for |>
+  mutate(
+    field_of_research = case_when(
+      
+      # ANZSRC 2008
+      for_division_code == "01" ~ "Mathematical sciences",
+      for_division_code == "02" ~ "Physical sciences",
+      for_division_code == "03" ~ "Chemical sciences",
+      for_division_code == "04" ~ "Earth sciences",
+      for_division_code == "05" ~ "Environmental sciences",
+      for_division_code == "06" ~ "Biological sciences",
+      for_division_code == "07" ~ "Agricultural, veterinary and food sciences",
+      for_division_code == "08" ~ "Information and computing sciences",
+      for_division_code == "09" ~ "Engineering",
+      
+      # 10 = Technology — no clean direct 2020 division
+      for_division_code == "10" ~ "Others",
+      
+      for_division_code == "11" ~ "Biomedical and health sciences",
+      for_division_code == "12" ~ "Built environment and design",
+      for_division_code == "13" ~ "Education",
+      for_division_code == "14" ~ "Economics",
+      for_division_code == "15" ~ "Commerce, management, tourism and services",
+      for_division_code == "16" ~ "Human society",
+      for_division_code == "17" ~ "Psychology",
+      for_division_code == "18" ~ "Law and legal studies",
+      for_division_code == "19" ~ "Creative arts and writing",
+      for_division_code == "20" ~ "Language, communication and culture",
+      for_division_code == "21" ~ "History, heritage and archaeology",
+      for_division_code == "22" ~ "Philosophy and religious studies",
+      
+      # ANZSRC 2020
+      for_division_code == "30" ~ "Agricultural, veterinary and food sciences",
+      for_division_code == "31" ~ "Biological sciences",
+      for_division_code == "32" ~ "Biomedical and health sciences",
+      for_division_code == "33" ~ "Built environment and design",
+      for_division_code == "34" ~ "Chemical sciences",
+      for_division_code == "35" ~ "Commerce, management, tourism and services",
+      for_division_code == "36" ~ "Creative arts and writing",
+      for_division_code == "37" ~ "Earth sciences",
+      for_division_code == "38" ~ "Economics",
+      for_division_code == "39" ~ "Education",
+      for_division_code == "40" ~ "Engineering",
+      for_division_code == "41" ~ "Environmental sciences",
+      for_division_code == "42" ~ "Biomedical and health sciences",
+      for_division_code == "43" ~ "History, heritage and archaeology",
+      for_division_code == "44" ~ "Human society",
+      
+      # No direct old equivalent
+      for_division_code == "45" ~ "Others",
+      
+      for_division_code == "46" ~ "Information and computing sciences",
+      for_division_code == "47" ~ "Language, communication and culture",
+      for_division_code == "48" ~ "Law and legal studies",
+      for_division_code == "49" ~ "Mathematical sciences",
+      for_division_code == "50" ~ "Philosophy and religious studies",
+      for_division_code == "51" ~ "Physical sciences",
+      for_division_code == "52" ~ "Psychology",
+      
+      TRUE ~ "Others"
+    )
+  )
+```
+
+```{r}
+ncmas_for <- ncmas_for |>
+  mutate(
+    allocated_compute_for = allocated_compute *
+      (for_percentage / 100)
+  )
+```
+
+```{r}
+ncmas_for |>
+  group_by(
+    year,
+    project_id,
+    facility,
+    allocated_compute
+  ) |>
+  summarise(
+    for_total_pct = sum(for_percentage, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  filter(
+    abs(for_total_pct - 100) > 0.1
+  )
+```
+
+```{r}
+ncmas_for |>
+  filter(
+    year == 2021,
+    project_id == "NCMAS-2021-53"
+  ) |>
+  select(
+    project_id,
+    facility,
+    for_as_reported,
+    for_code,
+    for_percentage,
+    allocated_compute
+  )
+```
+
+```{r}
+ncmas_for <- ncmas_for |>
+  group_by(year, project_id, facility, allocated_compute) |>
+  mutate(
+    for_total_pct = sum(for_percentage, na.rm = TRUE),
+    for_pct_status = case_when(
+      abs(for_total_pct - 100) <= 0.1 ~ "Valid",
+      for_total_pct > 100.1 ~ "Exceeds 100%",
+      for_total_pct < 99.9 ~ "Below 100%"
+    )
+  ) |>
+  ungroup()
+```
+
+```{r}
+ncmas_for <- ncmas_for |>
+  mutate(
+    allocated_compute_for = case_when(
+      for_pct_status == "Valid" ~
+        allocated_compute * for_percentage / 100,
+      TRUE ~ NA_real_
+    )
+  )
+```
+
+```{r}
+for_summary <- ncmas_for |>
+  filter(for_pct_status == "Valid") |>
+  group_by(field_of_research) |>
+  summarise(
+    allocated_ksu = sum(allocated_compute_for, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  arrange(desc(allocated_ksu))
+```
+
+```{r}
+ggplot(
+  for_summary,
+  aes(
+    x = allocated_ksu,
+    y = reorder(field_of_research, allocated_ksu)
+  )
+) +
+  geom_col() +
+  scale_x_continuous(
+    labels = scales::label_number(
+      scale = 1e-3,
+      suffix = "K"
+    )
+  ) +
+  labs(
+    title = "NCMAS Compute Allocation by Field of Research",
+    subtitle = "Total project-level allocation across 2021–2026",
+    x = "Allocated compute (kSU)",
+    y = NULL,
+    caption = "FoR allocations are based on reported project FoR percentages. Records with invalid FoR percentages are excluded."
+  ) +
+  theme_minimal(base_size = 12)
+```
+
+```{r}
+for_year <- ncmas_for |>
+  filter(for_pct_status == "Valid") |>
+  group_by(year, field_of_research) |>
+  summarise(
+    allocated_ksu = sum(allocated_compute_for, na.rm = TRUE),
+    .groups = "drop"
+  )
+```
+
+```{r}
+top_fields <- for_year |>
+  group_by(field_of_research) |>
+  summarise(
+    total_ksu = sum(allocated_ksu),
+    .groups = "drop"
+  ) |>
+  slice_max(total_ksu, n = 6) |>
+  pull(field_of_research)
+```
+
+```{r}
+for_year |>
+  filter(field_of_research %in% top_fields) |>
+  ggplot(
+    aes(
+      x = year,
+      y = allocated_ksu,
+      colour = field_of_research,
+      linetype = field_of_research
+    )
+  ) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 2.5) +
+  scale_x_continuous(
+    breaks = 2021:2026
+  ) +
+  scale_y_continuous(
+    labels = scales::label_number(
+      scale = 1e-3,
+      suffix = "K"
+    )
+  ) +
+  scale_colour_viridis_d() +
+  labs(
+    title = "NCMAS Compute Allocation by Major Field of Research",
+    subtitle = "Six largest FoR categories across 2021–2026",
+    x = NULL,
+    y = "Allocated compute (kSU)",
+    colour = "Field of Research",
+    linetype = "Field of Research"
+  ) +
+  theme_minimal(base_size = 12)
+```
+
+```{r}
+for_share <- for_year |>
+  group_by(year) |>
+  mutate(
+    allocation_share = allocated_ksu /
+      sum(allocated_ksu) * 100
+  ) |>
+  ungroup()
+```
+
+```{r}
+for_share |>
+  filter(field_of_research %in% top_fields) |>
+  ggplot(
+    aes(
+      x = year,
+      y = allocation_share,
+      colour = field_of_research,
+      linetype = field_of_research
+    )
+  ) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 2.5) +
+  scale_x_continuous(breaks = 2021:2026) +
+  scale_colour_viridis_d() +
+  labs(
+    title = "Share of NCMAS Allocation by Major Field of Research",
+    subtitle = "Changes in the research composition of allocated compute",
+    x = NULL,
+    y = "Share of allocation (%)",
+    colour = "Field of Research",
+    linetype = "Field of Research"
+  ) +
+  theme_minimal(base_size = 12)
+```
+
+```{r}
+for_year <- ncmas_for |>
+  filter(for_pct_status == "Valid") |>
+  group_by(year, field_of_research) |>
+  summarise(
+    allocated_ksu = sum(allocated_compute_for, na.rm = TRUE),
+    .groups = "drop"
+  )
+```
+
+```{r}
+ggplot(
+  for_year,
+  aes(
+    x = factor(year),
+    y = allocated_ksu,
+    fill = field_of_research
+  )
+) +
+  geom_col(
+    colour = "white",
+    linewidth = 0.2
+  ) +
+  scale_fill_viridis_d(option = "D") +
+  scale_y_continuous(
+    labels = scales::label_number(
+      scale = 1e-3,
+      suffix = "K"
+    ),
+    expand = expansion(mult = c(0, 0.05))
+  ) +
+  labs(
+    title = "NCMAS Compute Allocation by Field of Research",
+    subtitle = "Detailed project-level allocation, 2021–2026",
+    x = NULL,
+    y = "Allocated compute (kSU)",
+    fill = "Field of Research",
+    caption = "Based on project-level reported FoR percentages. Records with invalid FoR percentages are excluded."
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(face = "bold"),
+    legend.position = "right",
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank()
+  )
+```
+
+```{r}
+year_totals <- for_year |>
+  group_by(year) |>
+  summarise(
+    total_ksu = sum(allocated_ksu, na.rm = TRUE),
+    .groups = "drop"
+  )
+```
+
+```{r}
+ggplot(
+  for_year,
+  aes(
+    x = factor(year),
+    y = allocated_ksu,
+    fill = field_of_research
+  )
+) +
+  geom_col(
+    colour = "white",
+    linewidth = 0.2
+  ) +
+  geom_text(
+    data = year_totals,
+    aes(
+      x = factor(year),
+      y = total_ksu,
+      label = scales::label_number(
+        scale = 1e-3,
+        suffix = "K",
+        accuracy = 1
+      )(total_ksu)
+    ),
+    inherit.aes = FALSE,
+    vjust = -0.6,
+    fontface = "bold",
+    size = 3.5
+  ) +
+  scale_fill_viridis_d(option = "D") +
+  scale_y_continuous(
+    labels = scales::label_number(
+      scale = 1e-3,
+      suffix = "K"
+    ),
+    expand = expansion(mult = c(0, 0.10))
+  ) +
+  labs(
+    title = "NCMAS Compute Allocation by Field of Research",
+    subtitle = "Detailed project-level allocation, 2021–2026",
+    x = NULL,
+    y = "Allocated compute (kSU)",
+    fill = "Field of Research",
+    caption = paste(
+      "Based on project-level reported FoR percentages.",
+      "NCMAS-2021-53 is excluded from the FoR breakdown because",
+      "its reported FoR percentages total 150%."
+    )
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(
+      face = "bold",
+      size = 16
+    ),
+    plot.subtitle = element_text(
+      size = 11
+    ),
+    axis.text.x = element_text(
+      size = 10
+    ),
+    legend.position = "right",
+    legend.title = element_text(
+      face = "bold"
+    ),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank(),
+    plot.caption = element_text(
+      size = 9,
+      colour = "grey40",
+      hjust = 0
+    )
+  )
+```
+
+```{r}
+for_historical <- for_allocation |>
+  filter(
+    source_period %in% c(
+      "2013/14", "2014/15", "2015/16", "2016/17",
+      "2017/18", "2018/19", "2019/20", "2020/21"
+    )
+  ) |>
+  mutate(
+    historical_for = case_when(
+      str_detect(
+        research_field_reported,
+        regex("Earth.*Environmental", ignore_case = TRUE)
+      ) ~ "Earth & Environmental Sciences",
+      
+      str_detect(
+        research_field_reported,
+        regex("Earth|Geoscience", ignore_case = TRUE)
+      ) ~ "Earth Sciences",
+      
+      str_detect(
+        research_field_reported,
+        regex("Engineering.*Technology", ignore_case = TRUE)
+      ) ~ "Engineering & Technology",
+      
+      str_detect(
+        research_field_reported,
+        regex("^Engineering", ignore_case = TRUE)
+      ) ~ "Engineering",
+      
+      str_detect(
+        research_field_reported,
+        regex("Physical", ignore_case = TRUE)
+      ) ~ "Physical Sciences",
+      
+      str_detect(
+        research_field_reported,
+        regex("Chemical", ignore_case = TRUE)
+      ) ~ "Chemical Sciences",
+      
+      str_detect(
+        research_field_reported,
+        regex("Biological", ignore_case = TRUE)
+      ) ~ "Biological Sciences",
+      
+      str_detect(
+        research_field_reported,
+        regex("Information|Computing", ignore_case = TRUE)
+      ) ~ "Information & Computing Sciences",
+      
+      str_detect(
+        research_field_reported,
+        regex("Mathematical", ignore_case = TRUE)
+      ) ~ "Mathematical Sciences",
+      
+      str_detect(
+        research_field_reported,
+        regex("Medical|Health", ignore_case = TRUE)
+      ) ~ "Medical & Health Sciences",
+      
+      str_detect(
+        research_field_reported,
+        regex("Agricultural|Veterinary", ignore_case = TRUE)
+      ) ~ "Agricultural & Veterinary Sciences",
+      
+      str_detect(
+        research_field_reported,
+        regex("Other|Unclassified|Unreported", ignore_case = TRUE)
+      ) ~ "Other / Unreported",
+      
+      TRUE ~ research_field_reported
+    )
+  ) |>
+  group_by(source_period, historical_for) |>
+  summarise(
+    allocated_ksu = sum(
+      standardised_allocated_ksu,
+      na.rm = TRUE
+    ),
+    .groups = "drop"
+  )
+```
+
+```{r}
+historical_totals <- for_historical |>
+  group_by(source_period) |>
+  summarise(
+    total_ksu = sum(allocated_ksu),
+    .groups = "drop"
+  )
+```
+
+```{r}
+ggplot(
+  for_historical,
+  aes(
+    x = source_period,
+    y = allocated_ksu,
+    fill = historical_for
+  )
+) +
+  geom_col(
+    colour = "white",
+    linewidth = 0.2
+  ) +
+  geom_text(
+    data = historical_totals,
+    aes(
+      x = source_period,
+      y = total_ksu,
+      label = scales::label_number(
+        scale = 1e-3,
+        suffix = "K",
+        accuracy = 1
+      )(total_ksu)
+    ),
+    inherit.aes = FALSE,
+    vjust = -0.6,
+    fontface = "bold",
+    size = 3.5
+  ) +
+  scale_fill_viridis_d(option = "D") +
+  scale_y_continuous(
+    labels = scales::label_number(
+      scale = 1e-3,
+      suffix = "K"
+    ),
+    expand = expansion(mult = c(0, 0.10))
+  ) +
+  labs(
+    title = "Historical HPC Allocation by Field of Research",
+    subtitle = "Reported FoR 2008 categories, 2013/14–2020/21",
+    x = NULL,
+    y = "Allocated compute (kSU)",
+    fill = "Field of Research",
+    caption = paste(
+      "Historical categories are retained at their reported level;",
+      "combined categories are not split.",
+      "Hour-based allocations use the interim conversion of",
+      "500 core-hours per kSU."
+    )
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(
+      face = "bold",
+      size = 16
+    ),
+    plot.subtitle = element_text(size = 11),
+    axis.text.x = element_text(
+      angle = 45,
+      hjust = 1
+    ),
+    legend.position = "right",
+    legend.title = element_text(face = "bold"),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank(),
+    plot.caption = element_text(
+      size = 9,
+      colour = "grey40",
+      hjust = 0
+    )
+  )
+```
+
