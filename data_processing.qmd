@@ -7,9 +7,15 @@ editor: visual
 ```{r}
 library(tidyverse)
 library(here)
+library(readxl)
 
-demand_allocation <- read_csv(
-  here("assets", "data", "raw data", "demand_allocation.csv")
+demand_allocation <- read_excel(
+  here(
+    "assets",
+    "data",
+    "data clean",
+    "demand_allocation_data.xlsx"
+  )
 )
 ```
 
@@ -217,8 +223,13 @@ demand_allocation |>
 ```
 
 ```{r}
-for_allocation <- read_csv(
-  here("assets", "data", "raw data", "for_data.csv")
+for_allocation <- read_excel(
+  here(
+    "assets",
+    "data",
+    "data clean",
+    "yearly_field_of_research_data.xlsx"
+  )
 )
 
 ```
@@ -278,7 +289,7 @@ for_allocation |>
 
 ```{r}
 for_allocation |>
-  group_by(source_period, field_of_research) |>
+  group_by(source_period, for_standard_2020) |>
   summarise(
     allocated_ksu = sum(standardised_allocated_ksu, na.rm = TRUE),
     .groups = "drop"
@@ -296,8 +307,8 @@ major_fields <- c(
 )
 
 for_major <- for_allocation |>
-  filter(field_of_research %in% major_fields) |>
-  group_by(source_period, field_of_research) |>
+  filter(for_standard_2020 %in% major_fields) |>
+  group_by(source_period, for_standard_2020) |>
   summarise(
     allocated_ksu = sum(standardised_allocated_ksu, na.rm = TRUE),
     .groups = "drop"
@@ -308,9 +319,9 @@ ggplot(
   aes(
     x = source_period,
     y = allocated_ksu,
-    colour = field_of_research,
-    linetype = field_of_research,
-    group = field_of_research
+    colour = for_standard_2020,
+    linetype = for_standard_2020,
+    group = for_standard_2020
   )
 ) +
   geom_line(linewidth = 1) +
@@ -368,7 +379,7 @@ ggplot(
 
 ```{r}
 for_stacked <- for_allocation |>
-  group_by(source_period, field_of_research) |>
+  group_by(source_period, for_standard_2020) |>
   summarise(
     allocated_ksu = sum(standardised_allocated_ksu, na.rm = TRUE),
     .groups = "drop"
@@ -387,7 +398,7 @@ ggplot(
   aes(
     x = source_period,
     y = allocated_ksu,
-    fill = field_of_research,
+    fill = for_standard_2020,
     order = stack_order
   )
 ) +
@@ -448,7 +459,7 @@ ggplot(
 
 ```{r}
 for_stacked <- for_allocation |>
-  group_by(source_period, field_of_research) |>
+  group_by(source_period, for_standard_2020) |>
   summarise(
     allocated_ksu = sum(standardised_allocated_ksu, na.rm = TRUE),
     .groups = "drop"
@@ -483,7 +494,7 @@ ggplot(for_stacked) +
       xmax = year_id + 0.4,
       ymin = ymin,
       ymax = ymax,
-      fill = field_of_research
+      fill = for_standard_2020
     ),
     colour = "white",
     linewidth = 0.2
@@ -544,13 +555,13 @@ ggplot(for_stacked) +
 ```
 
 ```{r}
-library(tidyverse)
-library(readxl)
-library(here)
-
 ncmas_raw <- read_excel(
-  here("assets", "data", "raw data", "ncmas_raw_data.xlsx"),
-  sheet = "NCMAS"
+  here(
+    "assets",
+    "data",
+    "data clean",
+    "ncmas_data.xlsx"
+  )
 )
 ```
 
