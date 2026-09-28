@@ -1,0 +1,97 @@
+# Data Collection
+
+## Purpose
+
+The first step of the project was to collect historical data on Australian
+HPC demand and allocation, together with other variables that may help
+explain changes in research compute demand over time.
+
+The data collection focused on building a longitudinal dataset that could
+support both descriptive analysis and forecasting.
+
+## Data Sources
+
+Data was collected from several sources, including:
+
+- National Computational Merit Allocation Scheme (NCMAS) outcomes and
+  supporting documentation,
+- National Computational Infrastructure (NCI) annual reports and
+  publications,
+- Pawsey Supercomputing Research Centre annual reports and publications,
+- Australian Research Council (ARC) funding data,
+- National Health and Medical Research Council (NHMRC) funding data,
+- Medical Research Future Fund (MRFF) data,
+- research workforce and research activity data, and
+- Field of Research (FoR) information.
+
+International HPC data will also be considered where suitable data is
+available, including information from EuroHPC, NSF ACCESS and ARCHER2.
+
+## HPC Demand and Allocation Data
+
+The main HPC dataset currently covers the period from 2013/14 to 2025/26.
+
+The collected information includes, where available:
+
+- requested compute,
+- allocated compute,
+- facility,
+- HPC system,
+- resource type,
+- original compute unit,
+- Field of Research,
+- institution,
+- source, and
+- reporting period.
+
+The level of detail varies across years because historical reporting
+practices and available public information are not consistent throughout
+the full period.
+
+## Field of Research Data
+
+Field of Research information was collected to examine how the composition
+of HPC use has changed over time.
+
+Where possible, historical FoR classifications are mapped to a consistent
+classification to support comparison across years.
+
+The available FoR data primarily describes the composition of allocated
+compute. It should therefore not automatically be interpreted as the
+composition of underlying research demand.
+
+## Potential Demand Drivers
+
+Additional datasets are being collected to investigate structural drivers
+of HPC demand.
+
+These include research funding, workforce, research activity and other
+indicators that may be associated with changes in research compute
+requirements.
+
+The suitability of these variables for forecasting will be assessed later
+based on their historical coverage, consistency and relationship with HPC
+demand.
+
+## Data Provenance
+
+The original source, reporting period, reported unit and relevant notes are
+retained wherever possible.
+
+This allows subsequent transformations and assumptions to be traced back to
+the original data source and helps identify observations that may not be
+directly comparable across years.
+
+## Data Collection Limitations
+
+The main limitations identified during data collection include:
+
+- limited consistent data before 2013,
+- differences in reporting formats across years,
+- inconsistent availability of requested and allocated compute,
+- incomplete separation of CPU and GPU resources in some historical data,
+- changes in HPC systems and accounting methods, and
+- differences in FoR classifications over time.
+
+These issues are addressed in the subsequent data integration,
+standardisation and conversion stages.

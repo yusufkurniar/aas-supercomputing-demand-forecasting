@@ -1,14 +1,13 @@
 project:
   type: book
-  output-dir: _output
 
 book:
   title: "Forecasting Demand for National Research Supercomputing"
   subtitle: "Australian Academy of Science Internship Project"
   author: "Yusuf Kurnia Romadhon"
-
   chapters:
     - index.qmd
+    - 01_data_collection.qmd
 
 format:
   html:
