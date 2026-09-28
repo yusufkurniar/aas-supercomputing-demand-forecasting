@@ -1,0 +1,179 @@
+# Potential Variable Definition
+
+## Purpose
+
+The second step is to define the variables that may be used in the
+descriptive analysis and forecasting models.
+
+The variables are divided into three main groups:
+
+- target variables representing HPC demand,
+- allocation and capacity variables, and
+- potential structural drivers of HPC demand.
+
+The final variables used in the forecasting models will depend on data
+availability, consistency and the results of the exploratory analysis.
+
+## HPC Demand
+
+The main outcome of interest is Australian research demand for HPC
+resources.
+
+However, demand is not directly observed in a single consistent measure.
+The project therefore distinguishes between several concepts.
+
+### Requested Compute
+
+Requested compute represents the amount of HPC resource requested through
+allocation schemes where this information is available.
+
+This provides an observable indicator of demand, but it may not represent
+the full level of research need if researchers limit their requests based
+on expected availability or if potential users do not apply.
+
+Where possible, requested compute will be separated into:
+
+- requested CPU core-hours; and
+- requested GPU-hours.
+
+### Allocated Compute
+
+Allocated compute represents the amount of HPC resource awarded to
+researchers.
+
+Allocation is treated separately from demand because it is constrained by
+the amount of compute available and by the allocation process.
+
+Where possible, allocated compute will be separated into:
+
+- allocated CPU core-hours; and
+- allocated GPU-hours.
+
+### Latent Demand
+
+Latent demand refers to the underlying level of HPC resources that
+Australian researchers may require, including demand that is not fully
+observed through allocation or request data.
+
+Latent demand is not directly observed and will therefore need to be
+estimated using available demand indicators and structural drivers.
+
+## Demand and Allocation Indicators
+
+Several indicators can be derived from the historical data.
+
+The observed request-allocation gap is defined as:
+
+$$
+\text{Request-Allocation Gap}_t =
+\text{Requested Compute}_t -
+\text{Allocated Compute}_t
+$$
+
+The fulfilment rate is defined as:
+
+$$
+\text{Fulfilment Rate}_t =
+\frac{\text{Allocated Compute}_t}
+{\text{Requested Compute}_t}
+$$
+
+These measures can help describe the relationship between observed
+requests and available allocation over time.
+
+They should not automatically be interpreted as the full level of unmet
+demand because requested compute itself may be constrained.
+
+## Field of Research
+
+Field of Research (FoR) is used to examine differences in the composition
+of HPC activity across research disciplines.
+
+Potential FoR variables include:
+
+- FoR classification,
+- share of annual allocation by FoR,
+- allocated compute by FoR, and
+- changes in FoR composition over time.
+
+The currently available FoR information primarily represents allocation
+rather than directly observed requested demand. Any use of allocation
+composition as a proxy for demand composition will therefore be documented
+as an assumption.
+
+## Potential Structural Drivers
+
+The project will investigate variables that may help explain changes in
+HPC demand over time.
+
+Potential drivers include:
+
+### Research Funding
+
+- Australian Research Council (ARC) funding,
+- National Health and Medical Research Council (NHMRC) funding,
+- Medical Research Future Fund (MRFF) funding, and
+- broader research and development expenditure where suitable data is
+  available.
+
+### Research Workforce and Activity
+
+- research workforce size,
+- number of researchers,
+- PhD completions,
+- number of research projects, and
+- grant activity in compute-intensive research fields.
+
+### Compute Intensity
+
+Potential indicators of changing compute intensity include:
+
+- compute use per project,
+- compute use by Field of Research,
+- changes in CPU and GPU use, and
+- changes associated with increasingly compute-intensive research.
+
+### HPC Infrastructure
+
+Infrastructure variables may include:
+
+- available HPC systems,
+- system commissioning and retirement,
+- available CPU and GPU resources, and
+- changes in national compute capacity.
+
+These variables are important for distinguishing changes in demand from
+changes caused by additional supply.
+
+## International Benchmarking Variables
+
+Where suitable data is available, international HPC systems may be used
+as external benchmarks.
+
+Potential indicators include:
+
+- compute per researcher,
+- compute per research dollar,
+- allocation and utilisation, and
+- changes in CPU and GPU use.
+
+Potential international comparators include EuroHPC, NSF ACCESS and
+ARCHER2.
+
+## Variable Selection for Modelling
+
+Not all potential variables will necessarily be included in the final
+forecasting model.
+
+Variable selection will consider:
+
+- theoretical relevance to HPC demand,
+- historical data coverage,
+- consistency of measurement,
+- availability through the forecast horizon,
+- relationship with observed HPC demand, and
+- the limited number of annual observations available for modelling.
+
+The final model will prioritise a small number of interpretable variables
+rather than including a large number of predictors in a short annual time
+series.

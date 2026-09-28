@@ -8,6 +8,7 @@ book:
   chapters:
     - index.qmd
     - 01_data_collection.qmd
+    - 02_variable_definition.qmd
 
 format:
   html:
