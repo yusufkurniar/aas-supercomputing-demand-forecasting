@@ -1,0 +1,84 @@
+---
+title: "Forecasting Demand for National Research Supercomputing"
+subtitle: "Australian Academy of Science Internship Project"
+author: "Yusuf Kurnia Romadhon"
+---
+
+# Introduction
+
+## Project Background
+
+High-performance computing (HPC) is an important part of Australia's
+research infrastructure, supporting computationally intensive research
+across a wide range of scientific fields.
+
+Australia has two national Tier-1 HPC facilities accessible to
+researchers: the National Computational Infrastructure (NCI) and the
+Pawsey Supercomputing Research Centre. Several Tier-2 HPC facilities
+also operate across Australian research institutions.
+
+As research becomes increasingly data- and compute-intensive,
+understanding future demand for HPC resources is important for planning
+Australia's national research infrastructure.
+
+## Project Purpose
+
+The purpose of this project is to develop a robust forecast of Australian
+research demand for high-performance computing to 2030.
+
+The forecast is intended to support national policy discussions around
+public compute investment and future research infrastructure planning.
+
+The project combines data engineering, descriptive analysis and
+forecasting using historical Australian HPC data and other indicators
+that may help explain changes in research compute demand.
+
+## The Forecasting Problem
+
+One of the main challenges is that observed HPC allocation does not
+necessarily represent actual research demand.
+
+National allocation schemes operate under limited available capacity.
+As a result, allocated compute represents the amount of resource awarded
+rather than necessarily the amount researchers required.
+
+Requested compute provides additional information about demand, but may
+also underestimate actual need if researchers limit their requests based
+on expected availability or if potential users do not apply.
+
+The project therefore distinguishes between:
+
+- requested compute,
+- allocated compute,
+- the observed gap between requested and allocated compute, and
+- underlying or latent demand.
+
+## Project Objectives
+
+The project aims to:
+
+1. build a documented longitudinal dataset of Australian HPC activity,
+2. improve comparability of compute measures across years, facilities
+   and hardware generations,
+3. distinguish CPU and GPU compute where possible,
+4. examine historical demand, allocation and oversubscription,
+5. analyse changes in Field of Research composition,
+6. investigate potential structural drivers of HPC demand,
+7. develop and compare suitable forecasting models,
+8. forecast HPC demand to 2030 under different scenarios, and
+9. estimate potential future gaps between demand and available capacity.
+
+## Analysis Framework
+
+The analysis follows ten main steps:
+
+1. Data collection
+2. Potential variable definition
+3. Data integration
+4. Data standardisation
+5. Data conversion
+6. Initial analysis and data manipulation
+7. Model development and benchmarking
+8. Model evaluation
+9. Model selection
+10. Scenario forecasting and capacity-gap analysis
