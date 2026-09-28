@@ -1,0 +1,27 @@
+project:
+  type: book
+  output-dir: _output
+
+book:
+  title: "Forecasting Demand for National Research Supercomputing"
+  subtitle: "Australian Academy of Science Internship Project"
+  author: "Yusuf Kurnia Romadhon"
+
+  chapters:
+    - index.qmd
+
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    code-fold: true
+    code-tools: true
+
+  pdf:
+    documentclass: report
+    toc: true
+    number-sections: true
+
+execute:
+  warning: false
+  message: false
