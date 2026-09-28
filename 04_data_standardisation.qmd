@@ -1,0 +1,77 @@
+# Data Standardisation
+
+## Purpose
+
+The purpose of this step is to standardise variables that are reported differently across years and data sources.
+
+The historical HPC data were collected from multiple reports and datasets. Differences in terminology, classification, units, and reporting structure need to be addressed before the data can be compared over time.
+
+## Reporting Period
+
+Reporting periods are standardised into a consistent annual format, while the original reporting period is retained for reference.
+
+The main analysis currently covers 2013/14 to 2025/26.
+
+## Institution Names
+
+Institution names may vary across datasets and years due to abbreviations, naming conventions, or organisational changes.
+
+Where possible, institution names are mapped to a consistent name while retaining the originally reported value.
+
+## Field of Research Classification
+
+Field of Research classifications are not fully consistent across the historical period.
+
+Earlier observations may use the 2008 Australian and New Zealand Standard Research Classification (ANZSRC), while more recent observations may use the 2020 classification.
+
+Where possible, research fields are mapped to a common classification for longitudinal analysis. The original classification is retained to avoid losing information from the source data.
+
+## HPC Facilities and Systems
+
+Facility and system names are standardised so that allocations can be associated with the relevant HPC infrastructure.
+
+This is particularly important because different systems may use different service unit accounting methods.
+
+## Resource Type
+
+Compute resources are classified into resource types where sufficient information is available.
+
+The main distinction is between:
+
+- CPU resources
+- GPU resources
+- mixed or unspecified resources
+
+CPU and GPU resources are kept separate because they represent different types of computing resources and cannot be directly combined as physical compute hours.
+
+## Units
+
+The original reported unit is retained for each observation.
+
+Historical sources may report compute using units such as:
+
+- service units (SU)
+- kilo service units (kSU)
+- CPU core-hours
+- GPU hours
+- other reported compute-hour measures
+
+Unit labels are standardised at this stage, but conversion between units is handled separately in the data conversion step.
+
+## Data Quality and Comparability
+
+Additional indicators are used where necessary to identify differences in data quality and comparability.
+
+These may include whether a value is:
+
+- directly reported
+- derived from another reported value
+- estimated or used as a proxy
+- comparable across years
+- affected by changes in systems or reporting methods
+
+These indicators allow later analysis to distinguish between directly observed values and values that require additional assumptions.
+
+## Output
+
+The output of this step is a standardised dataset that retains the original reported information while providing consistent classifications for subsequent conversion and analysis.

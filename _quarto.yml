@@ -10,6 +10,7 @@ book:
     - 01_data_collection.qmd
     - 02_variable_definition.qmd
     - 03_data_integration.qmd
+    - 04_data_standardisation.qmd
 
 format:
   html:
