@@ -1,0 +1,53 @@
+# Data Integration
+
+## Purpose
+
+The purpose of this step is to integrate the different data sources collected for the project into a consistent structure for analysis.
+
+The datasets were collected from different sources and contain different time periods, levels of detail, and reporting formats. Integration is therefore required before the variables can be compared and used for modelling.
+
+## Main Datasets
+
+The main datasets used in the integration process are:
+
+- HPC demand and allocation data
+- NCMAS project and allocation data
+- Field of Research data
+- Research funding data
+- Research workforce and activity data
+- HPC system and capacity information
+
+## Time Period
+
+The main HPC dataset covers the period from 2013/14 to 2025/26.
+
+Other datasets may have different reporting periods. Where possible, these are aligned with the corresponding HPC allocation year while retaining the original reporting period for reference.
+
+## Integration Structure
+
+The datasets are integrated primarily using:
+
+- year or reporting period
+- Field of Research
+- institution, where available
+- facility and HPC system
+- resource type
+
+The level of integration depends on the detail available in each source.
+
+## Integration Considerations
+
+Several issues need to be considered when integrating the datasets:
+
+- reporting periods are not always consistent across sources
+- Field of Research classifications have changed over time
+- institution names may be reported differently
+- CPU and GPU resources are reported using different units
+- some historical demand values are directly reported while others are estimated or derived
+- the level of detail available varies across years
+
+These differences are retained and documented rather than assuming that all observations are directly comparable.
+
+## Output
+
+The output of this step is an integrated dataset that retains the original source information while providing a common structure for subsequent data standardisation and conversion.

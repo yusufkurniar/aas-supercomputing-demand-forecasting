@@ -9,6 +9,7 @@ book:
     - index.qmd
     - 01_data_collection.qmd
     - 02_variable_definition.qmd
+    - 03_data_integration.qmd
 
 format:
   html:
