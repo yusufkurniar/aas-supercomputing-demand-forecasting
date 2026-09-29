@@ -1,0 +1,112 @@
+# Scenario Forecasting and Capacity-Gap Analysis
+
+## Purpose
+
+The purpose of this step is to use the selected modelling approach to forecast Australian research HPC demand to 2030 under different scenarios.
+
+The scenarios are designed to represent different possible developments in Australian research activity and compute intensity rather than producing a single estimate of future demand.
+
+The resulting demand forecasts are then compared with available or projected national HPC capacity to identify potential capacity gaps.
+
+## Forecast Horizon
+
+The selected modelling approach is used to produce forecasts to 2030.
+
+Forecast uncertainty is reported where appropriate to reflect the uncertainty associated with both the historical data and future assumptions.
+
+## Scenario Framework
+
+Three main scenarios are considered:
+
+1. Status quo
+2. Restored national R&D intensity
+3. AI acceleration
+
+Each scenario uses the same overall modelling framework but applies different assumptions about the future development of relevant demand drivers.
+
+## Status Quo Scenario
+
+The status quo scenario represents a continuation of current research and HPC demand conditions.
+
+Future values of the structural drivers are based on recent trends or other reasonable baseline assumptions.
+
+This scenario provides a baseline against which the alternative scenarios can be compared.
+
+## Restored National R&D Intensity Scenario
+
+This scenario considers higher research activity associated with an increase in Australia's research and development intensity.
+
+Changes in relevant drivers, such as research funding and research activity, are translated into future HPC demand using the selected modelling approach.
+
+The assumptions used for this scenario are documented explicitly.
+
+## AI Acceleration Scenario
+
+The AI acceleration scenario considers stronger growth in compute-intensive research associated with increasing use of artificial intelligence, machine learning and accelerated computing.
+
+Particular attention is given to GPU demand because these workloads may have different resource requirements from traditional CPU-based research computing.
+
+The scenario assumptions are based on available evidence and are documented separately from the historical observations.
+
+## CPU and GPU Forecasts
+
+Where supported by the available data, CPU and GPU demand are forecast separately.
+
+This avoids assuming that CPU core-hours and GPU hours are directly interchangeable and allows differences in their future growth to be examined.
+
+## Capacity Comparison
+
+Forecast demand is compared with available or projected national HPC capacity where suitable capacity information is available.
+
+Demand and capacity are only compared where their units and definitions are sufficiently consistent.
+
+The general capacity-gap calculation is:
+
+$$
+\text{Capacity Gap}_t =
+\text{Forecast Demand}_t -
+\text{Available Capacity}_t
+$$
+
+A positive value indicates forecast demand above the capacity represented in the comparison.
+
+## Facility-Equivalent Capacity
+
+Where sufficient information is available, the estimated capacity gap may also be expressed in facility-equivalent terms.
+
+This provides a more interpretable indication of the scale of additional computing infrastructure that may be required.
+
+Any facility-equivalent calculation depends on assumptions about system capacity, resource type and utilisation. These assumptions are therefore reported explicitly.
+
+## Scenario Comparison
+
+The three scenarios are compared to examine how different assumptions affect projected HPC demand to 2030.
+
+The comparison focuses on:
+
+- total forecast demand
+- CPU demand
+- GPU demand
+- growth relative to the historical period
+- estimated capacity gaps
+- differences between scenarios
+
+## Uncertainty and Sensitivity
+
+Scenario forecasts are not treated as precise predictions of future HPC demand.
+
+Results depend on the selected model, historical data, conversion assumptions and future values assumed for the structural drivers.
+
+Sensitivity analysis is used where appropriate to examine how changes in key assumptions affect the forecast results.
+
+## Policy Interpretation
+
+The scenario results are interpreted in the context of Australia's future national research computing requirements.
+
+The analysis focuses on the potential scale and composition of future demand and the implications of different research and technology trajectories for national HPC infrastructure.
+
+## Output
+
+The output of this step is a set of scenario forecasts to 2030 together with estimates of potential capacity gaps.
+
+These results provide the main quantitative evidence used in the final technical report, policy summary and project presentation.

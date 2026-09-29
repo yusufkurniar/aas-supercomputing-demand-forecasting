@@ -16,6 +16,7 @@ book:
     - 07_model_development.qmd
     - 08_model_evaluation.qmd
     - 09_model_selection.qmd
+    - 10_scenario_forecasting.qmd
 
 format:
   html:
