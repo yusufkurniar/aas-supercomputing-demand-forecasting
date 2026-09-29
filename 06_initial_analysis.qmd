@@ -1,0 +1,107 @@
+# Initial Analysis and Data Manipulation
+
+## Purpose
+
+The purpose of this step is to explore the prepared datasets, identify historical patterns, assess data quality and comparability, and prepare the variables required for modelling.
+
+This analysis is also used to identify potential relationships between HPC demand and the structural drivers considered in the project.
+
+## Historical Demand and Allocation
+
+Historical requested and allocated compute are examined over time to understand how the use of national HPC resources has changed.
+
+The analysis considers:
+
+- changes in requested compute
+- changes in allocated compute
+- the gap between requested and allocated resources
+- fulfilment rates
+- periods of unusually high or low growth
+
+Requested and allocated compute are interpreted separately because allocation is constrained by available capacity and does not necessarily represent total research demand.
+
+## CPU and GPU Resources
+
+Where sufficient information is available, CPU and GPU resources are analysed separately.
+
+This allows the analysis to examine:
+
+- historical CPU demand and allocation
+- historical GPU demand and allocation
+- changes in the composition of national HPC usage
+- the increasing role of GPU-based computing
+
+CPU core-hours and GPU hours are not combined into a single physical compute measure.
+
+## Field of Research
+
+The distribution of HPC resources across Fields of Research is examined to identify which research areas account for the largest shares of national compute allocation and how this composition has changed over time.
+
+Where FoR data represent allocation rather than requested compute, this distinction is retained when interpreting the results.
+
+## Institutional Distribution
+
+Where institution-level data are available, allocations are examined across universities and research organisations.
+
+This provides an indication of how national HPC resources are distributed across institutions and whether the distribution has changed over time.
+
+## Potential Demand Drivers
+
+Potential structural drivers are explored alongside the HPC data.
+
+These may include:
+
+- research funding
+- research workforce
+- research activity
+- grant funding in compute-intensive fields
+- changes in compute intensity
+- changes in HPC infrastructure
+
+The purpose of this analysis is to identify variables that may be useful for the modelling stage rather than assuming that every available variable should be included.
+
+## Data Manipulation for Modelling
+
+Additional variables required for analysis and modelling are created where appropriate.
+
+These may include:
+
+- annual growth rates
+- request-allocation gaps
+- fulfilment rates
+- lagged funding variables
+- FoR shares
+- indicators for major system changes
+- CPU and GPU measures
+
+Any derived variables and assumptions are documented so that they can be reproduced.
+
+## Exploratory Analysis
+
+Visual and statistical analysis is used to examine trends, relationships and potential structural changes in the data.
+
+This includes time-series plots, comparisons between requested and allocated compute, FoR composition, and relationships between HPC demand and potential structural drivers.
+
+Particular attention is given to major changes in national HPC infrastructure because increases in observed allocation may reflect changes in available capacity rather than equivalent increases in underlying demand.
+
+## Data Readiness for Modelling
+
+Before moving to model development, the prepared data are assessed for:
+
+- sufficient historical coverage
+- consistency of units
+- CPU and GPU separation
+- availability of requested and allocated values
+- direct versus derived or proxy observations
+- changes in HPC systems
+- changes in FoR classifications
+- missing values
+- potential structural breaks
+
+Variables that are not sufficiently comparable or supported by the available data are either excluded from modelling or treated separately.
+
+## Output
+
+The output of this step is a modelling-ready dataset together with an initial understanding of historical HPC demand, allocation, research composition and potential demand drivers.
+
+These findings provide the basis for model development and benchmarking in the next step.
