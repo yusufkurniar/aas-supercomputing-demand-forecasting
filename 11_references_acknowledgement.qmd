@@ -1,0 +1,15 @@
+# References and AI Acknowledgement
+
+## References
+
+References used throughout this project include academic literature, technical documentation, government publications, annual reports, and publicly available information from organisations including NCI and Pawsey.
+
+A complete reference list will be provided here using a consistent citation style.
+
+## AI Acknowledgement
+
+Generative AI tools, including ChatGPT, were used to support aspects of this project such as brainstorming, reviewing code, improving written expression, and assisting with the organisation of the analysis and documentation.
+
+All data preparation, analytical decisions, model development, interpretation of results, and final conclusions were reviewed and verified by the author.
+
+AI-generated suggestions were not treated as primary sources. Information and assumptions used in the analysis were checked against the original sources where appropriate.
