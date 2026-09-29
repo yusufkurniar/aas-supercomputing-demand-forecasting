@@ -1,0 +1,99 @@
+# Data Conversion
+
+## Purpose
+
+The purpose of this step is to convert the reported HPC resource values into units that are more comparable across years and systems.
+
+The historical data are reported using different units, including service units (SU), kilo service units (kSU), CPU core-hours and GPU hours. Service unit accounting can also differ between HPC systems and resource types. Therefore, a single conversion factor cannot be applied across the full historical dataset.
+
+## Conversion Approach
+
+The original reported value and unit are retained in the dataset.
+
+Where sufficient information is available, reported service units are converted using conversion factors specific to the relevant facility, system and resource type.
+
+The general conversion from kSU to SU is:
+
+$$
+\text{SU} = \text{kSU} \times 1000
+$$
+
+Conversion from SU to physical compute hours depends on the accounting method used by the relevant HPC system.
+
+## CPU Resources
+
+CPU resources are converted to CPU core-hours where a documented service-unit conversion is available.
+
+For example, if a system charges two service units per CPU core-hour:
+
+$$
+\text{CPU Core-Hours}
+=
+\frac{\text{kSU} \times 1000}{2}
+$$
+
+The applicable conversion factor is determined separately for each system and reporting period.
+
+## GPU Resources
+
+GPU resources are converted separately from CPU resources.
+
+Where a documented GPU service-unit rate is available:
+
+$$
+\text{GPU Hours}
+=
+\frac{\text{kSU} \times 1000}
+{\text{SU per GPU Hour}}
+$$
+
+GPU hours are not combined directly with CPU core-hours because they represent different types of computational resources.
+
+## Historical Conversion
+
+Conversion of historical observations requires additional care because HPC systems and service-unit accounting methods have changed over time.
+
+For each observation, the conversion process considers:
+
+- facility
+- HPC system
+- reporting period
+- resource type
+- original unit
+- documented service-unit accounting method
+
+Where a reliable conversion factor cannot be identified, the original reported value is retained rather than applying an unsupported conversion.
+
+## Conversion Documentation
+
+The converted dataset retains information about how each value was produced.
+
+Where possible, this includes:
+
+- original reported value
+- original reported unit
+- converted value
+- converted unit
+- conversion formula or factor
+- conversion source
+- conversion confidence
+- comparability status
+- relevant notes
+
+This allows converted values to be traced back to their original source and assumptions.
+
+## CPU and GPU Separation
+
+CPU core-hours and GPU hours are maintained as separate measures throughout the analysis.
+
+This avoids treating different computational resources as directly equivalent and allows changes in the composition of HPC demand, including increasing GPU demand, to be analysed separately.
+
+## Current Limitations
+
+Conversion factors have not yet been confirmed for every historical system and year.
+
+In particular, historical service-unit accounting and changes associated with system transitions require further validation. These assumptions will be reviewed using available documentation and feedback from NCI and Pawsey before the final converted dataset is used for modelling.
+
+## Output
+
+The output of this step will be a conversion table and analysis dataset containing the original reported values together with comparable CPU or GPU measures where supported by sufficient evidence.

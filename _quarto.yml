@@ -11,6 +11,7 @@ book:
     - 02_variable_definition.qmd
     - 03_data_integration.qmd
     - 04_data_standardisation.qmd
+    - 05_data_conversion.qmd
 
 format:
   html:
