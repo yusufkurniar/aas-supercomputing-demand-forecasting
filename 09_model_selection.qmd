@@ -1,0 +1,75 @@
+# Model Selection
+
+## Purpose
+
+The purpose of this step is to select the modelling approach that will be used to forecast Australian research HPC demand to 2030.
+
+The selection is based on the evaluation results from the previous step. Forecast accuracy is considered alongside model stability, interpretability, forecast behaviour and suitability for scenario analysis.
+
+## Selection Criteria
+
+Candidate models are compared using several criteria:
+
+- out-of-sample forecast accuracy
+- residual diagnostics
+- stability of the model
+- plausibility of the resulting forecasts
+- interpretability
+- suitability for the available historical data
+- ability to support forecasting to 2030
+- suitability for scenario analysis
+
+No model is selected based on a single accuracy measure.
+
+## Benchmark and Structural Models
+
+The performance of the structural demand models is compared with the simpler benchmark models.
+
+Benchmark models provide a useful reference for determining whether additional structural variables improve the forecasting approach.
+
+Where a more complex model does not provide a meaningful improvement over a simpler model, the simpler model may be preferred.
+
+## Structural Driver Selection
+
+For structural models, the final set of explanatory variables is selected based on both statistical performance and their relationship with HPC demand.
+
+The selected variables should:
+
+- have a clear relationship with HPC demand
+- have sufficient historical coverage
+- be reasonably consistent over time
+- avoid unnecessary model complexity
+- support assumptions or projections to 2030
+- provide a useful interpretation for policy analysis
+
+Given the limited number of annual observations, the final model is kept parsimonious.
+
+## CPU and GPU Modelling Approach
+
+CPU and GPU resources are considered separately when selecting the final forecasting approach.
+
+Different models may be selected for CPU and GPU demand if the historical data and demand patterns support different approaches.
+
+Where the GPU time series is too limited for reliable statistical forecasting, a scenario-based approach may be used instead.
+
+## Expert Review
+
+The modelling results and assumptions may also be reviewed with relevant HPC experts.
+
+Expert feedback is used to assess whether the model assumptions, historical interpretation and resulting forecasts are reasonable in the context of Australian national research computing.
+
+Any changes resulting from expert feedback are documented.
+
+## Final Model Selection
+
+The final model or combination of models is selected after considering the quantitative evaluation results and the broader analytical requirements of the project.
+
+The selected approach should provide a reasonable balance between forecasting performance, interpretability and robustness given the limitations of the historical data.
+
+The rationale for the final selection will be documented together with the model specification and key assumptions.
+
+## Output
+
+The output of this step is the selected forecasting approach for projecting Australian research HPC demand to 2030.
+
+The selected model is then used as the basis for scenario forecasting and capacity-gap analysis in the final step.

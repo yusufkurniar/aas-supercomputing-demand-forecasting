@@ -15,6 +15,7 @@ book:
     - 06_initial_analysis.qmd
     - 07_model_development.qmd
     - 08_model_evaluation.qmd
+    - 09_model_selection.qmd
 
 format:
   html:
