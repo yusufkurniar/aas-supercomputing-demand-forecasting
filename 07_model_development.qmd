@@ -1,0 +1,134 @@
+# Model Development and Benchmarking
+
+## Purpose
+
+The purpose of this step is to develop forecasting models for Australian research HPC demand and compare their performance.
+
+The modelling approach includes simple benchmark models as well as models that incorporate potential structural drivers of HPC demand.
+
+Because the historical dataset is relatively short and includes changes in HPC systems, reporting methods and resource types, the models are kept relatively simple and interpretable.
+
+## Forecast Target
+
+The primary forecasting target is Australian research demand for national HPC resources.
+
+Where the available data support it, CPU and GPU demand are modelled separately because they represent different types of computational resources and have different historical growth patterns.
+
+Allocated compute is treated separately from demand because allocation is constrained by available national HPC capacity.
+
+## Benchmark Models
+
+Simple forecasting models are used to provide a baseline against which more complex models can be compared.
+
+The benchmark models considered include:
+
+- naïve
+- drift
+- linear trend
+- exponential smoothing (ETS)
+- ARIMA
+
+These models provide different representations of the historical trend without requiring external explanatory variables.
+
+## Structural Demand Model
+
+In addition to the benchmark models, a structural modelling approach is considered to explain HPC demand using potential demand drivers.
+
+Potential drivers identified in the earlier stages include:
+
+- research funding
+- research workforce
+- research activity
+- funding in compute-intensive research fields
+- compute intensity
+- changes in CPU and GPU use
+
+A general form of the structural model is:
+
+$$
+D_t =
+\beta_0 +
+\beta_1 X_{1,t} +
+\beta_2 X_{2,t} +
+\cdots +
+\beta_k X_{k,t} +
+\varepsilon_t
+$$
+
+where $D_t$ represents HPC demand and $X_{1,t}, \ldots, X_{k,t}$ represent selected demand drivers.
+
+## Leading Indicators
+
+Some structural variables may influence HPC demand with a delay.
+
+For example, research funding may be considered as a leading indicator because funded research projects may require HPC resources after funding has been awarded.
+
+Where supported by the data, lagged variables are therefore considered:
+
+$$
+D_t =
+\beta_0 +
+\beta_1 Funding_{t-1} +
+\beta_2 Workforce_t +
+\beta_3 ComputeIntensity_t +
+\varepsilon_t
+$$
+
+The appropriate lag structure is determined using the available data and the expected relationship between each driver and HPC demand.
+
+## Variable Selection
+
+The number of predictors included in the structural model is kept small because the historical annual dataset contains a limited number of observations.
+
+Variables are considered based on:
+
+- theoretical relationship with HPC demand
+- historical data availability
+- consistency across years
+- exploratory relationships with demand
+- availability of future values or assumptions to 2030
+- interpretability for policy analysis
+
+Variables are not included solely because they improve in-sample model fit.
+
+## Model Benchmarking
+
+The candidate models are compared using a consistent evaluation framework.
+
+Where possible, rolling-origin time-series cross-validation is used so that models are evaluated using only information that would have been available at the time of each forecast.
+
+Forecast accuracy measures considered include:
+
+- Mean Absolute Error (MAE)
+- Root Mean Squared Error (RMSE)
+- Mean Absolute Percentage Error (MAPE), where appropriate
+
+Forecast behaviour and interpretability are also considered alongside numerical accuracy.
+
+## CPU and GPU Modelling
+
+Where sufficient historical information is available, CPU and GPU demand are modelled separately.
+
+This is particularly important for GPU resources because growth in AI, machine learning and other accelerator-intensive research may result in a different demand trajectory from traditional CPU computing.
+
+If the historical GPU series is insufficient for reliable standalone forecasting, alternative scenario-based assumptions are considered rather than fitting an unnecessarily complex statistical model.
+
+## Modelling Limitations
+
+The modelling approach is affected by several limitations:
+
+- a relatively short annual time series
+- changes in HPC systems and accounting methods
+- incomplete historical requested-demand information
+- supply constraints affecting observed allocations
+- limited historical GPU observations
+- changes in research classifications
+- some values being derived or estimated rather than directly reported
+
+These limitations are considered when interpreting model performance and selecting the final forecasting approach.
+
+## Output
+
+The output of this step is a set of candidate forecasting models and benchmark results.
+
+These models are evaluated in the next step before the final forecasting approach is selected for scenario analysis to 2030.

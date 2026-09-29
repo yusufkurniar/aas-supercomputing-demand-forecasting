@@ -13,6 +13,7 @@ book:
     - 04_data_standardisation.qmd
     - 05_data_conversion.qmd
     - 06_initial_analysis.qmd
+    - 07_model_development.qmd
 
 format:
   html:
