@@ -1,0 +1,143 @@
+# Model Evaluation
+
+## Purpose
+
+The purpose of this step is to evaluate the forecasting models developed in the previous step and assess how well they represent historical HPC demand.
+
+Model evaluation considers forecast accuracy, residual behaviour, forecast behaviour and interpretability. The aim is not only to identify models with low forecast errors, but also to ensure that the resulting forecasts are reasonable for the available data and the purpose of the project.
+
+## Evaluation Approach
+
+The candidate models are evaluated using a consistent framework.
+
+Where possible, time-series cross-validation is used to assess how the models would have performed when forecasting observations that were not used during model estimation.
+
+This is particularly important because evaluating models only on their in-sample fit may give an overly optimistic view of forecasting performance.
+
+## Time-Series Cross-Validation
+
+Rolling-origin time-series cross-validation is used where the available historical data allow it.
+
+At each evaluation point, the model is estimated using observations available up to that point and then used to forecast future observations.
+
+The forecasting origin is progressively moved forward through the historical period.
+
+This approach maintains the chronological order of the data and avoids using future information to predict the past.
+
+## Forecast Accuracy
+
+Forecast accuracy is assessed using measures such as:
+
+### Mean Absolute Error
+
+$$
+MAE =
+\frac{1}{n}
+\sum_{t=1}^{n}
+|y_t-\hat{y}_t|
+$$
+
+MAE measures the average absolute difference between observed and forecast values.
+
+### Root Mean Squared Error
+
+$$
+RMSE =
+\sqrt{
+\frac{1}{n}
+\sum_{t=1}^{n}
+(y_t-\hat{y}_t)^2
+}
+$$
+
+RMSE gives greater weight to larger forecast errors.
+
+### Mean Absolute Percentage Error
+
+$$
+MAPE =
+\frac{100}{n}
+\sum_{t=1}^{n}
+\left|
+\frac{y_t-\hat{y}_t}{y_t}
+\right|
+$$
+
+MAPE may be used as a supplementary measure where the observed values make percentage errors meaningful.
+
+No single accuracy measure is used in isolation when comparing the models.
+
+## Residual Diagnostics
+
+Residuals are examined to determine whether important patterns remain unexplained by the model.
+
+The evaluation considers:
+
+- residuals over time
+- residual autocorrelation
+- unusually large residuals
+- systematic over- or under-forecasting
+- residual distribution
+
+A well-performing forecasting model should not leave strong systematic patterns in its residuals.
+
+## Forecast Behaviour
+
+The resulting forecasts are also examined visually.
+
+This is important because a model can achieve relatively good historical accuracy while producing unrealistic long-term forecasts.
+
+The evaluation therefore considers whether:
+
+- the direction of the forecast is reasonable
+- long-term growth is plausible
+- forecasts become unstable
+- prediction intervals appropriately reflect uncertainty
+- forecasts respond reasonably to the historical data
+
+## Structural Model Evaluation
+
+For models containing structural demand drivers, evaluation also considers whether the estimated relationships are interpretable and consistent with the expected relationship between the variables and HPC demand.
+
+Particular attention is given to:
+
+- coefficient direction
+- sensitivity to individual observations
+- model complexity
+- stability of estimated relationships
+- contribution of the selected drivers
+
+Given the limited number of annual observations, model complexity is considered carefully.
+
+## Comparison with Benchmark Models
+
+The structural models are compared with the simpler benchmark models developed in Step 7.
+
+A more complex model is not automatically preferred simply because it contains additional explanatory variables.
+
+The additional complexity should provide useful forecasting performance or interpretation relative to simpler alternatives.
+
+## CPU and GPU Evaluation
+
+Where CPU and GPU demand are modelled separately, their models are evaluated independently.
+
+This allows the evaluation approach to reflect differences in historical data availability and demand patterns between the two resource types.
+
+## Evaluation Limitations
+
+Model evaluation is constrained by the relatively short historical dataset.
+
+As a result:
+
+- the number of cross-validation periods may be limited
+- accuracy measures may be sensitive to individual years
+- structural changes may affect historical model performance
+- GPU evaluation may be based on fewer observations than CPU evaluation
+
+These limitations are considered when interpreting differences in model performance.
+
+## Output
+
+The output of this step is a comparison of candidate models based on forecast accuracy, residual diagnostics, forecast behaviour and interpretability.
+
+The evaluation results are then used to support model selection in the next step.
