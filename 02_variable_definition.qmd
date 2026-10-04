@@ -1,18 +1,27 @@
-# Potential Variable Definition
+# Variable Definition
 
 ## Purpose
 
-The second step is to define the variables that may be used in the
-descriptive analysis and forecasting models.
+The purpose of the variable definition stage is to establish clear and
+consistent meanings for the measures used throughout the analysis.
 
-The variables are divided into three main groups:
+The variables are organised into three main groups:
 
-- target variables representing HPC demand,
-- allocation and capacity variables, and
-- potential structural drivers of HPC demand.
+- HPC demand variables, including requested compute and related demand
+  indicators,
+- allocation and infrastructure variables, including awarded compute and
+  available capacity, and
+- potential structural drivers that may help explain changes in research
+  computing demand over time.
 
-The final variables used in the forecasting models will depend on data
-availability, consistency and the results of the exploratory analysis.
+Not all defined variables are expected to enter the final forecasting
+model. Some are used primarily for descriptive analysis, comparability
+assessment or interpretation.
+
+Variables considered for modelling are evaluated later based on their
+theoretical relevance, historical coverage, consistency of measurement,
+temporal alignment and suitability for the relatively short annual time
+series available.
 
 ## HPC Demand
 

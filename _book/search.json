@@ -132,81 +132,81 @@
   {
     "objectID": "02_variable_definition.html",
     "href": "02_variable_definition.html",
-    "title": "3  Potential Variable Definition",
+    "title": "3  Variable Definition",
     "section": "",
-    "text": "3.1 Purpose\nThe second step is to define the variables that may be used in the descriptive analysis and forecasting models.\nThe variables are divided into three main groups:\nThe final variables used in the forecasting models will depend on data availability, consistency and the results of the exploratory analysis.",
+    "text": "3.1 Purpose\nThe purpose of the variable definition stage is to establish clear and consistent meanings for the measures used throughout the analysis.\nThe variables are organised into three main groups:\nNot all defined variables are expected to enter the final forecasting model. Some are used primarily for descriptive analysis, comparability assessment or interpretation.\nVariables considered for modelling are evaluated later based on their theoretical relevance, historical coverage, consistency of measurement, temporal alignment and suitability for the relatively short annual time series available.",
     "crumbs": [
-      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Potential Variable Definition</span>"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Variable Definition</span>"
     ]
   },
   {
     "objectID": "02_variable_definition.html#purpose",
     "href": "02_variable_definition.html#purpose",
-    "title": "3  Potential Variable Definition",
+    "title": "3  Variable Definition",
     "section": "",
-    "text": "target variables representing HPC demand,\nallocation and capacity variables, and\npotential structural drivers of HPC demand.",
+    "text": "HPC demand variables, including requested compute and related demand indicators,\nallocation and infrastructure variables, including awarded compute and available capacity, and\npotential structural drivers that may help explain changes in research computing demand over time.",
     "crumbs": [
-      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Potential Variable Definition</span>"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Variable Definition</span>"
     ]
   },
   {
     "objectID": "02_variable_definition.html#hpc-demand",
     "href": "02_variable_definition.html#hpc-demand",
-    "title": "3  Potential Variable Definition",
+    "title": "3  Variable Definition",
     "section": "3.2 HPC Demand",
     "text": "3.2 HPC Demand\nThe main outcome of interest is Australian research demand for HPC resources.\nHowever, demand is not directly observed in a single consistent measure. The project therefore distinguishes between several concepts.\n\n3.2.1 Requested Compute\nRequested compute represents the amount of HPC resource requested through allocation schemes where this information is available.\nThis provides an observable indicator of demand, but it may not represent the full level of research need if researchers limit their requests based on expected availability or if potential users do not apply.\nWhere possible, requested compute will be separated into:\n\nrequested CPU core-hours; and\nrequested GPU-hours.\n\n\n\n3.2.2 Allocated Compute\nAllocated compute represents the amount of HPC resource awarded to researchers.\nAllocation is treated separately from demand because it is constrained by the amount of compute available and by the allocation process.\nWhere possible, allocated compute will be separated into:\n\nallocated CPU core-hours; and\nallocated GPU-hours.\n\n\n\n3.2.3 Latent Demand\nLatent demand refers to the underlying level of HPC resources that Australian researchers may require, including demand that is not fully observed through allocation or request data.\nLatent demand is not directly observed and will therefore need to be estimated using available demand indicators and structural drivers.",
     "crumbs": [
-      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Potential Variable Definition</span>"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Variable Definition</span>"
     ]
   },
   {
     "objectID": "02_variable_definition.html#demand-and-allocation-indicators",
     "href": "02_variable_definition.html#demand-and-allocation-indicators",
-    "title": "3  Potential Variable Definition",
+    "title": "3  Variable Definition",
     "section": "3.3 Demand and Allocation Indicators",
     "text": "3.3 Demand and Allocation Indicators\nSeveral indicators can be derived from the historical data.\nThe observed request-allocation gap is defined as:\n\\[\n\\text{Request-Allocation Gap}_t =\n\\text{Requested Compute}_t -\n\\text{Allocated Compute}_t\n\\]\nThe fulfilment rate is defined as:\n\\[\n\\text{Fulfilment Rate}_t =\n\\frac{\\text{Allocated Compute}_t}\n{\\text{Requested Compute}_t}\n\\]\nThese measures can help describe the relationship between observed requests and available allocation over time.\nThey should not automatically be interpreted as the full level of unmet demand because requested compute itself may be constrained.",
     "crumbs": [
-      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Potential Variable Definition</span>"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Variable Definition</span>"
     ]
   },
   {
     "objectID": "02_variable_definition.html#field-of-research",
     "href": "02_variable_definition.html#field-of-research",
-    "title": "3  Potential Variable Definition",
+    "title": "3  Variable Definition",
     "section": "3.4 Field of Research",
     "text": "3.4 Field of Research\nField of Research (FoR) is used to examine differences in the composition of HPC activity across research disciplines.\nPotential FoR variables include:\n\nFoR classification,\nshare of annual allocation by FoR,\nallocated compute by FoR, and\nchanges in FoR composition over time.\n\nThe currently available FoR information primarily represents allocation rather than directly observed requested demand. Any use of allocation composition as a proxy for demand composition will therefore be documented as an assumption.",
     "crumbs": [
-      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Potential Variable Definition</span>"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Variable Definition</span>"
     ]
   },
   {
     "objectID": "02_variable_definition.html#potential-structural-drivers",
     "href": "02_variable_definition.html#potential-structural-drivers",
-    "title": "3  Potential Variable Definition",
+    "title": "3  Variable Definition",
     "section": "3.5 Potential Structural Drivers",
     "text": "3.5 Potential Structural Drivers\nThe project will investigate variables that may help explain changes in HPC demand over time.\nPotential drivers include:\n\n3.5.1 Research Funding\n\nAustralian Research Council (ARC) funding,\nNational Health and Medical Research Council (NHMRC) funding,\nMedical Research Future Fund (MRFF) funding, and\nbroader research and development expenditure where suitable data is available.\n\n\n\n3.5.2 Research Workforce and Activity\n\nresearch workforce size,\nnumber of researchers,\nPhD completions,\nnumber of research projects, and\ngrant activity in compute-intensive research fields.\n\n\n\n3.5.3 Compute Intensity\nPotential indicators of changing compute intensity include:\n\ncompute use per project,\ncompute use by Field of Research,\nchanges in CPU and GPU use, and\nchanges associated with increasingly compute-intensive research.\n\n\n\n3.5.4 HPC Infrastructure\nInfrastructure variables may include:\n\navailable HPC systems,\nsystem commissioning and retirement,\navailable CPU and GPU resources, and\nchanges in national compute capacity.\n\nThese variables are important for distinguishing changes in demand from changes caused by additional supply.",
     "crumbs": [
-      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Potential Variable Definition</span>"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Variable Definition</span>"
     ]
   },
   {
     "objectID": "02_variable_definition.html#international-benchmarking-variables",
     "href": "02_variable_definition.html#international-benchmarking-variables",
-    "title": "3  Potential Variable Definition",
+    "title": "3  Variable Definition",
     "section": "3.6 International Benchmarking Variables",
     "text": "3.6 International Benchmarking Variables\nWhere suitable data is available, international HPC systems may be used as external benchmarks.\nPotential indicators include:\n\ncompute per researcher,\ncompute per research dollar,\nallocation and utilisation, and\nchanges in CPU and GPU use.\n\nPotential international comparators include EuroHPC, NSF ACCESS and ARCHER2.",
     "crumbs": [
-      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Potential Variable Definition</span>"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Variable Definition</span>"
     ]
   },
   {
     "objectID": "02_variable_definition.html#variable-selection-for-modelling",
     "href": "02_variable_definition.html#variable-selection-for-modelling",
-    "title": "3  Potential Variable Definition",
+    "title": "3  Variable Definition",
     "section": "3.7 Variable Selection for Modelling",
     "text": "3.7 Variable Selection for Modelling\nNot all potential variables will necessarily be included in the final forecasting model.\nVariable selection will consider:\n\ntheoretical relevance to HPC demand,\nhistorical data coverage,\nconsistency of measurement,\navailability through the forecast horizon,\nrelationship with observed HPC demand, and\nthe limited number of annual observations available for modelling.\n\nThe final model will prioritise a small number of interpretable variables rather than including a large number of predictors in a short annual time series.",
     "crumbs": [
-      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Potential Variable Definition</span>"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Variable Definition</span>"
     ]
   },
   {
