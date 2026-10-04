@@ -259,14 +259,24 @@ compared directly or require additional qualification before analysis.
 
 ## Data Collection Limitations
 
-The main limitations identified during data collection include:
+Several limitations were identified during the data collection stage.
 
-- limited consistent data before 2013,
-- differences in reporting formats across years,
+The main limitations include:
+
+- limited availability of consistent historical data before 2013,
+- changes in reporting formats, terminology and level of detail across years,
 - inconsistent availability of requested and allocated compute,
-- incomplete separation of CPU and GPU resources in some historical data,
-- changes in HPC systems and accounting methods, and
-- differences in FoR classifications over time.
+- incomplete separation of CPU and GPU resources in some historical records,
+- changes in HPC systems, hardware generations and accounting methods,
+- differences in reporting scope between NCI, Pawsey and NCMAS sources,
+- changes in Field of Research classifications and reporting granularity, and
+- the use of derived or proxy values where directly reported measures are not available.
 
-These issues are addressed in the subsequent data integration,
-standardisation and conversion stages.
+These limitations mean that the historical series cannot be treated as
+perfectly homogeneous or directly comparable across all years.
+
+The impact of these issues is assessed in later stages of the project
+through data integration, standardisation, conversion and comparability
+assessment. Observations that require assumptions or additional
+qualification are retained with supporting provenance information rather
+than being treated as equivalent to directly reported values.
