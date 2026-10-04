@@ -84,16 +84,40 @@ as precise measurements of unconstrained demand.
 
 The project aims to:
 
-1. build a documented longitudinal dataset of Australian HPC activity,
-2. improve comparability of compute measures across years, facilities
-   and hardware generations,
-3. distinguish CPU and GPU compute where possible,
-4. examine historical demand, allocation and oversubscription,
-5. analyse changes in Field of Research composition,
-6. investigate potential structural drivers of HPC demand,
-7. develop and compare suitable forecasting models,
-8. forecast HPC demand to 2030 under different scenarios, and
-9. estimate potential future gaps between demand and available capacity.
+1. build a documented longitudinal dataset of Australian national HPC
+   activity using publicly available NCI, Pawsey and NCMAS sources,
+
+2. document differences in reporting practices, compute units, systems
+   and accounting methods across years,
+
+3. improve comparability of historical compute measures where a
+   defensible conversion or normalisation approach is available,
+
+4. distinguish CPU and GPU resources where the available source data
+   permits,
+
+5. examine historical patterns in requested compute, allocation and
+   oversubscription,
+
+6. analyse changes in Field of Research composition using the most
+   comparable available data,
+
+7. assess potential indicators or structural drivers of research
+   computing demand where suitable data are available,
+
+8. develop and compare forecasting or projection approaches appropriate
+   to the length and quality of the historical series, and
+
+9. develop demand scenarios to 2030 and assess their implications for
+   future national research computing requirements.
+
+Throughout the analysis, assumptions, derived values, source limitations
+and uncertainty are documented explicitly.
+
+The project objectives are informed by the internship brief, which
+emphasises longitudinal data assembly, descriptive analysis,
+structural demand modelling and scenario development
+[@HPCInternshipBrief].
 
 ## Analysis Framework
 
