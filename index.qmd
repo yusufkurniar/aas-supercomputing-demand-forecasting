@@ -9,24 +9,25 @@ author: "Yusuf Kurnia Romadhon"
 ## Project Background
 
 High-performance computing (HPC) is an important component of
-Australia's research infrastructure [@AAS2024FutureComputing], supporting computationally
-intensive research across a wide range of scientific fields.
+Australia's research infrastructure, supporting computationally
+intensive research across a wide range of scientific fields
+[@AAS2024FutureComputing].
 
 Australia has two national Tier-1 HPC facilities accessible to
 researchers: the National Computational Infrastructure (NCI) and the
-Pawsey Supercomputing Research Centre [@NCIWhoWeAre; @PawseyAbout]. Several Tier-2 HPC facilities
-also operate across Australian research institutions.
+Pawsey Supercomputing Research Centre
+[@NCIWhoWeAre; @PawseyAbout].
 
-As research becomes increasingly data and compute-intensive,
+As research becomes increasingly data- and compute-intensive,
 understanding how demand for HPC resources is changing is important for
-planning Australia's future national research infrastructure.
+planning Australia's future national research infrastructure
+[@AAS2024FutureComputing].
 
 ## Project Purpose
 
 The purpose of this project is to analyse historical Australian research
 computing demand and develop an evidence-based projection of future
-high-performance computing requirements to 2030
-[@HPCInternshipBrief].
+HPC demand to 2030 [@HPCInternshipBrief].
 
 The analysis is intended to support national policy discussions relating
 to public compute investment and future research infrastructure planning
@@ -34,10 +35,9 @@ to public compute investment and future research infrastructure planning
 
 The project combines data engineering, descriptive analysis and
 forecasting using publicly available NCI and Pawsey data, particularly
-National Computational Merit Allocation Scheme (NCMAS) information,
-together with additional indicators where they are sufficiently
-consistent and relevant
-[@HPCInternshipBrief].
+information from the National Computational Merit Allocation Scheme
+(NCMAS), together with additional indicators where they are sufficiently
+consistent and relevant [@HPCInternshipBrief].
 
 Because historical reporting practices, hardware systems and compute
 accounting methods have changed over time, the analysis explicitly
@@ -85,7 +85,8 @@ as precise measurements of unconstrained demand.
 The project aims to:
 
 1. build a documented longitudinal dataset of Australian national HPC
-   activity using publicly available NCI, Pawsey and NCMAS sources,
+   activity using publicly available NCI and Pawsey sources, including
+   NCMAS allocation information,
 
 2. document differences in reporting practices, compute units, systems
    and accounting methods across years,
@@ -129,7 +130,7 @@ The analysis follows ten main steps:
 4. Data standardisation
 5. Data conversion and comparability assessment
 6. Exploratory and descriptive analysis
-7. Model development and benchmarking
+7. Model development and comparison
 8. Model evaluation
 9. Model selection
 10. Scenario forecasting and interpretation
