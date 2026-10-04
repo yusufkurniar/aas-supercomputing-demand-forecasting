@@ -25,47 +25,49 @@ series available.
 
 ## HPC Demand
 
-The main outcome of interest is Australian research demand for HPC
-resources.
+The main outcome of interest is Australian research demand for national
+HPC resources.
 
-However, demand is not directly observed in a single consistent measure.
-The project therefore distinguishes between several concepts.
+Demand is not directly observed through a single consistent measure.
+The internship brief notes that national HPC allocations are
+supply-constrained and that researchers may also limit requests based on
+expected availability, meaning that observed requests may not capture the
+full level of underlying need [@HPCInternshipBrief].
+
+The analysis therefore distinguishes between requested compute,
+allocated compute and underlying or latent demand.
 
 ### Requested Compute
 
-Requested compute represents the amount of HPC resource requested through
-allocation schemes where this information is available.
+Requested compute represents the amount of HPC resource requested by
+researchers through an allocation process where this information is
+available.
 
-This provides an observable indicator of demand, but it may not represent
-the full level of research need if researchers limit their requests based
-on expected availability or if potential users do not apply.
-
-Where possible, requested compute will be separated into:
-
-- requested CPU core-hours; and
-- requested GPU-hours.
+It is treated as the primary observable indicator of research demand.
+However, requested compute may understate underlying need if researchers
+limit their requests based on expected resource availability or if
+potential users do not submit applications [@HPCInternshipBrief].
 
 ### Allocated Compute
 
 Allocated compute represents the amount of HPC resource awarded to
-researchers.
+researchers through the relevant allocation process, as reported in NCMAS
+outcomes and related NCI and Pawsey allocation documentation
+[@NCMAS2024; @NCMAS2025; @NCMAS2026].
 
-Allocation is treated separately from demand because it is constrained by
-the amount of compute available and by the allocation process.
-
-Where possible, allocated compute will be separated into:
-
-- allocated CPU core-hours; and
-- allocated GPU-hours.
+Allocation is analysed separately from demand because the amount awarded
+is constrained by available resources and the allocation process.
 
 ### Latent Demand
 
-Latent demand refers to the underlying level of HPC resources that
-Australian researchers may require, including demand that is not fully
-observed through allocation or request data.
+Latent demand refers in this project to the broader level of HPC
+resources that researchers might require beyond what is observed in
+submitted requests or awarded allocations.
 
-Latent demand is not directly observed and will therefore need to be
-estimated using available demand indicators and structural drivers.
+This is an analytical concept rather than a directly observed variable.
+The internship brief highlights that observed demand may be censored by
+available capacity and by researchers adapting their requests to expected
+resource availability [@HPCInternshipBrief].
 
 ## Demand and Allocation Indicators
 
