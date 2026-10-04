@@ -233,12 +233,29 @@ the final forecasting model.
 
 ## Data Provenance
 
-The original source, reporting period, reported unit and relevant notes are
-retained wherever possible.
+Data provenance is retained throughout the dataset so that each
+observation can be traced back to its original published source.
 
-This allows subsequent transformations and assumptions to be traced back to
-the original data source and helps identify observations that may not be
-directly comparable across years.
+Where available, the retained provenance information includes:
+
+- source document or webpage,
+- source URL,
+- source reporting period,
+- source location or relevant section,
+- originally reported value and unit,
+- reporting or allocation scope, and
+- notes describing extraction, derivation or interpretation.
+
+This information provides an audit trail for subsequent data integration,
+standardisation and conversion. It also makes it possible to distinguish
+values that are directly reported from those that are derived, estimated
+or based on analytical assumptions.
+
+Maintaining provenance is particularly important because the historical
+HPC series is assembled from publications that differ in reporting
+format, scope, compute units and level of detail across years. Provenance
+information is therefore used to assess whether observations can be
+compared directly or require additional qualification before analysis.
 
 ## Data Collection Limitations
 
