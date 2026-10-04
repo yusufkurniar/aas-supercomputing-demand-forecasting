@@ -214,7 +214,7 @@
     "href": "03_data_integration.html#main-datasets",
     "title": "4  Data Integration",
     "section": "4.2 Main Datasets",
-    "text": "4.2 Main Datasets\nThe main datasets used in the integration process are:\n\nHPC demand and allocation data\nNCMAS project and allocation data\nField of Research data\nResearch funding data\nResearch workforce and activity data\nHPC system and capacity information",
+    "text": "4.2 Main Datasets\nThe integration process combines several datasets with different analytical roles.\nThe core HPC datasets include:\n\nannual HPC demand and allocation data,\nNCMAS project and allocation level data, and\nField of Research data.\n\nSupporting datasets include:\n\nresearch funding data,\nresearch workforce and research activity data, and\nHPC system and capacity information.\n\nThe core datasets provide the main historical measures of requested compute, allocated compute and disciplinary composition. Supporting datasets are retained as contextual or candidate explanatory variables for later analysis and modelling.\nBecause these datasets differ in temporal coverage, granularity and reporting scope, they are not merged indiscriminately. Integration is performed only where suitable common identifiers and compatible levels of aggregation are available.",
     "crumbs": [
       "<span class='chapter-number'>4</span>  <span class='chapter-title'>Data Integration</span>"
     ]

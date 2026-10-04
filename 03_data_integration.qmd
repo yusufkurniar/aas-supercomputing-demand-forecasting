@@ -23,14 +23,30 @@ than assuming equivalence.
 
 ## Main Datasets
 
-The main datasets used in the integration process are:
+The integration process combines several datasets with different
+analytical roles.
 
-- HPC demand and allocation data
-- NCMAS project and allocation data
-- Field of Research data
-- Research funding data
-- Research workforce and activity data
-- HPC system and capacity information
+The core HPC datasets include:
+
+- annual HPC demand and allocation data,
+- NCMAS project and allocation level data, and
+- Field of Research data.
+
+Supporting datasets include:
+
+- research funding data,
+- research workforce and research activity data, and
+- HPC system and capacity information.
+
+The core datasets provide the main historical measures of requested
+compute, allocated compute and disciplinary composition. Supporting
+datasets are retained as contextual or candidate explanatory variables
+for later analysis and modelling.
+
+Because these datasets differ in temporal coverage, granularity and
+reporting scope, they are not merged indiscriminately. Integration is
+performed only where suitable common identifiers and compatible levels
+of aggregation are available.
 
 ## Time Period
 
