@@ -9,7 +9,8 @@ computing demand and allocation.
 The project draws primarily on publicly available NCMAS outcomes and
 NCI and Pawsey reporting to identify historical requested compute,
 allocated compute, resource type, Field of Research and other available
-characteristics of national HPC activity [@HPCInternshipBrief].
+characteristics of national HPC allocations and usage
+[@HPCInternshipBrief].
 
 Additional datasets, including research funding, workforce and research
 activity indicators, are collected as potential structural drivers of
@@ -26,21 +27,120 @@ stages.
 
 ## Data Sources
 
-Data was collected from several sources, including:
+The project uses multiple public data sources from NCI, Pawsey and
+NCMAS, together with research funding, workforce and Field of Research
+datasets.
 
-- National Computational Merit Allocation Scheme (NCMAS) outcomes and
-  supporting documentation,
-- National Computational Infrastructure (NCI) annual reports and
-  publications,
-- Pawsey Supercomputing Research Centre annual reports and publications,
-- Australian Research Council (ARC) funding data,
-- National Health and Medical Research Council (NHMRC) funding data,
-- Medical Research Future Fund (MRFF) data,
-- research workforce and research activity data, and
-- Field of Research (FoR) information.
+The specific HPC source varies by analytical year. Earlier observations
+are primarily drawn from annual reports, allocation documents and other
+historical NCI and Pawsey publications, while more recent observations
+increasingly use direct NCMAS outcome pages, applicant guidance and
+facility-specific allocation information.
 
-International HPC data will also be considered where suitable data is
-available, including information from EuroHPC, NSF ACCESS and ARCHER2.
+In several years, different documents are used for different analytical
+components. Allocation outcomes, requested-demand information, resource
+availability and Field of Research composition may therefore originate
+from separate official publications.
+
+For transparency and reproducibility, the exact source document,
+source location and URL are retained in the underlying yearly datasets.
+The principal sources used for each analytical year are summarised below.
+
+### Year-specific HPC source summary
+
+```{r}
+#| label: tbl-yearly-sources
+#| tbl-cap: "Principal year-specific sources used to construct the historical HPC dataset"
+
+library(tibble)
+library(knitr)
+
+source_table <- tribble(
+  ~Year, ~`Demand / Context Source`, ~`Allocation Source`, ~`FoR Source`,
+
+  2014,
+  "NCI Annual Report 2013/14; NCMAS Information for Applicants 2014",
+  "NCI Annual Report 2013/14",
+  "NCI Annual Report 2013/14",
+
+  2015,
+  "NCI Annual Report 2014/15",
+  "NCI Annual Report 2014/15; Pawsey Annual Report 2014/15",
+  "NCI Annual Report 2014/15",
+
+  2016,
+  "NCI Annual Report 2015/16; CSIRO Annual Report 2015/16",
+  "NCI Annual Report 2015/16",
+  "NCI Annual Report 2015/16",
+
+  2017,
+  "NCI Annual Report 2016/17; Pawsey Annual Report 2016/17",
+  "NCI Annual Report 2016/17; Pawsey Annual Report 2016/17",
+  "Pawsey Annual Report 2016/17",
+
+  2018,
+  "NCI Annual Report 2017/18; NCMAS 2018 results",
+  "NCI Annual Report 2017/18",
+  "NCI Annual Report 2017/18",
+
+  2019,
+  "NCI Annual Report 2018/19; Pawsey 2019 NCMAS information",
+  "NCI Annual Report 2018/19",
+  "NCI Annual Report 2018/19",
+
+  2020,
+  "NCI Annual Report 2019/20; NCMAS 2020 Information for Applicants",
+  "NCI 2019/20 Compute Allocations Detail",
+  "NCI 2019/20 Compute Allocations Detail",
+
+  2021,
+  "NCMAS 2021 Outcomes; NCI and Pawsey annual reports",
+  "NCMAS 2021 Outcomes; NCI Compute Allocations 2020/21",
+  "NCMAS 2021 Outcomes",
+
+  2022,
+  "NCMAS 2023 Information for Applicants; NCI/Pawsey reports",
+  "NCMAS 2022 Outcomes",
+  "NCMAS 2022 Outcomes",
+
+  2023,
+  "NCMAS 2023 Outcomes; NCI/Pawsey supporting publications",
+  "NCMAS 2023 Outcomes",
+  "NCMAS 2023 Outcomes",
+
+  2024,
+  "NCMAS 2024 Outcomes; NCMAS 2024 Information for Applicants",
+  "NCMAS 2024 Outcomes",
+  "NCMAS 2024 Outcomes",
+
+  2025,
+  "NCMAS 2025 Outcomes; Pawsey 2025 Allocations",
+  "NCMAS 2025 Outcomes",
+  "NCMAS 2025 Outcomes",
+
+  2026,
+  "NCMAS 2026 Outcomes; NCMAS 2026 Information for Applicants",
+  "NCMAS 2026 Outcomes",
+  "NCMAS 2026 Outcomes"
+)
+
+knitr::kable(
+  source_table,
+  format = "html",
+  escape = TRUE,
+  align = c("c", "l", "l", "l")
+)
+```
+
+Key source families include NCI annual and allocation reports
+[@NCI201314; @NCI201415; @NCI201516; @NCI201617; @NCI201718;
+@NCI201819; @NCI201920; @NCIAllocations201920;
+@NCIAllocations202021], Pawsey annual and allocation publications
+[@Pawsey201415; @Pawsey201617; @Pawsey2019NCMAS], and NCMAS
+outcomes and applicant guidance [@NCMAS2014Info; @NCMAS2018Results;
+@NCMAS2020Info; @NCMAS2021; @NCMAS2022; @NCMAS2023Info;
+@NCMAS2023; @NCMAS2024; @NCMAS2024Info; @NCMAS2025;
+@NCMAS2026; @NCMAS2026Info].
 
 ## HPC Demand and Allocation Data
 

@@ -247,7 +247,10 @@ div.csl-indent {
    
   <ul>
   <li><a href="#purpose" id="toc-purpose" class="nav-link active" data-scroll-target="#purpose"><span class="header-section-number">2.1</span> Purpose</a></li>
-  <li><a href="#data-sources" id="toc-data-sources" class="nav-link" data-scroll-target="#data-sources"><span class="header-section-number">2.2</span> Data Sources</a></li>
+  <li><a href="#data-sources" id="toc-data-sources" class="nav-link" data-scroll-target="#data-sources"><span class="header-section-number">2.2</span> Data Sources</a>
+  <ul class="collapse">
+  <li><a href="#year-specific-hpc-source-summary" id="toc-year-specific-hpc-source-summary" class="nav-link" data-scroll-target="#year-specific-hpc-source-summary"><span class="header-section-number">2.2.1</span> Year-specific HPC source summary</a></li>
+  </ul></li>
   <li><a href="#hpc-demand-and-allocation-data" id="toc-hpc-demand-and-allocation-data" class="nav-link" data-scroll-target="#hpc-demand-and-allocation-data"><span class="header-section-number">2.3</span> HPC Demand and Allocation Data</a></li>
   <li><a href="#field-of-research-data" id="toc-field-of-research-data" class="nav-link" data-scroll-target="#field-of-research-data"><span class="header-section-number">2.4</span> Field of Research Data</a></li>
   <li><a href="#potential-demand-drivers" id="toc-potential-demand-drivers" class="nav-link" data-scroll-target="#potential-demand-drivers"><span class="header-section-number">2.5</span> Potential Demand Drivers</a></li>
@@ -261,7 +264,7 @@ div.csl-indent {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data Collection</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data Collection</span></h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
 </div>
 
 
@@ -281,24 +284,204 @@ div.csl-indent {
 <section id="purpose" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="purpose"><span class="header-section-number">2.1</span> Purpose</h2>
 <p>The purpose of the data collection stage is to assemble a documented longitudinal evidence base for analysing Australian national research computing demand and allocation.</p>
-<p>The project draws primarily on publicly available NCMAS outcomes and NCI and Pawsey reporting to identify historical requested compute, allocated compute, resource type, Field of Research and other available characteristics of national HPC activity <span class="citation" data-cites="HPCInternshipBrief">(<a href="11_references_acknowledgement.html#ref-HPCInternshipBrief" role="doc-biblioref">Australian Academy of Science 2026</a>)</span>.</p>
+<p>The project draws primarily on publicly available NCMAS outcomes and NCI and Pawsey reporting to identify historical requested compute, allocated compute, resource type, Field of Research and other available characteristics of national HPC allocations and usage <span class="citation" data-cites="HPCInternshipBrief">(<a href="11_references_acknowledgement.html#ref-HPCInternshipBrief" role="doc-biblioref">Australian Academy of Science 2026</a>)</span>.</p>
 <p>Additional datasets, including research funding, workforce and research activity indicators, are collected as potential structural drivers of future HPC demand where sufficiently consistent time-series data are available <span class="citation" data-cites="HPCInternshipBrief">(<a href="11_references_acknowledgement.html#ref-HPCInternshipBrief" role="doc-biblioref">Australian Academy of Science 2026</a>)</span>.</p>
 <p>Because the availability, scope and definition of variables differ substantially across years and sources, the purpose of this stage is not to assume that all collected observations are directly comparable. Instead, original values, units, reporting periods, source definitions and data limitations are retained so that their suitability for integration, standardisation and modelling can be assessed in subsequent stages.</p>
 </section>
 <section id="data-sources" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="data-sources"><span class="header-section-number">2.2</span> Data Sources</h2>
-<p>Data was collected from several sources, including:</p>
-<ul>
-<li>National Computational Merit Allocation Scheme (NCMAS) outcomes and supporting documentation,</li>
-<li>National Computational Infrastructure (NCI) annual reports and publications,</li>
-<li>Pawsey Supercomputing Research Centre annual reports and publications,</li>
-<li>Australian Research Council (ARC) funding data,</li>
-<li>National Health and Medical Research Council (NHMRC) funding data,</li>
-<li>Medical Research Future Fund (MRFF) data,</li>
-<li>research workforce and research activity data, and</li>
-<li>Field of Research (FoR) information.</li>
-</ul>
-<p>International HPC data will also be considered where suitable data is available, including information from EuroHPC, NSF ACCESS and ARCHER2.</p>
+<p>The project uses multiple public data sources from NCI, Pawsey and NCMAS, together with research funding, workforce and Field of Research datasets.</p>
+<p>The specific HPC source varies by analytical year. Earlier observations are primarily drawn from annual reports, allocation documents and other historical NCI and Pawsey publications, while more recent observations increasingly use direct NCMAS outcome pages, applicant guidance and facility-specific allocation information.</p>
+<p>In several years, different documents are used for different analytical components. Allocation outcomes, requested-demand information, resource availability and Field of Research composition may therefore originate from separate official publications.</p>
+<p>For transparency and reproducibility, the exact source document, source location and URL are retained in the underlying yearly datasets. The principal sources used for each analytical year are summarised below.</p>
+<section id="year-specific-hpc-source-summary" class="level3" data-number="2.2.1">
+<h3 data-number="2.2.1" class="anchored" data-anchor-id="year-specific-hpc-source-summary"><span class="header-section-number">2.2.1</span> Year-specific HPC source summary</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>source_table <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>Year, <span class="sc">~</span><span class="st">`</span><span class="at">Demand / Context Source</span><span class="st">`</span>, <span class="sc">~</span><span class="st">`</span><span class="at">Allocation Source</span><span class="st">`</span>, <span class="sc">~</span><span class="st">`</span><span class="at">FoR Source</span><span class="st">`</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2014</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCI Annual Report 2013/14; NCMAS Information for Applicants 2014"</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCI Annual Report 2013/14"</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCI Annual Report 2013/14"</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2015</span>,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCI Annual Report 2014/15"</span>,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCI Annual Report 2014/15; Pawsey Annual Report 2014/15"</span>,</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCI Annual Report 2014/15"</span>,</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2016</span>,</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCI Annual Report 2015/16; CSIRO Annual Report 2015/16"</span>,</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCI Annual Report 2015/16"</span>,</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCI Annual Report 2015/16"</span>,</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2017</span>,</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCI Annual Report 2016/17; Pawsey Annual Report 2016/17"</span>,</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCI Annual Report 2016/17; Pawsey Annual Report 2016/17"</span>,</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Pawsey Annual Report 2016/17"</span>,</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2018</span>,</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCI Annual Report 2017/18; NCMAS 2018 results"</span>,</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCI Annual Report 2017/18"</span>,</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCI Annual Report 2017/18"</span>,</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2019</span>,</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCI Annual Report 2018/19; Pawsey 2019 NCMAS information"</span>,</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCI Annual Report 2018/19"</span>,</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCI Annual Report 2018/19"</span>,</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2020</span>,</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCI Annual Report 2019/20; NCMAS 2020 Information for Applicants"</span>,</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCI 2019/20 Compute Allocations Detail"</span>,</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCI 2019/20 Compute Allocations Detail"</span>,</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2021</span>,</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCMAS 2021 Outcomes; NCI and Pawsey annual reports"</span>,</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCMAS 2021 Outcomes; NCI Compute Allocations 2020/21"</span>,</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCMAS 2021 Outcomes"</span>,</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2022</span>,</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCMAS 2023 Information for Applicants; NCI/Pawsey reports"</span>,</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCMAS 2022 Outcomes"</span>,</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCMAS 2022 Outcomes"</span>,</span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2023</span>,</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCMAS 2023 Outcomes; NCI/Pawsey supporting publications"</span>,</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCMAS 2023 Outcomes"</span>,</span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCMAS 2023 Outcomes"</span>,</span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2024</span>,</span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCMAS 2024 Outcomes; NCMAS 2024 Information for Applicants"</span>,</span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCMAS 2024 Outcomes"</span>,</span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCMAS 2024 Outcomes"</span>,</span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2025</span>,</span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCMAS 2025 Outcomes; Pawsey 2025 Allocations"</span>,</span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCMAS 2025 Outcomes"</span>,</span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCMAS 2025 Outcomes"</span>,</span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2026</span>,</span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCMAS 2026 Outcomes; NCMAS 2026 Information for Applicants"</span>,</span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCMAS 2026 Outcomes"</span>,</span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCMAS 2026 Outcomes"</span></span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a>  source_table,</span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a>  <span class="at">format =</span> <span class="st">"html"</span>,</span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a>  <span class="at">escape =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a>  <span class="at">align =</span> <span class="fu">c</span>(<span class="st">"c"</span>, <span class="st">"l"</span>, <span class="st">"l"</span>, <span class="st">"l"</span>)</span>
+<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-yearly-sources" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-yearly-sources-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2.1: Principal year-specific sources used to construct the historical HPC dataset
+</figcaption>
+<div aria-describedby="tbl-yearly-sources-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="cell caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: center;" data-quarto-table-cell-role="th">Year</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Demand / Context Source</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Allocation Source</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">FoR Source</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">2014</td>
+<td style="text-align: left;">NCI Annual Report 2013/14; NCMAS Information for Applicants 2014</td>
+<td style="text-align: left;">NCI Annual Report 2013/14</td>
+<td style="text-align: left;">NCI Annual Report 2013/14</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">2015</td>
+<td style="text-align: left;">NCI Annual Report 2014/15</td>
+<td style="text-align: left;">NCI Annual Report 2014/15; Pawsey Annual Report 2014/15</td>
+<td style="text-align: left;">NCI Annual Report 2014/15</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">2016</td>
+<td style="text-align: left;">NCI Annual Report 2015/16; CSIRO Annual Report 2015/16</td>
+<td style="text-align: left;">NCI Annual Report 2015/16</td>
+<td style="text-align: left;">NCI Annual Report 2015/16</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">2017</td>
+<td style="text-align: left;">NCI Annual Report 2016/17; Pawsey Annual Report 2016/17</td>
+<td style="text-align: left;">NCI Annual Report 2016/17; Pawsey Annual Report 2016/17</td>
+<td style="text-align: left;">Pawsey Annual Report 2016/17</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">2018</td>
+<td style="text-align: left;">NCI Annual Report 2017/18; NCMAS 2018 results</td>
+<td style="text-align: left;">NCI Annual Report 2017/18</td>
+<td style="text-align: left;">NCI Annual Report 2017/18</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">2019</td>
+<td style="text-align: left;">NCI Annual Report 2018/19; Pawsey 2019 NCMAS information</td>
+<td style="text-align: left;">NCI Annual Report 2018/19</td>
+<td style="text-align: left;">NCI Annual Report 2018/19</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">2020</td>
+<td style="text-align: left;">NCI Annual Report 2019/20; NCMAS 2020 Information for Applicants</td>
+<td style="text-align: left;">NCI 2019/20 Compute Allocations Detail</td>
+<td style="text-align: left;">NCI 2019/20 Compute Allocations Detail</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">2021</td>
+<td style="text-align: left;">NCMAS 2021 Outcomes; NCI and Pawsey annual reports</td>
+<td style="text-align: left;">NCMAS 2021 Outcomes; NCI Compute Allocations 2020/21</td>
+<td style="text-align: left;">NCMAS 2021 Outcomes</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">2022</td>
+<td style="text-align: left;">NCMAS 2023 Information for Applicants; NCI/Pawsey reports</td>
+<td style="text-align: left;">NCMAS 2022 Outcomes</td>
+<td style="text-align: left;">NCMAS 2022 Outcomes</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">2023</td>
+<td style="text-align: left;">NCMAS 2023 Outcomes; NCI/Pawsey supporting publications</td>
+<td style="text-align: left;">NCMAS 2023 Outcomes</td>
+<td style="text-align: left;">NCMAS 2023 Outcomes</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">2024</td>
+<td style="text-align: left;">NCMAS 2024 Outcomes; NCMAS 2024 Information for Applicants</td>
+<td style="text-align: left;">NCMAS 2024 Outcomes</td>
+<td style="text-align: left;">NCMAS 2024 Outcomes</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">2025</td>
+<td style="text-align: left;">NCMAS 2025 Outcomes; Pawsey 2025 Allocations</td>
+<td style="text-align: left;">NCMAS 2025 Outcomes</td>
+<td style="text-align: left;">NCMAS 2025 Outcomes</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">2026</td>
+<td style="text-align: left;">NCMAS 2026 Outcomes; NCMAS 2026 Information for Applicants</td>
+<td style="text-align: left;">NCMAS 2026 Outcomes</td>
+<td style="text-align: left;">NCMAS 2026 Outcomes</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Key source families include NCI annual and allocation reports <span class="citation" data-cites="NCI201314 NCI201415 NCI201516 NCI201617 NCI201718 NCI201819 NCI201920 NCIAllocations201920 NCIAllocations202021">(<a href="11_references_acknowledgement.html#ref-NCI201314" role="doc-biblioref">National Computational Infrastructure 2014a</a>, <a href="11_references_acknowledgement.html#ref-NCI201415" role="doc-biblioref">2015</a>, <a href="11_references_acknowledgement.html#ref-NCI201516" role="doc-biblioref">2016</a>, <a href="11_references_acknowledgement.html#ref-NCI201617" role="doc-biblioref">2017</a>, <a href="11_references_acknowledgement.html#ref-NCI201718" role="doc-biblioref">2018a</a>, <a href="11_references_acknowledgement.html#ref-NCI201819" role="doc-biblioref">2019</a>, <a href="11_references_acknowledgement.html#ref-NCI201920" role="doc-biblioref">2020a</a>, <a href="11_references_acknowledgement.html#ref-NCIAllocations201920" role="doc-biblioref">2020b</a>, <a href="11_references_acknowledgement.html#ref-NCIAllocations202021" role="doc-biblioref">2021</a>)</span>, Pawsey annual and allocation publications <span class="citation" data-cites="Pawsey201415 Pawsey201617 Pawsey2019NCMAS">(<a href="11_references_acknowledgement.html#ref-Pawsey201415" role="doc-biblioref">Pawsey Supercomputing Research Centre 2015</a>, <a href="11_references_acknowledgement.html#ref-Pawsey201617" role="doc-biblioref">2017</a>, <a href="11_references_acknowledgement.html#ref-Pawsey2019NCMAS" role="doc-biblioref">2019</a>)</span>, and NCMAS outcomes and applicant guidance <span class="citation" data-cites="NCMAS2014Info NCMAS2018Results NCMAS2020Info NCMAS2021 NCMAS2022 NCMAS2023Info NCMAS2023 NCMAS2024 NCMAS2024Info NCMAS2025 NCMAS2026 NCMAS2026Info">(<a href="11_references_acknowledgement.html#ref-NCMAS2014Info" role="doc-biblioref">National Computational Infrastructure 2014b</a>, <a href="11_references_acknowledgement.html#ref-NCMAS2018Results" role="doc-biblioref">2018b</a>, <a href="11_references_acknowledgement.html#ref-NCMAS2020Info" role="doc-biblioref">2020c</a>, <a href="11_references_acknowledgement.html#ref-NCMAS2023Info" role="doc-biblioref">2022</a>, <a href="11_references_acknowledgement.html#ref-NCMAS2024Info" role="doc-biblioref">2023</a>, <a href="11_references_acknowledgement.html#ref-NCMAS2026Info" role="doc-biblioref">2025</a>; <a href="11_references_acknowledgement.html#ref-NCMAS2021" role="doc-biblioref">National Computational Merit Allocation Scheme 2021</a>, <a href="11_references_acknowledgement.html#ref-NCMAS2022" role="doc-biblioref">2022</a>, <a href="11_references_acknowledgement.html#ref-NCMAS2023" role="doc-biblioref">2023</a>, <a href="11_references_acknowledgement.html#ref-NCMAS2024" role="doc-biblioref">2024</a>, <a href="11_references_acknowledgement.html#ref-NCMAS2025" role="doc-biblioref">2025</a>, <a href="11_references_acknowledgement.html#ref-NCMAS2026" role="doc-biblioref">2026</a>)</span>.</p>
+</section>
 </section>
 <section id="hpc-demand-and-allocation-data" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="hpc-demand-and-allocation-data"><span class="header-section-number">2.3</span> HPC Demand and Allocation Data</h2>
@@ -354,6 +537,78 @@ div.csl-indent {
 <div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
 <div id="ref-HPCInternshipBrief" class="csl-entry" role="listitem">
 Australian Academy of Science. 2026. <em>Internship Project Brief: Forecasting Demand for National Research Supercomputing</em>.
+</div>
+<div id="ref-NCI201314" class="csl-entry" role="listitem">
+National Computational Infrastructure. 2014a. <em>Annual Report 2013/14</em>. <a href="https://nci.org.au/sites/default/files/annual-reports/2019-07/About%20Us_Annual%20Reports_2013-14.pdf">https://nci.org.au/sites/default/files/annual-reports/2019-07/About%20Us_Annual%20Reports_2013-14.pdf</a>.
+</div>
+<div id="ref-NCMAS2014Info" class="csl-entry" role="listitem">
+National Computational Infrastructure. 2014b. <span>“NCMAS Information for Applicants.”</span> <a href="https://nci.org.au/news-events/news/ncmas-information-applicants">https://nci.org.au/news-events/news/ncmas-information-applicants</a>.
+</div>
+<div id="ref-NCI201415" class="csl-entry" role="listitem">
+National Computational Infrastructure. 2015. <em>Annual Report 2014/15</em>. <a href="https://nci.org.au/sites/default/files/annual-reports/2019-07/About%20Us_Annual%20Reports_2014-15.pdf">https://nci.org.au/sites/default/files/annual-reports/2019-07/About%20Us_Annual%20Reports_2014-15.pdf</a>.
+</div>
+<div id="ref-NCI201516" class="csl-entry" role="listitem">
+National Computational Infrastructure. 2016. <em>Annual Report 2015/16</em>. <a href="https://nci.org.au/sites/default/files/annual-reports/2019-07/About%20Us_Annual%20Reports_2015-16.pdf">https://nci.org.au/sites/default/files/annual-reports/2019-07/About%20Us_Annual%20Reports_2015-16.pdf</a>.
+</div>
+<div id="ref-NCI201617" class="csl-entry" role="listitem">
+National Computational Infrastructure. 2017. <em>Annual Report 2016/17</em>. <a href="https://nci.org.au/sites/default/files/annual-reports/2019-07/About%20Us_Annual%20Reports_2016-17.pdf">https://nci.org.au/sites/default/files/annual-reports/2019-07/About%20Us_Annual%20Reports_2016-17.pdf</a>.
+</div>
+<div id="ref-NCI201718" class="csl-entry" role="listitem">
+National Computational Infrastructure. 2018a. <em>Annual Report 2017/18</em>. <a href="https://nci.org.au/sites/default/files/annual-reports/2019-07/About%20Us_Annual%20Reports_2017-18.pdf">https://nci.org.au/sites/default/files/annual-reports/2019-07/About%20Us_Annual%20Reports_2017-18.pdf</a>.
+</div>
+<div id="ref-NCMAS2018Results" class="csl-entry" role="listitem">
+National Computational Infrastructure. 2018b. <span>“NCMAS Allocations Now Available Online.”</span> <a href="https://nci.org.au/news-events/news/ncmas-allocations-now-available-online">https://nci.org.au/news-events/news/ncmas-allocations-now-available-online</a>.
+</div>
+<div id="ref-NCI201819" class="csl-entry" role="listitem">
+National Computational Infrastructure. 2019. <em>Annual Report 2018/19</em>. <a href="https://nci.org.au/sites/default/files/annual-reports/2019-11/NCI%20Report%202019%20web.pdf">https://nci.org.au/sites/default/files/annual-reports/2019-11/NCI%20Report%202019%20web.pdf</a>.
+</div>
+<div id="ref-NCI201920" class="csl-entry" role="listitem">
+National Computational Infrastructure. 2020a. <em>Annual Report 2019/20</em>. <a href="https://nci.org.au/sites/default/files/annual-reports/2021-01/NCI%20Annual%20report%202019-20%20web_final_opt2.pdf">https://nci.org.au/sites/default/files/annual-reports/2021-01/NCI%20Annual%20report%202019-20%20web_final_opt2.pdf</a>.
+</div>
+<div id="ref-NCIAllocations201920" class="csl-entry" role="listitem">
+National Computational Infrastructure. 2020b. <em>Compute Allocations 2019/20</em>. <a href="https://nci.org.au/sites/default/files/annual-reports/2021-01/Allocations%202019-20%20for%20website%20FINAL%20with%20pagenb.pdf">https://nci.org.au/sites/default/files/annual-reports/2021-01/Allocations%202019-20%20for%20website%20FINAL%20with%20pagenb.pdf</a>.
+</div>
+<div id="ref-NCMAS2020Info" class="csl-entry" role="listitem">
+National Computational Infrastructure. 2020c. <em>NCMAS 2020 Information for Applicants</em>. <a href="https://nci.org.au/sites/default/files/documents/2019-10/NCMAS-2020-InformationForApplicants.pdf">https://nci.org.au/sites/default/files/documents/2019-10/NCMAS-2020-InformationForApplicants.pdf</a>.
+</div>
+<div id="ref-NCIAllocations202021" class="csl-entry" role="listitem">
+National Computational Infrastructure. 2021. <em>Compute Allocations 2020–2021</em>. <a href="https://nci.org.au/sites/default/files/annual-reports/2021-12/NCI%20Compute%20Allocations%202020-2021_0.pdf">https://nci.org.au/sites/default/files/annual-reports/2021-12/NCI%20Compute%20Allocations%202020-2021_0.pdf</a>.
+</div>
+<div id="ref-NCMAS2023Info" class="csl-entry" role="listitem">
+National Computational Infrastructure. 2022. <em>NCMAS 2023 Information for Applicants</em>. <a href="https://my.nci.org.au/mancini-assets/media/mas/ncmas/2023/NCMAS2023-NCMAS_2023_Info4Applicants_v5-20220830T164026AEST.pdf">https://my.nci.org.au/mancini-assets/media/mas/ncmas/2023/NCMAS2023-NCMAS_2023_Info4Applicants_v5-20220830T164026AEST.pdf</a>.
+</div>
+<div id="ref-NCMAS2024Info" class="csl-entry" role="listitem">
+National Computational Infrastructure. 2023. <em>NCMAS 2024 Information for Applicants</em>. <a href="https://my.nci.org.au/mancini-assets/media/mas/ncmas/2024/NCMAS2024-NCMAS_2024_-_Information_for_Applicants_20231109-20231109T131740AEDT.pdf">https://my.nci.org.au/mancini-assets/media/mas/ncmas/2024/NCMAS2024-NCMAS_2024_-_Information_for_Applicants_20231109-20231109T131740AEDT.pdf</a>.
+</div>
+<div id="ref-NCMAS2026Info" class="csl-entry" role="listitem">
+National Computational Infrastructure. 2025. <em>NCMAS 2026 Information for Applicants</em>. <a href="https://my.nci.org.au/mancini-assets/media/mas/ncmas/2026/NCMAS2026-Information_for_Applicants-20251023T122535AEDT.pdf">https://my.nci.org.au/mancini-assets/media/mas/ncmas/2026/NCMAS2026-Information_for_Applicants-20251023T122535AEDT.pdf</a>.
+</div>
+<div id="ref-NCMAS2021" class="csl-entry" role="listitem">
+National Computational Merit Allocation Scheme. 2021. <span>“NCMAS 2021 Outcomes.”</span> <a href="https://my.nci.org.au/mancini/ncmas/2021/outcomes">https://my.nci.org.au/mancini/ncmas/2021/outcomes</a>.
+</div>
+<div id="ref-NCMAS2022" class="csl-entry" role="listitem">
+National Computational Merit Allocation Scheme. 2022. <span>“NCMAS 2022 Outcomes.”</span> <a href="https://my.nci.org.au/mancini/ncmas/2022/outcomes">https://my.nci.org.au/mancini/ncmas/2022/outcomes</a>.
+</div>
+<div id="ref-NCMAS2023" class="csl-entry" role="listitem">
+National Computational Merit Allocation Scheme. 2023. <span>“NCMAS 2023 Outcomes.”</span> <a href="https://my.nci.org.au/mancini/ncmas/2023/outcomes">https://my.nci.org.au/mancini/ncmas/2023/outcomes</a>.
+</div>
+<div id="ref-NCMAS2024" class="csl-entry" role="listitem">
+National Computational Merit Allocation Scheme. 2024. <span>“NCMAS 2024 Outcomes.”</span> <a href="https://my.nci.org.au/mancini/ncmas/2024/outcomes">https://my.nci.org.au/mancini/ncmas/2024/outcomes</a>.
+</div>
+<div id="ref-NCMAS2025" class="csl-entry" role="listitem">
+National Computational Merit Allocation Scheme. 2025. <span>“NCMAS 2025 Outcomes.”</span> <a href="https://my.nci.org.au/mancini/ncmas/2025/outcomes">https://my.nci.org.au/mancini/ncmas/2025/outcomes</a>.
+</div>
+<div id="ref-NCMAS2026" class="csl-entry" role="listitem">
+National Computational Merit Allocation Scheme. 2026. <span>“NCMAS 2026 Outcomes.”</span> <a href="https://my.nci.org.au/mancini/ncmas/2026/outcomes">https://my.nci.org.au/mancini/ncmas/2026/outcomes</a>.
+</div>
+<div id="ref-Pawsey201415" class="csl-entry" role="listitem">
+Pawsey Supercomputing Research Centre. 2015. <em>Annual Report 2014/15</em>. <a href="https://pawsey.org.au/wp-content/uploads/2018/10/ANNUALREPORT14-15v11web.pdf">https://pawsey.org.au/wp-content/uploads/2018/10/ANNUALREPORT14-15v11web.pdf</a>.
+</div>
+<div id="ref-Pawsey201617" class="csl-entry" role="listitem">
+Pawsey Supercomputing Research Centre. 2017. <em>Annual Report 2016/17</em>. <a href="https://pawsey.org.au/wp-content/uploads/2018/10/Pawsey-Annual-Report-2016-2017.pdf">https://pawsey.org.au/wp-content/uploads/2018/10/Pawsey-Annual-Report-2016-2017.pdf</a>.
+</div>
+<div id="ref-Pawsey2019NCMAS" class="csl-entry" role="listitem">
+Pawsey Supercomputing Research Centre. 2019. <span>“Applications Open for 2019 Access to Pawsey Supercomputers.”</span> <a href="https://pawsey.org.au/applications-open-for-2019-access-to-pawsey-supercomputers/">https://pawsey.org.au/applications-open-for-2019-access-to-pawsey-supercomputers/</a>.
 </div>
 </div>
 </section>
@@ -822,118 +1077,219 @@ Australian Academy of Science. 2026. <em>Internship Project Brief: Forecasting D
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Data Collection</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">## Purpose</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>The purpose of the data collection stage is to assemble a documented</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>longitudinal evidence base for analysing Australian national research</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>computing demand and allocation.</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>The project draws primarily on publicly available NCMAS outcomes and</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>NCI and Pawsey reporting to identify historical requested compute,</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>allocated compute, resource type, Field of Research and other available</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>characteristics of national HPC activity <span class="co">[</span><span class="ot">@HPCInternshipBrief</span><span class="co">]</span>.</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>Additional datasets, including research funding, workforce and research</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>activity indicators, are collected as potential structural drivers of</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>future HPC demand where sufficiently consistent time-series data are</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>available <span class="co">[</span><span class="ot">@HPCInternshipBrief</span><span class="co">]</span>.</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>Because the availability, scope and definition of variables differ</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>substantially across years and sources, the purpose of this stage is not</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>to assume that all collected observations are directly comparable.</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>Instead, original values, units, reporting periods, source definitions</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>and data limitations are retained so that their suitability for</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>integration, standardisation and modelling can be assessed in subsequent</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>stages.</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="fu">## Data Sources</span></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>Data was collected from several sources, including:</span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>National Computational Merit Allocation Scheme (NCMAS) outcomes and</span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  supporting documentation,</span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>National Computational Infrastructure (NCI) annual reports and</span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>  publications,</span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Pawsey Supercomputing Research Centre annual reports and publications,</span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Australian Research Council (ARC) funding data,</span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>National Health and Medical Research Council (NHMRC) funding data,</span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Medical Research Future Fund (MRFF) data,</span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>research workforce and research activity data, and</span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Field of Research (FoR) information.</span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>International HPC data will also be considered where suitable data is</span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>available, including information from EuroHPC, NSF ACCESS and ARCHER2.</span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="fu">## HPC Demand and Allocation Data</span></span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>The main HPC dataset currently covers the period from 2013/14 to 2025/26.</span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>The collected information includes, where available:</span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>requested compute,</span>
-<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>allocated compute,</span>
-<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>facility,</span>
-<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>HPC system,</span>
-<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>resource type,</span>
-<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>original compute unit,</span>
-<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Field of Research,</span>
-<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>institution,</span>
-<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>source, and</span>
-<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>reporting period.</span>
-<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>The level of detail varies across years because historical reporting</span>
-<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>practices and available public information are not consistent throughout</span>
-<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>the full period.</span>
-<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a><span class="fu">## Field of Research Data</span></span>
-<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>Field of Research information was collected to examine how the composition</span>
-<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>of HPC use has changed over time.</span>
-<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>Where possible, historical FoR classifications are mapped to a consistent</span>
-<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a>classification to support comparison across years.</span>
-<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a>The available FoR data primarily describes the composition of allocated</span>
-<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a>compute. It should therefore not automatically be interpreted as the</span>
-<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a>composition of underlying research demand.</span>
-<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a><span class="fu">## Potential Demand Drivers</span></span>
-<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a>Additional datasets are being collected to investigate structural drivers</span>
-<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a>of HPC demand.</span>
-<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a>These include research funding, workforce, research activity and other</span>
-<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a>indicators that may be associated with changes in research compute</span>
-<span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a>requirements.</span>
-<span id="cb1-86"><a href="#cb1-86" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-87"><a href="#cb1-87" aria-hidden="true" tabindex="-1"></a>The suitability of these variables for forecasting will be assessed later</span>
-<span id="cb1-88"><a href="#cb1-88" aria-hidden="true" tabindex="-1"></a>based on their historical coverage, consistency and relationship with HPC</span>
-<span id="cb1-89"><a href="#cb1-89" aria-hidden="true" tabindex="-1"></a>demand.</span>
-<span id="cb1-90"><a href="#cb1-90" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-91"><a href="#cb1-91" aria-hidden="true" tabindex="-1"></a><span class="fu">## Data Provenance</span></span>
-<span id="cb1-92"><a href="#cb1-92" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-93"><a href="#cb1-93" aria-hidden="true" tabindex="-1"></a>The original source, reporting period, reported unit and relevant notes are</span>
-<span id="cb1-94"><a href="#cb1-94" aria-hidden="true" tabindex="-1"></a>retained wherever possible.</span>
-<span id="cb1-95"><a href="#cb1-95" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-96"><a href="#cb1-96" aria-hidden="true" tabindex="-1"></a>This allows subsequent transformations and assumptions to be traced back to</span>
-<span id="cb1-97"><a href="#cb1-97" aria-hidden="true" tabindex="-1"></a>the original data source and helps identify observations that may not be</span>
-<span id="cb1-98"><a href="#cb1-98" aria-hidden="true" tabindex="-1"></a>directly comparable across years.</span>
-<span id="cb1-99"><a href="#cb1-99" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-100"><a href="#cb1-100" aria-hidden="true" tabindex="-1"></a><span class="fu">## Data Collection Limitations</span></span>
-<span id="cb1-101"><a href="#cb1-101" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-102"><a href="#cb1-102" aria-hidden="true" tabindex="-1"></a>The main limitations identified during data collection include:</span>
-<span id="cb1-103"><a href="#cb1-103" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-104"><a href="#cb1-104" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>limited consistent data before 2013,</span>
-<span id="cb1-105"><a href="#cb1-105" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>differences in reporting formats across years,</span>
-<span id="cb1-106"><a href="#cb1-106" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>inconsistent availability of requested and allocated compute,</span>
-<span id="cb1-107"><a href="#cb1-107" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>incomplete separation of CPU and GPU resources in some historical data,</span>
-<span id="cb1-108"><a href="#cb1-108" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>changes in HPC systems and accounting methods, and</span>
-<span id="cb1-109"><a href="#cb1-109" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>differences in FoR classifications over time.</span>
-<span id="cb1-110"><a href="#cb1-110" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-111"><a href="#cb1-111" aria-hidden="true" tabindex="-1"></a>These issues are addressed in the subsequent data integration,</span>
-<span id="cb1-112"><a href="#cb1-112" aria-hidden="true" tabindex="-1"></a>standardisation and conversion stages.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Data Collection</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">## Purpose</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>The purpose of the data collection stage is to assemble a documented</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>longitudinal evidence base for analysing Australian national research</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>computing demand and allocation.</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>The project draws primarily on publicly available NCMAS outcomes and</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>NCI and Pawsey reporting to identify historical requested compute,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>allocated compute, resource type, Field of Research and other available</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>characteristics of national HPC allocations and usage</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">@HPCInternshipBrief</span><span class="co">]</span>.</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>Additional datasets, including research funding, workforce and research</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>activity indicators, are collected as potential structural drivers of</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>future HPC demand where sufficiently consistent time-series data are</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>available <span class="co">[</span><span class="ot">@HPCInternshipBrief</span><span class="co">]</span>.</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>Because the availability, scope and definition of variables differ</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>substantially across years and sources, the purpose of this stage is not</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>to assume that all collected observations are directly comparable.</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>Instead, original values, units, reporting periods, source definitions</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>and data limitations are retained so that their suitability for</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>integration, standardisation and modelling can be assessed in subsequent</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>stages.</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="fu">## Data Sources</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>The project uses multiple public data sources from NCI, Pawsey and</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>NCMAS, together with research funding, workforce and Field of Research</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>datasets.</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>The specific HPC source varies by analytical year. Earlier observations</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>are primarily drawn from annual reports, allocation documents and other</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>historical NCI and Pawsey publications, while more recent observations</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>increasingly use direct NCMAS outcome pages, applicant guidance and</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>facility-specific allocation information.</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>In several years, different documents are used for different analytical</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>components. Allocation outcomes, requested-demand information, resource</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>availability and Field of Research composition may therefore originate</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>from separate official publications.</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>For transparency and reproducibility, the exact source document,</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>source location and URL are retained in the underlying yearly datasets.</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>The principal sources used for each analytical year are summarised below.</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a><span class="fu">### Year-specific HPC source summary</span></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tbl-yearly-sources</span></span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: "Principal year-specific sources used to construct the historical HPC dataset"</span></span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>source_table <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>Year, <span class="sc">~</span><span class="st">`</span><span class="at">Demand / Context Source</span><span class="st">`</span>, <span class="sc">~</span><span class="st">`</span><span class="at">Allocation Source</span><span class="st">`</span>, <span class="sc">~</span><span class="st">`</span><span class="at">FoR Source</span><span class="st">`</span>,</span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2014</span>,</span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCI Annual Report 2013/14; NCMAS Information for Applicants 2014"</span>,</span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCI Annual Report 2013/14"</span>,</span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCI Annual Report 2013/14"</span>,</span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2015</span>,</span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCI Annual Report 2014/15"</span>,</span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCI Annual Report 2014/15; Pawsey Annual Report 2014/15"</span>,</span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCI Annual Report 2014/15"</span>,</span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2016</span>,</span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCI Annual Report 2015/16; CSIRO Annual Report 2015/16"</span>,</span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCI Annual Report 2015/16"</span>,</span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCI Annual Report 2015/16"</span>,</span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2017</span>,</span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCI Annual Report 2016/17; Pawsey Annual Report 2016/17"</span>,</span>
+<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCI Annual Report 2016/17; Pawsey Annual Report 2016/17"</span>,</span>
+<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Pawsey Annual Report 2016/17"</span>,</span>
+<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2018</span>,</span>
+<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCI Annual Report 2017/18; NCMAS 2018 results"</span>,</span>
+<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCI Annual Report 2017/18"</span>,</span>
+<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCI Annual Report 2017/18"</span>,</span>
+<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2019</span>,</span>
+<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCI Annual Report 2018/19; Pawsey 2019 NCMAS information"</span>,</span>
+<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCI Annual Report 2018/19"</span>,</span>
+<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCI Annual Report 2018/19"</span>,</span>
+<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2020</span>,</span>
+<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCI Annual Report 2019/20; NCMAS 2020 Information for Applicants"</span>,</span>
+<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCI 2019/20 Compute Allocations Detail"</span>,</span>
+<span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCI 2019/20 Compute Allocations Detail"</span>,</span>
+<span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2021</span>,</span>
+<span id="cb2-99"><a href="#cb2-99" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCMAS 2021 Outcomes; NCI and Pawsey annual reports"</span>,</span>
+<span id="cb2-100"><a href="#cb2-100" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCMAS 2021 Outcomes; NCI Compute Allocations 2020/21"</span>,</span>
+<span id="cb2-101"><a href="#cb2-101" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCMAS 2021 Outcomes"</span>,</span>
+<span id="cb2-102"><a href="#cb2-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-103"><a href="#cb2-103" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2022</span>,</span>
+<span id="cb2-104"><a href="#cb2-104" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCMAS 2023 Information for Applicants; NCI/Pawsey reports"</span>,</span>
+<span id="cb2-105"><a href="#cb2-105" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCMAS 2022 Outcomes"</span>,</span>
+<span id="cb2-106"><a href="#cb2-106" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCMAS 2022 Outcomes"</span>,</span>
+<span id="cb2-107"><a href="#cb2-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-108"><a href="#cb2-108" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2023</span>,</span>
+<span id="cb2-109"><a href="#cb2-109" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCMAS 2023 Outcomes; NCI/Pawsey supporting publications"</span>,</span>
+<span id="cb2-110"><a href="#cb2-110" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCMAS 2023 Outcomes"</span>,</span>
+<span id="cb2-111"><a href="#cb2-111" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCMAS 2023 Outcomes"</span>,</span>
+<span id="cb2-112"><a href="#cb2-112" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-113"><a href="#cb2-113" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2024</span>,</span>
+<span id="cb2-114"><a href="#cb2-114" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCMAS 2024 Outcomes; NCMAS 2024 Information for Applicants"</span>,</span>
+<span id="cb2-115"><a href="#cb2-115" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCMAS 2024 Outcomes"</span>,</span>
+<span id="cb2-116"><a href="#cb2-116" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCMAS 2024 Outcomes"</span>,</span>
+<span id="cb2-117"><a href="#cb2-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-118"><a href="#cb2-118" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2025</span>,</span>
+<span id="cb2-119"><a href="#cb2-119" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCMAS 2025 Outcomes; Pawsey 2025 Allocations"</span>,</span>
+<span id="cb2-120"><a href="#cb2-120" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCMAS 2025 Outcomes"</span>,</span>
+<span id="cb2-121"><a href="#cb2-121" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCMAS 2025 Outcomes"</span>,</span>
+<span id="cb2-122"><a href="#cb2-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-123"><a href="#cb2-123" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2026</span>,</span>
+<span id="cb2-124"><a href="#cb2-124" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCMAS 2026 Outcomes; NCMAS 2026 Information for Applicants"</span>,</span>
+<span id="cb2-125"><a href="#cb2-125" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCMAS 2026 Outcomes"</span>,</span>
+<span id="cb2-126"><a href="#cb2-126" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NCMAS 2026 Outcomes"</span></span>
+<span id="cb2-127"><a href="#cb2-127" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-128"><a href="#cb2-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-129"><a href="#cb2-129" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb2-130"><a href="#cb2-130" aria-hidden="true" tabindex="-1"></a>  source_table,</span>
+<span id="cb2-131"><a href="#cb2-131" aria-hidden="true" tabindex="-1"></a>  <span class="at">format =</span> <span class="st">"html"</span>,</span>
+<span id="cb2-132"><a href="#cb2-132" aria-hidden="true" tabindex="-1"></a>  <span class="at">escape =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb2-133"><a href="#cb2-133" aria-hidden="true" tabindex="-1"></a>  <span class="at">align =</span> <span class="fu">c</span>(<span class="st">"c"</span>, <span class="st">"l"</span>, <span class="st">"l"</span>, <span class="st">"l"</span>)</span>
+<span id="cb2-134"><a href="#cb2-134" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-135"><a href="#cb2-135" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb2-136"><a href="#cb2-136" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-137"><a href="#cb2-137" aria-hidden="true" tabindex="-1"></a>Key source families include NCI annual and allocation reports</span>
+<span id="cb2-138"><a href="#cb2-138" aria-hidden="true" tabindex="-1"></a>[@NCI201314; @NCI201415; @NCI201516; @NCI201617; @NCI201718;</span>
+<span id="cb2-139"><a href="#cb2-139" aria-hidden="true" tabindex="-1"></a>@NCI201819; @NCI201920; @NCIAllocations201920;</span>
+<span id="cb2-140"><a href="#cb2-140" aria-hidden="true" tabindex="-1"></a>@NCIAllocations202021], Pawsey annual and allocation publications</span>
+<span id="cb2-141"><a href="#cb2-141" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">@Pawsey201415; @Pawsey201617; @Pawsey2019NCMAS</span><span class="co">]</span>, and NCMAS</span>
+<span id="cb2-142"><a href="#cb2-142" aria-hidden="true" tabindex="-1"></a>outcomes and applicant guidance [@NCMAS2014Info; @NCMAS2018Results;</span>
+<span id="cb2-143"><a href="#cb2-143" aria-hidden="true" tabindex="-1"></a>@NCMAS2020Info; @NCMAS2021; @NCMAS2022; @NCMAS2023Info;</span>
+<span id="cb2-144"><a href="#cb2-144" aria-hidden="true" tabindex="-1"></a>@NCMAS2023; @NCMAS2024; @NCMAS2024Info; @NCMAS2025;</span>
+<span id="cb2-145"><a href="#cb2-145" aria-hidden="true" tabindex="-1"></a>@NCMAS2026; @NCMAS2026Info].</span>
+<span id="cb2-146"><a href="#cb2-146" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-147"><a href="#cb2-147" aria-hidden="true" tabindex="-1"></a><span class="fu">## HPC Demand and Allocation Data</span></span>
+<span id="cb2-148"><a href="#cb2-148" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-149"><a href="#cb2-149" aria-hidden="true" tabindex="-1"></a>The main HPC dataset currently covers the period from 2013/14 to 2025/26.</span>
+<span id="cb2-150"><a href="#cb2-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-151"><a href="#cb2-151" aria-hidden="true" tabindex="-1"></a>The collected information includes, where available:</span>
+<span id="cb2-152"><a href="#cb2-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-153"><a href="#cb2-153" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>requested compute,</span>
+<span id="cb2-154"><a href="#cb2-154" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>allocated compute,</span>
+<span id="cb2-155"><a href="#cb2-155" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>facility,</span>
+<span id="cb2-156"><a href="#cb2-156" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>HPC system,</span>
+<span id="cb2-157"><a href="#cb2-157" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>resource type,</span>
+<span id="cb2-158"><a href="#cb2-158" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>original compute unit,</span>
+<span id="cb2-159"><a href="#cb2-159" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Field of Research,</span>
+<span id="cb2-160"><a href="#cb2-160" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>institution,</span>
+<span id="cb2-161"><a href="#cb2-161" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>source, and</span>
+<span id="cb2-162"><a href="#cb2-162" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>reporting period.</span>
+<span id="cb2-163"><a href="#cb2-163" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-164"><a href="#cb2-164" aria-hidden="true" tabindex="-1"></a>The level of detail varies across years because historical reporting</span>
+<span id="cb2-165"><a href="#cb2-165" aria-hidden="true" tabindex="-1"></a>practices and available public information are not consistent throughout</span>
+<span id="cb2-166"><a href="#cb2-166" aria-hidden="true" tabindex="-1"></a>the full period.</span>
+<span id="cb2-167"><a href="#cb2-167" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-168"><a href="#cb2-168" aria-hidden="true" tabindex="-1"></a><span class="fu">## Field of Research Data</span></span>
+<span id="cb2-169"><a href="#cb2-169" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-170"><a href="#cb2-170" aria-hidden="true" tabindex="-1"></a>Field of Research information was collected to examine how the composition</span>
+<span id="cb2-171"><a href="#cb2-171" aria-hidden="true" tabindex="-1"></a>of HPC use has changed over time.</span>
+<span id="cb2-172"><a href="#cb2-172" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-173"><a href="#cb2-173" aria-hidden="true" tabindex="-1"></a>Where possible, historical FoR classifications are mapped to a consistent</span>
+<span id="cb2-174"><a href="#cb2-174" aria-hidden="true" tabindex="-1"></a>classification to support comparison across years.</span>
+<span id="cb2-175"><a href="#cb2-175" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-176"><a href="#cb2-176" aria-hidden="true" tabindex="-1"></a>The available FoR data primarily describes the composition of allocated</span>
+<span id="cb2-177"><a href="#cb2-177" aria-hidden="true" tabindex="-1"></a>compute. It should therefore not automatically be interpreted as the</span>
+<span id="cb2-178"><a href="#cb2-178" aria-hidden="true" tabindex="-1"></a>composition of underlying research demand.</span>
+<span id="cb2-179"><a href="#cb2-179" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-180"><a href="#cb2-180" aria-hidden="true" tabindex="-1"></a><span class="fu">## Potential Demand Drivers</span></span>
+<span id="cb2-181"><a href="#cb2-181" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-182"><a href="#cb2-182" aria-hidden="true" tabindex="-1"></a>Additional datasets are being collected to investigate structural drivers</span>
+<span id="cb2-183"><a href="#cb2-183" aria-hidden="true" tabindex="-1"></a>of HPC demand.</span>
+<span id="cb2-184"><a href="#cb2-184" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-185"><a href="#cb2-185" aria-hidden="true" tabindex="-1"></a>These include research funding, workforce, research activity and other</span>
+<span id="cb2-186"><a href="#cb2-186" aria-hidden="true" tabindex="-1"></a>indicators that may be associated with changes in research compute</span>
+<span id="cb2-187"><a href="#cb2-187" aria-hidden="true" tabindex="-1"></a>requirements.</span>
+<span id="cb2-188"><a href="#cb2-188" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-189"><a href="#cb2-189" aria-hidden="true" tabindex="-1"></a>The suitability of these variables for forecasting will be assessed later</span>
+<span id="cb2-190"><a href="#cb2-190" aria-hidden="true" tabindex="-1"></a>based on their historical coverage, consistency and relationship with HPC</span>
+<span id="cb2-191"><a href="#cb2-191" aria-hidden="true" tabindex="-1"></a>demand.</span>
+<span id="cb2-192"><a href="#cb2-192" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-193"><a href="#cb2-193" aria-hidden="true" tabindex="-1"></a><span class="fu">## Data Provenance</span></span>
+<span id="cb2-194"><a href="#cb2-194" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-195"><a href="#cb2-195" aria-hidden="true" tabindex="-1"></a>The original source, reporting period, reported unit and relevant notes are</span>
+<span id="cb2-196"><a href="#cb2-196" aria-hidden="true" tabindex="-1"></a>retained wherever possible.</span>
+<span id="cb2-197"><a href="#cb2-197" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-198"><a href="#cb2-198" aria-hidden="true" tabindex="-1"></a>This allows subsequent transformations and assumptions to be traced back to</span>
+<span id="cb2-199"><a href="#cb2-199" aria-hidden="true" tabindex="-1"></a>the original data source and helps identify observations that may not be</span>
+<span id="cb2-200"><a href="#cb2-200" aria-hidden="true" tabindex="-1"></a>directly comparable across years.</span>
+<span id="cb2-201"><a href="#cb2-201" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-202"><a href="#cb2-202" aria-hidden="true" tabindex="-1"></a><span class="fu">## Data Collection Limitations</span></span>
+<span id="cb2-203"><a href="#cb2-203" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-204"><a href="#cb2-204" aria-hidden="true" tabindex="-1"></a>The main limitations identified during data collection include:</span>
+<span id="cb2-205"><a href="#cb2-205" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-206"><a href="#cb2-206" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>limited consistent data before 2013,</span>
+<span id="cb2-207"><a href="#cb2-207" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>differences in reporting formats across years,</span>
+<span id="cb2-208"><a href="#cb2-208" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>inconsistent availability of requested and allocated compute,</span>
+<span id="cb2-209"><a href="#cb2-209" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>incomplete separation of CPU and GPU resources in some historical data,</span>
+<span id="cb2-210"><a href="#cb2-210" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>changes in HPC systems and accounting methods, and</span>
+<span id="cb2-211"><a href="#cb2-211" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>differences in FoR classifications over time.</span>
+<span id="cb2-212"><a href="#cb2-212" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-213"><a href="#cb2-213" aria-hidden="true" tabindex="-1"></a>These issues are addressed in the subsequent data integration,</span>
+<span id="cb2-214"><a href="#cb2-214" aria-hidden="true" tabindex="-1"></a>standardisation and conversion stages.</span>
+</code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 
