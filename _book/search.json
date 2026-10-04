@@ -104,7 +104,7 @@
     "href": "01_data_collection.html#potential-demand-drivers",
     "title": "2  Data Collection",
     "section": "2.5 Potential Demand Drivers",
-    "text": "2.5 Potential Demand Drivers\nAdditional datasets are being collected to investigate structural drivers of HPC demand.\nThese include research funding, workforce, research activity and other indicators that may be associated with changes in research compute requirements.\nThe suitability of these variables for forecasting will be assessed later based on their historical coverage, consistency and relationship with HPC demand.",
+    "text": "2.5 Potential Demand Drivers\nAdditional datasets are collected to investigate potential structural drivers of national research computing demand.\nThese include research funding, research workforce, research activity and related indicators that may help explain changes in HPC demand over time. The internship brief identifies competitive grant flows, research workforce size and changes in compute intensity as potential structural drivers of future demand (Australian Academy of Science 2026).\nThese variables are treated as candidate explanatory indicators rather than assumed drivers. Their suitability for modelling is assessed later based on historical coverage, consistency, temporal alignment and their observed relationship with the available HPC demand measures.\nVariables with insufficient coverage or weak comparability are retained for contextual analysis where useful but are not necessarily included in the final forecasting model.",
     "crumbs": [
       "<span class='chapter-number'>2</span>  <span class='chapter-title'>Data Collection</span>"
     ]
