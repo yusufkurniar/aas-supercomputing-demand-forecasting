@@ -64,7 +64,7 @@
     "href": "01_data_collection.html",
     "title": "2  Data Collection",
     "section": "",
-    "text": "2.1 Purpose\nThe first step of the project was to collect historical data on Australian HPC demand and allocation, together with other variables that may help explain changes in research compute demand over time.\nThe data collection focused on building a longitudinal dataset that could support both descriptive analysis and forecasting.",
+    "text": "2.1 Purpose\nThe purpose of the data collection stage is to assemble a documented longitudinal evidence base for analysing Australian national research computing demand and allocation.\nThe project draws primarily on publicly available NCMAS outcomes and NCI and Pawsey reporting to identify historical requested compute, allocated compute, resource type, Field of Research and other available characteristics of national HPC activity (Australian Academy of Science 2026).\nAdditional datasets, including research funding, workforce and research activity indicators, are collected as potential structural drivers of future HPC demand where sufficiently consistent time-series data are available (Australian Academy of Science 2026).\nBecause the availability, scope and definition of variables differ substantially across years and sources, the purpose of this stage is not to assume that all collected observations are directly comparable. Instead, original values, units, reporting periods, source definitions and data limitations are retained so that their suitability for integration, standardisation and modelling can be assessed in subsequent stages.",
     "crumbs": [
       "<span class='chapter-number'>2</span>  <span class='chapter-title'>Data Collection</span>"
     ]
@@ -124,7 +124,7 @@
     "href": "01_data_collection.html#data-collection-limitations",
     "title": "2  Data Collection",
     "section": "2.7 Data Collection Limitations",
-    "text": "2.7 Data Collection Limitations\nThe main limitations identified during data collection include:\n\nlimited consistent data before 2013,\ndifferences in reporting formats across years,\ninconsistent availability of requested and allocated compute,\nincomplete separation of CPU and GPU resources in some historical data,\nchanges in HPC systems and accounting methods, and\ndifferences in FoR classifications over time.\n\nThese issues are addressed in the subsequent data integration, standardisation and conversion stages.",
+    "text": "2.7 Data Collection Limitations\nThe main limitations identified during data collection include:\n\nlimited consistent data before 2013,\ndifferences in reporting formats across years,\ninconsistent availability of requested and allocated compute,\nincomplete separation of CPU and GPU resources in some historical data,\nchanges in HPC systems and accounting methods, and\ndifferences in FoR classifications over time.\n\nThese issues are addressed in the subsequent data integration, standardisation and conversion stages.\n\n\n\n\n\n\nAustralian Academy of Science. 2026. Internship Project Brief: Forecasting Demand for National Research Supercomputing.",
     "crumbs": [
       "<span class='chapter-number'>2</span>  <span class='chapter-title'>Data Collection</span>"
     ]
