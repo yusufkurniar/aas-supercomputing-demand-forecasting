@@ -124,12 +124,12 @@ structural demand modelling and scenario development
 The analysis follows ten main steps:
 
 1. Data collection
-2. Potential variable definition
+2. Variable definition
 3. Data integration
 4. Data standardisation
-5. Data conversion
-6. Initial analysis and data manipulation
+5. Data conversion and comparability assessment
+6. Exploratory and descriptive analysis
 7. Model development and benchmarking
 8. Model evaluation
 9. Model selection
-10. Scenario forecasting and capacity-gap analysis
+10. Scenario forecasting and interpretation
