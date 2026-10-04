@@ -46,23 +46,39 @@ treating all historical observations as directly comparable.
 
 ## The Forecasting Problem
 
-One of the main challenges is that observed HPC allocation does not
-necessarily represent actual research demand.
+One of the main challenges in forecasting national research computing
+demand is that observed HPC allocation does not necessarily represent
+the full level of research demand.
 
-National allocation schemes operate under limited available capacity.
-As a result, allocated compute represents the amount of resource awarded
-rather than necessarily the amount researchers required.
+National allocation schemes operate under finite capacity. As a result,
+allocated compute represents the amount of resource awarded rather than
+necessarily the amount researchers would use if additional capacity were
+available [@HPCInternshipBrief].
 
-Requested compute provides additional information about demand, but may
-also underestimate actual need if researchers limit their requests based
-on expected availability or if potential users do not apply.
+Requested compute provides additional evidence of demand, but it may
+also understate underlying need where researchers constrain their
+requests based on expected availability or where potential users do not
+apply [@HPCInternshipBrief].
 
 The project therefore distinguishes between:
 
 - requested compute,
 - allocated compute,
-- the observed gap between requested and allocated compute, and
-- underlying or latent demand.
+- the gap between requested and allocated compute, and
+- broader underlying or latent demand, which cannot be observed directly
+  from the available allocation data.
+
+A further challenge is that the historical series is not fully
+comparable across years. Reporting practices, hardware systems, compute
+units and service-unit accounting have changed over time, and CPU and
+GPU resources are not directly interchangeable
+[@HPCInternshipBrief].
+
+For this reason, the analysis uses the longest available historical
+series while explicitly documenting where values are directly reported,
+derived, estimated or based on assumptions. Forecasting results are
+therefore interpreted together with these data limitations rather than
+as precise measurements of unconstrained demand.
 
 ## Project Objectives
 
