@@ -6,11 +6,7 @@ The purpose of the data collection stage is to assemble a documented
 longitudinal evidence base for analysing Australian national research
 computing demand and allocation.
 
-The project draws primarily on publicly available NCMAS outcomes and
-NCI and Pawsey reporting to identify historical requested compute,
-allocated compute, resource type, Field of Research and other available
-characteristics of national HPC allocations and usage
-[@HPCInternshipBrief].
+The project draws primarily on publicly available NCI, Pawsey and NCMAS reporting to identify historical requested compute, allocated compute, resource type, Field of Research and other available characteristics of national HPC allocations and usage [@HPCInternshipBrief]
 
 Additional datasets, including research funding, workforce and research
 activity indicators, are collected as potential structural drivers of
@@ -207,9 +203,7 @@ Where allocation composition is subsequently combined with annual
 requested-compute totals to estimate demand by FoR, the resulting values
 are treated as analytical proxies rather than directly observed demand.
 
-Because source scope and data quality differ across years, longer-term
-FoR trends are interpreted with caution, with greater weight placed on
-years where direct and comparable NCMAS FoR information is available.
+Because source scope and data quality differ across years, longer-term FoR trends are interpreted with caution, with the most confidence placed in years where direct and more comparable NCMAS FoR information is available.
 
 ## Potential Demand Drivers
 
@@ -233,8 +227,7 @@ the final forecasting model.
 
 ## Data Provenance
 
-Data provenance is retained throughout the dataset so that each
-observation can be traced back to its original published source.
+Data provenance is retained throughout the dataset so that each observation can be traced to its originating source information and, where relevant, the derivation used to construct it.
 
 Where available, the retained provenance information includes:
 
@@ -263,7 +256,8 @@ Several limitations were identified during the data collection stage.
 
 The main limitations include:
 
-- limited availability of consistent historical data before 2013,
+- limited availability of sufficiently consistent historical data before 2013,
+- requested compute may understate underlying demand where researchers constrain applications in response to expected resource availability,
 - changes in reporting formats, terminology and level of detail across years,
 - inconsistent availability of requested and allocated compute,
 - incomplete separation of CPU and GPU resources in some historical records,
