@@ -23,15 +23,26 @@ planning Australia's future national research infrastructure.
 
 ## Project Purpose
 
-The purpose of this project is to develop a robust forecast of Australian
-research demand for high-performance computing to 2030.
+The purpose of this project is to analyse historical Australian research
+computing demand and develop an evidence-based projection of future
+high-performance computing requirements to 2030
+[@HPCInternshipBrief].
 
-The forecast is intended to support national policy discussions around
-public compute investment and future research infrastructure planning.
+The analysis is intended to support national policy discussions relating
+to public compute investment and future research infrastructure planning
+[@HPCInternshipBrief].
 
 The project combines data engineering, descriptive analysis and
-forecasting using historical Australian HPC data and other indicators
-that may help explain changes in research compute demand.
+forecasting using publicly available NCI and Pawsey data, particularly
+National Computational Merit Allocation Scheme (NCMAS) information,
+together with additional indicators where they are sufficiently
+consistent and relevant
+[@HPCInternshipBrief].
+
+Because historical reporting practices, hardware systems and compute
+accounting methods have changed over time, the analysis explicitly
+documents assumptions, derived values and limitations rather than
+treating all historical observations as directly comparable.
 
 ## The Forecasting Problem
 

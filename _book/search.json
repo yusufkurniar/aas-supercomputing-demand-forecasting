@@ -24,7 +24,7 @@
     "href": "index.html#project-purpose",
     "title": "Forecasting Demand for National Research Supercomputing",
     "section": "1.2 Project Purpose",
-    "text": "1.2 Project Purpose\nThe purpose of this project is to develop a robust forecast of Australian research demand for high-performance computing to 2030.\nThe forecast is intended to support national policy discussions around public compute investment and future research infrastructure planning.\nThe project combines data engineering, descriptive analysis and forecasting using historical Australian HPC data and other indicators that may help explain changes in research compute demand.",
+    "text": "1.2 Project Purpose\nThe purpose of this project is to analyse historical Australian research computing demand and develop an evidence-based projection of future high-performance computing requirements to 2030 (Australian Academy of Science 2026).\nThe analysis is intended to support national policy discussions relating to public compute investment and future research infrastructure planning (Australian Academy of Science 2026).\nThe project combines data engineering, descriptive analysis and forecasting using publicly available NCI and Pawsey data, particularly National Computational Merit Allocation Scheme (NCMAS) information, together with additional indicators where they are sufficiently consistent and relevant (Australian Academy of Science 2026).\nBecause historical reporting practices, hardware systems and compute accounting methods have changed over time, the analysis explicitly documents assumptions, derived values and limitations rather than treating all historical observations as directly comparable.",
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>Forecasting Demand for National Research Supercomputing</span>"
     ]
@@ -54,7 +54,7 @@
     "href": "index.html#analysis-framework",
     "title": "Forecasting Demand for National Research Supercomputing",
     "section": "1.5 Analysis Framework",
-    "text": "1.5 Analysis Framework\nThe analysis follows ten main steps:\n\nData collection\nPotential variable definition\nData integration\nData standardisation\nData conversion\nInitial analysis and data manipulation\nModel development and benchmarking\nModel evaluation\nModel selection\nScenario forecasting and capacity-gap analysis\n\n\n\n\n\n\n\nAustralian Academy of Science. 2024. “The Future Computing Needs of the Australian Science Sector.” https://www.science.org.au/.\n\n\nNational Computational Infrastructure. n.d. “Who We Are.” Accessed October 4, 2026. https://nci.org.au/.\n\n\nPawsey Supercomputing Research Centre. n.d. “About Pawsey.” Accessed October 4, 2026. https://pawsey.org.au/.",
+    "text": "1.5 Analysis Framework\nThe analysis follows ten main steps:\n\nData collection\nPotential variable definition\nData integration\nData standardisation\nData conversion\nInitial analysis and data manipulation\nModel development and benchmarking\nModel evaluation\nModel selection\nScenario forecasting and capacity-gap analysis\n\n\n\n\n\n\n\nAustralian Academy of Science. 2024. “The Future Computing Needs of the Australian Science Sector.” https://www.science.org.au/.\n\n\nAustralian Academy of Science. 2026. Internship Project Brief: Forecasting Demand for National Research Supercomputing.\n\n\nNational Computational Infrastructure. n.d. “Who We Are.” Accessed October 4, 2026. https://nci.org.au/.\n\n\nPawsey Supercomputing Research Centre. n.d. “About Pawsey.” Accessed October 4, 2026. https://pawsey.org.au/.",
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>Forecasting Demand for National Research Supercomputing</span>"
     ]
@@ -980,21 +980,21 @@
     ]
   },
   {
-    "objectID": "11_references_acknowledgement.html#ai-acknowledgement",
-    "href": "11_references_acknowledgement.html#ai-acknowledgement",
+    "objectID": "11_references_acknowledgement.html#references",
+    "href": "11_references_acknowledgement.html#references",
     "title": "12  References and AI Acknowledgement",
-    "section": "12.2 AI Acknowledgement",
-    "text": "12.2 AI Acknowledgement\nGenerative AI tools, including ChatGPT, were used to support aspects of this project such as brainstorming, reviewing code, improving written expression, and assisting with the organisation of the analysis and documentation.\nAll data preparation, analytical decisions, model development, interpretation of results, and final conclusions were reviewed and verified by the author.\nAI-generated suggestions were not treated as primary sources. Information and assumptions used in the analysis were checked against the original sources where appropriate.",
+    "section": "",
+    "text": "Australian Academy of Science. 2024. “The Future Computing Needs\nof the Australian Science Sector.” https://www.science.org.au/.\n\n\nAustralian Academy of Science. 2026. Internship Project Brief:\nForecasting Demand for National Research Supercomputing.\n\n\nNational Computational Infrastructure. n.d. “Who We Are.”\nAccessed October 4, 2026. https://nci.org.au/.\n\n\nPawsey Supercomputing Research Centre. n.d. “About Pawsey.”\nAccessed October 4, 2026. https://pawsey.org.au/.",
     "crumbs": [
       "<span class='chapter-number'>12</span>  <span class='chapter-title'>References and AI Acknowledgement</span>"
     ]
   },
   {
-    "objectID": "11_references_acknowledgement.html#references",
-    "href": "11_references_acknowledgement.html#references",
+    "objectID": "11_references_acknowledgement.html#ai-acknowledgement",
+    "href": "11_references_acknowledgement.html#ai-acknowledgement",
     "title": "12  References and AI Acknowledgement",
-    "section": "",
-    "text": "Australian Academy of Science. 2024. “The Future Computing Needs\nof the Australian Science Sector.” https://www.science.org.au/.\n\n\nNational Computational Infrastructure. n.d. “Who We Are.”\nAccessed October 4, 2026. https://nci.org.au/.\n\n\nPawsey Supercomputing Research Centre. n.d. “About Pawsey.”\nAccessed October 4, 2026. https://pawsey.org.au/.",
+    "section": "12.2 AI Acknowledgement",
+    "text": "12.2 AI Acknowledgement\nGenerative AI tools, including ChatGPT, were used to support aspects of this project such as brainstorming, reviewing code, improving written expression, and assisting with the organisation of the analysis and documentation.\nAll data preparation, analytical decisions, model development, interpretation of results, and final conclusions were reviewed and verified by the author.\nAI-generated suggestions were not treated as primary sources. Information and assumptions used in the analysis were checked against the original sources where appropriate.",
     "crumbs": [
       "<span class='chapter-number'>12</span>  <span class='chapter-title'>References and AI Acknowledgement</span>"
     ]
