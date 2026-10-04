@@ -1,0 +1,62 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Forecasting Demand for National Research Supercomputing",
+    "section": "",
+    "text": "1 Introduction",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Forecasting Demand for National Research Supercomputing</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#project-background",
+    "href": "index.html#project-background",
+    "title": "Forecasting Demand for National Research Supercomputing",
+    "section": "1.1 Project Background",
+    "text": "1.1 Project Background\nHigh-performance computing (HPC) is an important part of Australia’s research infrastructure, supporting computationally intensive research across a wide range of scientific fields.\nAustralia has two national Tier-1 HPC facilities accessible to researchers: the National Computational Infrastructure (NCI) and the Pawsey Supercomputing Research Centre. Several Tier-2 HPC facilities also operate across Australian research institutions.\nAs research becomes increasingly data- and compute-intensive, understanding future demand for HPC resources is important for planning Australia’s national research infrastructure.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Forecasting Demand for National Research Supercomputing</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#project-purpose",
+    "href": "index.html#project-purpose",
+    "title": "Forecasting Demand for National Research Supercomputing",
+    "section": "1.2 Project Purpose",
+    "text": "1.2 Project Purpose\nThe purpose of this project is to develop a robust forecast of Australian research demand for high-performance computing to 2030.\nThe forecast is intended to support national policy discussions around public compute investment and future research infrastructure planning.\nThe project combines data engineering, descriptive analysis and forecasting using historical Australian HPC data and other indicators that may help explain changes in research compute demand.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Forecasting Demand for National Research Supercomputing</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#the-forecasting-problem",
+    "href": "index.html#the-forecasting-problem",
+    "title": "Forecasting Demand for National Research Supercomputing",
+    "section": "1.3 The Forecasting Problem",
+    "text": "1.3 The Forecasting Problem\nOne of the main challenges is that observed HPC allocation does not necessarily represent actual research demand.\nNational allocation schemes operate under limited available capacity. As a result, allocated compute represents the amount of resource awarded rather than necessarily the amount researchers required.\nRequested compute provides additional information about demand, but may also underestimate actual need if researchers limit their requests based on expected availability or if potential users do not apply.\nThe project therefore distinguishes between:\n\nrequested compute,\nallocated compute,\nthe observed gap between requested and allocated compute, and\nunderlying or latent demand.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Forecasting Demand for National Research Supercomputing</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#project-objectives",
+    "href": "index.html#project-objectives",
+    "title": "Forecasting Demand for National Research Supercomputing",
+    "section": "1.4 Project Objectives",
+    "text": "1.4 Project Objectives\nThe project aims to:\n\nbuild a documented longitudinal dataset of Australian HPC activity,\nimprove comparability of compute measures across years, facilities and hardware generations,\ndistinguish CPU and GPU compute where possible,\nexamine historical demand, allocation and oversubscription,\nanalyse changes in Field of Research composition,\ninvestigate potential structural drivers of HPC demand,\ndevelop and compare suitable forecasting models,\nforecast HPC demand to 2030 under different scenarios, and\nestimate potential future gaps between demand and available capacity.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Forecasting Demand for National Research Supercomputing</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#analysis-framework",
+    "href": "index.html#analysis-framework",
+    "title": "Forecasting Demand for National Research Supercomputing",
+    "section": "1.5 Analysis Framework",
+    "text": "1.5 Analysis Framework\nThe analysis follows ten main steps:\n\nData collection\nPotential variable definition\nData integration\nData standardisation\nData conversion\nInitial analysis and data manipulation\nModel development and benchmarking\nModel evaluation\nModel selection\nScenario forecasting and capacity-gap analysis",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Forecasting Demand for National Research Supercomputing</span>"
+    ]
+  }
+]

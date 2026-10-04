@@ -1,0 +1,974 @@
+---
+title: "Preliminary Demand vs Allocation"
+subtitle: "Draft for NCI / Pawsey data-validation discussion"
+format:
+  html:
+    toc: true
+    embed-resources: true
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+```{r}
+library(tidyverse)
+library(readxl)
+library(scales)
+library(knitr)
+
+# Main annual demand/allocation table
+demand_raw <- read_excel(
+  file.path(
+    "assets",
+    "data",
+    "data clean",
+    "demand_allocation_all_years_v2.xlsx"
+  ),
+  sheet = "demand_allocation"
+)
+
+# Conversion workbook used as the reference for current rules
+conversion_rules_raw <- read_excel(
+  file.path(
+    "assets",
+    "progress",
+    "Yearly Conversion.xlsx"
+  ),
+  sheet = "Analysis 4"
+)
+
+# Analysis 4 uses blank cells for repeated years
+conversion_rules <- conversion_rules_raw %>%
+  fill(Year)
+
+all_periods <- demand_raw$period
+```
+
+## Purpose
+
+This is a **preliminary working conversion for discussion**, not a final validated historical series.
+
+For tomorrow's discussion, the aim is to have a complete year-by-year view rather than leave large gaps. Where the exact resource split is available, the system-specific conversion is used. Where it is not available, a clearly labelled **closest available assumption** is used to create a provisional **CPU-equivalent** series.
+
+The objectives are to:
+
+1. confirm that the historical demand and allocation figures have been interpreted correctly;
+2. confirm the current system-specific conversion rules;
+3. show a complete preliminary demand-versus-allocation trend for 2013/14–2025/26; and
+4. identify which years rely on stronger or weaker assumptions before the final forecast is built.
+
+## Source data collected so far
+
+```{r}
+demand_raw %>%
+  select(
+    period,
+    demand,
+    demand_uom,
+    allocation,
+    allocation_uom,
+    source_status,
+    reason,
+    source_link
+  ) %>%
+  kable()
+```
+
+## Current conversion rules
+
+The conversion reference below is read directly from **Analysis 4** of `Yearly Conversion.xlsx`.
+
+```{r}
+conversion_rules %>%
+  select(
+    Year,
+    Resource,
+    `Original unit`,
+    `Conversion formula`,
+    `Converted unit`,
+    Source
+  ) %>%
+  kable()
+```
+
+The current system-specific rules used where the resource is known are:
+
+- Raijin CPU: `kSU × 1,000 ÷ 1`
+- Magnus CPU: `kSU × 1,000 ÷ 1`
+- Gadi CPU: `kSU × 1,000 ÷ 2`
+- Setonix CPU: `kSU × 1,000 ÷ 1`
+- Setonix GPU: `kSU × 1,000 ÷ 128`
+- Setonix Q: `kSU × 1,000 ÷ 256`
+- values already reported in million CPU/core-hours: `value × 1,000,000`
+
+CPU core-hours and GPU-hours are kept separate. They are **not added together**.
+
+## Resource-level values currently available
+
+Where a resource-level split is known, it is used instead of converting the annual kSU total with one factor.
+
+```{r}
+resource_detail <- tribble(
+  ~period, ~measure, ~resource, ~ksu,
+
+  # 2022/23: demand and allocation split available
+  "2022/23", "Demand",     "Gadi CPU",       770866,
+  "2022/23", "Demand",     "Setonix CPU",    390033,
+  "2022/23", "Demand",     "Setonix GPU",    172341,
+  "2022/23", "Allocation", "Gadi CPU",       328156,
+  "2022/23", "Allocation", "Setonix CPU",    327400,
+  "2022/23", "Allocation", "Setonix GPU",    162400,
+
+  # 2024/25: allocation split available
+  "2024/25", "Allocation", "Gadi CPU",       355200,
+  "2024/25", "Allocation", "Setonix CPU",    349950,
+  "2024/25", "Allocation", "Setonix GPU",    171050,
+
+  # 2025/26: demand and allocation split available
+  "2025/26", "Demand",     "Gadi CPU",      1246722,
+  "2025/26", "Demand",     "Setonix CPU",    611675,
+  "2025/26", "Demand",     "Setonix GPU",    384420,
+  "2025/26", "Allocation", "Gadi CPU",       387288,
+  "2025/26", "Allocation", "Setonix CPU",    325000,
+  "2025/26", "Allocation", "Setonix GPU",    160000
+)
+
+resource_converted <- resource_detail %>%
+  mutate(
+    cpu_hours = case_when(
+      resource == "Gadi CPU" ~ ksu * 1000 / 2,
+      resource == "Setonix CPU" ~ ksu * 1000 / 1,
+      TRUE ~ NA_real_
+    ),
+    gpu_hours = case_when(
+      resource == "Setonix GPU" ~ ksu * 1000 / 128,
+      TRUE ~ NA_real_
+    )
+  )
+
+resource_summary <- resource_converted %>%
+  group_by(period, measure) %>%
+  summarise(
+    cpu_hours = if (all(is.na(cpu_hours))) NA_real_ else sum(cpu_hours, na.rm = TRUE),
+    gpu_hours = if (all(is.na(gpu_hours))) NA_real_ else sum(gpu_hours, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+resource_summary %>% kable()
+```
+
+## Blended conversion factors for recent aggregate kSU years
+
+For 2022/23 and 2025/26, the resource split is known. These years can therefore be used to calculate an observed **CPU-equivalent hours per total kSU** ratio.
+
+This ratio is only used as a practical approximation for nearby years where the annual kSU total is known but the requested resource split is not available.
+
+```{r}
+known_total_ksu <- demand_raw %>%
+  filter(period %in% c("2022/23", "2025/26")) %>%
+  select(period, demand, allocation)
+
+known_cpu <- resource_summary %>%
+  filter(period %in% c("2022/23", "2025/26")) %>%
+  select(period, measure, cpu_hours) %>%
+  pivot_wider(
+    names_from = measure,
+    values_from = cpu_hours
+  )
+
+blended_factors <- known_total_ksu %>%
+  left_join(known_cpu, by = "period") %>%
+  transmute(
+    period,
+    demand_cpu_hours_per_ksu = Demand / demand,
+    allocation_cpu_hours_per_ksu = Allocation / allocation
+  )
+
+blended_factors %>%
+  mutate(
+    demand_cpu_hours_per_ksu = round(demand_cpu_hours_per_ksu, 1),
+    allocation_cpu_hours_per_ksu = round(allocation_cpu_hours_per_ksu, 1)
+  ) %>%
+  kable()
+```
+
+Extract the two nearby-year factors for use below.
+
+```{r}
+demand_factor_2022 <- blended_factors %>%
+  filter(period == "2022/23") %>%
+  pull(demand_cpu_hours_per_ksu)
+
+allocation_factor_2022 <- blended_factors %>%
+  filter(period == "2022/23") %>%
+  pull(allocation_cpu_hours_per_ksu)
+
+demand_factor_2025 <- blended_factors %>%
+  filter(period == "2025/26") %>%
+  pull(demand_cpu_hours_per_ksu)
+
+allocation_factor_2025 <- blended_factors %>%
+  filter(period == "2025/26") %>%
+  pull(allocation_cpu_hours_per_ksu)
+```
+
+## Provisional CPU-equivalent conversion for every year
+
+The rules below deliberately prioritise having a complete working series for discussion.
+
+- **2013/14:** annual kSU is provisionally treated as CPU-equivalent using the Raijin/Magnus rule (`×1,000 ÷1`). This may slightly overstate CPU-equivalent hours if the Fornax GPU share is material.
+- **2014/15–2015/16:** demand is already reported in million hours; allocation kSU is provisionally converted with the historical CPU rule (`×1,000 ÷1`).
+- **2016/17–2018/19:** already reported in million core-hours / million hours / million CPU-hours.
+- **2019/20–2021/22:** annual aggregate kSU is provisionally treated as Gadi-equivalent (`×1,000 ÷2`). This is a working assumption for the transition period.
+- **2022/23:** exact CPU total from the known resource split.
+- **2023/24:** no resource split is currently available, so the 2022/23 observed blended CPU-equivalent ratio is used.
+- **2024/25:** allocation uses the known resource split; demand uses the nearest available 2025/26 blended demand ratio.
+- **2025/26:** exact CPU total from the known resource split.
+
+```{r}
+cpu_exact <- resource_summary %>%
+  filter(!is.na(cpu_hours)) %>%
+  select(period, measure, cpu_hours) %>%
+  pivot_wider(
+    names_from = measure,
+    values_from = cpu_hours
+  ) %>%
+  rename(
+    exact_demand_cpu_hours = Demand,
+    exact_allocation_cpu_hours = Allocation
+  )
+
+cpu_equivalent <- demand_raw %>%
+  left_join(cpu_exact, by = "period") %>%
+  mutate(
+    demand_cpu_equiv_hours = case_when(
+
+      # Historical kSU - closest historical CPU rule
+      period == "2013/14" ~ demand * 1000,
+
+      # Demand already reported in million hours
+      period %in% c("2014/15", "2015/16") ~ demand * 1e6,
+
+      # Already reported in hours/core-hours
+      period %in% c("2016/17", "2017/18", "2018/19") ~ demand * 1e6,
+
+      # Transition / Gadi-dominant working assumption
+      period %in% c("2019/20", "2020/21", "2021/22") ~ demand * 1000 / 2,
+
+      # Exact resource-level conversion
+      period == "2022/23" ~ exact_demand_cpu_hours,
+
+      # Nearest known resource mix
+      period == "2023/24" ~ demand * demand_factor_2022,
+
+      # Nearest later known resource mix
+      period == "2024/25" ~ demand * demand_factor_2025,
+
+      # Exact resource-level conversion
+      period == "2025/26" ~ exact_demand_cpu_hours,
+
+      TRUE ~ NA_real_
+    ),
+
+    allocation_cpu_equiv_hours = case_when(
+
+      # Historical kSU - closest historical CPU rule
+      period %in% c("2013/14", "2014/15", "2015/16") ~ allocation * 1000,
+
+      # Already reported in hours/core-hours
+      period %in% c("2016/17", "2017/18", "2018/19") ~ allocation * 1e6,
+
+      # Transition / Gadi-dominant working assumption
+      period %in% c("2019/20", "2020/21", "2021/22") ~ allocation * 1000 / 2,
+
+      # Exact resource-level conversion
+      period == "2022/23" ~ exact_allocation_cpu_hours,
+
+      # Nearest known resource mix
+      period == "2023/24" ~ allocation * allocation_factor_2022,
+
+      # Exact allocation split is available
+      period == "2024/25" ~ exact_allocation_cpu_hours,
+
+      # Exact resource-level conversion
+      period == "2025/26" ~ exact_allocation_cpu_hours,
+
+      TRUE ~ NA_real_
+    ),
+
+    assumption = case_when(
+      period == "2013/14" ~
+        "Historical CPU-equivalent assumption: aggregate kSU × 1,000",
+      period %in% c("2014/15", "2015/16") ~
+        "Demand reported in hours; allocation uses historical CPU kSU conversion",
+      period %in% c("2016/17", "2017/18", "2018/19") ~
+        "Reported directly in hours/core-hours",
+      period %in% c("2019/20", "2020/21", "2021/22") ~
+        "Aggregate kSU treated as Gadi-equivalent: kSU × 1,000 ÷ 2",
+      period == "2022/23" ~
+        "Exact conversion from known Gadi / Setonix resource split",
+      period == "2023/24" ~
+        "Approximation using observed 2022/23 blended CPU-equivalent ratio",
+      period == "2024/25" ~
+        "Demand uses 2025/26 blended ratio; allocation uses known resource split",
+      period == "2025/26" ~
+        "Exact conversion from known Gadi / Setonix resource split"
+    ),
+
+    confidence = case_when(
+      period %in% c("2016/17", "2017/18", "2018/19", "2022/23", "2025/26") ~
+        "Higher",
+      period %in% c("2014/15", "2015/16", "2024/25") ~
+        "Medium",
+      TRUE ~
+        "Lower"
+    )
+  )
+```
+
+## Preliminary CPU-equivalent table
+
+```{r}
+cpu_equivalent %>%
+  transmute(
+    period,
+    demand_million_cpu_equiv_hours = demand_cpu_equiv_hours / 1e6,
+    allocation_million_cpu_equiv_hours = allocation_cpu_equiv_hours / 1e6,
+    assumption,
+    confidence
+  ) %>%
+  kable(digits = 1)
+```
+
+## Chart 1 — Preliminary CPU-equivalent demand vs allocation
+
+This chart intentionally shows **every year**.
+
+The y-axis is labelled **CPU-equivalent core-hours** rather than actual CPU core-hours because some historical aggregate kSU values are being converted using the closest available system/accounting assumption.
+
+```{r}
+cpu_chart <- cpu_equivalent %>%
+  select(
+    period,
+    demand_cpu_equiv_hours,
+    allocation_cpu_equiv_hours
+  ) %>%
+  pivot_longer(
+    cols = c(
+      demand_cpu_equiv_hours,
+      allocation_cpu_equiv_hours
+    ),
+    names_to = "measure",
+    values_to = "cpu_equiv_hours"
+  ) %>%
+  mutate(
+    measure = recode(
+      measure,
+      demand_cpu_equiv_hours = "Demand",
+      allocation_cpu_equiv_hours = "Allocation"
+    ),
+    period = factor(
+      period,
+      levels = all_periods,
+      ordered = TRUE
+    ),
+    million_cpu_hours = cpu_equiv_hours / 1e6,
+
+    value_label = scales::number(
+      million_cpu_hours,
+      accuracy = 1,
+      big.mark = ","
+    ),
+
+    label_vjust = if_else(
+      measure == "Demand",
+      -0.8,
+      1.5
+    )
+  )
+
+
+ggplot(
+  cpu_chart,
+  aes(
+    x = period,
+    y = million_cpu_hours,
+    colour = measure,
+    group = measure
+  )
+) +
+  geom_line(
+    linewidth = 1
+  ) +
+  geom_point(
+    size = 2.8
+  ) +
+  geom_text(
+    aes(
+      label = value_label,
+      vjust = label_vjust
+    ),
+    size = 3,
+    show.legend = FALSE
+  ) +
+  scale_y_continuous(
+    labels = label_number(
+      big.mark = ",",
+      accuracy = 1
+    ),
+    expand = expansion(
+      mult = c(0.06, 0.12)
+    )
+  ) +
+  scale_x_discrete(
+    drop = FALSE
+  ) +
+  labs(
+    title = "CPU demand and allocation over time",
+    subtitle = "Preliminary CPU-equivalent estimates, 2013/14–2025/26",
+    x = NULL,
+    y = "Million CPU-equivalent core-hours",
+    colour = NULL
+  ) +
+  theme_minimal(
+    base_size = 12
+  ) +
+  theme(
+    legend.position = "top",
+
+    plot.title = element_text(
+      face = "bold",
+      size = 15
+    ),
+
+    plot.subtitle = element_text(
+      size = 11,
+      margin = margin(
+        b = 12
+      )
+    ),
+
+    axis.text.x = element_text(
+      angle = 45,
+      hjust = 1
+    ),
+
+    panel.grid.minor = element_blank(),
+
+    panel.grid.major.x = element_blank(),
+
+    legend.text = element_text(
+      size = 11
+    )
+  )
+```
+
+## Preliminary gap and fulfilment rate
+
+These are also **working estimates**, because they inherit the conversion assumptions above.
+
+```{r}
+cpu_gap <- cpu_equivalent %>%
+  mutate(
+    gap_cpu_equiv_hours =
+      demand_cpu_equiv_hours - allocation_cpu_equiv_hours,
+
+    fulfilment_rate =
+      allocation_cpu_equiv_hours / demand_cpu_equiv_hours
+  ) %>%
+  transmute(
+    period,
+    demand_million = demand_cpu_equiv_hours / 1e6,
+    allocation_million = allocation_cpu_equiv_hours / 1e6,
+    gap_million = gap_cpu_equiv_hours / 1e6,
+    fulfilment_rate = percent(fulfilment_rate, accuracy = 0.1),
+    confidence
+  )
+
+cpu_gap %>% kable(digits = 1)
+```
+
+## Chart 2 — Preliminary GPU demand vs allocation
+
+The GPU chart keeps **all financial years on the x-axis**.
+
+However, I do **not** force a GPU estimate for years where there is no defensible GPU share.  
+For those years the value remains `NA`, because treating missing GPU information as zero would be misleading.
+
+Current GPU logic:
+
+- **2013/14:** Fornax GPU is identified, but neither the GPU kSU split nor the historical conversion factor is confirmed → `NA`
+- **2014/15–2020/21:** no defensible GPU split in the current annual data → `NA`
+- **2021/22:** use the observed **2022/23 GPU share** as a working proxy
+- **2022/23:** exact Setonix GPU split
+- **2023/24:** use the observed **2022/23 GPU share** as the nearest-year proxy
+- **2024/25:** allocation uses the exact Setonix GPU split; demand uses the **2025/26 demand GPU share**
+- **2025/26:** exact Setonix GPU split
+
+```{r}
+# Observed GPU shares from years with known resource splits
+gpu_share_2022_demand <- 172341 / 1333240
+gpu_share_2022_allocation <- 162400 / 817956
+
+gpu_share_2025_demand <- 384420 / 2242817
+gpu_share_2025_allocation <- 160000 / 872288
+
+gpu_equivalent <- demand_raw %>%
+  mutate(
+    demand_gpu_ksu = case_when(
+      period == "2021/22" ~ demand * gpu_share_2022_demand,
+      period == "2022/23" ~ 172341,
+      period == "2023/24" ~ demand * gpu_share_2022_demand,
+      period == "2024/25" ~ demand * gpu_share_2025_demand,
+      period == "2025/26" ~ 384420,
+      TRUE ~ NA_real_
+    ),
+
+    allocation_gpu_ksu = case_when(
+      period == "2021/22" ~ allocation * gpu_share_2022_allocation,
+      period == "2022/23" ~ 162400,
+      period == "2023/24" ~ allocation * gpu_share_2022_allocation,
+      period == "2024/25" ~ 171050,
+      period == "2025/26" ~ 160000,
+      TRUE ~ NA_real_
+    ),
+
+    # Setonix GPU accounting rule
+    demand_gpu_hours = demand_gpu_ksu * 1000 / 128,
+    allocation_gpu_hours = allocation_gpu_ksu * 1000 / 128,
+
+    gpu_assumption = case_when(
+      period %in% c("2022/23", "2025/26") ~
+        "Exact resource split",
+      period == "2024/25" ~
+        "Allocation exact; demand uses 2025/26 GPU share",
+      period %in% c("2021/22", "2023/24") ~
+        "Uses 2022/23 GPU share as proxy",
+      TRUE ~
+        "No defensible GPU estimate from current data"
+    )
+  )
+```
+
+```{r}
+gpu_chart <- gpu_equivalent %>%
+  select(
+    period,
+    demand_gpu_hours,
+    allocation_gpu_hours
+  ) %>%
+  pivot_longer(
+    cols = c(
+      demand_gpu_hours,
+      allocation_gpu_hours
+    ),
+    names_to = "measure",
+    values_to = "gpu_hours"
+  ) %>%
+  mutate(
+    measure = recode(
+      measure,
+      demand_gpu_hours = "Demand",
+      allocation_gpu_hours = "Allocation"
+    ),
+    period = factor(
+      period,
+      levels = all_periods,
+      ordered = TRUE
+    ),
+
+    # Labels only for years with GPU values
+    value_label = if_else(
+      !is.na(gpu_hours),
+      scales::number(
+        gpu_hours,
+        accuracy = 1,
+        big.mark = ","
+      ),
+      NA_character_
+    ),
+
+    # Demand labels above, allocation labels below
+    label_vjust = if_else(
+      measure == "Demand",
+      -0.8,
+      1.5
+    )
+  )
+
+
+ggplot(
+  gpu_chart,
+  aes(
+    x = period,
+    y = gpu_hours,
+    colour = measure,
+    group = measure
+  )
+) +
+  geom_line(
+    linewidth = 1,
+    na.rm = TRUE
+  ) +
+  geom_point(
+    size = 2.8,
+    na.rm = TRUE
+  ) +
+  geom_text(
+    data = gpu_chart %>%
+      filter(!is.na(gpu_hours)),
+    aes(
+      label = value_label,
+      vjust = label_vjust
+    ),
+    size = 3,
+    show.legend = FALSE
+  ) +
+  scale_x_discrete(
+    drop = FALSE
+  ) +
+  scale_y_continuous(
+    labels = label_number(
+      big.mark = ",",
+      accuracy = 1
+    ),
+    expand = expansion(
+      mult = c(0.06, 0.12)
+    )
+  ) +
+  labs(
+    title = "GPU demand and allocation over time",
+    subtitle = "Preliminary estimates where a GPU resource split or proxy is available",
+    x = NULL,
+    y = "GPU-hours",
+    colour = NULL
+  ) +
+  theme_minimal(
+    base_size = 12
+  ) +
+  theme(
+    legend.position = "top",
+
+    plot.title = element_text(
+      face = "bold",
+      size = 15
+    ),
+
+    plot.subtitle = element_text(
+      size = 11,
+      margin = margin(
+        b = 12
+      )
+    ),
+
+    axis.text.x = element_text(
+      angle = 45,
+      hjust = 1
+    ),
+
+    panel.grid.minor = element_blank(),
+
+    panel.grid.major.x = element_blank(),
+
+    legend.text = element_text(
+      size = 11
+    )
+  )
+```
+
+## Chart 3 — kSU-equivalent demand vs allocation
+
+This chart puts **every year into a kSU-equivalent scale**.
+
+For years already reported in kSU, I keep the original values.  
+For years reported in million hours/core-hours, I reverse the historical CPU conversion:
+
+`kSU-equivalent = hours ÷ 1,000`
+
+This is a **comparison scale**, not a claim that those years were originally reported in kSU.
+
+```{r}
+ksu_equivalent <- demand_raw %>%
+  mutate(
+    demand_ksu_equiv = case_when(
+      demand_uom == "kSU" ~ demand,
+
+      demand_uom %in% c(
+        "million hours",
+        "million core-hours",
+        "million CPU-hours"
+      ) ~ demand * 1e6 / 1000,
+
+      TRUE ~ NA_real_
+    ),
+
+    allocation_ksu_equiv = case_when(
+      allocation_uom == "kSU" ~ allocation,
+
+      allocation_uom %in% c(
+        "million hours",
+        "million core-hours",
+        "million CPU-hours"
+      ) ~ allocation * 1e6 / 1000,
+
+      TRUE ~ NA_real_
+    ),
+
+    ksu_basis = case_when(
+      demand_uom == "kSU" & allocation_uom == "kSU" ~
+        "Original values already in kSU",
+
+      TRUE ~
+        "Hours reverse-converted to kSU-equivalent using 1 kSU = 1,000 CPU-equivalent hours"
+    )
+  )
+```
+
+```{r}
+ksu_chart <- ksu_equivalent %>%
+  select(
+    period,
+    demand_ksu_equiv,
+    allocation_ksu_equiv
+  ) %>%
+  pivot_longer(
+    cols = c(
+      demand_ksu_equiv,
+      allocation_ksu_equiv
+    ),
+    names_to = "measure",
+    values_to = "ksu_equiv"
+  ) %>%
+  mutate(
+    measure = recode(
+      measure,
+      demand_ksu_equiv = "Demand",
+      allocation_ksu_equiv = "Allocation"
+    ),
+    period = factor(
+      period,
+      levels = all_periods,
+      ordered = TRUE
+    ),
+
+    value_label = scales::number(
+      ksu_equiv,
+      accuracy = 1,
+      big.mark = ","
+    ),
+
+    label_vjust = if_else(
+      measure == "Demand",
+      -0.8,
+      1.5
+    )
+  )
+
+
+ggplot(
+  ksu_chart,
+  aes(
+    x = period,
+    y = ksu_equiv,
+    colour = measure,
+    group = measure
+  )
+) +
+  geom_line(
+    linewidth = 1
+  ) +
+  geom_point(
+    size = 2.8
+  ) +
+  geom_text(
+    aes(
+      label = value_label,
+      vjust = label_vjust
+    ),
+    size = 3,
+    show.legend = FALSE
+  ) +
+  scale_x_discrete(
+    drop = FALSE
+  ) +
+  scale_y_continuous(
+    labels = label_number(
+      big.mark = ",",
+      accuracy = 1
+    ),
+    expand = expansion(
+      mult = c(0.06, 0.12)
+    )
+  ) +
+  labs(
+    title = "kSU-equivalent demand and allocation over time",
+    subtitle = "Common comparison scale for 2013/14–2025/26",
+    x = NULL,
+    y = "kSU-equivalent",
+    colour = NULL
+  ) +
+  theme_minimal(
+    base_size = 12
+  ) +
+  theme(
+    legend.position = "top",
+
+    plot.title = element_text(
+      face = "bold",
+      size = 15
+    ),
+
+    plot.subtitle = element_text(
+      size = 11,
+      margin = margin(
+        b = 12
+      )
+    ),
+
+    axis.text.x = element_text(
+      angle = 45,
+      hjust = 1
+    ),
+
+    panel.grid.minor = element_blank(),
+
+    panel.grid.major.x = element_blank(),
+
+    legend.text = element_text(
+      size = 11
+    )
+  )
+```
+
+## Assumption summary for discussion
+
+```{r}
+cpu_equivalent %>%
+  select(
+    period,
+    assumption,
+    confidence,
+    reason
+  ) %>%
+  kable()
+```
+
+## Questions to validate with NCI / Pawsey
+
+1. **Historical values:** Are the demand and allocation figures interpreted correctly, particularly the years where demand was derived from fulfilment rates or capacity statements?
+
+2. **Older systems:** Is it reasonable to use the Raijin/Magnus CPU rule as a CPU-equivalent approximation for the early aggregate kSU years, and how material was Fornax GPU in those totals?
+
+3. **2019/20–2021/22:** Is treating aggregate kSU as Gadi-equivalent (`kSU × 1,000 ÷ 2`) a reasonable working approximation for these transition years?
+
+4. **Recent aggregate years:** If the requested resource split is unavailable, is using the nearest observed Gadi/Setonix resource mix a reasonable approximation for a national trend?
+
+5. **Accounting changes:** Did the definition of an SU / kSU or the charging/accounting method change across systems or over time in a way that would materially change these comparisons?
+
+6. **CPU and GPU:** Is it appropriate to keep CPU-equivalent core-hours and GPU-hours as separate measures rather than combining them?
+
+7. **Definition of demand:** Is requested compute the most appropriate measure of researcher demand, or would another metric be preferable?
+
+## Meeting note
+
+The CPU chart is deliberately a **CPU-equivalent working series** rather than a claim that every historical value represents observed CPU core-hours.
+
+The hierarchy used is:
+
+1. exact resource-level conversion where available;
+2. directly reported CPU/core-hours where available;
+3. closest system-specific conversion where the dominant historical system is known;
+4. nearest observed resource mix for recent years where only an aggregate kSU total is available.
+
+This provides a complete trend for discussion while keeping the assumptions explicit and easy to replace after validation.
+
+```{r}
+cpu_facet <- cpu_equivalent %>%
+  transmute(
+    period,
+    chart = "CPU-equivalent",
+    Demand = demand_cpu_equiv_hours / 1e6,
+    Allocation = allocation_cpu_equiv_hours / 1e6
+  )
+
+gpu_facet <- gpu_equivalent %>%
+  transmute(
+    period,
+    chart = "GPU",
+    Demand = demand_gpu_hours / 1e6,
+    Allocation = allocation_gpu_hours / 1e6
+  )
+
+ksu_facet <- ksu_equivalent %>%
+  transmute(
+    period,
+    chart = "kSU-equivalent",
+    Demand = demand_ksu_equiv / 1e6,
+    Allocation = allocation_ksu_equiv / 1e6
+  )
+```
+
+```{r}
+facet_chart <- bind_rows(
+  cpu_facet,
+  gpu_facet,
+  ksu_facet
+) %>%
+  pivot_longer(
+    cols = c(Demand, Allocation),
+    names_to = "measure",
+    values_to = "value"
+  ) %>%
+  mutate(
+    period = factor(
+      period,
+      levels = all_periods,
+      ordered = TRUE
+    )
+  )
+```
+
+```{r}
+ggplot(
+  facet_chart,
+  aes(
+    x = period,
+    y = value,
+    colour = measure,
+    group = measure
+  )
+) +
+  geom_line(linewidth = 1, na.rm = TRUE) +
+  geom_point(size = 2.5, na.rm = TRUE) +
+  facet_wrap(
+    ~ chart,
+    scales = "free_y",
+    ncol = 1
+  ) +
+  scale_x_discrete(drop = FALSE) +
+  scale_y_continuous(
+    labels = scales::label_number(
+      big.mark = ",",
+      accuracy = 0.1
+    )
+  ) +
+  labs(
+    title = "Demand and allocation over time: three comparison views",
+    subtitle = "Values shown in millions; each panel uses its own y-axis scale",
+    x = NULL,
+    y = "Millions",
+    colour = NULL
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    legend.position = "top",
+    plot.title = element_text(face = "bold", size = 15),
+    plot.subtitle = element_text(size = 11, margin = margin(b = 12)),
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_blank(),
+    strip.text = element_text(face = "bold")
+  )
+```
+
