@@ -2,9 +2,24 @@
 
 ## Purpose
 
-The purpose of this step is to integrate the different data sources collected for the project into a consistent structure for analysis.
+The purpose of the data integration stage is to combine the different
+datasets collected for the project into a structured analytical dataset
+while preserving their original values, units, scope and provenance.
 
-The datasets were collected from different sources and contain different time periods, levels of detail, and reporting formats. Integration is therefore required before the variables can be compared and used for modelling.
+The source datasets cover different reporting periods, levels of
+granularity and data structures. Integration is therefore required to
+align common identifiers such as analytical year, facility, computing
+system, resource type and Field of Research before the data can be
+analysed together.
+
+At this stage, integration focuses on organising and linking the available
+information rather than forcing observations into common units or
+classifications. Differences in naming, classification and compute units
+are addressed subsequently through data standardisation and conversion.
+
+Where datasets cannot be combined directly because of differences in
+scope or granularity, those distinctions are retained explicitly rather
+than assuming equivalence.
 
 ## Main Datasets
 
