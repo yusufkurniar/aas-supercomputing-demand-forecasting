@@ -59,7 +59,26 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -271,9 +290,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
 <section id="project-background" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="project-background"><span class="header-section-number">1.1</span> Project Background</h2>
-<p>High-performance computing (HPC) is an important part of Australia’s research infrastructure, supporting computationally intensive research across a wide range of scientific fields.</p>
-<p>Australia has two national Tier-1 HPC facilities accessible to researchers: the National Computational Infrastructure (NCI) and the Pawsey Supercomputing Research Centre. Several Tier-2 HPC facilities also operate across Australian research institutions.</p>
-<p>As research becomes increasingly data- and compute-intensive, understanding future demand for HPC resources is important for planning Australia’s national research infrastructure.</p>
+<p>High-performance computing (HPC) is an important component of Australia’s research infrastructure <span class="citation" data-cites="AAS2024FutureComputing">(<a href="11_references_acknowledgement.html#ref-AAS2024FutureComputing" role="doc-biblioref">Australian Academy of Science 2024</a>)</span>, supporting computationally intensive research across a wide range of scientific fields.</p>
+<p>Australia has two national Tier-1 HPC facilities accessible to researchers: the National Computational Infrastructure (NCI) and the Pawsey Supercomputing Research Centre <span class="citation" data-cites="NCIWhoWeAre PawseyAbout">(<a href="11_references_acknowledgement.html#ref-NCIWhoWeAre" role="doc-biblioref">National Computational Infrastructure, n.d.</a>; <a href="11_references_acknowledgement.html#ref-PawseyAbout" role="doc-biblioref">Pawsey Supercomputing Research Centre, n.d.</a>)</span>. Several Tier-2 HPC facilities also operate across Australian research institutions.</p>
+<p>As research becomes increasingly data and compute-intensive, understanding how demand for HPC resources is changing is important for planning Australia’s future national research infrastructure.</p>
 </section>
 <section id="project-purpose" class="level2" data-number="1.2">
 <h2 data-number="1.2" class="anchored" data-anchor-id="project-purpose"><span class="header-section-number">1.2</span> Project Purpose</h2>
@@ -328,6 +347,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <!-- -->
 
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-AAS2024FutureComputing" class="csl-entry" role="listitem">
+Australian Academy of Science. 2024. <span>“The Future Computing Needs of the Australian Science Sector.”</span> <a href="https://www.science.org.au/">https://www.science.org.au/</a>.
+</div>
+<div id="ref-NCIWhoWeAre" class="csl-entry" role="listitem">
+National Computational Infrastructure. n.d. <span>“Who We Are.”</span> Accessed October 4, 2026. <a href="https://nci.org.au/">https://nci.org.au/</a>.
+</div>
+<div id="ref-PawseyAbout" class="csl-entry" role="listitem">
+Pawsey Supercomputing Research Centre. n.d. <span>“About Pawsey.”</span> Accessed October 4, 2026. <a href="https://pawsey.org.au/">https://pawsey.org.au/</a>.
+</div>
+</div>
 </section>
 </section>
 
@@ -802,18 +832,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">## Project Background</span></span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>High-performance computing (HPC) is an important part of Australia's</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>research infrastructure, supporting computationally intensive research</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>across a wide range of scientific fields.</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>High-performance computing (HPC) is an important component of</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>Australia's research infrastructure <span class="co">[</span><span class="ot">@AAS2024FutureComputing</span><span class="co">]</span>, supporting computationally</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>intensive research across a wide range of scientific fields.</span>
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>Australia has two national Tier-1 HPC facilities accessible to</span>
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>researchers: the National Computational Infrastructure (NCI) and the</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>Pawsey Supercomputing Research Centre. Several Tier-2 HPC facilities</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>Pawsey Supercomputing Research Centre <span class="co">[</span><span class="ot">@NCIWhoWeAre; @PawseyAbout</span><span class="co">]</span>. Several Tier-2 HPC facilities</span>
 <span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>also operate across Australian research institutions.</span>
 <span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>As research becomes increasingly data- and compute-intensive,</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>understanding future demand for HPC resources is important for planning</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>Australia's national research infrastructure.</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>As research becomes increasingly data and compute-intensive,</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>understanding how demand for HPC resources is changing is important for</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>planning Australia's future national research infrastructure.</span>
 <span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="fu">## Project Purpose</span></span>
 <span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>

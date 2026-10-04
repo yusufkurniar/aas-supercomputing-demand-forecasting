@@ -8,18 +8,18 @@ author: "Yusuf Kurnia Romadhon"
 
 ## Project Background
 
-High-performance computing (HPC) is an important part of Australia's
-research infrastructure, supporting computationally intensive research
-across a wide range of scientific fields.
+High-performance computing (HPC) is an important component of
+Australia's research infrastructure [@AAS2024FutureComputing], supporting computationally
+intensive research across a wide range of scientific fields.
 
 Australia has two national Tier-1 HPC facilities accessible to
 researchers: the National Computational Infrastructure (NCI) and the
-Pawsey Supercomputing Research Centre. Several Tier-2 HPC facilities
+Pawsey Supercomputing Research Centre [@NCIWhoWeAre; @PawseyAbout]. Several Tier-2 HPC facilities
 also operate across Australian research institutions.
 
-As research becomes increasingly data- and compute-intensive,
-understanding future demand for HPC resources is important for planning
-Australia's national research infrastructure.
+As research becomes increasingly data and compute-intensive,
+understanding how demand for HPC resources is changing is important for
+planning Australia's future national research infrastructure.
 
 ## Project Purpose
 

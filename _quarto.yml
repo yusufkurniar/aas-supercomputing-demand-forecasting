@@ -1,6 +1,8 @@
 project:
   type: book
 
+bibliography: references.bib
+
 book:
   title: "Forecasting Demand for National Research Supercomputing"
   subtitle: "Australian Academy of Science Internship Project"
