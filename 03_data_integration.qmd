@@ -104,6 +104,7 @@ demand_files <- list.files(
 )
 
 ```
+
 Derived the source period from file name.
 
 ```{r}
@@ -124,8 +125,18 @@ get_source_period <- function(path) {
 }
 ```
 
-Integrate context metrics
+Each yearly demand and allocation workbook contains several recurring
+worksheets. The same set of yearly workbooks is therefore used to extract
+each analytical component separately.
 
+#### Integrate Context Metrics
+
+Demand and allocation context metrics are combined across the yearly
+workbooks while retaining the source filename and reporting period.
+
+These records contain annual or supporting measures used to interpret
+requested compute, allocated compute and related demand-allocation
+relationships.
 ```{r}
 context_metrics <- map_dfr(
   demand_files,
@@ -142,6 +153,39 @@ context_metrics <- map_dfr(
   }
 )
 ```
+
+#### Integrate Project Allocations
+
+Project-level allocation records are combined across the yearly workbooks
+while retaining the source filename and reporting period.
+
+```{r}
+project_allocations <- map_dfr(
+  demand_files,
+  function(file) {
+
+    read_excel(
+      file,
+      sheet = "Project_Allocations",
+      col_types = "text"
+    ) |>
+      mutate(
+        source_file = basename(file),
+        source_period = get_source_period(file)
+      )
+  }
+)
+```
+
+#### Integrate Resource Envelope
+
+Resource-envelope records are combined across the yearly workbooks while
+retaining the source filename and reporting period.
+
+These records describe available HPC systems, resource availability and
+capacity-related information used to interpret the supply environment
+associated with observed demand and allocation.
+
 
 
 ## Integration Considerations
