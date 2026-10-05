@@ -248,6 +248,43 @@ resource_envelope <- resource_envelope |>
   )
 ```
 
+#### Validate Demand and Allocation Integration
+
+The integrated demand and allocation tables are checked to confirm that
+all yearly source workbooks have been retained and that the common
+analytical year is aligned consistently across the historical series.
+
+```{r}
+context_metrics |>
+  summarise(
+    rows = n(),
+    source_periods = n_distinct(source_period),
+    source_files = n_distinct(source_file),
+    years = n_distinct(year)
+  )
+
+project_allocations |>
+  summarise(
+    rows = n(),
+    source_periods = n_distinct(source_period),
+    source_files = n_distinct(source_file),
+    years = n_distinct(year)
+  )
+
+resource_envelope |>
+  summarise(
+    rows = n(),
+    source_periods = n_distinct(source_period),
+    source_files = n_distinct(source_file),
+    years = n_distinct(year)
+  )
+```
+
+```{r}
+
+```
+
+
 ## Integration Considerations
 
 Several issues need to be considered when integrating the datasets:
