@@ -320,6 +320,34 @@ for_data <- for_data |>
   )
 ```
 
+#### Validate Field of Research Integration
+
+The integrated Field of Research data are checked to confirm that all
+yearly FoR workbooks have been retained and that the common analytical
+year is aligned consistently with the demand and allocation series.
+
+```{r}
+for_data |>
+  summarise(
+    rows = n(),
+    source_periods = n_distinct(source_period),
+    source_files = n_distinct(source_file),
+    years = n_distinct(year)
+  )
+```
+
+```{r}
+for_data |>
+  group_by(source_period, year) |>
+  summarise(
+    composition_total = sum(
+      suppressWarnings(as.numeric(composition_pct)),
+      na.rm = TRUE
+    ),
+    .groups = "drop"
+  )
+```
+
 ## Integration Considerations
 
 Several issues need to be considered when integrating the datasets:
