@@ -489,20 +489,417 @@ resource_candidates |>
   count(year)
 ```
 
+### Construct Reconstructed Annual Summary
 
-## Integration Considerations
+The annual series is reconstructed from the integrated evidence without
+using the previously assembled summary as an input.
 
-Several issues need to be considered when integrating the datasets:
+Directly reported annual values are used where available. Derived values
+are calculated only where the required source values and relationships are
+contained in the integrated evidence. Where the integrated evidence is
+insufficient to reproduce an earlier summary value, the value is left
+missing for subsequent reconciliation rather than being inferred from the
+existing summary.
 
-- reporting periods are not always consistent across sources
-- Field of Research classifications have changed over time
-- institution names may be reported differently
-- CPU and GPU resources are reported using different units
-- some historical demand values are directly reported while others are estimated or derived
-- the level of detail available varies across years
+```{r}
+get_metric_value <- function(target_year, metric_name) {
 
-These differences are retained and documented rather than assuming that all observations are directly comparable.
+  context_candidates |>
+    filter(
+      year == target_year,
+      metric == metric_name
+    ) |>
+    pull(value_num) |>
+    first()
+}
+```
 
-## Output
+```{r}
+reconstructed_summary <- tibble(
+  year = 2014:2026,
+  source_period = paste0(
+    year - 1,
+    "/",
+    str_sub(as.character(year), -2)
+  )
+) |>
+  mutate(
 
-The output of this step is an integrated dataset that retains the original source information while providing a common structure for subsequent data standardisation and conversion.
+    requested_compute = case_when(
+
+      year == 2014 ~
+        get_metric_value(
+          2014,
+          "ncmas_total_ksu_request"
+        ),
+
+      year == 2015 ~
+        get_metric_value(
+          2015,
+          "nci_ncmas_implied_demand_2015"
+        ),
+
+      year == 2016 ~
+        get_metric_value(
+          2016,
+          "nci_ncmas_implied_requested_compute_2016"
+        ),
+
+      year == 2017 ~
+        get_metric_value(
+          2017,
+          "pawsey_ncmas_requested_compute_2017"
+        ),
+
+      year == 2018 ~
+        get_metric_value(
+          2018,
+          "national_implied_requested_compute_2018"
+        ),
+
+      # Current integrated evidence does not contain the
+      # 220 × 3 national proxy used previously.
+      year == 2019 ~ NA_real_,
+
+      year == 2020 ~
+        resource_candidates |>
+          filter(
+            year == 2020,
+            unit == "kSU"
+          ) |>
+          pull(resource_available_total) |>
+          first() * 2,
+
+      year == 2021 ~
+        get_metric_value(
+          2021,
+          "direct_ncmas_2021_total_allocation"
+        ) *
+        get_metric_value(
+          2021,
+          "ncmas_demand_supply_factor_high"
+        ),
+
+      year == 2022 ~
+        get_metric_value(
+          2022,
+          "ncmas_allocated_compute_total"
+        ) /
+        (
+          get_metric_value(
+            2022,
+            "ncmas_allocated_share_of_requested_pct"
+          ) / 100
+        ),
+
+      year == 2023 ~
+        get_metric_value(
+          2023,
+          "ncmas_requested_compute"
+        ),
+
+      # Retrospective 57% and 56% demand relationships are
+      # not currently retained in the integrated source tables.
+      year == 2024 ~ NA_real_,
+      year == 2025 ~ NA_real_,
+
+      year == 2026 ~
+        get_metric_value(
+          2026,
+          "ncmas_requested_compute"
+        )
+    ),
+
+    allocated_compute = case_when(
+
+      # 83,505 kSU is not currently retained as an annual
+      # metric in the integrated evidence.
+      year == 2014 ~ NA_real_,
+
+      year == 2015 ~
+        get_metric_value(
+          2015,
+          "nci_ncmas_allocation_2014_15"
+        ),
+
+      year == 2016 ~
+        get_metric_value(
+          2016,
+          "nci_ncmas_allocation_2015_16"
+        ),
+
+      year == 2017 ~
+        get_metric_value(
+          2017,
+          "pawsey_ncmas_available_compute_2017"
+        ),
+
+      year == 2018 ~
+        get_metric_value(
+          2018,
+          "national_allocated_compute_2018"
+        ),
+
+      # The 220m national capacity proxy is not currently
+      # retained in the integrated evidence.
+      year == 2019 ~ NA_real_,
+
+      year == 2020 ~
+        get_metric_value(
+          2020,
+          "nci_supplement_ncmas_allocation_total_verified"
+        ),
+
+      year == 2021 ~
+        get_metric_value(
+          2021,
+          "direct_ncmas_2021_total_allocation"
+        ),
+
+      year == 2022 ~
+        get_metric_value(
+          2022,
+          "ncmas_allocated_compute_total"
+        ),
+
+      year == 2023 ~
+        get_metric_value(
+          2023,
+          "ncmas_allocated_compute_total"
+        ),
+
+      year == 2024 ~
+        get_metric_value(
+          2024,
+          "ncmas_total_allocation"
+        ),
+
+      year == 2025 ~
+        get_metric_value(
+          2025,
+          "ncmas_total_allocation"
+        ),
+
+      year == 2026 ~
+        get_metric_value(2026, "ncmas_gadi_allocation") +
+        get_metric_value(2026, "ncmas_setonix_cpu_allocation") +
+        get_metric_value(2026, "ncmas_setonix_gpu_allocation")
+    )
+  )
+```
+
+```{r}
+reconstructed_summary
+```
+
+### Compare Reconstructed and Existing Annual Summaries
+
+The reconstructed annual series is compared with the previously assembled
+summary to identify values that are reproduced directly from the
+integrated evidence and values that require additional source evidence or
+documented derivation.
+
+```{r}
+current_summary <- read_excel(
+  file.path(clean_path, "demand_allocation_data.xlsx")
+) |>
+  mutate(
+    year = get_end_year(source_period)
+  )
+```
+
+```{r}
+summary_comparison <- current_summary |>
+  select(
+    year,
+    source_period,
+    old_requested = requested_compute,
+    old_allocated = allocated_compute
+  ) |>
+  full_join(
+    reconstructed_summary |>
+      rename(
+        reconstructed_requested = requested_compute,
+        reconstructed_allocated = allocated_compute
+      ),
+    by = c("year", "source_period")
+  ) |>
+  mutate(
+    requested_match = case_when(
+      is.na(reconstructed_requested) ~ FALSE,
+      TRUE ~ near(old_requested, reconstructed_requested)
+    ),
+    allocated_match = case_when(
+      is.na(reconstructed_allocated) ~ FALSE,
+      TRUE ~ near(old_allocated, reconstructed_allocated)
+    )
+  ) |>
+  arrange(year)
+```
+
+```{r}
+summary_comparison |>
+  select(
+    year,
+    source_period,
+    old_requested,
+    reconstructed_requested,
+    requested_match,
+    old_allocated,
+    reconstructed_allocated,
+    allocated_match
+  )
+```
+
+### Resolve Unreconstructed Annual Values
+
+The initial reconstruction identified several annual values that could not
+be reproduced from the integrated source tables because the supporting
+metric or derivation had not yet been retained explicitly in the
+integrated evidence.
+
+These cases are reviewed against the original yearly source evidence
+before the final annual summary is constructed.
+
+```{r}
+unreconstructed_values <- summary_comparison |>
+  filter(
+    is.na(reconstructed_requested) |
+    is.na(reconstructed_allocated)
+  ) |>
+  transmute(
+    year,
+    source_period,
+    missing_requested = is.na(reconstructed_requested),
+    missing_allocated = is.na(reconstructed_allocated),
+    old_requested,
+    old_allocated
+  )
+
+unreconstructed_values
+```
+
+```{r}
+missing_value_notes <- tribble(
+  ~year, ~missing_measure, ~reason,
+
+  2014, "Allocated compute",
+  "The 83,505 kSU annual allocation is supported by the original annual-report evidence but was not retained as an explicit annual metric in the integrated Context_Metrics table.",
+
+  2019, "Requested and allocated compute",
+  "The 660 million requested / 220 million available proxy pair depends on the reported three-times demand-to-supply relationship, but the complete derivation is not retained explicitly in the integrated evidence.",
+
+  2024, "Requested compute",
+  "The requested-demand proxy depends on the retrospective 57% allocation-to-request relationship, which is not currently retained as an explicit integrated metric.",
+
+  2025, "Requested compute",
+  "The requested-demand proxy depends on the retrospective 56% allocation-to-request relationship, which is not currently retained as an explicit integrated metric."
+)
+```
+
+### Derive Missing Annual Measures
+
+Where a directly reported annual demand or allocation measure is not
+available, a derived or proxy value is constructed from other published
+evidence retained in the integrated source data.
+
+These derivations are applied only where the relationship used is
+explicitly supported by the source material. Derived and proxy values are
+retained separately from directly reported measures so that their status
+remains transparent.
+
+```{r}
+reconstructed_summary <- reconstructed_summary |>
+  mutate(
+    requested_compute = case_when(
+      year == 2019 ~ 220 * 3,
+      year == 2024 ~ 812569 / 0.57,
+      year == 2025 ~ 876200 / 0.56,
+      TRUE ~ requested_compute
+    ),
+    allocated_compute = case_when(
+      year == 2014 ~ 83505,
+      year == 2019 ~ 220,
+      TRUE ~ allocated_compute
+    )
+  )
+```
+
+```{r}
+reconstructed_summary <- reconstructed_summary |>
+  mutate(
+    requested_basis = case_when(
+      year == 2014 ~ "Direct",
+      year == 2015 ~ "Derived",
+      year == 2016 ~ "Derived",
+      year == 2017 ~ "Proxy",
+      year == 2018 ~ "Derived",
+      year == 2019 ~ "Derived proxy",
+      year == 2020 ~ "Derived proxy",
+      year == 2021 ~ "Derived proxy",
+      year == 2022 ~ "Derived proxy",
+      year == 2023 ~ "Direct",
+      year == 2024 ~ "Derived proxy",
+      year == 2025 ~ "Derived proxy",
+      year == 2026 ~ "Direct"
+    ),
+
+    allocated_basis = case_when(
+      year == 2014 ~ "Direct",
+      year == 2015 ~ "Direct",
+      year == 2016 ~ "Direct",
+      year == 2017 ~ "Capacity proxy",
+      year == 2018 ~ "Direct",
+      year == 2019 ~ "Capacity proxy",
+      year == 2020 ~ "Direct",
+      year == 2021 ~ "Direct",
+      year == 2022 ~ "Direct",
+      year == 2023 ~ "Direct",
+      year == 2024 ~ "Direct",
+      year == 2025 ~ "Direct",
+      year == 2026 ~ "Direct comparable subset"
+    ),
+
+    derivation_note = case_when(
+      year == 2015 ~
+        "Requested compute derived from reported allocation and demand relationship.",
+
+      year == 2016 ~
+        "Requested compute derived from reported one-third fulfilment relationship.",
+
+      year == 2017 ~
+        "Requested compute retained as a lower-bound proxy; available capacity used as the allocation proxy.",
+
+      year == 2018 ~
+        "Requested compute derived from 222 million hours and a 42% fulfilment relationship.",
+
+      year == 2019 ~
+        "Requested compute derived as 220 × 3; available capacity used as the allocation proxy.",
+
+      year == 2020 ~
+        "Requested compute derived from the resource envelope and reported demand-supply relationship.",
+
+      year == 2021 ~
+        "Requested compute derived using the approximate three-times demand-supply relationship.",
+
+      year == 2022 ~
+        "Requested compute derived from allocated compute and the reported 50% fulfilment relationship.",
+
+      year == 2024 ~
+        "Requested compute derived from allocated compute and the retrospective 57% fulfilment relationship.",
+
+      year == 2025 ~
+        "Requested compute derived from allocated compute and the retrospective 56% fulfilment relationship.",
+
+      year == 2026 ~
+        "Setonix-Q excluded from allocation to match the scope of the published requested-compute comparison.",
+
+      TRUE ~ NA_character_
+    )
+  )
+```
+
+```{r}
+reconstructed_summary
+```
+
