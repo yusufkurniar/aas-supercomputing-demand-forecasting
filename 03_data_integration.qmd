@@ -348,6 +348,98 @@ for_data |>
   )
 ```
 
+#### Export Integrated Source Data
+
+The validated integrated tables are exported as a consolidated workbook
+to provide a reproducible intermediate dataset between the original yearly
+source files and the annual modelling summary.
+
+The workbook retains the different analytical components on separate
+worksheets so that differences in granularity and scope are preserved.
+
+```{r}
+writexl::write_xlsx(
+  list(
+    Context_Metrics = context_metrics,
+    Project_Allocations = project_allocations,
+    Resource_Envelope = resource_envelope,
+    FoR_Composition = for_data
+  ),
+  path = file.path(
+    clean_path,
+    "integrated_hpc_source_data.xlsx"
+  )
+)
+```
+
+
+## Annual Demand and Allocation Summary Construction
+
+The annual demand and allocation summary is constructed after integration
+of the detailed yearly source evidence.
+
+The existing manually assembled summary is retained temporarily as a
+reference for reconciliation rather than treated as an independent source
+of data. Each annual requested and allocated compute value is checked
+against the integrated `Context_Metrics`, `Project_Allocations` and
+`Resource_Envelope` evidence.
+
+Where a directly reported comparable annual value is available, that
+value is preferred. Where it is not available, a derived or proxy value
+may be constructed from the integrated evidence using an explicitly
+documented assumption.
+
+```{r}
+current_summary <- read_excel(
+  file.path(clean_path, "demand_allocation_data.xlsx")
+) |>
+  mutate(
+    year = get_end_year(source_period)
+  )
+```
+
+```{r}
+demand_allocation_evidence <- context_metrics |>
+  filter(
+    str_detect(
+      metric,
+      regex(
+        "request|demand|allocat|fulfil|oversub|capacity|available",
+        ignore_case = TRUE
+      )
+    )
+  ) |>
+  select(
+    year,
+    source_period,
+    metric,
+    value,
+    unit,
+    scope,
+    source,
+    source_url,
+    notes
+  ) |>
+  arrange(year, metric)
+```
+
+```{r}
+reconciliation_check <- current_summary |>
+  select(
+    year,
+    source_period,
+    requested_compute,
+    allocated_compute,
+    requested_value_type,
+    allocated_value_type
+  ) |>
+  left_join(
+    demand_allocation_evidence,
+    by = c("year", "source_period")
+  ) |>
+  arrange(year, metric)
+```
+
 ## Integration Considerations
 
 Several issues need to be considered when integrating the datasets:
