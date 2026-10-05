@@ -214,27 +214,17 @@
     "href": "03_data_integration.html#main-datasets",
     "title": "4  Data Integration",
     "section": "4.2 Main Datasets",
-    "text": "4.2 Main Datasets\nThe integration process combines several datasets with different analytical roles.\nThe core HPC datasets include:\n\nannual HPC demand and allocation data,\nNCMAS project and allocation level data, and\nField of Research data.\n\nSupporting datasets include:\n\nresearch funding data,\nresearch workforce and research activity data, and\nHPC system and capacity information.\n\nThe core datasets provide the main historical measures of requested compute, allocated compute and disciplinary composition. Supporting datasets are retained as contextual or candidate explanatory variables for later analysis and modelling.\nBecause these datasets differ in temporal coverage, granularity and reporting scope, they are not merged indiscriminately. Integration is performed only where suitable common identifiers and compatible levels of aggregation are available.",
+    "text": "4.2 Main Datasets\nThe integration process combines several datasets (2014 - 2026) with different analytical roles.\nThe core HPC datasets include:\n\nyearly HPC demand and allocation source data,\nNCMAS project and allocation-level data, and\nField of Research data.\n\nSupporting datasets include:\n\nresearch funding data,\nresearch workforce and research activity data, and\nHPC system and capacity information.\n\nThe core datasets provide the historical evidence used to construct measures of requested compute, allocated compute and disciplinary composition. Supporting datasets are retained as contextual or candidate explanatory variables for later analysis and modelling.\nBecause these datasets differ in temporal coverage, granularity and reporting scope, they are not merged indiscriminately. Integration is performed only where suitable common identifiers and compatible levels of aggregation are available.\nWhere annual demand or allocation measures are not directly available, derived or proxy values are constructed later from the integrated source evidence using explicitly documented assumptions. These selected annual measures are subsequently assembled into a separate summary dataset for modelling.",
     "crumbs": [
       "<span class='chapter-number'>4</span>  <span class='chapter-title'>Data Integration</span>"
     ]
   },
   {
-    "objectID": "03_data_integration.html#time-period",
-    "href": "03_data_integration.html#time-period",
+    "objectID": "03_data_integration.html#yearly-source-integration",
+    "href": "03_data_integration.html#yearly-source-integration",
     "title": "4  Data Integration",
-    "section": "4.3 Time Period",
-    "text": "4.3 Time Period\nThe main HPC dataset covers the period from 2013/14 to 2025/26.\nOther datasets may have different reporting periods. Where possible, these are aligned with the corresponding HPC allocation year while retaining the original reporting period for reference.",
-    "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Data Integration</span>"
-    ]
-  },
-  {
-    "objectID": "03_data_integration.html#integration-structure",
-    "href": "03_data_integration.html#integration-structure",
-    "title": "4  Data Integration",
-    "section": "4.4 Integration Structure",
-    "text": "4.4 Integration Structure\nThe datasets are integrated primarily using:\n\nyear or reporting period\nField of Research\ninstitution, where available\nfacility and HPC system\nresource type\n\nThe level of integration depends on the detail available in each source.",
+    "section": "4.3 Yearly Source Integration",
+    "text": "4.3 Yearly Source Integration\nThe detailed yearly source files are integrated before constructing the annual modelling summary.\nFor the HPC demand and allocation data, each yearly workbook contains multiple types of evidence. The integration therefore preserves the different analytical levels rather than reducing each workbook immediately to a single annual value.\nThree recurring components are retained:\n\nProject_Allocations, containing project- or allocation-level records,\nContext_Metrics, containing reported or derived annual and contextual measures, and\nResource_Envelope, containing information on available resources and system-level capacity.\n\nField of Research data are integrated separately from the yearly FoR_Composition sheets.\nThe source filename and source period are retained during integration so that each observation remains traceable to its original yearly workbook. The resulting integrated tables form the evidence base from which annual summary measures are selected or derived later.",
     "crumbs": [
       "<span class='chapter-number'>4</span>  <span class='chapter-title'>Data Integration</span>"
     ]
@@ -243,8 +233,8 @@
     "objectID": "03_data_integration.html#integration-considerations",
     "href": "03_data_integration.html#integration-considerations",
     "title": "4  Data Integration",
-    "section": "4.5 Integration Considerations",
-    "text": "4.5 Integration Considerations\nSeveral issues need to be considered when integrating the datasets:\n\nreporting periods are not always consistent across sources\nField of Research classifications have changed over time\ninstitution names may be reported differently\nCPU and GPU resources are reported using different units\nsome historical demand values are directly reported while others are estimated or derived\nthe level of detail available varies across years\n\nThese differences are retained and documented rather than assuming that all observations are directly comparable.",
+    "section": "4.4 Integration Considerations",
+    "text": "4.4 Integration Considerations\nSeveral issues need to be considered when integrating the datasets:\n\nreporting periods are not always consistent across sources\nField of Research classifications have changed over time\ninstitution names may be reported differently\nCPU and GPU resources are reported using different units\nsome historical demand values are directly reported while others are estimated or derived\nthe level of detail available varies across years\n\nThese differences are retained and documented rather than assuming that all observations are directly comparable.",
     "crumbs": [
       "<span class='chapter-number'>4</span>  <span class='chapter-title'>Data Integration</span>"
     ]
@@ -253,8 +243,8 @@
     "objectID": "03_data_integration.html#output",
     "href": "03_data_integration.html#output",
     "title": "4  Data Integration",
-    "section": "4.6 Output",
-    "text": "4.6 Output\nThe output of this step is an integrated dataset that retains the original source information while providing a common structure for subsequent data standardisation and conversion.",
+    "section": "4.5 Output",
+    "text": "4.5 Output\nThe output of this step is an integrated dataset that retains the original source information while providing a common structure for subsequent data standardisation and conversion.",
     "crumbs": [
       "<span class='chapter-number'>4</span>  <span class='chapter-title'>Data Integration</span>"
     ]

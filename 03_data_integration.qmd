@@ -23,13 +23,13 @@ than assuming equivalence.
 
 ## Main Datasets
 
-The integration process combines several datasets with different
+The integration process combines several datasets (2014 - 2026) with different
 analytical roles.
 
 The core HPC datasets include:
 
-- annual HPC demand and allocation data,
-- NCMAS project and allocation level data, and
+- yearly HPC demand and allocation source data,
+- NCMAS project and allocation-level data, and
 - Field of Research data.
 
 Supporting datasets include:
@@ -38,33 +38,47 @@ Supporting datasets include:
 - research workforce and research activity data, and
 - HPC system and capacity information.
 
-The core datasets provide the main historical measures of requested
-compute, allocated compute and disciplinary composition. Supporting
-datasets are retained as contextual or candidate explanatory variables
-for later analysis and modelling.
+The core datasets provide the historical evidence used to construct
+measures of requested compute, allocated compute and disciplinary
+composition. Supporting datasets are retained as contextual or candidate
+explanatory variables for later analysis and modelling.
 
 Because these datasets differ in temporal coverage, granularity and
 reporting scope, they are not merged indiscriminately. Integration is
 performed only where suitable common identifiers and compatible levels
 of aggregation are available.
 
-## Time Period
+Where annual demand or allocation measures are not directly available,
+derived or proxy values are constructed later from the integrated source
+evidence using explicitly documented assumptions. These selected annual
+measures are subsequently assembled into a separate summary dataset for
+modelling.
 
-The main HPC dataset covers the period from 2013/14 to 2025/26.
+## Yearly Source Integration
 
-Other datasets may have different reporting periods. Where possible, these are aligned with the corresponding HPC allocation year while retaining the original reporting period for reference.
+The detailed yearly source files are integrated before constructing the
+annual modelling summary.
 
-## Integration Structure
+For the HPC demand and allocation data, each yearly workbook contains
+multiple types of evidence. The integration therefore preserves the
+different analytical levels rather than reducing each workbook
+immediately to a single annual value.
 
-The datasets are integrated primarily using:
+Three recurring components are retained:
 
-- year or reporting period
-- Field of Research
-- institution, where available
-- facility and HPC system
-- resource type
+- `Project_Allocations`, containing project- or allocation-level records,
+- `Context_Metrics`, containing reported or derived annual and contextual
+  measures, and
+- `Resource_Envelope`, containing information on available resources and
+  system-level capacity.
 
-The level of integration depends on the detail available in each source.
+Field of Research data are integrated separately from the yearly
+`FoR_Composition` sheets.
+
+The source filename and source period are retained during integration so
+that each observation remains traceable to its original yearly workbook.
+The resulting integrated tables form the evidence base from which annual
+summary measures are selected or derived later.
 
 ## Integration Considerations
 

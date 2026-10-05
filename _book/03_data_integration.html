@@ -229,10 +229,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#purpose" id="toc-purpose" class="nav-link active" data-scroll-target="#purpose"><span class="header-section-number">4.1</span> Purpose</a></li>
   <li><a href="#main-datasets" id="toc-main-datasets" class="nav-link" data-scroll-target="#main-datasets"><span class="header-section-number">4.2</span> Main Datasets</a></li>
-  <li><a href="#time-period" id="toc-time-period" class="nav-link" data-scroll-target="#time-period"><span class="header-section-number">4.3</span> Time Period</a></li>
-  <li><a href="#integration-structure" id="toc-integration-structure" class="nav-link" data-scroll-target="#integration-structure"><span class="header-section-number">4.4</span> Integration Structure</a></li>
-  <li><a href="#integration-considerations" id="toc-integration-considerations" class="nav-link" data-scroll-target="#integration-considerations"><span class="header-section-number">4.5</span> Integration Considerations</a></li>
-  <li><a href="#output" id="toc-output" class="nav-link" data-scroll-target="#output"><span class="header-section-number">4.6</span> Output</a></li>
+  <li><a href="#yearly-source-integration" id="toc-yearly-source-integration" class="nav-link" data-scroll-target="#yearly-source-integration"><span class="header-section-number">4.3</span> Yearly Source Integration</a></li>
+  <li><a href="#integration-considerations" id="toc-integration-considerations" class="nav-link" data-scroll-target="#integration-considerations"><span class="header-section-number">4.4</span> Integration Considerations</a></li>
+  <li><a href="#output" id="toc-output" class="nav-link" data-scroll-target="#output"><span class="header-section-number">4.5</span> Output</a></li>
   </ul>
 </nav>
     </div>
@@ -267,11 +266,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="main-datasets" class="level2" data-number="4.2">
 <h2 data-number="4.2" class="anchored" data-anchor-id="main-datasets"><span class="header-section-number">4.2</span> Main Datasets</h2>
-<p>The integration process combines several datasets with different analytical roles.</p>
+<p>The integration process combines several datasets (2014 - 2026) with different analytical roles.</p>
 <p>The core HPC datasets include:</p>
 <ul>
-<li>annual HPC demand and allocation data,</li>
-<li>NCMAS project and allocation level data, and</li>
+<li>yearly HPC demand and allocation source data,</li>
+<li>NCMAS project and allocation-level data, and</li>
 <li>Field of Research data.</li>
 </ul>
 <p>Supporting datasets include:</p>
@@ -280,28 +279,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>research workforce and research activity data, and</li>
 <li>HPC system and capacity information.</li>
 </ul>
-<p>The core datasets provide the main historical measures of requested compute, allocated compute and disciplinary composition. Supporting datasets are retained as contextual or candidate explanatory variables for later analysis and modelling.</p>
+<p>The core datasets provide the historical evidence used to construct measures of requested compute, allocated compute and disciplinary composition. Supporting datasets are retained as contextual or candidate explanatory variables for later analysis and modelling.</p>
 <p>Because these datasets differ in temporal coverage, granularity and reporting scope, they are not merged indiscriminately. Integration is performed only where suitable common identifiers and compatible levels of aggregation are available.</p>
+<p>Where annual demand or allocation measures are not directly available, derived or proxy values are constructed later from the integrated source evidence using explicitly documented assumptions. These selected annual measures are subsequently assembled into a separate summary dataset for modelling.</p>
 </section>
-<section id="time-period" class="level2" data-number="4.3">
-<h2 data-number="4.3" class="anchored" data-anchor-id="time-period"><span class="header-section-number">4.3</span> Time Period</h2>
-<p>The main HPC dataset covers the period from 2013/14 to 2025/26.</p>
-<p>Other datasets may have different reporting periods. Where possible, these are aligned with the corresponding HPC allocation year while retaining the original reporting period for reference.</p>
-</section>
-<section id="integration-structure" class="level2" data-number="4.4">
-<h2 data-number="4.4" class="anchored" data-anchor-id="integration-structure"><span class="header-section-number">4.4</span> Integration Structure</h2>
-<p>The datasets are integrated primarily using:</p>
+<section id="yearly-source-integration" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="yearly-source-integration"><span class="header-section-number">4.3</span> Yearly Source Integration</h2>
+<p>The detailed yearly source files are integrated before constructing the annual modelling summary.</p>
+<p>For the HPC demand and allocation data, each yearly workbook contains multiple types of evidence. The integration therefore preserves the different analytical levels rather than reducing each workbook immediately to a single annual value.</p>
+<p>Three recurring components are retained:</p>
 <ul>
-<li>year or reporting period</li>
-<li>Field of Research</li>
-<li>institution, where available</li>
-<li>facility and HPC system</li>
-<li>resource type</li>
+<li><code>Project_Allocations</code>, containing project- or allocation-level records,</li>
+<li><code>Context_Metrics</code>, containing reported or derived annual and contextual measures, and</li>
+<li><code>Resource_Envelope</code>, containing information on available resources and system-level capacity.</li>
 </ul>
-<p>The level of integration depends on the detail available in each source.</p>
+<p>Field of Research data are integrated separately from the yearly <code>FoR_Composition</code> sheets.</p>
+<p>The source filename and source period are retained during integration so that each observation remains traceable to its original yearly workbook. The resulting integrated tables form the evidence base from which annual summary measures are selected or derived later.</p>
 </section>
-<section id="integration-considerations" class="level2" data-number="4.5">
-<h2 data-number="4.5" class="anchored" data-anchor-id="integration-considerations"><span class="header-section-number">4.5</span> Integration Considerations</h2>
+<section id="integration-considerations" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="integration-considerations"><span class="header-section-number">4.4</span> Integration Considerations</h2>
 <p>Several issues need to be considered when integrating the datasets:</p>
 <ul>
 <li>reporting periods are not always consistent across sources</li>
@@ -313,8 +309,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p>These differences are retained and documented rather than assuming that all observations are directly comparable.</p>
 </section>
-<section id="output" class="level2" data-number="4.6">
-<h2 data-number="4.6" class="anchored" data-anchor-id="output"><span class="header-section-number">4.6</span> Output</h2>
+<section id="output" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="output"><span class="header-section-number">4.5</span> Output</h2>
 <p>The output of this step is an integrated dataset that retains the original source information while providing a common structure for subsequent data standardisation and conversion.</p>
 
 
@@ -811,13 +807,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="fu">## Main Datasets</span></span>
 <span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>The integration process combines several datasets with different</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>The integration process combines several datasets (2014 - 2026) with different</span>
 <span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>analytical roles.</span>
 <span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>The core HPC datasets include:</span>
 <span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>annual HPC demand and allocation data,</span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>NCMAS project and allocation level data, and</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>yearly HPC demand and allocation source data,</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>NCMAS project and allocation-level data, and</span>
 <span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Field of Research data.</span>
 <span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>Supporting datasets include:</span>
@@ -826,50 +822,64 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>research workforce and research activity data, and</span>
 <span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>HPC system and capacity information.</span>
 <span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>The core datasets provide the main historical measures of requested</span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>compute, allocated compute and disciplinary composition. Supporting</span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>datasets are retained as contextual or candidate explanatory variables</span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>for later analysis and modelling.</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>The core datasets provide the historical evidence used to construct</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>measures of requested compute, allocated compute and disciplinary</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>composition. Supporting datasets are retained as contextual or candidate</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>explanatory variables for later analysis and modelling.</span>
 <span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>Because these datasets differ in temporal coverage, granularity and</span>
 <span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>reporting scope, they are not merged indiscriminately. Integration is</span>
 <span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>performed only where suitable common identifiers and compatible levels</span>
 <span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>of aggregation are available.</span>
 <span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a><span class="fu">## Time Period</span></span>
-<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>The main HPC dataset covers the period from 2013/14 to 2025/26.</span>
-<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>Other datasets may have different reporting periods. Where possible, these are aligned with the corresponding HPC allocation year while retaining the original reporting period for reference.</span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>Where annual demand or allocation measures are not directly available,</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>derived or proxy values are constructed later from the integrated source</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>evidence using explicitly documented assumptions. These selected annual</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>measures are subsequently assembled into a separate summary dataset for</span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>modelling.</span>
 <span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a><span class="fu">## Integration Structure</span></span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a><span class="fu">## Yearly Source Integration</span></span>
 <span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>The datasets are integrated primarily using:</span>
-<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>year or reporting period</span>
-<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Field of Research</span>
-<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>institution, where available</span>
-<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>facility and HPC system</span>
-<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>resource type</span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>The detailed yearly source files are integrated before constructing the</span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>annual modelling summary.</span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>For the HPC demand and allocation data, each yearly workbook contains</span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>multiple types of evidence. The integration therefore preserves the</span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>different analytical levels rather than reducing each workbook</span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>immediately to a single annual value.</span>
 <span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>The level of integration depends on the detail available in each source.</span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>Three recurring components are retained:</span>
 <span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a><span class="fu">## Integration Considerations</span></span>
-<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>Several issues need to be considered when integrating the datasets:</span>
-<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>reporting periods are not always consistent across sources</span>
-<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Field of Research classifications have changed over time</span>
-<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>institution names may be reported differently</span>
-<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>CPU and GPU resources are reported using different units</span>
-<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>some historical demand values are directly reported while others are estimated or derived</span>
-<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>the level of detail available varies across years</span>
-<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a>These differences are retained and documented rather than assuming that all observations are directly comparable.</span>
-<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a><span class="fu">## Output</span></span>
-<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a>The output of this step is an integrated dataset that retains the original source information while providing a common structure for subsequent data standardisation and conversion.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`Project_Allocations`</span>, containing project- or allocation-level records,</span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`Context_Metrics`</span>, containing reported or derived annual and contextual</span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>  measures, and</span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`Resource_Envelope`</span>, containing information on available resources and</span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>  system-level capacity.</span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a>Field of Research data are integrated separately from the yearly</span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a><span class="in">`FoR_Composition`</span> sheets.</span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a>The source filename and source period are retained during integration so</span>
+<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a>that each observation remains traceable to its original yearly workbook.</span>
+<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a>The resulting integrated tables form the evidence base from which annual</span>
+<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a>summary measures are selected or derived later.</span>
+<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a><span class="fu">## Integration Considerations</span></span>
+<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a>Several issues need to be considered when integrating the datasets:</span>
+<span id="cb1-86"><a href="#cb1-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-87"><a href="#cb1-87" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>reporting periods are not always consistent across sources</span>
+<span id="cb1-88"><a href="#cb1-88" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Field of Research classifications have changed over time</span>
+<span id="cb1-89"><a href="#cb1-89" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>institution names may be reported differently</span>
+<span id="cb1-90"><a href="#cb1-90" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>CPU and GPU resources are reported using different units</span>
+<span id="cb1-91"><a href="#cb1-91" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>some historical demand values are directly reported while others are estimated or derived</span>
+<span id="cb1-92"><a href="#cb1-92" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>the level of detail available varies across years</span>
+<span id="cb1-93"><a href="#cb1-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-94"><a href="#cb1-94" aria-hidden="true" tabindex="-1"></a>These differences are retained and documented rather than assuming that all observations are directly comparable.</span>
+<span id="cb1-95"><a href="#cb1-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-96"><a href="#cb1-96" aria-hidden="true" tabindex="-1"></a><span class="fu">## Output</span></span>
+<span id="cb1-97"><a href="#cb1-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-98"><a href="#cb1-98" aria-hidden="true" tabindex="-1"></a>The output of this step is an integrated dataset that retains the original source information while providing a common structure for subsequent data standardisation and conversion.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 
