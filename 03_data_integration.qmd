@@ -123,6 +123,16 @@ get_source_period <- function(path) {
     years[, 3]
   )
 }
+
+get_end_year <- function(source_period) {
+
+  end_year <- str_extract(
+    source_period,
+    "(?<=/)\\d{2}$"
+  )
+
+  2000 + as.numeric(end_year)
+}
 ```
 
 Each yearly demand and allocation workbook contains several recurring
@@ -137,6 +147,7 @@ workbooks while retaining the source filename and reporting period.
 These records contain annual or supporting measures used to interpret
 requested compute, allocated compute and related demand-allocation
 relationships.
+
 ```{r}
 context_metrics <- map_dfr(
   demand_files,
@@ -152,6 +163,7 @@ context_metrics <- map_dfr(
       )
   }
 )
+
 ```
 
 #### Integrate Project Allocations
@@ -186,7 +198,55 @@ These records describe available HPC systems, resource availability and
 capacity-related information used to interpret the supply environment
 associated with observed demand and allocation.
 
+```{r}
+resource_envelope <- map_dfr(
+  demand_files,
+  function(file) {
 
+    read_excel(
+      file,
+      sheet = "Resource_Envelope",
+      col_types = "text"
+    ) |>
+      mutate(
+        source_file = basename(file),
+        source_period = get_source_period(file)
+      )
+  }
+)
+```
+
+#### Align Analytical Year
+
+A common analytical year is created to align observations across the
+different yearly source tables. The ending year of each source period is
+used as the common reference year where a consistent NCMAS or allocation
+year is not available.
+
+```{r}
+context_metrics <- context_metrics |>
+  mutate(
+    year = get_end_year(source_period)
+  )
+
+project_allocations <- project_allocations |>
+  mutate(
+    year = coalesce(
+      suppressWarnings(as.numeric(ncmas_year)),
+      suppressWarnings(as.numeric(allocation_year)),
+      get_end_year(source_period)
+    )
+  )
+
+resource_envelope <- resource_envelope |>
+  mutate(
+    year = coalesce(
+      suppressWarnings(as.numeric(ncmas_year)),
+      suppressWarnings(as.numeric(allocation_year)),
+      get_end_year(source_period)
+    )
+  )
+```
 
 ## Integration Considerations
 
