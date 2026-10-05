@@ -23,20 +23,19 @@ than assuming equivalence.
 
 ## Main Datasets
 
-The integration process combines several datasets (2014 - 2026) with different
-analytical roles.
+The integration process combines several datasets covering 2014 - 2026,
+with different analytical roles.
 
 The core HPC datasets include:
 
-- yearly HPC demand and allocation source data,
-- NCMAS project and allocation-level data, and
-- Field of Research data.
+- yearly HPC demand and allocation source workbooks,
+- Field of Research composition data, and
+- HPC system and capacity information.
 
 Supporting datasets include:
 
-- research funding data,
-- research workforce and research activity data, and
-- HPC system and capacity information.
+- research funding data, and
+- research workforce and research activity data.
 
 The core datasets provide the historical evidence used to construct
 measures of requested compute, allocated compute and disciplinary
@@ -142,7 +141,7 @@ each analytical component separately.
 #### Integrate Context Metrics
 
 Demand and allocation context metrics are combined across the yearly
-workbooks while retaining the source filename and reporting period.
+workbooks.
 
 These records contain annual or supporting measures used to interpret
 requested compute, allocated compute and related demand-allocation
@@ -168,8 +167,8 @@ context_metrics <- map_dfr(
 
 #### Integrate Project Allocations
 
-Project-level allocation records are combined across the yearly workbooks
-while retaining the source filename and reporting period.
+Project-level allocation records are combined across the yearly
+workbooks while preserving their original source-level structure.
 
 ```{r}
 project_allocations <- map_dfr(
@@ -191,8 +190,7 @@ project_allocations <- map_dfr(
 
 #### Integrate Resource Envelope
 
-Resource-envelope records are combined across the yearly workbooks while
-retaining the source filename and reporting period.
+Resource-envelope records are combined across the yearly workbooks.
 
 These records describe available HPC systems, resource availability and
 capacity-related information used to interpret the supply environment
@@ -280,10 +278,47 @@ resource_envelope |>
   )
 ```
 
-```{r}
+#### Integrate Field of Research Data
 
+Field of Research composition data are combined across the yearly FoR
+workbooks while retaining the source filename and reporting period.
+
+These records describe the disciplinary composition of HPC allocation
+and are integrated separately from the demand and allocation evidence
+because they have a different analytical structure and level of
+aggregation.
+
+```{r}
+for_files <- list.files(
+  for_path,
+  pattern = "\\.xlsx$",
+  full.names = TRUE
+)
 ```
 
+```{r}
+for_data <- map_dfr(
+  for_files,
+  function(file) {
+
+    read_excel(
+      file,
+      sheet = "FoR_Composition",
+      col_types = "text"
+    ) |>
+      mutate(
+        source_file = basename(file)
+      )
+  }
+)
+```
+
+```{r}
+for_data <- for_data |>
+  mutate(
+    year = get_end_year(source_period)
+  )
+```
 
 ## Integration Considerations
 
