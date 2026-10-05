@@ -903,3 +903,83 @@ reconstructed_summary <- reconstructed_summary |>
 reconstructed_summary
 ```
 
+### Final Reconciliation Check
+
+After the missing annual measures are reconstructed and their basis is
+documented, the annual series is compared again with the previously
+assembled summary.
+
+This final check identifies whether the reconstructed values reproduce the
+existing annual summary and highlights any remaining differences due to
+rounding, scope or methodological treatment.
+
+```{r}
+final_summary_comparison <- current_summary |>
+  select(
+    year,
+    source_period,
+    old_requested = requested_compute,
+    old_allocated = allocated_compute
+  ) |>
+  full_join(
+    reconstructed_summary |>
+      select(
+        year,
+        source_period,
+        reconstructed_requested = requested_compute,
+        reconstructed_allocated = allocated_compute,
+        requested_basis,
+        allocated_basis,
+        derivation_note
+      ),
+    by = c("year", "source_period")
+  ) |>
+  mutate(
+    requested_difference =
+      reconstructed_requested - old_requested,
+
+    allocated_difference =
+      reconstructed_allocated - old_allocated,
+
+    requested_match =
+      near(
+        old_requested,
+        reconstructed_requested,
+        tol = 1e-3
+      ),
+
+    allocated_match =
+      near(
+        old_allocated,
+        reconstructed_allocated,
+        tol = 1e-3
+      )
+  ) |>
+  arrange(year)
+```
+
+```{r}
+final_summary_comparison |>
+  select(
+    year,
+    source_period,
+    old_requested,
+    reconstructed_requested,
+    requested_match,
+    old_allocated,
+    reconstructed_allocated,
+    allocated_match
+  )
+```
+
+```{r}
+final_summary_comparison |>
+  summarise(
+    years = n(),
+    requested_matches = sum(requested_match),
+    allocated_matches = sum(allocated_match),
+    requested_mismatches = sum(!requested_match),
+    allocated_mismatches = sum(!allocated_match)
+  )
+```
+
