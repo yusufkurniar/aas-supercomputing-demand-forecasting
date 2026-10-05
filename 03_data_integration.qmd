@@ -398,8 +398,22 @@ current_summary <- read_excel(
   )
 ```
 
+### Reconstruct Annual Demand and Allocation Summary
+
+Annual demand and allocation measures are reconstructed from the
+integrated source tables before comparison with the previously assembled
+summary.
+
+Context metrics are used to identify reported annual totals, ratios and
+derived demand information. Project-level allocations and resource
+envelopes are retained as supporting evidence and are aggregated only
+where their scope and units are sufficiently consistent.
+
 ```{r}
-demand_allocation_evidence <- context_metrics |>
+context_candidates <- context_metrics |>
+  mutate(
+    value_num = suppressWarnings(as.numeric(value))
+  ) |>
   filter(
     str_detect(
       metric,
@@ -413,32 +427,68 @@ demand_allocation_evidence <- context_metrics |>
     year,
     source_period,
     metric,
-    value,
+    value_num,
     unit,
     scope,
     source,
-    source_url,
     notes
   ) |>
   arrange(year, metric)
 ```
 
 ```{r}
-reconciliation_check <- current_summary |>
-  select(
+project_candidates <- project_allocations |>
+  mutate(
+    allocated_compute_num =
+      suppressWarnings(as.numeric(allocated_compute))
+  ) |>
+  filter(!is.na(allocated_compute_num)) |>
+  group_by(
     year,
     source_period,
-    requested_compute,
-    allocated_compute,
-    requested_value_type,
-    allocated_value_type
+    unit,
+    allocation_type
   ) |>
-  left_join(
-    demand_allocation_evidence,
-    by = c("year", "source_period")
+  summarise(
+    allocated_total = sum(allocated_compute_num),
+    records = n(),
+    .groups = "drop"
   ) |>
-  arrange(year, metric)
+  arrange(year, unit, allocation_type)
 ```
+
+```{r}
+resource_candidates <- resource_envelope |>
+  mutate(
+    resource_available_num =
+      suppressWarnings(as.numeric(resource_available))
+  ) |>
+  filter(!is.na(resource_available_num)) |>
+  group_by(
+    year,
+    source_period,
+    unit
+  ) |>
+  summarise(
+    resource_available_total =
+      sum(resource_available_num),
+    records = n(),
+    .groups = "drop"
+  ) |>
+  arrange(year, unit)
+```
+
+```{r}
+context_candidates |>
+  count(year)
+
+project_candidates |>
+  count(year)
+
+resource_candidates |>
+  count(year)
+```
+
 
 ## Integration Considerations
 
