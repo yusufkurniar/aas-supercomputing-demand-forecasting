@@ -80,6 +80,70 @@ that each observation remains traceable to its original yearly workbook.
 The resulting integrated tables form the evidence base from which annual
 summary measures are selected or derived later.
 
+### Load Data & Libraries
+
+Define Path
+
+```{r}
+library(tidyverse)
+library(readxl)
+
+demand_path <- "assets/data/raw data/demand and allocation"
+for_path <- "assets/data/raw data/field of research"
+
+clean_path <- "assets/data/data clean"
+```
+
+Get yearly demand/allocation files
+
+```{r}
+demand_files <- list.files(
+  demand_path,
+  pattern = "\\.xlsx$",
+  full.names = TRUE
+)
+
+```
+Derived the source period from file name.
+
+```{r}
+get_source_period <- function(path) {
+
+  filename <- basename(path)
+
+  years <- str_match(
+    filename,
+    "(\\d{4})_(\\d{2})"
+  )
+
+  paste0(
+    years[, 2],
+    "/",
+    years[, 3]
+  )
+}
+```
+
+Integrate context metrics
+
+```{r}
+context_metrics <- map_dfr(
+  demand_files,
+  function(file) {
+
+    read_excel(
+      file,
+      sheet = "Context_Metrics"
+    ) |>
+      mutate(
+        source_file = basename(file),
+        source_period = get_source_period(file)
+      )
+  }
+)
+```
+
+
 ## Integration Considerations
 
 Several issues need to be considered when integrating the datasets:
