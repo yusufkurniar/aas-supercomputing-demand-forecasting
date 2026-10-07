@@ -1018,3 +1018,121 @@ writexl::write_xlsx(
 )
 ```
 
+## Field of Research Summary Construction
+
+The integrated Field of Research records are next assembled into a
+consistent annual summary.
+
+Unlike the national demand and allocation series, historical FoR evidence
+varies in classification, reporting scope and completeness. The purpose
+of this stage is therefore to preserve the reported disciplinary
+composition while identifying differences in coverage and evidence
+quality across years.
+
+FoR percentages are treated primarily as allocation composition rather
+than directly observed demand composition. Where these shares are later
+applied to annual requested compute, the resulting values are treated as
+analytical demand proxies rather than observed FoR-specific demand.
+
+```{r}
+for_annual_check <- for_data |>
+  mutate(
+    composition_pct_num =
+      suppressWarnings(as.numeric(composition_pct))
+  ) |>
+  group_by(
+    year,
+    source_period
+  ) |>
+  summarise(
+    records = n(),
+    composition_total =
+      sum(composition_pct_num, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  arrange(year)
+
+for_annual_check
+```
+
+```{r}
+for_data |>
+  count(
+    year,
+    source_period,
+    evidence_quality,
+    scope,
+    value_basis
+  ) |>
+  arrange(year)
+```
+
+```{r}
+for_quality_summary <- for_data |>
+  mutate(
+    composition_pct_num =
+      suppressWarnings(as.numeric(composition_pct))
+  ) |>
+  group_by(
+    year,
+    source_period,
+    evidence_quality,
+    scope,
+    value_basis
+  ) |>
+  summarise(
+    records = n(),
+    composition_total =
+      sum(composition_pct_num, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  arrange(year)
+
+for_quality_summary
+```
+
+### Assess Historical FoR Comparability
+
+The yearly FoR compositions generally sum to approximately 100%, but
+completeness alone does not imply that all years are directly comparable.
+
+Historical observations differ in reporting scope, classification method
+and evidence quality. Some years are based on direct NCMAS allocation
+composition, while others rely on estimated project classification,
+residual categories, or broader facility-level usage.
+
+For this reason, the FoR series is classified by analytical use rather
+than treated as a uniformly consistent time series. The strongest and most
+comparable national NCMAS composition evidence is available from 2021
+onward. Earlier observations are retained primarily as historical context,
+with 2017 treated separately because it represents Pawsey usage across all
+allocation schemes rather than national NCMAS allocation composition.
+
+```{r}
+for_year_quality <- for_annual_check |>
+  mutate(
+    analytical_use = case_when(
+      year == 2017 ~ "Context only",
+      year <= 2020 ~ "Historical / lower confidence",
+      year >= 2021 ~ "Main FoR trend"
+    )
+  )
+
+for_year_quality
+```
+
+```{r}
+for_year_quality <- for_annual_check |>
+  mutate(
+    analytical_use = case_when(
+      year == 2017 ~ "Context only",
+      year %in% c(2014, 2016, 2018, 2019, 2020) ~
+        "Historical / lower confidence",
+      year == 2015 ~
+        "Historical / moderate confidence",
+      year >= 2021 ~
+        "Main FoR trend"
+    )
+  )
+```
+
