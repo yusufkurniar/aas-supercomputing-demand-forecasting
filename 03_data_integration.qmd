@@ -963,18 +963,6 @@ for_annual_check
 ```
 
 ```{r}
-for_data |>
-  count(
-    year,
-    source_period,
-    evidence_quality,
-    scope,
-    value_basis
-  ) |>
-  arrange(year)
-```
-
-```{r}
 for_quality_summary <- for_data |>
   mutate(
     composition_pct_num =
@@ -1010,35 +998,40 @@ For this reason, the FoR series is classified by analytical use rather than trea
 for_year_quality <- for_annual_check |>
   mutate(
     analytical_use = case_when(
-      year == 2017 ~ "Context only",
-      year <= 2020 ~ "Historical / lower confidence",
-      year >= 2021 ~ "Main FoR trend"
+      year == 2017 ~
+        "Context only",
+
+      year %in% c(
+        2014,
+        2016,
+        2018,
+        2019,
+        2020
+      ) ~
+        "Historical / lower confidence",
+
+      year == 2015 ~
+        "Historical / moderate confidence",
+
+      year >= 2021 ~
+        "Main FoR trend"
     )
   )
 
 for_year_quality
 ```
 
-```{r}
-for_year_quality <- for_annual_check |>
-  mutate(
-    analytical_use = case_when(
-      year == 2017 ~ "Context only",
-      year %in% c(2014, 2016, 2018, 2019, 2020) ~
-        "Historical / lower confidence",
-      year == 2015 ~
-        "Historical / moderate confidence",
-      year >= 2021 ~
-        "Main FoR trend"
-    )
-  )
-```
-
 ### Construct FoR-Level Compute Measures
 
 The annual FoR composition is linked to the reconciled national demand and allocation series using analytical year and source period.
 
-FoR allocation shares are used to estimate the amount of annual allocated compute associated with each research field. The same shares are also applied to annual requested compute to construct an indicative FoR-level demand proxy.
+Where FoR scope is sufficiently compatible with the annual national
+series, allocation shares are applied to annual compute totals to
+construct FoR-level estimates.
+
+Years classified as contextual only are retained for composition analysis
+but are not used to distribute national annual compute totals because
+their reporting scope is not sufficiently comparable. The same shares are also applied to annual requested compute to construct an indicative FoR-level demand proxy.
 
 The resulting demand measure is not treated as directly observed disciplinary demand because the available FoR percentages primarily describe allocation composition rather than request composition.
 
@@ -1068,6 +1061,7 @@ for_summary <- for_summary |>
         source_period,
         requested_compute,
         allocated_compute,
+        unit,
         requested_basis,
         allocated_basis
       ),
@@ -1081,29 +1075,66 @@ for_summary <- for_summary |>
     allocation_share_for =
       composition_pct_num / 100,
 
-    allocated_compute_for =
-      allocated_compute * allocation_share_for,
+    scope_alignment = case_when(
+      year == 2017 ~
+        "Not comparable",
 
-    estimated_demand_by_for_proxy =
-      requested_compute * allocation_share_for
+      year == 2026 ~
+        "Review required: FoR includes Setonix-Q while annual comparable allocation excludes Setonix-Q",
+
+      analytical_use == "Main FoR trend" ~
+        "Broadly comparable",
+
+      TRUE ~
+        "Historical / approximate"
+    ),
+
+    estimated_allocated_compute_by_for = case_when(
+      analytical_use == "Context only" ~ NA_real_,
+      TRUE ~ allocated_compute * allocation_share_for
+    ),
+
+    estimated_demand_by_for_proxy = case_when(
+      analytical_use == "Context only" ~ NA_real_,
+      TRUE ~ requested_compute * allocation_share_for
+    )
   )
 ```
 
 ```{r}
-for_summary |>
+for_validation <- for_summary |>
   group_by(
     year,
-    source_period
+    source_period,
+    analytical_use
   ) |>
   summarise(
     composition_total =
       sum(composition_pct_num, na.rm = TRUE),
 
-    allocated_for_total =
-      sum(allocated_compute_for, na.rm = TRUE),
+    estimated_allocated_for_total =
+      if (
+        all(is.na(estimated_allocated_compute_by_for))
+      ) {
+        NA_real_
+      } else {
+        sum(
+          estimated_allocated_compute_by_for,
+          na.rm = TRUE
+        )
+      },
 
     demand_proxy_total =
-      sum(estimated_demand_by_for_proxy, na.rm = TRUE),
+      if (
+        all(is.na(estimated_demand_by_for_proxy))
+      ) {
+        NA_real_
+      } else {
+        sum(
+          estimated_demand_by_for_proxy,
+          na.rm = TRUE
+        )
+      },
 
     annual_allocated =
       first(allocated_compute),
@@ -1114,6 +1145,8 @@ for_summary |>
     .groups = "drop"
   ) |>
   arrange(year)
+
+for_validation
 ```
 
 The validation confirms that the FoR composition shares sum to 100% for each analytical year. As a result, the sum of FoR-level allocated compute reproduces the corresponding annual allocated-compute total, while the sum of the FoR-level demand proxies reproduces the annual requested-compute total.
@@ -1143,14 +1176,16 @@ final_for_summary <- for_summary |>
 
     requested_compute_annual = requested_compute,
     allocated_compute_annual = allocated_compute,
-
+    annual_compute_unit = unit,
+    
     estimated_demand_by_for_proxy,
-    allocated_compute_for,
+    estimated_allocated_compute_by_for,
 
     requested_basis,
     allocated_basis,
 
     analytical_use,
+    scope_alignment,
     evidence_quality,
     scope,
     value_basis,
@@ -1173,7 +1208,10 @@ final_for_summary |>
     years = n_distinct(year),
     source_periods = n_distinct(source_period),
     missing_composition = sum(is.na(composition_pct)),
-    missing_for_name = sum(is.na(for_standard_2020))
+    missing_for_name = sum(
+      is.na(for_standard_2020) |
+        str_trim(for_standard_2020) == ""
+    )
   )
 ```
 
