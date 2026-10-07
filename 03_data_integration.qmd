@@ -983,3 +983,38 @@ final_summary_comparison |>
   )
 ```
 
+### Export Reconciled Annual Demand and Allocation Summary
+
+Following reconciliation, the reconstructed annual series is retained as
+the reproducible demand and allocation summary for subsequent
+standardisation, conversion and modelling.
+
+The exported dataset preserves the analytical basis of each annual value
+so that directly reported, derived and proxy measures remain
+distinguishable in later stages of the analysis.
+
+```{r}
+final_demand_allocation_summary <- reconstructed_summary |>
+  select(
+    year,
+    source_period,
+    requested_compute,
+    allocated_compute,
+    requested_basis,
+    allocated_basis,
+    derivation_note
+  )
+
+final_demand_allocation_summary
+```
+
+```{r}
+writexl::write_xlsx(
+  final_demand_allocation_summary,
+  path = file.path(
+    clean_path,
+    "reconciled_demand_allocation_summary.xlsx"
+  )
+)
+```
+

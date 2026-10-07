@@ -972,3 +972,125 @@ ggplot(
   )
 ```
 
+## Preliminary Forecast Model Comparison
+
+The preliminary CPU-equivalent series is used to test whether the
+available historical data provide sufficient structure for forecasting.
+
+At this stage, the objective is not to select a final forecasting model.
+Instead, several simple and interpretable models are compared to assess
+how strongly the 2030 outlook depends on model specification.
+
+Given the short annual series, complex models are avoided. The preliminary
+comparison includes benchmark, trend, exponential smoothing and ARIMA
+models.
+
+```{r}
+library(tsibble)
+library(fable)
+library(feasts)
+```
+
+```{r}
+forecast_data <- cpu_equivalent %>%
+  transmute(
+    year = 2014:2026,
+    period,
+    demand = demand_cpu_equiv_hours / 1e6,
+    allocation = allocation_cpu_equiv_hours / 1e6
+  ) %>%
+  as_tsibble(index = year)
+```
+
+```{r}
+forecast_data %>%
+  select(year, demand, allocation) %>%
+  kable(digits = 1)
+```
+
+```{r}
+forecast_data %>%
+  ggplot(aes(x = year, y = demand)) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 2.5) +
+  labs(
+    title = "Historical CPU-equivalent demand",
+    subtitle = "Preliminary modelling series",
+    x = NULL,
+    y = "Million CPU-equivalent core-hours"
+  ) +
+  theme_minimal()
+```
+
+```{r}
+# Fit models
+demand_models <- forecast_data |>
+  model(
+    Naive = NAIVE(demand),
+    Drift = RW(demand ~ drift()),
+    Linear = TSLM(demand ~ trend()),
+    ETS = ETS(demand),
+    ARIMA = ARIMA(demand)
+  )
+```
+
+```{r}
+demand_models
+```
+
+```{r}
+# Cross-validation accuracy
+cv_accuracy <- demand_cv |>
+  filter(year <= max(forecast_data$year)) |>
+  accuracy(forecast_data) |>
+  select(
+    .model,
+    RMSE,
+    MAE,
+    MAPE
+  ) |>
+  arrange(RMSE)
+
+cv_accuracy
+```
+
+```{r}
+# Forecast full models to 2030
+demand_forecasts <- demand_models |>
+  forecast(h = 4)
+```
+
+```{r}
+# Extract 2030
+forecast_2030 <- demand_forecasts |>
+  as_tibble() |>
+  filter(year == 2030) |>
+  transmute(
+    .model,
+    year,
+    .mean,
+    demand_billion = .mean / 1000
+  )
+
+forecast_2030
+```
+
+```{r}
+# Combine model accuracy and 2030 forecast
+model_summary <- cv_accuracy |>
+  select(
+    .model,
+    RMSE
+  ) |>
+  left_join(
+    forecast_2030 |>
+      select(
+        .model,
+        demand_billion
+      ),
+    by = ".model"
+  )
+
+model_summary
+```
+
