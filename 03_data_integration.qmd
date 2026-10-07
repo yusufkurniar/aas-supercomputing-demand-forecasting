@@ -1136,3 +1136,172 @@ for_year_quality <- for_annual_check |>
   )
 ```
 
+### Construct FoR-Level Compute Measures
+
+The annual FoR composition is linked to the reconciled national demand and
+allocation series using analytical year and source period.
+
+FoR allocation shares are used to estimate the amount of annual allocated
+compute associated with each research field. The same shares are also
+applied to annual requested compute to construct an indicative FoR-level
+demand proxy.
+
+The resulting demand measure is not treated as directly observed
+disciplinary demand because the available FoR percentages primarily
+describe allocation composition rather than request composition.
+
+```{r}
+for_summary <- for_data |>
+  mutate(
+    composition_pct_num =
+      suppressWarnings(as.numeric(composition_pct))
+  ) |>
+  left_join(
+    for_year_quality |>
+      select(
+        year,
+        source_period,
+        analytical_use
+      ),
+    by = c("year", "source_period")
+  )
+```
+
+```{r}
+for_summary <- for_summary |>
+  left_join(
+    final_demand_allocation_summary |>
+      select(
+        year,
+        source_period,
+        requested_compute,
+        allocated_compute,
+        requested_basis,
+        allocated_basis
+      ),
+    by = c("year", "source_period")
+  )
+```
+
+```{r}
+for_summary <- for_summary |>
+  mutate(
+    allocation_share_for =
+      composition_pct_num / 100,
+
+    allocated_compute_for =
+      allocated_compute * allocation_share_for,
+
+    estimated_demand_by_for_proxy =
+      requested_compute * allocation_share_for
+  )
+```
+
+```{r}
+for_summary |>
+  group_by(
+    year,
+    source_period
+  ) |>
+  summarise(
+    composition_total =
+      sum(composition_pct_num, na.rm = TRUE),
+
+    allocated_for_total =
+      sum(allocated_compute_for, na.rm = TRUE),
+
+    demand_proxy_total =
+      sum(estimated_demand_by_for_proxy, na.rm = TRUE),
+
+    annual_allocated =
+      first(allocated_compute),
+
+    annual_requested =
+      first(requested_compute),
+
+    .groups = "drop"
+  ) |>
+  arrange(year)
+```
+
+The validation confirms that the FoR composition shares sum to 100% for
+each analytical year. As a result, the sum of FoR-level allocated compute
+reproduces the corresponding annual allocated-compute total, while the sum
+of the FoR-level demand proxies reproduces the annual requested-compute
+total.
+
+This confirms that the FoR allocation shares have been applied
+consistently to the reconciled national series. The demand values remain
+analytical proxies rather than directly observed FoR-specific requests.
+
+### Export Reconciled Field of Research Summary
+
+The validated FoR-level measures are retained as the integrated
+disciplinary summary for subsequent standardisation, analysis and
+modelling.
+
+The exported table preserves the original FoR classification information,
+allocation composition, analytical-use classification and evidence-quality
+metadata. FoR-level requested compute remains explicitly identified as a
+proxy derived from allocation composition.
+
+```{r}
+final_for_summary <- for_summary |>
+  select(
+    year,
+    source_period,
+
+    research_field_reported,
+    for_2008_division_code,
+    for_2020_division_code,
+    for_standard_2020,
+
+    composition_pct = composition_pct_num,
+    allocation_share_for,
+
+    requested_compute_annual = requested_compute,
+    allocated_compute_annual = allocated_compute,
+
+    estimated_demand_by_for_proxy,
+    allocated_compute_for,
+
+    requested_basis,
+    allocated_basis,
+
+    analytical_use,
+    evidence_quality,
+    scope,
+    value_basis,
+    classification_status,
+    standardisation_note,
+    notes,
+    source,
+    source_url
+  ) |>
+  arrange(
+    year,
+    desc(composition_pct)
+  )
+```
+
+```{r}
+final_for_summary |>
+  summarise(
+    rows = n(),
+    years = n_distinct(year),
+    source_periods = n_distinct(source_period),
+    missing_composition = sum(is.na(composition_pct)),
+    missing_for_name = sum(is.na(for_standard_2020))
+  )
+```
+
+```{r}
+writexl::write_xlsx(
+  final_for_summary,
+  path = file.path(
+    clean_path,
+    "reconciled_field_of_research_summary.xlsx"
+  )
+)
+```
+
