@@ -1094,3 +1094,16 @@ model_summary <- cv_accuracy |>
 model_summary
 ```
 
+```{r}
+demand_cv_fc |>
+  accuracy(demand_ts) |>
+  select(.model, RMSE, MAE, MAPE) |>
+  arrange(RMSE)
+```
+
+
+
+
+
+
+
