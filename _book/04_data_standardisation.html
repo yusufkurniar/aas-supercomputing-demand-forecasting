@@ -267,6 +267,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>This stage uses the reconciled annual demand and allocation summary and the Field of Research (FoR) summary produced during Data Integration.</p>
 <p>Standardisation focuses on aligning reporting periods, variable names, units, research field classifications, and data quality labels where necessary. Original values, source information, and derivation assumptions are retained to maintain traceability.</p>
 <p>Numerical demand and allocation values are not converted at this stage. Compute-unit conversion is addressed separately in the Data Conversion chapter.</p>
+</section>
+<section id="reporting-period" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="reporting-period"><span class="header-section-number">5.2</span> Reporting Period</h2>
+<p>Reporting periods are standardised using the ending year of each annual reporting period. For example, 2013/14 is represented as 2014, and 2025/26 as 2026.</p>
+<p>The analysis covers 13 annual observations from 2014 to 2026. The year column is retained as the analytical year, while source_period preserves the original reporting period.</p>
+<p>Both variables are carried forward from Data Integration. This step validates their consistency without modifying the existing year assignments.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -301,16 +307,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>The validation identified no inconsistencies between the analytical years and their corresponding reporting periods.</p>
 </section>
-<section id="reporting-period" class="level2" data-number="5.2">
-<h2 data-number="5.2" class="anchored" data-anchor-id="reporting-period"><span class="header-section-number">5.2</span> Reporting Period</h2>
-<p>Reporting periods are standardised using the ending year of each annual reporting period. For example, 2013/14 is represented as 2014, and 2025/26 as 2026.</p>
-<p>The analysis covers 13 annual observations from 2014 to 2026. The <code>year</code> column is retained as the analytical year, while <code>source_period</code> preserves the original reporting period.</p>
-<p>Both variables are carried forward from Data Integration. This step validates their consistency without modifying the existing year assignments.</p>
-</section>
 <section id="institution-names" class="level2" data-number="5.3">
 <h2 data-number="5.3" class="anchored" data-anchor-id="institution-names"><span class="header-section-number">5.3</span> Institution Names</h2>
-<p>Institution names may vary across datasets and years due to abbreviations, naming conventions, or organisational changes.</p>
-<p>Where possible, institution names are mapped to a consistent name while retaining the originally reported value.</p>
+<p>Institution names may differ across historical sources because of abbreviations, naming conventions, or organisational changes.</p>
+<p>The reconciled annual demand and allocation summary and Field of Research (FoR) summary do not contain institution-level observations. Therefore, no institution-name mapping is applied to these datasets.</p>
+<p>Institution-level standardisation may be undertaken separately if institutional allocation data are included in subsequent analysis.</p>
 </section>
 <section id="field-of-research-classification" class="level2" data-number="5.4">
 <h2 data-number="5.4" class="anchored" data-anchor-id="field-of-research-classification"><span class="header-section-number">5.4</span> Field of Research Classification</h2>
@@ -845,100 +846,102 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>Numerical demand and allocation values are not converted at this stage. Compute-unit conversion is addressed separately in the Data Conversion chapter.</span>
 <span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="fu">## Reporting Period</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>Reporting periods are standardised using the ending year of each annual reporting period. For example, 2013/14 is represented as 2014, and 2025/26 as 2026.</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>The analysis covers 13 annual observations from 2014 to 2026. The year column is retained as the analytical year, while source_period preserves the original reporting period.</span>
 <span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>annual_data <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(</span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assets/data/data clean/reconciled_demand_allocation_summary.xlsx"</span></span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>year_check <span class="ot">&lt;-</span> annual_data <span class="sc">|&gt;</span></span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">expected_year =</span> <span class="fu">as.integer</span>(</span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sub</span>(<span class="st">"^.*[/</span><span class="sc">\\</span><span class="st">-]"</span>, <span class="st">""</span>, source_period)</span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span> <span class="dv">2000</span>L</span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">is.na</span>(year) <span class="sc">|</span> year <span class="sc">!=</span> expected_year)</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>Both variables are carried forward from Data Integration. This step validates their consistency without modifying the existing year assignments.</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>annual_data <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assets/data/data clean/reconciled_demand_allocation_summary.xlsx"</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>year_check</span>
-<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">nrow</span>(year_check) <span class="sc">==</span> <span class="dv">0</span>)</span>
-<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>The validation identified no inconsistencies between the analytical years and their corresponding reporting periods.</span>
-<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a><span class="fu">## Reporting Period</span></span>
-<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>Reporting periods are standardised using the ending year of each annual reporting period. For example, 2013/14 is represented as 2014, and 2025/26 as 2026.</span>
-<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>The analysis covers 13 annual observations from 2014 to 2026. The <span class="in">`year`</span> column is retained as the analytical year, while <span class="in">`source_period`</span> preserves the original reporting period.</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>year_check <span class="ot">&lt;-</span> annual_data <span class="sc">|&gt;</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">expected_year =</span> <span class="fu">as.integer</span>(</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sub</span>(<span class="st">"^.*[/</span><span class="sc">\\</span><span class="st">-]"</span>, <span class="st">""</span>, source_period)</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span> <span class="dv">2000</span>L</span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">is.na</span>(year) <span class="sc">|</span> year <span class="sc">!=</span> expected_year)</span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>year_check</span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">nrow</span>(year_check) <span class="sc">==</span> <span class="dv">0</span>)</span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>Both variables are carried forward from Data Integration. This step validates their consistency without modifying the existing year assignments.</span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>The validation identified no inconsistencies between the analytical years and their corresponding reporting periods.</span>
 <span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a><span class="fu">## Institution Names</span></span>
 <span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>Institution names may vary across datasets and years due to abbreviations, naming conventions, or organisational changes.</span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>Institution names may differ across historical sources because of abbreviations, naming conventions, or organisational changes.</span>
 <span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>Where possible, institution names are mapped to a consistent name while retaining the originally reported value.</span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>The reconciled annual demand and allocation summary and Field of Research (FoR) summary do not contain institution-level observations. Therefore, no institution-name mapping is applied to these datasets.</span>
 <span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a><span class="fu">## Field of Research Classification</span></span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>Institution-level standardisation may be undertaken separately if institutional allocation data are included in subsequent analysis.</span>
 <span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>Field of Research classifications are not fully consistent across the historical period.</span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a><span class="fu">## Field of Research Classification</span></span>
 <span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>Earlier observations may use the 2008 Australian and New Zealand Standard Research Classification (ANZSRC), while more recent observations may use the 2020 classification.</span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>Field of Research classifications are not fully consistent across the historical period.</span>
 <span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>Where possible, research fields are mapped to a common classification for longitudinal analysis. The original classification is retained to avoid losing information from the source data.</span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>Earlier observations may use the 2008 Australian and New Zealand Standard Research Classification (ANZSRC), while more recent observations may use the 2020 classification.</span>
 <span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a><span class="fu">## HPC Facilities and Systems</span></span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>Where possible, research fields are mapped to a common classification for longitudinal analysis. The original classification is retained to avoid losing information from the source data.</span>
 <span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>Facility and system names are standardised so that allocations can be associated with the relevant HPC infrastructure.</span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a><span class="fu">## HPC Facilities and Systems</span></span>
 <span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>This is particularly important because different systems may use different service unit accounting methods.</span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>Facility and system names are standardised so that allocations can be associated with the relevant HPC infrastructure.</span>
 <span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a><span class="fu">## Resource Type</span></span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a>This is particularly important because different systems may use different service unit accounting methods.</span>
 <span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a>Compute resources are classified into resource types where sufficient information is available.</span>
+<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a><span class="fu">## Resource Type</span></span>
 <span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a>The main distinction is between:</span>
+<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a>Compute resources are classified into resource types where sufficient information is available.</span>
 <span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>CPU resources</span>
-<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>GPU resources</span>
-<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>mixed or unspecified resources</span>
-<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a>CPU and GPU resources are kept separate because they represent different types of computing resources and cannot be directly combined as physical compute hours.</span>
+<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a>The main distinction is between:</span>
+<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>CPU resources</span>
+<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>GPU resources</span>
+<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>mixed or unspecified resources</span>
 <span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a><span class="fu">## Units</span></span>
+<span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a>CPU and GPU resources are kept separate because they represent different types of computing resources and cannot be directly combined as physical compute hours.</span>
 <span id="cb4-79"><a href="#cb4-79" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-80"><a href="#cb4-80" aria-hidden="true" tabindex="-1"></a>The original reported unit is retained for each observation.</span>
+<span id="cb4-80"><a href="#cb4-80" aria-hidden="true" tabindex="-1"></a><span class="fu">## Units</span></span>
 <span id="cb4-81"><a href="#cb4-81" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-82"><a href="#cb4-82" aria-hidden="true" tabindex="-1"></a>Historical sources may report compute using units such as:</span>
+<span id="cb4-82"><a href="#cb4-82" aria-hidden="true" tabindex="-1"></a>The original reported unit is retained for each observation.</span>
 <span id="cb4-83"><a href="#cb4-83" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-84"><a href="#cb4-84" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>service units (SU)</span>
-<span id="cb4-85"><a href="#cb4-85" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>kilo service units (kSU)</span>
-<span id="cb4-86"><a href="#cb4-86" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>CPU core-hours</span>
-<span id="cb4-87"><a href="#cb4-87" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>GPU hours</span>
-<span id="cb4-88"><a href="#cb4-88" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>other reported compute-hour measures</span>
-<span id="cb4-89"><a href="#cb4-89" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-90"><a href="#cb4-90" aria-hidden="true" tabindex="-1"></a>Unit labels are standardised at this stage, but conversion between units is handled separately in the data conversion step.</span>
+<span id="cb4-84"><a href="#cb4-84" aria-hidden="true" tabindex="-1"></a>Historical sources may report compute using units such as:</span>
+<span id="cb4-85"><a href="#cb4-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-86"><a href="#cb4-86" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>service units (SU)</span>
+<span id="cb4-87"><a href="#cb4-87" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>kilo service units (kSU)</span>
+<span id="cb4-88"><a href="#cb4-88" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>CPU core-hours</span>
+<span id="cb4-89"><a href="#cb4-89" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>GPU hours</span>
+<span id="cb4-90"><a href="#cb4-90" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>other reported compute-hour measures</span>
 <span id="cb4-91"><a href="#cb4-91" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-92"><a href="#cb4-92" aria-hidden="true" tabindex="-1"></a><span class="fu">## Data Quality and Comparability</span></span>
+<span id="cb4-92"><a href="#cb4-92" aria-hidden="true" tabindex="-1"></a>Unit labels are standardised at this stage, but conversion between units is handled separately in the data conversion step.</span>
 <span id="cb4-93"><a href="#cb4-93" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-94"><a href="#cb4-94" aria-hidden="true" tabindex="-1"></a>Additional indicators are used where necessary to identify differences in data quality and comparability.</span>
+<span id="cb4-94"><a href="#cb4-94" aria-hidden="true" tabindex="-1"></a><span class="fu">## Data Quality and Comparability</span></span>
 <span id="cb4-95"><a href="#cb4-95" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-96"><a href="#cb4-96" aria-hidden="true" tabindex="-1"></a>These may include whether a value is:</span>
+<span id="cb4-96"><a href="#cb4-96" aria-hidden="true" tabindex="-1"></a>Additional indicators are used where necessary to identify differences in data quality and comparability.</span>
 <span id="cb4-97"><a href="#cb4-97" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-98"><a href="#cb4-98" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>directly reported</span>
-<span id="cb4-99"><a href="#cb4-99" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>derived from another reported value</span>
-<span id="cb4-100"><a href="#cb4-100" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>estimated or used as a proxy</span>
-<span id="cb4-101"><a href="#cb4-101" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>comparable across years</span>
-<span id="cb4-102"><a href="#cb4-102" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>affected by changes in systems or reporting methods</span>
-<span id="cb4-103"><a href="#cb4-103" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-104"><a href="#cb4-104" aria-hidden="true" tabindex="-1"></a>These indicators allow later analysis to distinguish between directly observed values and values that require additional assumptions.</span>
+<span id="cb4-98"><a href="#cb4-98" aria-hidden="true" tabindex="-1"></a>These may include whether a value is:</span>
+<span id="cb4-99"><a href="#cb4-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-100"><a href="#cb4-100" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>directly reported</span>
+<span id="cb4-101"><a href="#cb4-101" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>derived from another reported value</span>
+<span id="cb4-102"><a href="#cb4-102" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>estimated or used as a proxy</span>
+<span id="cb4-103"><a href="#cb4-103" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>comparable across years</span>
+<span id="cb4-104"><a href="#cb4-104" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>affected by changes in systems or reporting methods</span>
 <span id="cb4-105"><a href="#cb4-105" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-106"><a href="#cb4-106" aria-hidden="true" tabindex="-1"></a><span class="fu">## Output</span></span>
+<span id="cb4-106"><a href="#cb4-106" aria-hidden="true" tabindex="-1"></a>These indicators allow later analysis to distinguish between directly observed values and values that require additional assumptions.</span>
 <span id="cb4-107"><a href="#cb4-107" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-108"><a href="#cb4-108" aria-hidden="true" tabindex="-1"></a>The output of this step is a standardised dataset that retains the original reported information while providing consistent classifications for subsequent conversion and analysis.</span>
+<span id="cb4-108"><a href="#cb4-108" aria-hidden="true" tabindex="-1"></a><span class="fu">## Output</span></span>
+<span id="cb4-109"><a href="#cb4-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-110"><a href="#cb4-110" aria-hidden="true" tabindex="-1"></a>The output of this step is a standardised dataset that retains the original reported information while providing consistent classifications for subsequent conversion and analysis.</span>
 </code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
