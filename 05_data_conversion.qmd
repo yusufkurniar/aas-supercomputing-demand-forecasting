@@ -18,17 +18,217 @@ The conversion process preserves the original reported values, units, source ref
 
 ## Conversion Approach
 
-The original reported value and unit are retained in the dataset.
+The conversion process uses the standardised annual demand and allocation dataset produced in Chapter 04, together with the system-level resource information collected during Data Integration.
 
-Where sufficient information is available, reported service units are converted using conversion factors specific to the relevant facility, system and resource type.
+Each historical observation is assessed according to its reporting period, facility, HPC system, resource type, original accounting unit, and available conversion documentation.
 
-The general conversion from kSU to SU is:
+The conversion process follows four principles:
+
+1. **Preserve original observations.** Original demand and allocation values, units, source references, and derivation assumptions are retained without modification.
+2. **Identify resource-specific information.** CPU and GPU resources are distinguished where supported by the original source records. Aggregate observations without a documented resource split remain unallocated to a specific resource type.
+3. **Apply documented conversion rules.** Conversion factors are selected according to the relevant system, resource type, and reporting period. No universal service-unit-to-compute-hour factor is assumed.
+4. **Record conversion uncertainty.** Where direct conversion rules or resource-level observations are unavailable, transparent assumptions are applied to produce estimated values. Each assumption is documented with its rationale, supporting evidence, confidence level, and limitations. Reported, derived, and assumed values remain distinguishable throughout the analysis.
+
+The general relationship between kilo service units (kSU) and service units (SU) is:
 
 $$
 \text{SU} = \text{kSU} \times 1000
 $$
 
-Conversion from SU to physical compute hours depends on the accounting method used by the relevant HPC system.
+However, conversion from service units to physical computational hours depends on the accounting rules of the relevant HPC system.
+
+For example, CPU core-hours and GPU hours require separate conversion factors and cannot be combined directly into a single physical compute-hour measure.
+
+The conversion framework therefore maintains separate demand and allocation measures and records conversion status, supporting evidence, and limitations for each observation.
+
+Where system-level breakdowns are available, they will be assessed separately before aggregation. Historical observations lacking sufficient detail will not be assigned unsupported CPU/GPU proportions.
+
+```{r}
+library(dplyr)
+
+# Load the standardised annual dataset from Chapter 04
+annual_standardised <- readRDS(
+  "assets/data/data standardised/annual_demand_allocation.rds"
+)
+
+# Inspect available variables before conversion
+names(annual_standardised)
+
+# Confirm the expected reporting years
+annual_standardised |>
+  select(year, source_period, unit) |>
+  arrange(year)
+
+stopifnot(
+  nrow(annual_standardised) == 13,
+  all(sort(annual_standardised$year) == 2014:2026)
+)
+```
+
+```{r}
+# Create the conversion framework
+# Original annual values remain unchanged
+
+# Create conversion framework and retain existing kSU values
+conversion_data <- annual_standardised |>
+  mutate(
+    demand_ksu = if_else(
+      unit == "kSU",
+      as.numeric(requested_compute),
+      NA_real_
+    ),
+
+    allocation_ksu = if_else(
+      unit == "kSU" |
+        grepl("kSU allocated", unit, fixed = TRUE),
+      as.numeric(allocated_compute),
+      NA_real_
+    ),
+
+    demand_cpu_core_hours = NA_real_,
+    allocation_cpu_core_hours = NA_real_,
+    demand_gpu_hours = NA_real_,
+    allocation_gpu_hours = NA_real_,
+
+    conversion_status = case_when(
+      unit == "kSU" ~ "Original kSU retained",
+      grepl("kSU allocated", unit, fixed = TRUE) ~
+        "Allocation kSU retained; demand conversion required",
+      TRUE ~ "Historical unit conversion required"
+    ),
+
+    conversion_note = NA_character_
+  )
+
+conversion_data |>
+  select(
+    year,
+    demand_ksu,
+    allocation_ksu,
+    conversion_status
+  ) |>
+  print(n = Inf)
+
+# Check the framework
+conversion_data |>
+  select(
+    year,
+    source_period,
+    demand_ksu,
+    allocation_ksu,
+    demand_cpu_core_hours,
+    allocation_cpu_core_hours,
+    demand_gpu_hours,
+    allocation_gpu_hours,
+    conversion_status
+  ) |>
+  print(n = Inf, width = Inf)
+
+# Confirm no historical observations were lost
+stopifnot(
+  nrow(conversion_data) == nrow(annual_standardised),
+  identical(
+    conversion_data$year,
+    annual_standardised$year
+  )
+)
+```
+
+```{r}
+# Review original historical values and supporting evidence
+historical_conversion_check <- conversion_data |>
+  filter(year >= 2014, year <= 2019) |>
+  select(
+    year,
+    source_period,
+    requested_compute,
+    allocated_compute,
+    unit,
+    requested_basis,
+    allocated_basis,
+    derivation_note
+  )
+
+historical_conversion_check |>
+  print(n = Inf, width = Inf)
+```
+
+```{r}
+# Historical conversion assumptions
+# Baseline: 1 service unit per CPU core-hour
+# 1 kSU = 1,000 SU
+# 1 million hours = 1,000,000 hours
+
+historical_su_per_cpu_hour <- 1
+
+conversion_data <- conversion_data |>
+  mutate(
+    demand_ksu = case_when(
+      year %in% 2015:2019 ~
+        requested_compute * 1000 * historical_su_per_cpu_hour,
+      TRUE ~ demand_ksu
+    ),
+
+    allocation_ksu = case_when(
+      year %in% 2017:2019 ~
+        allocated_compute * 1000 * historical_su_per_cpu_hour,
+      TRUE ~ allocation_ksu
+    ),
+
+    conversion_status = case_when(
+      year == 2014 ~ "Reported kSU; resource conversion assumed",
+      year %in% 2015:2016 ~
+        "Demand kSU estimated; allocation kSU reported",
+      year %in% c(2017, 2019) ~
+        "Both kSU estimated; capacity proxy used",
+      year == 2018 ~
+        "Both kSU estimated; allocation reported",
+      TRUE ~ conversion_status
+    ),
+
+    conversion_note = case_when(
+      year == 2014 ~
+        "Original reported kSU retained; CPU/GPU resource split not established.",
+      year %in% 2015:2016 ~
+        "Demand million hours x 1,000,000 x assumed 1 SU/hour / 1,000; allocation kSU retained.",
+      year == 2017 ~
+        "Million core-hours converted using assumed 1 SU/core-hour; capacity is an allocation proxy; Pawsey-wide scope differs from NCMAS.",
+      year == 2018 ~
+        "Million hours converted using assumed 1 SU/hour; original rounded values retained.",
+      year == 2019 ~
+        "Million CPU-hours converted using assumed 1 SU/CPU-hour; available capacity is an allocation proxy.",
+      TRUE ~ conversion_note
+    )
+  )
+
+# Display converted historical totals
+conversion_data |>
+  filter(year <= 2019) |>
+  select(
+    source_period,
+    demand_ksu,
+    allocation_ksu,
+    conversion_status,
+    conversion_note
+  ) |>
+  print(n = Inf, width = Inf)
+```
+
+```{r}
+conversion_data |>
+  filter(year <= 2019) |>
+  select(
+    source_period,
+    demand_ksu,
+    allocation_ksu,
+    requested_basis,
+    allocated_basis,
+    source_url,
+    conversion_note
+  ) |>
+  print(n = Inf, width = Inf)
+```
+
 
 ## CPU Resources
 
