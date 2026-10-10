@@ -237,7 +237,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#hpc-facilities-and-systems" id="toc-hpc-facilities-and-systems" class="nav-link" data-scroll-target="#hpc-facilities-and-systems"><span class="header-section-number">5.5</span> HPC Facilities and Systems</a></li>
   <li><a href="#resource-type" id="toc-resource-type" class="nav-link" data-scroll-target="#resource-type"><span class="header-section-number">5.6</span> Resource Type</a></li>
   <li><a href="#units" id="toc-units" class="nav-link" data-scroll-target="#units"><span class="header-section-number">5.7</span> Units</a></li>
-  <li><a href="#data-quality-and-comparability" id="toc-data-quality-and-comparability" class="nav-link" data-scroll-target="#data-quality-and-comparability"><span class="header-section-number">5.8</span> Data Quality and Comparability</a></li>
+  <li><a href="#data-quality-and-comparability" id="toc-data-quality-and-comparability" class="nav-link" data-scroll-target="#data-quality-and-comparability"><span class="header-section-number">5.8</span> Data Quality and Comparability</a>
+  <ul class="collapse">
+  <li><a href="#data-provenance-and-estimation" id="toc-data-provenance-and-estimation" class="nav-link" data-scroll-target="#data-provenance-and-estimation"><span class="header-section-number">5.8.1</span> Data Provenance and Estimation</a></li>
+  <li><a href="#comparability-across-reporting-years" id="toc-comparability-across-reporting-years" class="nav-link" data-scroll-target="#comparability-across-reporting-years"><span class="header-section-number">5.8.2</span> Comparability Across Reporting Years</a></li>
+  <li><a href="#treatment-for-subsequent-analysis" id="toc-treatment-for-subsequent-analysis" class="nav-link" data-scroll-target="#treatment-for-subsequent-analysis"><span class="header-section-number">5.8.3</span> Treatment for Subsequent Analysis</a></li>
+  </ul></li>
   <li><a href="#output" id="toc-output" class="nav-link" data-scroll-target="#output"><span class="header-section-number">5.9</span> Output</a></li>
   </ul>
 </nav>
@@ -579,16 +584,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="data-quality-and-comparability" class="level2" data-number="5.8">
 <h2 data-number="5.8" class="anchored" data-anchor-id="data-quality-and-comparability"><span class="header-section-number">5.8</span> Data Quality and Comparability</h2>
-<p>Additional indicators are used where necessary to identify differences in data quality and comparability.</p>
-<p>These may include whether a value is:</p>
-<ul>
-<li>directly reported</li>
-<li>derived from another reported value</li>
-<li>estimated or used as a proxy</li>
-<li>comparable across years</li>
-<li>affected by changes in systems or reporting methods</li>
-</ul>
-<p>These indicators allow later analysis to distinguish between directly observed values and values that require additional assumptions.</p>
+<p>The integrated historical HPC dataset combines directly reported demand and allocation figures with values derived from reported demand-to-supply relationships, fulfilment rates, and available computing capacity. Consequently, the quality and comparability of observations vary across reporting years.</p>
+<section id="data-provenance-and-estimation" class="level3" data-number="5.8.1">
+<h3 data-number="5.8.1" class="anchored" data-anchor-id="data-provenance-and-estimation"><span class="header-section-number">5.8.1</span> Data Provenance and Estimation</h3>
+<p>Directly reported observations are retained as published in the original sources. Where demand figures are unavailable, existing estimates derived during Data Integration are preserved together with their calculation assumptions and source references.</p>
+<p>For example, the 2014/15 and 2015/16 demand estimates are derived from reported demand-to-supply or fulfilment relationships. The 2017/18, 2020/21, 2023/24, and 2024/25 demand estimates similarly rely on reported allocation totals and demand-to-supply or fulfilment information.</p>
+<p>The 2016/17 and 2018/19 records include capacity-based information or conservative demand proxies. These are distinguished from directly reported allocation and demand figures.</p>
+<p>No demand estimates or allocation values are recalculated during Data Standardisation.</p>
+</section>
+<section id="comparability-across-reporting-years" class="level3" data-number="5.8.2">
+<h3 data-number="5.8.2" class="anchored" data-anchor-id="comparability-across-reporting-years"><span class="header-section-number">5.8.2</span> Comparability Across Reporting Years</h3>
+<p>Historical observations differ in their reporting scope, computational accounting units, and availability of system-level information.</p>
+<p>In particular, the 2016/17 data include Pawsey-wide supercomputer usage and capacity information, which are not directly equivalent to NCMAS allocation outcomes in other years.</p>
+<p>Differences between CPU and GPU resources, system-specific accounting conventions, and incomplete resource breakdowns also limit direct comparisons across reporting periods.</p>
+<p>These limitations are retained in the analysis rather than resolved through unsupported assumptions.</p>
+</section>
+<section id="treatment-for-subsequent-analysis" class="level3" data-number="5.8.3">
+<h3 data-number="5.8.3" class="anchored" data-anchor-id="treatment-for-subsequent-analysis"><span class="header-section-number">5.8.3</span> Treatment for Subsequent Analysis</h3>
+<p>The standardisation process preserves original numerical values, source references, estimation assumptions, and existing data quality information.</p>
+<p>Observations with different reporting scopes, derived demand values, or uncertain conversion assumptions will be explicitly considered during Data Conversion, exploratory analysis, and forecasting model evaluation.</p>
+<p>Where appropriate, sensitivity analysis will be used to assess how historical proxies and comparability limitations affect the forecasting results.</p>
+</section>
 </section>
 <section id="output" class="level2" data-number="5.9">
 <h2 data-number="5.9" class="anchored" data-anchor-id="output"><span class="header-section-number">5.9</span> Output</h2>
@@ -1307,21 +1323,39 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb15-250"><a href="#cb15-250" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-251"><a href="#cb15-251" aria-hidden="true" tabindex="-1"></a><span class="fu">## Data Quality and Comparability</span></span>
 <span id="cb15-252"><a href="#cb15-252" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-253"><a href="#cb15-253" aria-hidden="true" tabindex="-1"></a>Additional indicators are used where necessary to identify differences in data quality and comparability.</span>
+<span id="cb15-253"><a href="#cb15-253" aria-hidden="true" tabindex="-1"></a>The integrated historical HPC dataset combines directly reported demand and allocation figures with values derived from reported demand-to-supply relationships, fulfilment rates, and available computing capacity. Consequently, the quality and comparability of observations vary across reporting years.</span>
 <span id="cb15-254"><a href="#cb15-254" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-255"><a href="#cb15-255" aria-hidden="true" tabindex="-1"></a>These may include whether a value is:</span>
+<span id="cb15-255"><a href="#cb15-255" aria-hidden="true" tabindex="-1"></a><span class="fu">### Data Provenance and Estimation</span></span>
 <span id="cb15-256"><a href="#cb15-256" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-257"><a href="#cb15-257" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>directly reported</span>
-<span id="cb15-258"><a href="#cb15-258" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>derived from another reported value</span>
-<span id="cb15-259"><a href="#cb15-259" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>estimated or used as a proxy</span>
-<span id="cb15-260"><a href="#cb15-260" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>comparable across years</span>
-<span id="cb15-261"><a href="#cb15-261" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>affected by changes in systems or reporting methods</span>
+<span id="cb15-257"><a href="#cb15-257" aria-hidden="true" tabindex="-1"></a>Directly reported observations are retained as published in the original sources. Where demand figures are unavailable, existing estimates derived during Data Integration are preserved together with their calculation assumptions and source references.</span>
+<span id="cb15-258"><a href="#cb15-258" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-259"><a href="#cb15-259" aria-hidden="true" tabindex="-1"></a>For example, the 2014/15 and 2015/16 demand estimates are derived from reported demand-to-supply or fulfilment relationships. The 2017/18, 2020/21, 2023/24, and 2024/25 demand estimates similarly rely on reported allocation totals and demand-to-supply or fulfilment information.</span>
+<span id="cb15-260"><a href="#cb15-260" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-261"><a href="#cb15-261" aria-hidden="true" tabindex="-1"></a>The 2016/17 and 2018/19 records include capacity-based information or conservative demand proxies. These are distinguished from directly reported allocation and demand figures.</span>
 <span id="cb15-262"><a href="#cb15-262" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-263"><a href="#cb15-263" aria-hidden="true" tabindex="-1"></a>These indicators allow later analysis to distinguish between directly observed values and values that require additional assumptions.</span>
+<span id="cb15-263"><a href="#cb15-263" aria-hidden="true" tabindex="-1"></a>No demand estimates or allocation values are recalculated during Data Standardisation.</span>
 <span id="cb15-264"><a href="#cb15-264" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-265"><a href="#cb15-265" aria-hidden="true" tabindex="-1"></a><span class="fu">## Output</span></span>
+<span id="cb15-265"><a href="#cb15-265" aria-hidden="true" tabindex="-1"></a><span class="fu">### Comparability Across Reporting Years</span></span>
 <span id="cb15-266"><a href="#cb15-266" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-267"><a href="#cb15-267" aria-hidden="true" tabindex="-1"></a>The output of this step is a standardised dataset that retains the original reported information while providing consistent classifications for subsequent conversion and analysis.</span>
+<span id="cb15-267"><a href="#cb15-267" aria-hidden="true" tabindex="-1"></a>Historical observations differ in their reporting scope, computational accounting units, and availability of system-level information.</span>
+<span id="cb15-268"><a href="#cb15-268" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-269"><a href="#cb15-269" aria-hidden="true" tabindex="-1"></a>In particular, the 2016/17 data include Pawsey-wide supercomputer usage and capacity information, which are not directly equivalent to NCMAS allocation outcomes in other years.</span>
+<span id="cb15-270"><a href="#cb15-270" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-271"><a href="#cb15-271" aria-hidden="true" tabindex="-1"></a>Differences between CPU and GPU resources, system-specific accounting conventions, and incomplete resource breakdowns also limit direct comparisons across reporting periods.</span>
+<span id="cb15-272"><a href="#cb15-272" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-273"><a href="#cb15-273" aria-hidden="true" tabindex="-1"></a>These limitations are retained in the analysis rather than resolved through unsupported assumptions.</span>
+<span id="cb15-274"><a href="#cb15-274" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-275"><a href="#cb15-275" aria-hidden="true" tabindex="-1"></a><span class="fu">### Treatment for Subsequent Analysis</span></span>
+<span id="cb15-276"><a href="#cb15-276" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-277"><a href="#cb15-277" aria-hidden="true" tabindex="-1"></a>The standardisation process preserves original numerical values, source references, estimation assumptions, and existing data quality information.</span>
+<span id="cb15-278"><a href="#cb15-278" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-279"><a href="#cb15-279" aria-hidden="true" tabindex="-1"></a>Observations with different reporting scopes, derived demand values, or uncertain conversion assumptions will be explicitly considered during Data Conversion, exploratory analysis, and forecasting model evaluation.</span>
+<span id="cb15-280"><a href="#cb15-280" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-281"><a href="#cb15-281" aria-hidden="true" tabindex="-1"></a>Where appropriate, sensitivity analysis will be used to assess how historical proxies and comparability limitations affect the forecasting results.</span>
+<span id="cb15-282"><a href="#cb15-282" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-283"><a href="#cb15-283" aria-hidden="true" tabindex="-1"></a><span class="fu">## Output</span></span>
+<span id="cb15-284"><a href="#cb15-284" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-285"><a href="#cb15-285" aria-hidden="true" tabindex="-1"></a>The output of this step is a standardised dataset that retains the original reported information while providing consistent classifications for subsequent conversion and analysis.</span>
 </code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

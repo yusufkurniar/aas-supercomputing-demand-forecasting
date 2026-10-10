@@ -242,17 +242,35 @@ The Data Conversion chapter will assess system-specific conversion factors, dist
 
 ## Data Quality and Comparability
 
-Additional indicators are used where necessary to identify differences in data quality and comparability.
+The integrated historical HPC dataset combines directly reported demand and allocation figures with values derived from reported demand-to-supply relationships, fulfilment rates, and available computing capacity. Consequently, the quality and comparability of observations vary across reporting years.
 
-These may include whether a value is:
+### Data Provenance and Estimation
 
-- directly reported
-- derived from another reported value
-- estimated or used as a proxy
-- comparable across years
-- affected by changes in systems or reporting methods
+Directly reported observations are retained as published in the original sources. Where demand figures are unavailable, existing estimates derived during Data Integration are preserved together with their calculation assumptions and source references.
 
-These indicators allow later analysis to distinguish between directly observed values and values that require additional assumptions.
+For example, the 2014/15 and 2015/16 demand estimates are derived from reported demand-to-supply or fulfilment relationships. The 2017/18, 2020/21, 2023/24, and 2024/25 demand estimates similarly rely on reported allocation totals and demand-to-supply or fulfilment information.
+
+The 2016/17 and 2018/19 records include capacity-based information or conservative demand proxies. These are distinguished from directly reported allocation and demand figures.
+
+No demand estimates or allocation values are recalculated during Data Standardisation.
+
+### Comparability Across Reporting Years
+
+Historical observations differ in their reporting scope, computational accounting units, and availability of system-level information.
+
+In particular, the 2016/17 data include Pawsey-wide supercomputer usage and capacity information, which are not directly equivalent to NCMAS allocation outcomes in other years.
+
+Differences between CPU and GPU resources, system-specific accounting conventions, and incomplete resource breakdowns also limit direct comparisons across reporting periods.
+
+These limitations are retained in the analysis rather than resolved through unsupported assumptions.
+
+### Treatment for Subsequent Analysis
+
+The standardisation process preserves original numerical values, source references, estimation assumptions, and existing data quality information.
+
+Observations with different reporting scopes, derived demand values, or uncertain conversion assumptions will be explicitly considered during Data Conversion, exploratory analysis, and forecasting model evaluation.
+
+Where appropriate, sensitivity analysis will be used to assess how historical proxies and comparability limitations affect the forecasting results.
 
 ## Output
 
