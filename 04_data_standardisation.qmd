@@ -230,17 +230,15 @@ No numerical allocation or demand values are redistributed between resource type
 
 ## Units
 
-The original reported unit is retained for each observation.
+The reconciled annual demand and allocation summary contains different computational accounting units across reporting periods.
 
-Historical sources may report compute using units such as:
+The 2013/14 records are expressed in kSU. The 2014/15 and 2015/16 records contain mixed units, with demand expressed in million hours and allocation expressed in kSU. The 2016/17 records use million core-hours, while 2017/18 uses million hours and 2018/19 uses million CPU-hours.
 
-- service units (SU)
-- kilo service units (kSU)
-- CPU core-hours
-- GPU hours
-- other reported compute-hour measures
+From 2019/20 to 2025/26, annual demand and allocation values are recorded in kSU. However, the use of the same unit label does not necessarily establish equivalence between different HPC systems or CPU and GPU resources.
 
-Unit labels are standardised at this stage, but conversion between units is handled separately in the data conversion step.
+At the standardisation stage, original unit labels are retained without numerical conversion. Mixed-unit records are explicitly identified to prevent inappropriate direct comparisons.
+
+The Data Conversion chapter will assess system-specific conversion factors, distinguish CPU and GPU accounting where supported, and document any assumptions required to establish comparable analytical measures.
 
 ## Data Quality and Comparability
 

@@ -571,16 +571,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="units" class="level2" data-number="5.7">
 <h2 data-number="5.7" class="anchored" data-anchor-id="units"><span class="header-section-number">5.7</span> Units</h2>
-<p>The original reported unit is retained for each observation.</p>
-<p>Historical sources may report compute using units such as:</p>
-<ul>
-<li>service units (SU)</li>
-<li>kilo service units (kSU)</li>
-<li>CPU core-hours</li>
-<li>GPU hours</li>
-<li>other reported compute-hour measures</li>
-</ul>
-<p>Unit labels are standardised at this stage, but conversion between units is handled separately in the data conversion step.</p>
+<p>The reconciled annual demand and allocation summary contains different computational accounting units across reporting periods.</p>
+<p>The 2013/14 records are expressed in kSU. The 2014/15 and 2015/16 records contain mixed units, with demand expressed in million hours and allocation expressed in kSU. The 2016/17 records use million core-hours, while 2017/18 uses million hours and 2018/19 uses million CPU-hours.</p>
+<p>From 2019/20 to 2025/26, annual demand and allocation values are recorded in kSU. However, the use of the same unit label does not necessarily establish equivalence between different HPC systems or CPU and GPU resources.</p>
+<p>At the standardisation stage, original unit labels are retained without numerical conversion. Mixed-unit records are explicitly identified to prevent inappropriate direct comparisons.</p>
+<p>The Data Conversion chapter will assess system-specific conversion factors, distinguish CPU and GPU accounting where supported, and document any assumptions required to establish comparable analytical measures.</p>
 </section>
 <section id="data-quality-and-comparability" class="level2" data-number="5.8">
 <h2 data-number="5.8" class="anchored" data-anchor-id="data-quality-and-comparability"><span class="header-section-number">5.8</span> Data Quality and Comparability</h2>
@@ -1300,35 +1295,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb15-238"><a href="#cb15-238" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-239"><a href="#cb15-239" aria-hidden="true" tabindex="-1"></a><span class="fu">## Units</span></span>
 <span id="cb15-240"><a href="#cb15-240" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-241"><a href="#cb15-241" aria-hidden="true" tabindex="-1"></a>The original reported unit is retained for each observation.</span>
+<span id="cb15-241"><a href="#cb15-241" aria-hidden="true" tabindex="-1"></a>The reconciled annual demand and allocation summary contains different computational accounting units across reporting periods.</span>
 <span id="cb15-242"><a href="#cb15-242" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-243"><a href="#cb15-243" aria-hidden="true" tabindex="-1"></a>Historical sources may report compute using units such as:</span>
+<span id="cb15-243"><a href="#cb15-243" aria-hidden="true" tabindex="-1"></a>The 2013/14 records are expressed in kSU. The 2014/15 and 2015/16 records contain mixed units, with demand expressed in million hours and allocation expressed in kSU. The 2016/17 records use million core-hours, while 2017/18 uses million hours and 2018/19 uses million CPU-hours.</span>
 <span id="cb15-244"><a href="#cb15-244" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-245"><a href="#cb15-245" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>service units (SU)</span>
-<span id="cb15-246"><a href="#cb15-246" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>kilo service units (kSU)</span>
-<span id="cb15-247"><a href="#cb15-247" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>CPU core-hours</span>
-<span id="cb15-248"><a href="#cb15-248" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>GPU hours</span>
-<span id="cb15-249"><a href="#cb15-249" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>other reported compute-hour measures</span>
+<span id="cb15-245"><a href="#cb15-245" aria-hidden="true" tabindex="-1"></a>From 2019/20 to 2025/26, annual demand and allocation values are recorded in kSU. However, the use of the same unit label does not necessarily establish equivalence between different HPC systems or CPU and GPU resources.</span>
+<span id="cb15-246"><a href="#cb15-246" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-247"><a href="#cb15-247" aria-hidden="true" tabindex="-1"></a>At the standardisation stage, original unit labels are retained without numerical conversion. Mixed-unit records are explicitly identified to prevent inappropriate direct comparisons.</span>
+<span id="cb15-248"><a href="#cb15-248" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-249"><a href="#cb15-249" aria-hidden="true" tabindex="-1"></a>The Data Conversion chapter will assess system-specific conversion factors, distinguish CPU and GPU accounting where supported, and document any assumptions required to establish comparable analytical measures.</span>
 <span id="cb15-250"><a href="#cb15-250" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-251"><a href="#cb15-251" aria-hidden="true" tabindex="-1"></a>Unit labels are standardised at this stage, but conversion between units is handled separately in the data conversion step.</span>
+<span id="cb15-251"><a href="#cb15-251" aria-hidden="true" tabindex="-1"></a><span class="fu">## Data Quality and Comparability</span></span>
 <span id="cb15-252"><a href="#cb15-252" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-253"><a href="#cb15-253" aria-hidden="true" tabindex="-1"></a><span class="fu">## Data Quality and Comparability</span></span>
+<span id="cb15-253"><a href="#cb15-253" aria-hidden="true" tabindex="-1"></a>Additional indicators are used where necessary to identify differences in data quality and comparability.</span>
 <span id="cb15-254"><a href="#cb15-254" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-255"><a href="#cb15-255" aria-hidden="true" tabindex="-1"></a>Additional indicators are used where necessary to identify differences in data quality and comparability.</span>
+<span id="cb15-255"><a href="#cb15-255" aria-hidden="true" tabindex="-1"></a>These may include whether a value is:</span>
 <span id="cb15-256"><a href="#cb15-256" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-257"><a href="#cb15-257" aria-hidden="true" tabindex="-1"></a>These may include whether a value is:</span>
-<span id="cb15-258"><a href="#cb15-258" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-259"><a href="#cb15-259" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>directly reported</span>
-<span id="cb15-260"><a href="#cb15-260" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>derived from another reported value</span>
-<span id="cb15-261"><a href="#cb15-261" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>estimated or used as a proxy</span>
-<span id="cb15-262"><a href="#cb15-262" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>comparable across years</span>
-<span id="cb15-263"><a href="#cb15-263" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>affected by changes in systems or reporting methods</span>
+<span id="cb15-257"><a href="#cb15-257" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>directly reported</span>
+<span id="cb15-258"><a href="#cb15-258" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>derived from another reported value</span>
+<span id="cb15-259"><a href="#cb15-259" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>estimated or used as a proxy</span>
+<span id="cb15-260"><a href="#cb15-260" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>comparable across years</span>
+<span id="cb15-261"><a href="#cb15-261" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>affected by changes in systems or reporting methods</span>
+<span id="cb15-262"><a href="#cb15-262" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-263"><a href="#cb15-263" aria-hidden="true" tabindex="-1"></a>These indicators allow later analysis to distinguish between directly observed values and values that require additional assumptions.</span>
 <span id="cb15-264"><a href="#cb15-264" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-265"><a href="#cb15-265" aria-hidden="true" tabindex="-1"></a>These indicators allow later analysis to distinguish between directly observed values and values that require additional assumptions.</span>
+<span id="cb15-265"><a href="#cb15-265" aria-hidden="true" tabindex="-1"></a><span class="fu">## Output</span></span>
 <span id="cb15-266"><a href="#cb15-266" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-267"><a href="#cb15-267" aria-hidden="true" tabindex="-1"></a><span class="fu">## Output</span></span>
-<span id="cb15-268"><a href="#cb15-268" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-269"><a href="#cb15-269" aria-hidden="true" tabindex="-1"></a>The output of this step is a standardised dataset that retains the original reported information while providing consistent classifications for subsequent conversion and analysis.</span>
+<span id="cb15-267"><a href="#cb15-267" aria-hidden="true" tabindex="-1"></a>The output of this step is a standardised dataset that retains the original reported information while providing consistent classifications for subsequent conversion and analysis.</span>
 </code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
