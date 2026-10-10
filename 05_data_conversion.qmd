@@ -229,20 +229,399 @@ conversion_data |>
   print(n = Inf, width = Inf)
 ```
 
-
 ## CPU Resources
 
-CPU resources are converted to CPU core-hours where a documented service-unit conversion is available.
+CPU resource conversion translates historical service-unit allocations and reported compute hours into CPU core-hours.
 
-For example, if a system charges two service units per CPU core-hour:
+The conversion is performed at the HPC system level where sufficient information is available. This is necessary because the accounting relationship between service units and CPU core-hours may differ across facilities and reporting periods.
+
+For observations reported in kSU, CPU core-hours are calculated as:
 
 $$
-\text{CPU Core-Hours}
-=
-\frac{\text{kSU} \times 1000}{2}
+\text{CPU core-hours} =
+\frac{\text{CPU kSU} \times 1000}
+{\text{SU per CPU core-hour}}
 $$
 
-The applicable conversion factor is determined separately for each system and reporting period.
+For observations already reported in CPU core-hours, the original values are retained without applying an additional service-unit conversion.
+
+Where aggregate kSU values include both CPU and GPU resources, the CPU component must first be identified or estimated before the conversion formula is applied.
+
+The conversion framework considers the historical systems identified during Data Integration, including Raijin, Magnus, FlashLite, MASSIVE, Gadi, and Setonix CPU.
+
+Documented accounting factors are prioritised. Where system-specific factors or resource splits are unavailable, assumptions are applied with explicit justification, source references, and confidence classifications.
+
+All calculations preserve the original observations and distinguish directly reported CPU values from derived and assumed estimates.
+
+```{r}
+# Historical CPU core-hour conversion: 2013/14–2018/19
+# Assumption: 1 SU per CPU core-hour for historical CPU kSU
+# Years already reported in millions of hours are scaled by 1,000,000
+
+historical_cpu_share <- 1.0  # Baseline assumption: 100% CPU-equivalent
+
+conversion_data <- conversion_data |>
+  mutate(
+    demand_cpu_core_hours = case_when(
+      year == 2014 ~ demand_ksu * 1000 * historical_cpu_share,
+      year %in% 2015:2019 ~ requested_compute * 1e6,
+      TRUE ~ demand_cpu_core_hours
+    ),
+
+    allocation_cpu_core_hours = case_when(
+      year %in% c(2014, 2015, 2016) ~
+        allocation_ksu * 1000 * historical_cpu_share,
+      year %in% 2017:2019 ~ allocated_compute * 1e6,
+      TRUE ~ allocation_cpu_core_hours
+    ),
+
+    cpu_conversion_assumption = case_when(
+      year == 2014 ~
+        "Assumed 100% CPU-equivalent; 1 SU per CPU core-hour. Historical Fornax GPU may be included in aggregate kSU.",
+      year %in% 2015:2016 ~
+        "Assumed reported million hours represent CPU core-hours; aggregate kSU allocation treated as CPU-equivalent at 1 SU/core-hour.",
+      year == 2017 ~
+        "Reported million core-hours converted directly; allocation represents available capacity, not awarded allocation.",
+      year == 2018 ~
+        "Assumed reported million hours represent CPU core-hours; original system mix not fully separated.",
+      year == 2019 ~
+        "Reported million CPU-hours converted directly; allocation represents available capacity.",
+      TRUE ~ NA_character_
+    )
+  )
+
+conversion_data |>
+  filter(year <= 2019) |>
+  select(
+    source_period,
+    demand_cpu_core_hours,
+    allocation_cpu_core_hours,
+    cpu_conversion_assumption
+  ) |>
+  print(n = Inf, width = Inf)
+```
+
+```{r}
+# System-level CPU allocation data
+# Analytical year 2021 = FY2020/21
+# Values are in kSU
+
+cpu_allocation_systems <- tibble::tribble(
+  ~year, ~system,       ~cpu_ksu, ~su_per_core_hour,
+  2021,  "Magnus",         107730, 1,
+  2021,  "FlashLite",         992, 1,
+  2021,  "MASSIVE",          2135, 1,
+  2021,  "Gadi",          287080, 2,
+  2022,  "MASSIVE",          1845, 1,
+  2022,  "Gadi",          300120, 2,
+  2022,  "Setonix CPU",   108700, 1,
+  2023,  "Gadi",          328156, 2,
+  2023,  "Setonix CPU",   327400, 1,
+  2024,  "Gadi",          305784, 2,
+  2024,  "Setonix CPU",   339155, 1,
+  2025,  "Gadi",          355200, 2,
+  2025,  "Setonix CPU",   349950, 1,
+  2026,  "Gadi",          387288, 2,
+  2026,  "Setonix CPU",   325000, 1
+)
+
+# Calculate CPU core-hours for each system
+cpu_allocation_systems <- cpu_allocation_systems |>
+  mutate(
+    cpu_core_hours =
+      cpu_ksu * 1000 / su_per_core_hour,
+
+    factor_status = case_when(
+      system %in% c("FlashLite", "MASSIVE") ~
+        "Provisional 1 SU/core-hour assumption",
+      TRUE ~
+        "Working system-specific factor from conversion workbook"
+    )
+  )
+
+# Aggregate CPU core-hours by year
+cpu_allocation_annual <- cpu_allocation_systems |>
+  group_by(year) |>
+  summarise(
+    allocation_cpu_core_hours =
+      sum(cpu_core_hours),
+    allocation_cpu_ksu =
+      sum(cpu_ksu),
+    .groups = "drop"
+  )
+
+cpu_allocation_annual |>
+  print(n = Inf)
+```
+
+```{r}
+# Compare system-level CPU allocation with annual totals
+
+cpu_allocation_check <- cpu_allocation_annual |>
+  left_join(
+    conversion_data |>
+      select(year, source_period, allocation_ksu),
+    by = "year"
+  ) |>
+  mutate(
+    non_cpu_ksu =
+      allocation_ksu - allocation_cpu_ksu
+  )
+
+cpu_allocation_check |>
+  select(
+    source_period,
+    allocation_ksu,
+    allocation_cpu_ksu,
+    non_cpu_ksu
+  ) |>
+  print(n = Inf)
+
+stopifnot(
+  all(cpu_allocation_check$non_cpu_ksu >= 0)
+)
+```
+
+```{r}
+# Integrate system-level CPU allocations
+# Preserve existing historical CPU values
+
+conversion_data <- conversion_data |>
+  left_join(
+    cpu_allocation_annual |>
+      select(
+        year,
+        allocation_cpu_core_hours
+      ) |>
+      rename(
+        calculated_allocation_cpu_core_hours =
+          allocation_cpu_core_hours
+      ),
+    by = "year"
+  ) |>
+  mutate(
+    allocation_cpu_core_hours = coalesce(
+      calculated_allocation_cpu_core_hours,
+      allocation_cpu_core_hours
+    )
+  ) |>
+  select(-calculated_allocation_cpu_core_hours)
+
+# Complete FY2019/20 CPU allocation
+# Assumption: 100% Gadi CPU-equivalent
+# Working factor: 2 SU per CPU core-hour
+
+conversion_data <- conversion_data |>
+  mutate(
+    allocation_cpu_core_hours = case_when(
+      year == 2020 ~ allocation_ksu * 1000 / 2,
+      TRUE ~ allocation_cpu_core_hours
+    ),
+
+    cpu_conversion_assumption = case_when(
+      year == 2020 ~ paste(
+        "FY2019/20: aggregate allocation assumed to be",
+        "100% Gadi CPU-equivalent at 2 SU/core-hour.",
+        "System split unavailable; sensitivity analysis required."
+      ),
+      TRUE ~ cpu_conversion_assumption
+    )
+  )
+
+# Display results AFTER correction
+conversion_data |>
+  select(
+    source_period,
+    allocation_cpu_core_hours
+  ) |>
+  print(n = Inf)
+
+# Validate all 13 years
+stopifnot(
+  nrow(conversion_data) == 13,
+  all(!is.na(conversion_data$allocation_cpu_core_hours))
+)
+```
+
+```{r}
+# CPU demand conversion: FY2019/20–FY2025/26
+# Preserve original annual demand and allocation values
+
+# 1. Direct system-level CPU demand (kSU)
+cpu_demand_systems <- tibble::tribble(
+  ~year, ~system,       ~cpu_ksu, ~su_per_core_hour,
+  2023,  "Gadi",          770866, 2,
+  2023,  "Setonix CPU",   390033, 1,
+  2026,  "Gadi",         1246722, 2,
+  2026,  "Setonix CPU",   611675, 1
+)
+
+cpu_demand_direct <- cpu_demand_systems |>
+  mutate(
+    cpu_core_hours = cpu_ksu * 1000 / su_per_core_hour
+  ) |>
+  group_by(year) |>
+  summarise(
+    demand_cpu_ksu = sum(cpu_ksu),
+    demand_cpu_core_hours = sum(cpu_core_hours),
+    .groups = "drop"
+  )
+
+# 2. Estimate CPU demand using allocation composition
+# FY2019/20: assume 100% Gadi CPU-equivalent at 2 SU/core-hour
+# Other years: assume demand follows allocation resource/system mix
+
+cpu_demand_estimated <- conversion_data |>
+  filter(year >= 2020) |>
+  left_join(
+    cpu_allocation_annual |>
+      select(year, allocation_cpu_ksu),
+    by = "year"
+  ) |>
+  mutate(
+    allocation_cpu_ksu = case_when(
+      year == 2020 ~ allocation_ksu,
+      TRUE ~ allocation_cpu_ksu
+    ),
+
+    cpu_allocation_share =
+      allocation_cpu_ksu / allocation_ksu,
+
+    estimated_demand_cpu_ksu =
+      demand_ksu * cpu_allocation_share,
+
+    estimated_demand_cpu_core_hours = case_when(
+      year == 2020 ~
+        estimated_demand_cpu_ksu * 1000 / 2,
+
+      TRUE ~
+        estimated_demand_cpu_ksu *
+        (allocation_cpu_core_hours / allocation_cpu_ksu)
+    )
+  ) |>
+  select(
+    year,
+    estimated_demand_cpu_ksu,
+    estimated_demand_cpu_core_hours,
+    cpu_allocation_share
+  )
+
+# 3. Prioritise direct system-level demand over estimates
+
+cpu_demand_annual <- cpu_demand_estimated |>
+  left_join(
+    cpu_demand_direct,
+    by = "year"
+  ) |>
+  mutate(
+    demand_cpu_ksu = coalesce(
+      demand_cpu_ksu,
+      estimated_demand_cpu_ksu
+    ),
+
+    demand_cpu_core_hours = coalesce(
+      demand_cpu_core_hours,
+      estimated_demand_cpu_core_hours
+    ),
+
+    cpu_demand_method = case_when(
+      year %in% c(2023, 2026) ~
+        "Reported CPU system split; working SU conversion factors",
+
+      year == 2020 ~
+        "Assumed 100% Gadi CPU-equivalent; 2 SU/core-hour",
+
+      TRUE ~
+        "Estimated using allocation CPU share and weighted CPU conversion"
+    ),
+
+    cpu_demand_confidence = case_when(
+      year %in% c(2023, 2026) ~ "Higher: reported resource split",
+      year == 2020 ~ "Low: assumed CPU-only system mix",
+      TRUE ~ "Moderate-low: allocation mix proxy"
+    ),
+
+    cpu_demand_assumption = case_when(
+      year %in% c(2023, 2026) ~
+        "CPU demand split is reported; physical hours use working system factors.",
+
+      year == 2020 ~
+        "Aggregate demand assumed entirely Gadi CPU at 2 SU/core-hour; GPU demand not independently established.",
+
+      TRUE ~
+        "CPU demand share and system mix assumed equal to allocation composition; actual requested mix may differ."
+    )
+  )
+
+# 4. Validate all seven years
+
+stopifnot(
+  nrow(cpu_demand_annual) == 7,
+  all(!is.na(cpu_demand_annual$demand_cpu_ksu)),
+  all(!is.na(cpu_demand_annual$demand_cpu_core_hours))
+)
+
+# 5. Display results
+
+cpu_demand_annual |>
+  select(
+    year,
+    demand_cpu_ksu,
+    demand_cpu_core_hours,
+    cpu_demand_method,
+    cpu_demand_confidence
+  ) |>
+  print(n = Inf, width = Inf)
+```
+
+```{r}
+# Integrate CPU demand into the main conversion dataset
+# Preserve historical CPU values and original source observations
+
+conversion_data <- conversion_data |>
+  left_join(
+    cpu_demand_annual |>
+      select(
+        year,
+        demand_cpu_core_hours,
+        cpu_demand_method,
+        cpu_demand_confidence,
+        cpu_demand_assumption
+      ) |>
+      rename(
+        calculated_demand_cpu_core_hours =
+          demand_cpu_core_hours
+      ),
+    by = "year"
+  ) |>
+  mutate(
+    demand_cpu_core_hours = coalesce(
+      calculated_demand_cpu_core_hours,
+      demand_cpu_core_hours
+    )
+  ) |>
+  select(-calculated_demand_cpu_core_hours)
+
+# Validate CPU conversion for all 13 years
+
+stopifnot(
+  nrow(conversion_data) == 13,
+  all(!is.na(conversion_data$demand_cpu_core_hours)),
+  all(!is.na(conversion_data$allocation_cpu_core_hours))
+)
+
+# Display consolidated CPU results
+
+conversion_data |>
+  select(
+    year,
+    source_period,
+    demand_cpu_core_hours,
+    allocation_cpu_core_hours
+  ) |>
+  print(n = Inf)
+```
+
 
 ## GPU Resources
 
