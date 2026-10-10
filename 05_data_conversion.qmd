@@ -2,9 +2,19 @@
 
 ## Purpose
 
-The purpose of this step is to convert the reported HPC resource values into units that are more comparable across years and systems.
+The purpose of this step is to convert historical High-Performance Computing (HPC) demand and allocation values into more comparable computational resource measures across reporting years, facilities, and systems.
 
-The historical data are reported using different units, including service units (SU), kilo service units (kSU), CPU core-hours and GPU hours. Service unit accounting can also differ between HPC systems and resource types. Therefore, a single conversion factor cannot be applied across the full historical dataset.
+The integrated dataset covers 13 financial years, from 2013/14 to 2025/26, and contains observations reported in different accounting units, including kilo service units (kSU), million compute hours, CPU core-hours, and GPU-related service units.
+
+These observations originate from different HPC facilities and systems, including the National Computational Infrastructure (NCI) and Pawsey Supercomputing Research Centre. Historical system information includes Raijin, Magnus, FlashLite, MASSIVE, Gadi, and Setonix CPU and GPU resources.
+
+Service-unit accounting conventions can vary across facilities, systems, resource types, and reporting periods. Consequently, values expressed in the same unit, such as kSU, are not necessarily computationally equivalent.
+
+This stage therefore evaluates conversion rules at the system and resource level rather than applying a single conversion factor across the historical dataset.
+
+Where sufficient documentation is available, original demand and allocation values are converted into CPU core-hours or GPU hours using the applicable accounting rules. Where conversion cannot be supported reliably, original values and their limitations are retained without introducing unsupported assumptions.
+
+The conversion process preserves the original reported values, units, source references, derivation methods, and conversion assumptions to maintain transparency and reproducibility for subsequent exploratory analysis and forecasting.
 
 ## Conversion Approach
 
