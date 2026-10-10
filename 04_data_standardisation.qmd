@@ -2,9 +2,15 @@
 
 ## Purpose
 
-The purpose of this step is to standardise variables that are reported differently across years and data sources.
+## Purpose
 
-The historical HPC data were collected from multiple reports and datasets. Differences in terminology, classification, units, and reporting structure need to be addressed before the data can be compared over time.
+The purpose of this step is to standardise the integrated historical High-Performance Computing (HPC) data to support consistent analysis across reporting years.
+
+This stage uses the reconciled annual demand and allocation summary and the Field of Research (FoR) summary produced during Data Integration.
+
+Standardisation focuses on aligning reporting periods, variable names, units, research field classifications, and data quality labels where necessary. Original values, source information, and derivation assumptions are retained to maintain traceability.
+
+Numerical demand and allocation values are not converted at this stage. Compute-unit conversion is addressed separately in the Data Conversion chapter.
 
 ## Reporting Period
 

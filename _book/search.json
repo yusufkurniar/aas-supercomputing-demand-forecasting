@@ -254,7 +254,17 @@
     "href": "04_data_standardisation.html",
     "title": "5  Data Standardisation",
     "section": "",
-    "text": "5.1 Purpose\nThe purpose of this step is to standardise variables that are reported differently across years and data sources.\nThe historical HPC data were collected from multiple reports and datasets. Differences in terminology, classification, units, and reporting structure need to be addressed before the data can be compared over time.",
+    "text": "5.1 Purpose",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Data Standardisation</span>"
+    ]
+  },
+  {
+    "objectID": "04_data_standardisation.html#purpose-1",
+    "href": "04_data_standardisation.html#purpose-1",
+    "title": "5  Data Standardisation",
+    "section": "5.2 Purpose",
+    "text": "5.2 Purpose\nThe purpose of this step is to standardise the integrated historical High-Performance Computing (HPC) data to support consistent analysis across reporting years.\nThis stage uses the reconciled annual demand and allocation summary and the Field of Research (FoR) summary produced during Data Integration.\nStandardisation focuses on aligning reporting periods, variable names, units, research field classifications, and data quality labels where necessary. Original values, source information, and derivation assumptions are retained to maintain traceability.\nNumerical demand and allocation values are not converted at this stage. Compute-unit conversion is addressed separately in the Data Conversion chapter.",
     "crumbs": [
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>Data Standardisation</span>"
     ]
@@ -263,8 +273,8 @@
     "objectID": "04_data_standardisation.html#reporting-period",
     "href": "04_data_standardisation.html#reporting-period",
     "title": "5  Data Standardisation",
-    "section": "5.2 Reporting Period",
-    "text": "5.2 Reporting Period\nReporting periods are standardised into a consistent annual format, while the original reporting period is retained for reference.\nThe main analysis currently covers 2013/14 to 2025/26.",
+    "section": "5.3 Reporting Period",
+    "text": "5.3 Reporting Period\nReporting periods are standardised into a consistent annual format, while the original reporting period is retained for reference.\nThe main analysis currently covers 2013/14 to 2025/26.",
     "crumbs": [
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>Data Standardisation</span>"
     ]
@@ -273,8 +283,8 @@
     "objectID": "04_data_standardisation.html#institution-names",
     "href": "04_data_standardisation.html#institution-names",
     "title": "5  Data Standardisation",
-    "section": "5.3 Institution Names",
-    "text": "5.3 Institution Names\nInstitution names may vary across datasets and years due to abbreviations, naming conventions, or organisational changes.\nWhere possible, institution names are mapped to a consistent name while retaining the originally reported value.",
+    "section": "5.4 Institution Names",
+    "text": "5.4 Institution Names\nInstitution names may vary across datasets and years due to abbreviations, naming conventions, or organisational changes.\nWhere possible, institution names are mapped to a consistent name while retaining the originally reported value.",
     "crumbs": [
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>Data Standardisation</span>"
     ]
@@ -283,8 +293,8 @@
     "objectID": "04_data_standardisation.html#field-of-research-classification",
     "href": "04_data_standardisation.html#field-of-research-classification",
     "title": "5  Data Standardisation",
-    "section": "5.4 Field of Research Classification",
-    "text": "5.4 Field of Research Classification\nField of Research classifications are not fully consistent across the historical period.\nEarlier observations may use the 2008 Australian and New Zealand Standard Research Classification (ANZSRC), while more recent observations may use the 2020 classification.\nWhere possible, research fields are mapped to a common classification for longitudinal analysis. The original classification is retained to avoid losing information from the source data.",
+    "section": "5.5 Field of Research Classification",
+    "text": "5.5 Field of Research Classification\nField of Research classifications are not fully consistent across the historical period.\nEarlier observations may use the 2008 Australian and New Zealand Standard Research Classification (ANZSRC), while more recent observations may use the 2020 classification.\nWhere possible, research fields are mapped to a common classification for longitudinal analysis. The original classification is retained to avoid losing information from the source data.",
     "crumbs": [
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>Data Standardisation</span>"
     ]
@@ -293,8 +303,8 @@
     "objectID": "04_data_standardisation.html#hpc-facilities-and-systems",
     "href": "04_data_standardisation.html#hpc-facilities-and-systems",
     "title": "5  Data Standardisation",
-    "section": "5.5 HPC Facilities and Systems",
-    "text": "5.5 HPC Facilities and Systems\nFacility and system names are standardised so that allocations can be associated with the relevant HPC infrastructure.\nThis is particularly important because different systems may use different service unit accounting methods.",
+    "section": "5.6 HPC Facilities and Systems",
+    "text": "5.6 HPC Facilities and Systems\nFacility and system names are standardised so that allocations can be associated with the relevant HPC infrastructure.\nThis is particularly important because different systems may use different service unit accounting methods.",
     "crumbs": [
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>Data Standardisation</span>"
     ]
@@ -303,8 +313,8 @@
     "objectID": "04_data_standardisation.html#resource-type",
     "href": "04_data_standardisation.html#resource-type",
     "title": "5  Data Standardisation",
-    "section": "5.6 Resource Type",
-    "text": "5.6 Resource Type\nCompute resources are classified into resource types where sufficient information is available.\nThe main distinction is between:\n\nCPU resources\nGPU resources\nmixed or unspecified resources\n\nCPU and GPU resources are kept separate because they represent different types of computing resources and cannot be directly combined as physical compute hours.",
+    "section": "5.7 Resource Type",
+    "text": "5.7 Resource Type\nCompute resources are classified into resource types where sufficient information is available.\nThe main distinction is between:\n\nCPU resources\nGPU resources\nmixed or unspecified resources\n\nCPU and GPU resources are kept separate because they represent different types of computing resources and cannot be directly combined as physical compute hours.",
     "crumbs": [
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>Data Standardisation</span>"
     ]
@@ -313,8 +323,8 @@
     "objectID": "04_data_standardisation.html#units",
     "href": "04_data_standardisation.html#units",
     "title": "5  Data Standardisation",
-    "section": "5.7 Units",
-    "text": "5.7 Units\nThe original reported unit is retained for each observation.\nHistorical sources may report compute using units such as:\n\nservice units (SU)\nkilo service units (kSU)\nCPU core-hours\nGPU hours\nother reported compute-hour measures\n\nUnit labels are standardised at this stage, but conversion between units is handled separately in the data conversion step.",
+    "section": "5.8 Units",
+    "text": "5.8 Units\nThe original reported unit is retained for each observation.\nHistorical sources may report compute using units such as:\n\nservice units (SU)\nkilo service units (kSU)\nCPU core-hours\nGPU hours\nother reported compute-hour measures\n\nUnit labels are standardised at this stage, but conversion between units is handled separately in the data conversion step.",
     "crumbs": [
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>Data Standardisation</span>"
     ]
@@ -323,8 +333,8 @@
     "objectID": "04_data_standardisation.html#data-quality-and-comparability",
     "href": "04_data_standardisation.html#data-quality-and-comparability",
     "title": "5  Data Standardisation",
-    "section": "5.8 Data Quality and Comparability",
-    "text": "5.8 Data Quality and Comparability\nAdditional indicators are used where necessary to identify differences in data quality and comparability.\nThese may include whether a value is:\n\ndirectly reported\nderived from another reported value\nestimated or used as a proxy\ncomparable across years\naffected by changes in systems or reporting methods\n\nThese indicators allow later analysis to distinguish between directly observed values and values that require additional assumptions.",
+    "section": "5.9 Data Quality and Comparability",
+    "text": "5.9 Data Quality and Comparability\nAdditional indicators are used where necessary to identify differences in data quality and comparability.\nThese may include whether a value is:\n\ndirectly reported\nderived from another reported value\nestimated or used as a proxy\ncomparable across years\naffected by changes in systems or reporting methods\n\nThese indicators allow later analysis to distinguish between directly observed values and values that require additional assumptions.",
     "crumbs": [
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>Data Standardisation</span>"
     ]
@@ -333,8 +343,8 @@
     "objectID": "04_data_standardisation.html#output",
     "href": "04_data_standardisation.html#output",
     "title": "5  Data Standardisation",
-    "section": "5.9 Output",
-    "text": "5.9 Output\nThe output of this step is a standardised dataset that retains the original reported information while providing consistent classifications for subsequent conversion and analysis.",
+    "section": "5.10 Output",
+    "text": "5.10 Output\nThe output of this step is a standardised dataset that retains the original reported information while providing consistent classifications for subsequent conversion and analysis.",
     "crumbs": [
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>Data Standardisation</span>"
     ]
