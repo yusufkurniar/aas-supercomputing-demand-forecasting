@@ -51,11 +51,156 @@ Institution-level standardisation may be undertaken separately if institutional 
 
 ## Field of Research Classification
 
-Field of Research classifications are not fully consistent across the historical period.
+Historical Field of Research (FoR) data use different classification systems, including ANZSRC 2008 and ANZSRC 2020.
 
-Earlier observations may use the 2008 Australian and New Zealand Standard Research Classification (ANZSRC), while more recent observations may use the 2020 classification.
+The reconciled FoR dataset from Data Integration retains the originally reported research fields and classification codes, alongside a standardised FoR category for longitudinal analysis.
 
-Where possible, research fields are mapped to a common classification for longitudinal analysis. The original classification is retained to avoid losing information from the source data.
+Existing mappings are retained, including combined historical categories where a direct one-to-one mapping is not supported. Classification status and standardisation notes document estimated classifications, unresolved mappings, and differences between reporting systems.
+
+This step validates the existing classifications without changing allocation shares, demand estimates, or other numerical values.
+
+```{r}
+for_data <- read_excel(
+  "assets/data/data clean/reconciled_field_of_research_summary.xlsx"
+)
+
+# Review existing classifications
+for_classification_check <- for_data |>
+  count(
+    classification_status,
+    standardisation_note,
+    name = "records"
+  ) |>
+  arrange(desc(records))
+
+for_classification_check
+
+# Identify records requiring mapping review
+for_mapping_review <- for_data |>
+  filter(
+    is.na(for_standard_2020) |
+      grepl(
+        "pending|estimated|cannot split",
+        paste(classification_status,
+              standardisation_note),
+        ignore.case = TRUE
+      )
+  ) |>
+  select(
+    year,
+    research_field_reported,
+    for_standard_2020,
+    classification_status,
+    standardisation_note
+  )
+
+for_mapping_review
+```
+
+### Historical FoR Reporting Groups
+
+For visualisation, the FoR data are divided into two periods: 2014–2020 and 2021–2026.
+
+For 2014 - 2020, originally reported research fields are grouped into consistent historical reporting categories. In particular, the separately reported Geosciences, Earth Sciences, and Environmental Sciences categories are combined into Earth & Environmental Sciences. Radioastronomy is combined with Physical Sciences, while Engineering and Technology are combined into Engineering & Technology.
+
+For 2021 - 2026, the existing standardised ANZSRC 2020 FoR categories are retained.
+
+These groupings are used for reporting and visualisation only. Original research field names, allocation shares, estimated compute values, and source information remain unchanged. Differences in data scope, particularly Pawsey-wide supercomputer usage in 2016/17, are retained as comparability limitations.
+
+```{r}
+# Create FoR reporting categories without modifying source values
+for_data <- for_data |>
+  mutate(
+    for_analysis_group = case_when(
+      year <= 2020 &
+        research_field_reported %in% c(
+          "Geosciences",
+          "Earth Sciences (exc. Geosciences)",
+          "Environmental Sciences",
+          "Earth & Environmental Sciences"
+        ) ~ "Earth & Environmental Sciences",
+
+      year <= 2020 &
+        research_field_reported %in% c(
+          "Radioastronomy",
+          "Physical Sciences (exc. radio astronomy)",
+          "Physical Sciences"
+        ) ~ "Physical Sciences",
+
+      year <= 2020 &
+        research_field_reported %in% c(
+          "Engineering",
+          "Technology",
+          "Engineering & Technology"
+        ) ~ "Engineering & Technology",
+
+      year <= 2020 &
+        research_field_reported %in% c(
+          "Other / Unreported",
+          "Other / Unclassified"
+        ) ~ "Other / Unclassified",
+
+      year <= 2020 ~ research_field_reported,
+
+      TRUE ~ for_standard_2020
+    )
+  )
+
+# Review the harmonised historical categories
+historical_for_check <- for_data |>
+  filter(year <= 2020) |>
+  group_by(year, for_analysis_group) |>
+  summarise(
+    allocation_share_pct = sum(
+      allocation_share_for, na.rm = TRUE
+    ) * 100,
+    .groups = "drop"
+  ) |>
+  arrange(year, desc(allocation_share_pct))
+
+historical_for_check
+```
+
+```{r}
+# Confirm the new grouping does not alter annual shares
+share_validation <- for_data |>
+  group_by(year) |>
+  summarise(
+    original_share = sum(allocation_share_for, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  left_join(
+    for_data |>
+      group_by(year, for_analysis_group) |>
+      summarise(
+        grouped_share = sum(allocation_share_for, na.rm = TRUE),
+        .groups = "drop"
+      ) |>
+      group_by(year) |>
+      summarise(
+        grouped_share = sum(grouped_share),
+        .groups = "drop"
+      ),
+    by = "year"
+  ) |>
+  mutate(
+    difference = original_share - grouped_share
+  )
+
+share_validation
+
+stopifnot(
+  all(abs(share_validation$difference) < 1e-10)
+)
+
+# Confirm every record has a reporting category
+missing_groups <- for_data |>
+  filter(is.na(for_analysis_group) | for_analysis_group == "")
+
+missing_groups
+
+stopifnot(nrow(missing_groups) == 0)
+```
 
 ## HPC Facilities and Systems
 
