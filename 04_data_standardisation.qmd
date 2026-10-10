@@ -216,15 +216,17 @@ Differences between NCI and Pawsey accounting conventions, system configurations
 
 ## Resource Type
 
-Compute resources are classified into resource types where sufficient information is available.
+Historical HPC demand and allocation records include different computing resources, primarily CPU and GPU systems. The availability of resource-level information varies across reporting periods.
 
-The main distinction is between:
+Earlier reporting years generally provide aggregate allocation or demand figures without a consistent CPU/GPU breakdown. Some historical systems, including Raijin and Magnus, are identified in the source records, but their system-level allocation shares are not always available.
 
-- CPU resources
-- GPU resources
-- mixed or unspecified resources
+More detailed resource-level information is available for later years. The 2020/21 allocation records identify Magnus, FlashLite, MASSIVE, and Gadi, while the 2021/22 records distinguish MASSIVE, Gadi, Setonix CPU, and Setonix GPU. From 2022/23 onwards, several reporting years provide separate Gadi CPU, Setonix CPU, and Setonix GPU allocations.
 
-CPU and GPU resources are kept separate because they represent different types of computing resources and cannot be directly combined as physical compute hours.
+However, the availability of resource-level demand data is more limited. In particular, the 2023/24 and 2024/25 demand estimates are derived from aggregate allocation and fulfilment rates, without a directly reported CPU/GPU demand breakdown.
+
+For standardisation, resource types are classified as CPU, GPU, or Unspecified only where supported by the original source information. Records without sufficient resource-level detail retain an unspecified classification rather than being assigned an estimated CPU/GPU split.
+
+No numerical allocation or demand values are redistributed between resource types at this stage. Resource-specific conversion factors and comparability adjustments are addressed in the Data Conversion chapter.
 
 ## Units
 

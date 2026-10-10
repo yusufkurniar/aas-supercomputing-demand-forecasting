@@ -562,14 +562,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="resource-type" class="level2" data-number="5.6">
 <h2 data-number="5.6" class="anchored" data-anchor-id="resource-type"><span class="header-section-number">5.6</span> Resource Type</h2>
-<p>Compute resources are classified into resource types where sufficient information is available.</p>
-<p>The main distinction is between:</p>
-<ul>
-<li>CPU resources</li>
-<li>GPU resources</li>
-<li>mixed or unspecified resources</li>
-</ul>
-<p>CPU and GPU resources are kept separate because they represent different types of computing resources and cannot be directly combined as physical compute hours.</p>
+<p>Historical HPC demand and allocation records include different computing resources, primarily CPU and GPU systems. The availability of resource-level information varies across reporting periods.</p>
+<p>Earlier reporting years generally provide aggregate allocation or demand figures without a consistent CPU/GPU breakdown. Some historical systems, including Raijin and Magnus, are identified in the source records, but their system-level allocation shares are not always available.</p>
+<p>More detailed resource-level information is available for later years. The 2020/21 allocation records identify Magnus, FlashLite, MASSIVE, and Gadi, while the 2021/22 records distinguish MASSIVE, Gadi, Setonix CPU, and Setonix GPU. From 2022/23 onwards, several reporting years provide separate Gadi CPU, Setonix CPU, and Setonix GPU allocations.</p>
+<p>However, the availability of resource-level demand data is more limited. In particular, the 2023/24 and 2024/25 demand estimates are derived from aggregate allocation and fulfilment rates, without a directly reported CPU/GPU demand breakdown.</p>
+<p>For standardisation, resource types are classified as CPU, GPU, or Unspecified only where supported by the original source information. Records without sufficient resource-level detail retain an unspecified classification rather than being assigned an estimated CPU/GPU split.</p>
+<p>No numerical allocation or demand values are redistributed between resource types at this stage. Resource-specific conversion factors and comparability adjustments are addressed in the Data Conversion chapter.</p>
 </section>
 <section id="units" class="level2" data-number="5.7">
 <h2 data-number="5.7" class="anchored" data-anchor-id="units"><span class="header-section-number">5.7</span> Units</h2>
@@ -1288,47 +1286,49 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb15-224"><a href="#cb15-224" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-225"><a href="#cb15-225" aria-hidden="true" tabindex="-1"></a><span class="fu">## Resource Type</span></span>
 <span id="cb15-226"><a href="#cb15-226" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-227"><a href="#cb15-227" aria-hidden="true" tabindex="-1"></a>Compute resources are classified into resource types where sufficient information is available.</span>
+<span id="cb15-227"><a href="#cb15-227" aria-hidden="true" tabindex="-1"></a>Historical HPC demand and allocation records include different computing resources, primarily CPU and GPU systems. The availability of resource-level information varies across reporting periods.</span>
 <span id="cb15-228"><a href="#cb15-228" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-229"><a href="#cb15-229" aria-hidden="true" tabindex="-1"></a>The main distinction is between:</span>
+<span id="cb15-229"><a href="#cb15-229" aria-hidden="true" tabindex="-1"></a>Earlier reporting years generally provide aggregate allocation or demand figures without a consistent CPU/GPU breakdown. Some historical systems, including Raijin and Magnus, are identified in the source records, but their system-level allocation shares are not always available.</span>
 <span id="cb15-230"><a href="#cb15-230" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-231"><a href="#cb15-231" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>CPU resources</span>
-<span id="cb15-232"><a href="#cb15-232" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>GPU resources</span>
-<span id="cb15-233"><a href="#cb15-233" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>mixed or unspecified resources</span>
+<span id="cb15-231"><a href="#cb15-231" aria-hidden="true" tabindex="-1"></a>More detailed resource-level information is available for later years. The 2020/21 allocation records identify Magnus, FlashLite, MASSIVE, and Gadi, while the 2021/22 records distinguish MASSIVE, Gadi, Setonix CPU, and Setonix GPU. From 2022/23 onwards, several reporting years provide separate Gadi CPU, Setonix CPU, and Setonix GPU allocations.</span>
+<span id="cb15-232"><a href="#cb15-232" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-233"><a href="#cb15-233" aria-hidden="true" tabindex="-1"></a>However, the availability of resource-level demand data is more limited. In particular, the 2023/24 and 2024/25 demand estimates are derived from aggregate allocation and fulfilment rates, without a directly reported CPU/GPU demand breakdown.</span>
 <span id="cb15-234"><a href="#cb15-234" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-235"><a href="#cb15-235" aria-hidden="true" tabindex="-1"></a>CPU and GPU resources are kept separate because they represent different types of computing resources and cannot be directly combined as physical compute hours.</span>
+<span id="cb15-235"><a href="#cb15-235" aria-hidden="true" tabindex="-1"></a>For standardisation, resource types are classified as CPU, GPU, or Unspecified only where supported by the original source information. Records without sufficient resource-level detail retain an unspecified classification rather than being assigned an estimated CPU/GPU split.</span>
 <span id="cb15-236"><a href="#cb15-236" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-237"><a href="#cb15-237" aria-hidden="true" tabindex="-1"></a><span class="fu">## Units</span></span>
+<span id="cb15-237"><a href="#cb15-237" aria-hidden="true" tabindex="-1"></a>No numerical allocation or demand values are redistributed between resource types at this stage. Resource-specific conversion factors and comparability adjustments are addressed in the Data Conversion chapter.</span>
 <span id="cb15-238"><a href="#cb15-238" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-239"><a href="#cb15-239" aria-hidden="true" tabindex="-1"></a>The original reported unit is retained for each observation.</span>
+<span id="cb15-239"><a href="#cb15-239" aria-hidden="true" tabindex="-1"></a><span class="fu">## Units</span></span>
 <span id="cb15-240"><a href="#cb15-240" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-241"><a href="#cb15-241" aria-hidden="true" tabindex="-1"></a>Historical sources may report compute using units such as:</span>
+<span id="cb15-241"><a href="#cb15-241" aria-hidden="true" tabindex="-1"></a>The original reported unit is retained for each observation.</span>
 <span id="cb15-242"><a href="#cb15-242" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-243"><a href="#cb15-243" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>service units (SU)</span>
-<span id="cb15-244"><a href="#cb15-244" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>kilo service units (kSU)</span>
-<span id="cb15-245"><a href="#cb15-245" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>CPU core-hours</span>
-<span id="cb15-246"><a href="#cb15-246" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>GPU hours</span>
-<span id="cb15-247"><a href="#cb15-247" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>other reported compute-hour measures</span>
-<span id="cb15-248"><a href="#cb15-248" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-249"><a href="#cb15-249" aria-hidden="true" tabindex="-1"></a>Unit labels are standardised at this stage, but conversion between units is handled separately in the data conversion step.</span>
+<span id="cb15-243"><a href="#cb15-243" aria-hidden="true" tabindex="-1"></a>Historical sources may report compute using units such as:</span>
+<span id="cb15-244"><a href="#cb15-244" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-245"><a href="#cb15-245" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>service units (SU)</span>
+<span id="cb15-246"><a href="#cb15-246" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>kilo service units (kSU)</span>
+<span id="cb15-247"><a href="#cb15-247" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>CPU core-hours</span>
+<span id="cb15-248"><a href="#cb15-248" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>GPU hours</span>
+<span id="cb15-249"><a href="#cb15-249" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>other reported compute-hour measures</span>
 <span id="cb15-250"><a href="#cb15-250" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-251"><a href="#cb15-251" aria-hidden="true" tabindex="-1"></a><span class="fu">## Data Quality and Comparability</span></span>
+<span id="cb15-251"><a href="#cb15-251" aria-hidden="true" tabindex="-1"></a>Unit labels are standardised at this stage, but conversion between units is handled separately in the data conversion step.</span>
 <span id="cb15-252"><a href="#cb15-252" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-253"><a href="#cb15-253" aria-hidden="true" tabindex="-1"></a>Additional indicators are used where necessary to identify differences in data quality and comparability.</span>
+<span id="cb15-253"><a href="#cb15-253" aria-hidden="true" tabindex="-1"></a><span class="fu">## Data Quality and Comparability</span></span>
 <span id="cb15-254"><a href="#cb15-254" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-255"><a href="#cb15-255" aria-hidden="true" tabindex="-1"></a>These may include whether a value is:</span>
+<span id="cb15-255"><a href="#cb15-255" aria-hidden="true" tabindex="-1"></a>Additional indicators are used where necessary to identify differences in data quality and comparability.</span>
 <span id="cb15-256"><a href="#cb15-256" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-257"><a href="#cb15-257" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>directly reported</span>
-<span id="cb15-258"><a href="#cb15-258" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>derived from another reported value</span>
-<span id="cb15-259"><a href="#cb15-259" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>estimated or used as a proxy</span>
-<span id="cb15-260"><a href="#cb15-260" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>comparable across years</span>
-<span id="cb15-261"><a href="#cb15-261" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>affected by changes in systems or reporting methods</span>
-<span id="cb15-262"><a href="#cb15-262" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-263"><a href="#cb15-263" aria-hidden="true" tabindex="-1"></a>These indicators allow later analysis to distinguish between directly observed values and values that require additional assumptions.</span>
+<span id="cb15-257"><a href="#cb15-257" aria-hidden="true" tabindex="-1"></a>These may include whether a value is:</span>
+<span id="cb15-258"><a href="#cb15-258" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-259"><a href="#cb15-259" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>directly reported</span>
+<span id="cb15-260"><a href="#cb15-260" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>derived from another reported value</span>
+<span id="cb15-261"><a href="#cb15-261" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>estimated or used as a proxy</span>
+<span id="cb15-262"><a href="#cb15-262" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>comparable across years</span>
+<span id="cb15-263"><a href="#cb15-263" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>affected by changes in systems or reporting methods</span>
 <span id="cb15-264"><a href="#cb15-264" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-265"><a href="#cb15-265" aria-hidden="true" tabindex="-1"></a><span class="fu">## Output</span></span>
+<span id="cb15-265"><a href="#cb15-265" aria-hidden="true" tabindex="-1"></a>These indicators allow later analysis to distinguish between directly observed values and values that require additional assumptions.</span>
 <span id="cb15-266"><a href="#cb15-266" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-267"><a href="#cb15-267" aria-hidden="true" tabindex="-1"></a>The output of this step is a standardised dataset that retains the original reported information while providing consistent classifications for subsequent conversion and analysis.</span>
+<span id="cb15-267"><a href="#cb15-267" aria-hidden="true" tabindex="-1"></a><span class="fu">## Output</span></span>
+<span id="cb15-268"><a href="#cb15-268" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-269"><a href="#cb15-269" aria-hidden="true" tabindex="-1"></a>The output of this step is a standardised dataset that retains the original reported information while providing consistent classifications for subsequent conversion and analysis.</span>
 </code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
