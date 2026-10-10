@@ -2,8 +2,6 @@
 
 ## Purpose
 
-## Purpose
-
 The purpose of this step is to standardise the integrated historical High-Performance Computing (HPC) data to support consistent analysis across reporting years.
 
 This stage uses the reconciled annual demand and allocation summary and the Field of Research (FoR) summary produced during Data Integration.
@@ -12,11 +10,36 @@ Standardisation focuses on aligning reporting periods, variable names, units, re
 
 Numerical demand and allocation values are not converted at this stage. Compute-unit conversion is addressed separately in the Data Conversion chapter.
 
+```{r}
+library(dplyr)
+library(readxl)
+
+annual_data <- read_excel(
+  "assets/data/data clean/reconciled_demand_allocation_summary.xlsx"
+)
+
+year_check <- annual_data |>
+  mutate(
+    expected_year = as.integer(
+      sub("^.*[/\\-]", "", source_period)
+    ) + 2000L
+  ) |>
+  filter(is.na(year) | year != expected_year)
+
+year_check
+
+stopifnot(nrow(year_check) == 0)
+```
+
+The validation identified no inconsistencies between the analytical years and their corresponding reporting periods.
+
 ## Reporting Period
 
-Reporting periods are standardised into a consistent annual format, while the original reporting period is retained for reference.
+Reporting periods are standardised using the ending year of each annual reporting period. For example, 2013/14 is represented as 2014, and 2025/26 as 2026.
 
-The main analysis currently covers 2013/14 to 2025/26.
+The analysis covers 13 annual observations from 2014 to 2026. The `year` column is retained as the analytical year, while `source_period` preserves the original reporting period.
+
+Both variables are carried forward from Data Integration. This step validates their consistency without modifying the existing year assignments.
 
 ## Institution Names
 
