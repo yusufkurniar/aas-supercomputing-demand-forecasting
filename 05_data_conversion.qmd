@@ -622,21 +622,657 @@ conversion_data |>
   print(n = Inf)
 ```
 
-
 ## GPU Resources
 
-GPU resources are converted separately from CPU resources.
+GPU resource conversion translates GPU-specific service-unit allocations and demand into GPU-hours.
 
-Where a documented GPU service-unit rate is available:
+Unlike CPU core-hours, GPU-hours represent the use of GPU resources and depend on the accounting conventions of the relevant HPC system.
+
+For GPU observations reported in kSU, the conversion is:
 
 $$
-\text{GPU Hours}
-=
-\frac{\text{kSU} \times 1000}
-{\text{SU per GPU Hour}}
+\text{GPU hours} =
+\frac{\text{GPU kSU} \times 1000}
+{\text{SU per GPU hour}}
 $$
 
-GPU hours are not combined directly with CPU core-hours because they represent different types of computational resources.
+The analysis prioritises directly reported GPU demand and allocation figures. Where GPU demand is unavailable, estimates are developed using documented assumptions and available resource-level evidence.
+
+The conversion distinguishes reported GPU observations from estimated values. Historical years without a documented GPU breakdown require separate assessment rather than being automatically classified as having zero GPU demand.
+
+Original source values, conversion factors, assumptions and limitations are preserved for reproducibility.
+
+```{r}
+# GPU allocation: FY2021/22–FY2025/26
+# Source: reconciled system-level allocation evidence
+# Working conversion factor: 128 SU per GPU-hour
+
+gpu_allocation_systems <- tibble::tribble(
+  ~year, ~system,       ~gpu_ksu, ~su_per_gpu_hour,
+  2022,  "Setonix GPU",    170450, 128,
+  2023,  "Setonix GPU",    162400, 128,
+  2024,  "Setonix GPU",    167630, 128,
+  2025,  "Setonix GPU",    171050, 128,
+  2026,  "Setonix GPU",    160000, 128
+)
+
+gpu_allocation_annual <- gpu_allocation_systems |>
+  mutate(
+    allocation_gpu_hours =
+      gpu_ksu * 1000 / su_per_gpu_hour
+  ) |>
+  group_by(year) |>
+  summarise(
+    allocation_gpu_ksu = sum(gpu_ksu),
+    allocation_gpu_hours = sum(allocation_gpu_hours),
+    .groups = "drop"
+  )
+
+# Check GPU allocation against annual non-CPU residuals
+gpu_allocation_check <- cpu_allocation_check |>
+  left_join(
+    gpu_allocation_annual,
+    by = "year"
+  ) |>
+  filter(year >= 2022) |>
+  mutate(
+    reconciliation_difference =
+      non_cpu_ksu - allocation_gpu_ksu
+  )
+
+stopifnot(
+  all(gpu_allocation_check$reconciliation_difference == 0)
+)
+
+# Display GPU allocation results
+gpu_allocation_annual |>
+  print(n = Inf)
+```
+
+```{r}
+# GPU demand: FY2021/22–FY2025/26
+# Working factor: 128 SU per Setonix GPU-hour
+
+gpu_demand_direct <- tibble::tribble(
+  ~year, ~demand_gpu_ksu,
+  2023, 172341,
+  2026, 384420
+)
+
+gpu_demand_annual <- conversion_data |>
+  filter(year %in% 2022:2026) |>
+  left_join(
+    gpu_allocation_annual |>
+      select(year, allocation_gpu_ksu),
+    by = "year"
+  ) |>
+  left_join(
+    gpu_demand_direct,
+    by = "year"
+  ) |>
+  mutate(
+    gpu_allocation_share =
+      allocation_gpu_ksu / allocation_ksu,
+
+    estimated_demand_gpu_ksu =
+      demand_ksu * gpu_allocation_share,
+
+    demand_gpu_ksu = coalesce(
+      demand_gpu_ksu,
+      estimated_demand_gpu_ksu
+    ),
+
+    demand_gpu_hours =
+      demand_gpu_ksu * 1000 / 128,
+
+    gpu_demand_method = if_else(
+      year %in% c(2023, 2026),
+      "Reported Setonix GPU demand; working conversion factor",
+      "Estimated using GPU allocation share"
+    ),
+
+    gpu_demand_confidence = if_else(
+      year %in% c(2023, 2026),
+      "Higher: reported GPU demand",
+      "Moderate-low: allocation share assumption"
+    )
+  ) |>
+  select(
+    year,
+    demand_gpu_ksu,
+    demand_gpu_hours,
+    gpu_demand_method,
+    gpu_demand_confidence
+  )
+
+# Validate GPU demand
+stopifnot(
+  nrow(gpu_demand_annual) == 5,
+  all(!is.na(gpu_demand_annual$demand_gpu_hours))
+)
+
+gpu_demand_annual |>
+  print(n = Inf, width = Inf)
+```
+
+```{r}
+# Reconcile CPU and GPU demand against annual demand
+
+resource_demand_check <- cpu_demand_annual |>
+  select(year, demand_cpu_ksu) |>
+  inner_join(
+    gpu_demand_annual |>
+      select(year, demand_gpu_ksu),
+    by = "year"
+  ) |>
+  left_join(
+    conversion_data |>
+      select(year, demand_ksu),
+    by = "year"
+  ) |>
+  mutate(
+    combined_demand_ksu =
+      demand_cpu_ksu + demand_gpu_ksu,
+
+    reconciliation_difference =
+      demand_ksu - combined_demand_ksu
+  )
+
+resource_demand_check |>
+  print(n = Inf)
+
+stopifnot(
+  all(abs(resource_demand_check$reconciliation_difference) < 1e-6)
+)
+```
+
+```{r}
+# Integrate GPU demand and allocation into the annual conversion dataset
+# Preserve original values and existing CPU calculations
+
+gpu_conversion_annual <- gpu_allocation_annual |>
+  full_join(
+    gpu_demand_annual |>
+      select(
+        year,
+        demand_gpu_ksu,
+        demand_gpu_hours,
+        gpu_demand_method,
+        gpu_demand_confidence
+      ),
+    by = "year"
+  )
+
+conversion_data <- conversion_data |>
+  left_join(
+    gpu_conversion_annual |>
+      rename(
+        calculated_demand_gpu_hours = demand_gpu_hours,
+        calculated_allocation_gpu_hours = allocation_gpu_hours
+      ),
+    by = "year"
+  ) |>
+  mutate(
+    demand_gpu_hours = coalesce(
+      calculated_demand_gpu_hours,
+      demand_gpu_hours
+    ),
+    allocation_gpu_hours = coalesce(
+      calculated_allocation_gpu_hours,
+      allocation_gpu_hours
+    )
+  ) |>
+  select(
+    -calculated_demand_gpu_hours,
+    -calculated_allocation_gpu_hours
+  )
+
+# Check converted GPU values
+conversion_data |>
+  select(
+    year,
+    source_period,
+    demand_gpu_hours,
+    allocation_gpu_hours
+  ) |>
+  print(n = Inf)
+
+# Validate years with reported Setonix GPU allocations
+stopifnot(
+  nrow(conversion_data) == 13,
+  all(!is.na(
+    conversion_data$demand_gpu_hours[
+      conversion_data$year %in% 2022:2026
+    ]
+  )),
+  all(!is.na(
+    conversion_data$allocation_gpu_hours[
+      conversion_data$year %in% 2022:2026
+    ]
+  ))
+)
+```
+
+```{r}
+# Historical GPU estimation framework: FY2013/14–FY2020/21
+# Assumptions must be documented and supported by historical evidence
+
+historical_gpu_assumptions <- tibble::tibble(
+  year = 2014:2021,
+
+  gpu_share_assumed = c(
+    NA_real_,  # 2013/14 - Fornax evidence requires assessment
+    NA_real_,  # 2014/15
+    NA_real_,  # 2015/16
+    NA_real_,  # 2016/17
+    NA_real_,  # 2017/18
+    NA_real_,  # 2018/19
+    NA_real_,  # 2019/20
+    NA_real_   # 2020/21 - FlashLite evidence requires assessment
+  ),
+
+  su_per_gpu_hour = NA_real_,
+
+  assumption_status = "Requires source-informed estimate"
+)
+
+historical_gpu_assumptions
+```
+
+```{r}
+historical_gpu_evidence <- tibble::tribble(
+  ~year, ~system, ~evidence_type, ~reported_ksu,
+  ~source_url,
+
+  2014, "Fornax",
+  "2014 NCMAS GPU capacity available",
+  1440,
+  "https://nci.org.au/news-events/news/ncmas-information-applicants",
+
+  2021, "FlashLite",
+  "System included in 2021 NCMAS; GPU split not reported",
+  NA_real_,
+  "https://pawsey.org.au/ncmas2021/"
+)
+
+historical_gpu_evidence |>
+  print(n = Inf, width = Inf)
+```
+
+```{r}
+# Historical system classification based on UQ documentation
+
+flashlite_classification <- tibble::tibble(
+  year = 2021,
+  system = "FlashLite",
+  allocation_ksu = 992,
+  resource_class = "CPU",
+  gpu_count = 0L,
+  gpu_allocation_ksu = 0,
+  evidence_status = "Verified system specification",
+  source_url = paste0(
+    "https://rcc.uq.edu.au/files/2009/",
+    "FlashLite_User_Guide_20200122.pdf"
+  )
+)
+
+flashlite_classification
+```
+
+```{r}
+# Gadi historical GPU conversion reference
+# Charging factor from Pawsey's Gadi/Setonix comparison
+
+gadi_gpu_reference <- tibble::tibble(
+  year = 2020:2021,
+  system = "Gadi GPU (NVIDIA V100)",
+  su_per_gpu_hour = 36,
+  conversion_formula = "GPU kSU * 1000 / 36",
+  allocation_gpu_ksu = NA_real_,
+  allocation_gpu_hours = NA_real_,
+  evidence_status = paste(
+    "GPU charging factor documented;",
+    "historical GPU allocation split unavailable"
+  ),
+  source_url = paste0(
+    "https://pawsey.atlassian.net/wiki/spaces/US/pages/",
+    "51927586/Changes+in+Supercomputing+Services+for+2023"
+  )
+)
+
+gadi_gpu_reference |>
+  print(n = Inf, width = Inf)
+```
+
+```{r}
+# Historical GPU conversion status
+# Missing GPU-hours are unknown, not zero.
+
+historical_gpu_status <- tibble::tibble(
+  year = 2014:2021,
+  gpu_system_evidence = c(
+    "Fornax",
+    "Historical GPU split not established",
+    "Historical GPU split not established",
+    "Historical GPU split not established",
+    "Historical GPU split not established",
+    "Historical GPU split not established",
+    "Gadi",
+    "Gadi; FlashLite classified as CPU"
+  ),
+  gpu_allocation_status = c(
+    "Fornax capacity reported; allocation unconfirmed",
+    rep("GPU allocation split unavailable", 5),
+    "Gadi GPU allocation split unavailable",
+    "Gadi GPU allocation split unavailable"
+  ),
+  gpu_conversion_status = "Not estimable from available allocation data",
+  gpu_estimation_method = "No unsupported GPU share assigned"
+)
+
+# Check historical coverage
+stopifnot(
+  nrow(historical_gpu_status) == 8,
+  identical(historical_gpu_status$year, 2014:2021)
+)
+
+historical_gpu_status |>
+  print(n = Inf, width = Inf)
+```
+
+### Historical GPU Estimation Scenarios
+
+Historical GPU allocation and demand are estimated using low, baseline, and high GPU-share scenarios for 2013/14–2020/21. These percentages are modelling assumptions rather than observed historical shares.
+
+The provisional conversion factor of 36 SU per GPU-hour is used as a common scenario proxy. It is not a verified conversion factor for Fornax or Topaz.
+
+```{r}
+# Step 1: Historical GPU assumptions
+
+historical_gpu_scenarios <- tibble::tribble(
+  ~year, ~gpu_system_proxy, ~gpu_factor_proxy,
+  ~gpu_share_low, ~gpu_share_baseline, ~gpu_share_high,
+
+  2014, "Fornax",         36, 0.005, 0.010, 0.020,
+  2015, "Fornax",         36, 0.005, 0.012, 0.025,
+  2016, "Fornax",         36, 0.007, 0.015, 0.030,
+  2017, "Fornax",         36, 0.008, 0.018, 0.035,
+  2018, "Fornax",         36, 0.010, 0.020, 0.040,
+  2019, "Fornax / Topaz", 36, 0.010, 0.025, 0.045,
+  2020, "Gadi",           36, 0.015, 0.030, 0.050,
+  2021, "Gadi",           36, 0.020, 0.035, 0.060
+)
+
+# Step 2: Calculate historical GPU estimates
+
+historical_gpu_estimates <- conversion_data |>
+  dplyr::filter(year %in% 2014:2021) |>
+  dplyr::select(
+    year,
+    source_period,
+    demand_ksu,
+    allocation_ksu
+  ) |>
+  dplyr::left_join(
+    historical_gpu_scenarios,
+    by = "year"
+  ) |>
+  dplyr::mutate(
+    allocation_gpu_ksu_low =
+      allocation_ksu * gpu_share_low,
+
+    allocation_gpu_ksu_baseline =
+      allocation_ksu * gpu_share_baseline,
+
+    allocation_gpu_ksu_high =
+      allocation_ksu * gpu_share_high,
+
+    demand_gpu_ksu_low =
+      demand_ksu * gpu_share_low,
+
+    demand_gpu_ksu_baseline =
+      demand_ksu * gpu_share_baseline,
+
+    demand_gpu_ksu_high =
+      demand_ksu * gpu_share_high,
+
+    allocation_gpu_hours_low =
+      allocation_gpu_ksu_low * 1000 / gpu_factor_proxy,
+
+    allocation_gpu_hours_baseline =
+      allocation_gpu_ksu_baseline * 1000 / gpu_factor_proxy,
+
+    allocation_gpu_hours_high =
+      allocation_gpu_ksu_high * 1000 / gpu_factor_proxy,
+
+    demand_gpu_hours_low =
+      demand_gpu_ksu_low * 1000 / gpu_factor_proxy,
+
+    demand_gpu_hours_baseline =
+      demand_gpu_ksu_baseline * 1000 / gpu_factor_proxy,
+
+    demand_gpu_hours_high =
+      demand_gpu_ksu_high * 1000 / gpu_factor_proxy
+  )
+
+# Step 3: Validate historical estimates
+
+stopifnot(
+  nrow(historical_gpu_estimates) == 8,
+
+  all(
+    historical_gpu_estimates$gpu_share_low <=
+      historical_gpu_estimates$gpu_share_baseline
+  ),
+
+  all(
+    historical_gpu_estimates$gpu_share_baseline <=
+      historical_gpu_estimates$gpu_share_high
+  ),
+
+  all(
+    historical_gpu_estimates$allocation_gpu_ksu_high <=
+      historical_gpu_estimates$allocation_ksu
+  ),
+
+  all(
+    historical_gpu_estimates$demand_gpu_ksu_high <=
+      historical_gpu_estimates$demand_ksu
+  )
+)
+
+# Step 4: Display baseline results
+
+historical_gpu_estimates |>
+  dplyr::select(
+    year,
+    source_period,
+    gpu_system_proxy,
+    gpu_share_baseline,
+    allocation_gpu_hours_baseline,
+    demand_gpu_hours_baseline
+  ) |>
+  print(n = Inf, width = Inf)
+```
+
+```{r}
+# Reconcile historical CPU and GPU service units
+# Baseline scenario only
+
+historical_resource_reconciliation <- historical_gpu_estimates |>
+  dplyr::mutate(
+    allocation_cpu_ksu_baseline =
+      allocation_ksu - allocation_gpu_ksu_baseline,
+
+    demand_cpu_ksu_baseline =
+      demand_ksu - demand_gpu_ksu_baseline,
+
+    allocation_reconciliation =
+      allocation_cpu_ksu_baseline +
+      allocation_gpu_ksu_baseline -
+      allocation_ksu,
+
+    demand_reconciliation =
+      demand_cpu_ksu_baseline +
+      demand_gpu_ksu_baseline -
+      demand_ksu
+  )
+
+# Validate reconciliation
+stopifnot(
+  all(abs(
+    historical_resource_reconciliation$allocation_reconciliation
+  ) < 1e-6),
+
+  all(abs(
+    historical_resource_reconciliation$demand_reconciliation
+  ) < 1e-6)
+)
+
+# Display results
+historical_resource_reconciliation |>
+  dplyr::select(
+    year,
+    source_period,
+    allocation_cpu_ksu_baseline,
+    allocation_gpu_ksu_baseline,
+    demand_cpu_ksu_baseline,
+    demand_gpu_ksu_baseline,
+    allocation_reconciliation,
+    demand_reconciliation
+  ) |>
+  print(n = Inf, width = Inf)
+```
+
+```{r}
+# Adjust historical CPU core-hours after separating GPU resources
+# Preserve original CPU-equivalent estimates
+
+historical_cpu_adjusted <- historical_resource_reconciliation |>
+  dplyr::left_join(
+    conversion_data |>
+      dplyr::select(
+        year,
+        original_demand_cpu_core_hours = demand_cpu_core_hours,
+        original_allocation_cpu_core_hours = allocation_cpu_core_hours
+      ),
+    by = "year"
+  ) |>
+  dplyr::mutate(
+    # Preserve each year's original implied CPU conversion rate
+    demand_cpu_core_hours_baseline =
+      original_demand_cpu_core_hours *
+      (demand_cpu_ksu_baseline / demand_ksu),
+
+    allocation_cpu_core_hours_baseline =
+      original_allocation_cpu_core_hours *
+      (allocation_cpu_ksu_baseline / allocation_ksu)
+  )
+
+# Check results
+historical_cpu_adjusted |>
+  dplyr::select(
+    year,
+    source_period,
+    original_demand_cpu_core_hours,
+    demand_cpu_core_hours_baseline,
+    original_allocation_cpu_core_hours,
+    allocation_cpu_core_hours_baseline
+  ) |>
+  print(n = Inf)
+
+# Validate adjusted CPU values
+stopifnot(
+  nrow(historical_cpu_adjusted) == 8,
+  all(
+    historical_cpu_adjusted$demand_cpu_core_hours_baseline <=
+      historical_cpu_adjusted$original_demand_cpu_core_hours
+  ),
+  all(
+    historical_cpu_adjusted$allocation_cpu_core_hours_baseline <=
+      historical_cpu_adjusted$original_allocation_cpu_core_hours
+  )
+)
+```
+
+```{r}
+# Integrate historical CPU/GPU baseline estimates
+# Preserve original CPU-equivalent values
+
+historical_resource_baseline <- historical_cpu_adjusted |>
+  dplyr::transmute(
+    year,
+    historical_demand_cpu_core_hours =
+      demand_cpu_core_hours_baseline,
+    historical_allocation_cpu_core_hours =
+      allocation_cpu_core_hours_baseline,
+    historical_demand_gpu_hours =
+      demand_gpu_hours_baseline,
+    historical_allocation_gpu_hours =
+      allocation_gpu_hours_baseline,
+    historical_demand_gpu_ksu =
+      demand_gpu_ksu_baseline,
+    historical_allocation_gpu_ksu =
+      allocation_gpu_ksu_baseline,
+    historical_demand_cpu_ksu =
+      demand_cpu_ksu_baseline,
+    historical_allocation_cpu_ksu =
+      allocation_cpu_ksu_baseline
+  )
+
+# Preserve original CPU-equivalent values
+conversion_data <- conversion_data |>
+  dplyr::mutate(
+    original_demand_cpu_core_hours = demand_cpu_core_hours,
+    original_allocation_cpu_core_hours = allocation_cpu_core_hours
+  ) |>
+  dplyr::left_join(
+    historical_resource_baseline,
+    by = "year"
+  ) |>
+  dplyr::mutate(
+    demand_cpu_core_hours = dplyr::coalesce(
+      historical_demand_cpu_core_hours,
+      demand_cpu_core_hours
+    ),
+    allocation_cpu_core_hours = dplyr::coalesce(
+      historical_allocation_cpu_core_hours,
+      allocation_cpu_core_hours
+    ),
+    demand_gpu_hours = dplyr::coalesce(
+      historical_demand_gpu_hours,
+      demand_gpu_hours
+    ),
+    allocation_gpu_hours = dplyr::coalesce(
+      historical_allocation_gpu_hours,
+      allocation_gpu_hours
+    )
+  ) |>
+  dplyr::select(
+    -dplyr::starts_with("historical_")
+  )
+
+# Validate complete annual CPU/GPU baseline
+stopifnot(
+  nrow(conversion_data) == 13,
+  all(!is.na(conversion_data$demand_cpu_core_hours)),
+  all(!is.na(conversion_data$allocation_cpu_core_hours)),
+  all(!is.na(conversion_data$demand_gpu_hours)),
+  all(!is.na(conversion_data$allocation_gpu_hours))
+)
+
+conversion_data |>
+  dplyr::select(
+    year,
+    source_period,
+    demand_cpu_core_hours,
+    allocation_cpu_core_hours,
+    demand_gpu_hours,
+    allocation_gpu_hours
+  ) |>
+  print(n = Inf)
+```
+
 
 ## Historical Conversion
 
