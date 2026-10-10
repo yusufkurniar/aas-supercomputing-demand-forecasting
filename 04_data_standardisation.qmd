@@ -274,4 +274,49 @@ Where appropriate, sensitivity analysis will be used to assess how historical pr
 
 ## Output
 
-The output of this step is a standardised dataset that retains the original reported information while providing consistent classifications for subsequent conversion and analysis.
+The Data Standardisation stage prepares the reconciled historical HPC datasets for subsequent conversion, analysis, and forecasting.
+
+Two datasets are carried forward:
+
+- **Annual Demand and Allocation Summary:** Retains the 13 annual observations from 2014 to 2026, including original demand and allocation values, reporting periods, accounting units, source references, and existing estimation information. No numerical conversions are performed at this stage.
+- **Standardised Field of Research Summary:** Retains the original FoR records and classification information while adding `for_analysis_group` for consistent historical reporting and visualisation.
+
+The standardisation process preserves original numerical values, research field labels, source references, and estimation assumptions. Historical FoR categories are harmonised for reporting purposes without redistributing allocation shares.
+
+Validation checks confirm reporting-period consistency, preservation of annual FoR allocation-share totals, and the absence of missing FoR reporting groups.
+
+The resulting datasets provide the input for Data Conversion, where computational accounting units and system-specific conversion assumptions will be evaluated before numerical comparisons and forecasting are undertaken.
+
+```{r}
+# Create a separate folder for standardisation outputs
+output_dir <- "assets/data/data standardised"
+
+dir.create(
+  output_dir,
+  recursive = TRUE,
+  showWarnings = FALSE
+)
+
+# Save the annual summary without changing its values
+saveRDS(
+  annual_data,
+  file.path(output_dir, "annual_demand_allocation.rds")
+)
+
+# Save the FoR dataset with its new reporting categories
+saveRDS(
+  for_data,
+  file.path(output_dir, "field_of_research.rds")
+)
+
+# Verify that both output files were created
+output_files <- c(
+  file.path(output_dir, "annual_demand_allocation.rds"),
+  file.path(output_dir, "field_of_research.rds")
+)
+
+stopifnot(all(file.exists(output_files)))
+
+output_files
+```
+
