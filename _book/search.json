@@ -402,101 +402,101 @@
   {
     "objectID": "06_initial_analysis.html",
     "href": "06_initial_analysis.html",
-    "title": "7  Initial Analysis and Data Manipulation",
+    "title": "7  Initial Analysis",
     "section": "",
-    "text": "7.1 Purpose\nThe purpose of this step is to explore the prepared datasets, identify historical patterns, assess data quality and comparability, and prepare the variables required for modelling.\nThis analysis is also used to identify potential relationships between HPC demand and the structural drivers considered in the project.",
+    "text": "7.1 Purpose\nThe purpose of this stage is to examine historical demand and allocation patterns for Australian national High-Performance Computing (HPC) resources from 2014 to 2026, using the converted datasets produced in Chapter 05.\nThe analysis focuses on identifying trends in computational resource demand, allocation levels, and potential differences between requested and allocated resources. CPU core-hours and GPU-hours are examined separately because they represent distinct computational resource types and cannot be directly combined.\nThe analysis also explores the distribution of HPC allocations across Fields of Research (FoR) to understand how computational resource requirements vary between research disciplines.\nParticular attention is given to historical reporting differences, conversion assumptions, and estimated resource values. These limitations are considered when interpreting trends and assessing the suitability of the data for forecasting.\nThe findings from this stage will inform subsequent forecasting model development, evaluation, and scenario analysis through 2030.\nCode\nannual_converted &lt;- readRDS(\n  \"assets/data/data converted/annual_demand_allocation_converted.rds\"\n)\n\nfor_converted &lt;- readRDS(\n  \"assets/data/data converted/field_of_research_converted.rds\"\n)\n\nhistorical_gpu_scenarios &lt;- readRDS(\n  \"assets/data/data converted/historical_gpu_scenarios.rds\"\n)",
     "crumbs": [
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Initial Analysis and Data Manipulation</span>"
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Initial Analysis</span>"
     ]
   },
   {
     "objectID": "06_initial_analysis.html#historical-demand-and-allocation",
     "href": "06_initial_analysis.html#historical-demand-and-allocation",
-    "title": "7  Initial Analysis and Data Manipulation",
+    "title": "7  Initial Analysis",
     "section": "7.2 Historical Demand and Allocation",
     "text": "7.2 Historical Demand and Allocation\nHistorical requested and allocated compute are examined over time to understand how the use of national HPC resources has changed.\nThe analysis considers:\n\nchanges in requested compute\nchanges in allocated compute\nthe gap between requested and allocated resources\nfulfilment rates\nperiods of unusually high or low growth\n\nRequested and allocated compute are interpreted separately because allocation is constrained by available capacity and does not necessarily represent total research demand.",
     "crumbs": [
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Initial Analysis and Data Manipulation</span>"
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Initial Analysis</span>"
     ]
   },
   {
     "objectID": "06_initial_analysis.html#cpu-and-gpu-resources",
     "href": "06_initial_analysis.html#cpu-and-gpu-resources",
-    "title": "7  Initial Analysis and Data Manipulation",
+    "title": "7  Initial Analysis",
     "section": "7.3 CPU and GPU Resources",
     "text": "7.3 CPU and GPU Resources\nWhere sufficient information is available, CPU and GPU resources are analysed separately.\nThis allows the analysis to examine:\n\nhistorical CPU demand and allocation\nhistorical GPU demand and allocation\nchanges in the composition of national HPC usage\nthe increasing role of GPU-based computing\n\nCPU core-hours and GPU hours are not combined into a single physical compute measure.",
     "crumbs": [
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Initial Analysis and Data Manipulation</span>"
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Initial Analysis</span>"
     ]
   },
   {
     "objectID": "06_initial_analysis.html#field-of-research",
     "href": "06_initial_analysis.html#field-of-research",
-    "title": "7  Initial Analysis and Data Manipulation",
+    "title": "7  Initial Analysis",
     "section": "7.4 Field of Research",
     "text": "7.4 Field of Research\nThe distribution of HPC resources across Fields of Research is examined to identify which research areas account for the largest shares of national compute allocation and how this composition has changed over time.\nWhere FoR data represent allocation rather than requested compute, this distinction is retained when interpreting the results.",
     "crumbs": [
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Initial Analysis and Data Manipulation</span>"
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Initial Analysis</span>"
     ]
   },
   {
     "objectID": "06_initial_analysis.html#institutional-distribution",
     "href": "06_initial_analysis.html#institutional-distribution",
-    "title": "7  Initial Analysis and Data Manipulation",
+    "title": "7  Initial Analysis",
     "section": "7.5 Institutional Distribution",
     "text": "7.5 Institutional Distribution\nWhere institution-level data are available, allocations are examined across universities and research organisations.\nThis provides an indication of how national HPC resources are distributed across institutions and whether the distribution has changed over time.",
     "crumbs": [
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Initial Analysis and Data Manipulation</span>"
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Initial Analysis</span>"
     ]
   },
   {
     "objectID": "06_initial_analysis.html#potential-demand-drivers",
     "href": "06_initial_analysis.html#potential-demand-drivers",
-    "title": "7  Initial Analysis and Data Manipulation",
+    "title": "7  Initial Analysis",
     "section": "7.6 Potential Demand Drivers",
     "text": "7.6 Potential Demand Drivers\nPotential structural drivers are explored alongside the HPC data.\nThese may include:\n\nresearch funding\nresearch workforce\nresearch activity\ngrant funding in compute-intensive fields\nchanges in compute intensity\nchanges in HPC infrastructure\n\nThe purpose of this analysis is to identify variables that may be useful for the modelling stage rather than assuming that every available variable should be included.",
     "crumbs": [
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Initial Analysis and Data Manipulation</span>"
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Initial Analysis</span>"
     ]
   },
   {
     "objectID": "06_initial_analysis.html#data-manipulation-for-modelling",
     "href": "06_initial_analysis.html#data-manipulation-for-modelling",
-    "title": "7  Initial Analysis and Data Manipulation",
+    "title": "7  Initial Analysis",
     "section": "7.7 Data Manipulation for Modelling",
     "text": "7.7 Data Manipulation for Modelling\nAdditional variables required for analysis and modelling are created where appropriate.\nThese may include:\n\nannual growth rates\nrequest-allocation gaps\nfulfilment rates\nlagged funding variables\nFoR shares\nindicators for major system changes\nCPU and GPU measures\n\nAny derived variables and assumptions are documented so that they can be reproduced.",
     "crumbs": [
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Initial Analysis and Data Manipulation</span>"
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Initial Analysis</span>"
     ]
   },
   {
     "objectID": "06_initial_analysis.html#exploratory-analysis",
     "href": "06_initial_analysis.html#exploratory-analysis",
-    "title": "7  Initial Analysis and Data Manipulation",
+    "title": "7  Initial Analysis",
     "section": "7.8 Exploratory Analysis",
     "text": "7.8 Exploratory Analysis\nVisual and statistical analysis is used to examine trends, relationships and potential structural changes in the data.\nThis includes time-series plots, comparisons between requested and allocated compute, FoR composition, and relationships between HPC demand and potential structural drivers.\nParticular attention is given to major changes in national HPC infrastructure because increases in observed allocation may reflect changes in available capacity rather than equivalent increases in underlying demand.",
     "crumbs": [
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Initial Analysis and Data Manipulation</span>"
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Initial Analysis</span>"
     ]
   },
   {
     "objectID": "06_initial_analysis.html#data-readiness-for-modelling",
     "href": "06_initial_analysis.html#data-readiness-for-modelling",
-    "title": "7  Initial Analysis and Data Manipulation",
+    "title": "7  Initial Analysis",
     "section": "7.9 Data Readiness for Modelling",
     "text": "7.9 Data Readiness for Modelling\nBefore moving to model development, the prepared data are assessed for:\n\nsufficient historical coverage\nconsistency of units\nCPU and GPU separation\navailability of requested and allocated values\ndirect versus derived or proxy observations\nchanges in HPC systems\nchanges in FoR classifications\nmissing values\npotential structural breaks\n\nVariables that are not sufficiently comparable or supported by the available data are either excluded from modelling or treated separately.",
     "crumbs": [
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Initial Analysis and Data Manipulation</span>"
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Initial Analysis</span>"
     ]
   },
   {
     "objectID": "06_initial_analysis.html#output",
     "href": "06_initial_analysis.html#output",
-    "title": "7  Initial Analysis and Data Manipulation",
+    "title": "7  Initial Analysis",
     "section": "7.10 Output",
     "text": "7.10 Output\nThe output of this step is a modelling-ready dataset together with an initial understanding of historical HPC demand, allocation, research composition and potential demand drivers.\nThese findings provide the basis for model development and benchmarking in the next step.",
     "crumbs": [
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Initial Analysis and Data Manipulation</span>"
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Initial Analysis</span>"
     ]
   },
   {

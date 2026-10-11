@@ -1,10 +1,30 @@
-# Initial Analysis and Data Manipulation
+# Initial Analysis
 
 ## Purpose
 
-The purpose of this step is to explore the prepared datasets, identify historical patterns, assess data quality and comparability, and prepare the variables required for modelling.
+The purpose of this stage is to examine historical demand and allocation patterns for Australian national High-Performance Computing (HPC) resources from 2014 to 2026, using the converted datasets produced in Chapter 05.
 
-This analysis is also used to identify potential relationships between HPC demand and the structural drivers considered in the project.
+The analysis focuses on identifying trends in computational resource demand, allocation levels, and potential differences between requested and allocated resources. CPU core-hours and GPU-hours are examined separately because they represent distinct computational resource types and cannot be directly combined.
+
+The analysis also explores the distribution of HPC allocations across Fields of Research (FoR) to understand how computational resource requirements vary between research disciplines.
+
+Particular attention is given to historical reporting differences, conversion assumptions, and estimated resource values. These limitations are considered when interpreting trends and assessing the suitability of the data for forecasting.
+
+The findings from this stage will inform subsequent forecasting model development, evaluation, and scenario analysis through 2030.
+
+```{r}
+annual_converted <- readRDS(
+  "assets/data/data converted/annual_demand_allocation_converted.rds"
+)
+
+for_converted <- readRDS(
+  "assets/data/data converted/field_of_research_converted.rds"
+)
+
+historical_gpu_scenarios <- readRDS(
+  "assets/data/data converted/historical_gpu_scenarios.rds"
+)
+```
 
 ## Historical Demand and Allocation
 
