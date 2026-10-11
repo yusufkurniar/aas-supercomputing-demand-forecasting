@@ -1273,52 +1273,261 @@ conversion_data |>
   print(n = Inf)
 ```
 
+## Field of Research Conversion
 
-## Historical Conversion
+The Field of Research (FoR) conversion estimates the distribution of computational resources across research disciplines using the standardised FoR allocation dataset from Chapter 04.
 
-Conversion of historical observations requires additional care because HPC systems and service-unit accounting methods have changed over time.
+The conversion uses each field's annual allocation share to distribute the corresponding annual CPU core-hours and GPU-hours. This assumes that the resource composition within each field is proportional to the overall annual allocation composition.
 
-For each observation, the conversion process considers:
+The resulting FoR-level CPU and GPU values are estimates rather than directly observed resource-specific allocations. Original FoR observations and classification variables are retained to support traceability and subsequent analysis.
 
-- facility
-- HPC system
-- reporting period
-- resource type
-- original unit
-- documented service-unit accounting method
+The 2016/17 reporting period requires particular caution because the available FoR information reflects Pawsey-wide reporting rather than the same NCMAS allocation scope used in other years. This difference will be explicitly flagged.
 
-Where a reliable conversion factor cannot be identified, the original reported value is retained rather than applying an unsupported conversion.
+Before conversion, the FoR allocation shares are checked for completeness and consistency within each reporting year.
 
-## Conversion Documentation
+```{r}
+# Load standardised Field of Research dataset from Chapter 04
 
-The converted dataset retains information about how each value was produced.
+for_standardised <- readRDS(
+  "assets/data/data standardised/field_of_research.rds"
+)
 
-Where possible, this includes:
+# Inspect available variables
+names(for_standardised)
 
-- original reported value
-- original reported unit
-- converted value
-- converted unit
-- conversion formula or factor
-- conversion source
-- conversion confidence
-- comparability status
-- relevant notes
+# Inspect the structure
+dplyr::glimpse(for_standardised)
 
-This allows converted values to be traced back to their original source and assumptions.
+# Check allocation shares by financial year
+for_share_check <- for_standardised |>
+  dplyr::group_by(year) |>
+  dplyr::summarise(
+    n_fields = dplyr::n(),
 
-## CPU and GPU Separation
+    total_allocation_share = sum(
+      allocation_share_for,
+      na.rm = TRUE
+    ),
 
-CPU core-hours and GPU hours are maintained as separate measures throughout the analysis.
+    missing_shares = sum(
+      is.na(allocation_share_for)
+    ),
 
-This avoids treating different computational resources as directly equivalent and allows changes in the composition of HPC demand, including increasing GPU demand, to be analysed separately.
+    .groups = "drop"
+  )
 
-## Current Limitations
+# Display all reporting years
+for_share_check |>
+  print(n = Inf)
 
-Conversion factors have not yet been confirmed for every historical system and year.
+# Validate that the annual dataset and FoR dataset
+# use consistent analytical years
+stopifnot(
+  all(for_standardised$year %in% conversion_data$year),
+  nrow(conversion_data) == 13
+)
+```
 
-In particular, historical service-unit accounting and changes associated with system transitions require further validation. These assumptions will be reviewed using available documentation and feedback from NCI and Pawsey before the final converted dataset is used for modelling.
+```{r}
+# Convert Field of Research allocations
+# Preserve all original FoR observations and variables
+
+for_converted <- for_standardised |>
+  dplyr::left_join(
+    conversion_data |>
+      dplyr::select(
+        year,
+        annual_allocation_ksu = allocation_ksu,
+        annual_allocation_cpu_core_hours =
+          allocation_cpu_core_hours,
+        annual_allocation_gpu_hours =
+          allocation_gpu_hours
+      ),
+    by = "year"
+  ) |>
+  dplyr::mutate(
+    # FoR allocation expressed in comparable annual kSU
+    allocation_for_ksu =
+      allocation_share_for * annual_allocation_ksu,
+
+    # Estimated CPU allocation by research field
+    allocation_for_cpu_core_hours =
+      allocation_share_for *
+      annual_allocation_cpu_core_hours,
+
+    # Estimated GPU allocation by research field
+    allocation_for_gpu_hours =
+      allocation_share_for *
+      annual_allocation_gpu_hours,
+
+    # Record estimation method
+    for_resource_conversion_method =
+      "Proportional allocation using annual FoR share",
+
+    # Flag reporting scope differences
+    for_resource_scope_flag = dplyr::case_when(
+      year == 2017 ~
+        "Pawsey-wide FoR scope; not directly comparable to NCMAS",
+      TRUE ~
+        "Annual resource allocation distributed using FoR shares"
+    ),
+
+    # Distinguish historical scenario estimates
+    for_resource_confidence = dplyr::case_when(
+      year <= 2021 ~
+        "Low: historical GPU scenario and proportional allocation",
+      TRUE ~
+        "Estimated: proportional CPU/GPU resource distribution"
+    )
+  )
+
+# Check converted FoR results
+for_converted |>
+  dplyr::select(
+    year,
+    for_analysis_group,
+    allocation_share_for,
+    allocation_for_ksu,
+    allocation_for_cpu_core_hours,
+    allocation_for_gpu_hours
+  ) |>
+  print(n = 20, width = Inf)
+
+# Validate original FoR row count
+stopifnot(
+  nrow(for_converted) == nrow(for_standardised),
+  nrow(for_converted) == 133
+)
+```
+
+```{r}
+# Reconcile FoR allocations with annual resource totals
+
+for_reconciliation <- for_converted |>
+  dplyr::group_by(year) |>
+  dplyr::summarise(
+    for_total_ksu = sum(allocation_for_ksu),
+    for_total_cpu_core_hours =
+      sum(allocation_for_cpu_core_hours),
+    for_total_gpu_hours =
+      sum(allocation_for_gpu_hours),
+    .groups = "drop"
+  ) |>
+  dplyr::left_join(
+    conversion_data |>
+      dplyr::select(
+        year,
+        allocation_ksu,
+        allocation_cpu_core_hours,
+        allocation_gpu_hours
+      ),
+    by = "year"
+  ) |>
+  dplyr::mutate(
+    ksu_difference =
+      for_total_ksu - allocation_ksu,
+
+    cpu_difference =
+      for_total_cpu_core_hours -
+      allocation_cpu_core_hours,
+
+    gpu_difference =
+      for_total_gpu_hours -
+      allocation_gpu_hours
+  )
+
+# Display reconciliation results
+for_reconciliation |>
+  dplyr::select(
+    year,
+    ksu_difference,
+    cpu_difference,
+    gpu_difference
+  ) |>
+  print(n = Inf)
+
+# Validate differences using a relative tolerance
+stopifnot(
+  all(abs(for_reconciliation$ksu_difference) <
+        pmax(1, abs(for_reconciliation$allocation_ksu)) * 1e-6),
+
+  all(abs(for_reconciliation$cpu_difference) <
+        pmax(1, abs(for_reconciliation$allocation_cpu_core_hours)) * 1e-6),
+
+  all(abs(for_reconciliation$gpu_difference) <
+        pmax(1, abs(for_reconciliation$allocation_gpu_hours)) * 1e-6)
+)
+```
 
 ## Output
 
-The output of this step will be a conversion table and analysis dataset containing the original reported values together with comparable CPU or GPU measures where supported by sufficient evidence.
+The Data Conversion stage produces three reproducible datasets for subsequent analysis and forecasting.
+
+The annual converted dataset contains 13 financial years of HPC demand and allocation observations, including converted CPU core-hours and GPU-hours. Original reported values, source references, and conversion assumptions are retained.
+
+The Field of Research converted dataset contains 133 observations with estimated allocations in kSU, CPU core-hours, and GPU-hours, distributed according to the standardised annual FoR allocation shares. These resource-specific field estimates are based on proportional allocation assumptions rather than directly observed CPU or GPU usage.
+
+A separate historical GPU scenario dataset preserves low, baseline, and high estimates for 2013/14 – 2020/21 to support sensitivity analysis.
+
+All converted datasets are stored separately from the standardised source datasets. Reconciliation checks confirm that the FoR allocations reproduce annual resource totals within numerical tolerance.
+
+Historical conversion factors, estimated resource shares, differences in reporting scope, and assumptions regarding CPU/GPU composition remain important limitations for interpretation and forecasting.
+
+```{r}
+# Create output directory
+output_dir <- "assets/data/data converted"
+
+dir.create(
+  output_dir,
+  recursive = TRUE,
+  showWarnings = FALSE
+)
+
+# Save converted annual demand and allocation dataset
+saveRDS(
+  conversion_data,
+  file.path(
+    output_dir,
+    "annual_demand_allocation_converted.rds"
+  )
+)
+
+# Save converted Field of Research dataset
+saveRDS(
+  for_converted,
+  file.path(
+    output_dir,
+    "field_of_research_converted.rds"
+  )
+)
+
+# Preserve historical GPU uncertainty scenarios separately
+saveRDS(
+  historical_gpu_estimates,
+  file.path(
+    output_dir,
+    "historical_gpu_scenarios.rds"
+  )
+)
+
+# Verify that all files were created
+output_files <- file.path(
+  output_dir,
+  c(
+    "annual_demand_allocation_converted.rds",
+    "field_of_research_converted.rds",
+    "historical_gpu_scenarios.rds"
+  )
+)
+
+stopifnot(all(file.exists(output_files)))
+
+# Verify exported dataset dimensions
+stopifnot(
+  nrow(readRDS(output_files[1])) == 13,
+  nrow(readRDS(output_files[2])) == 133,
+  nrow(readRDS(output_files[3])) == 8
+)
+
+cat("All three converted datasets exported successfully.\n")
+```
