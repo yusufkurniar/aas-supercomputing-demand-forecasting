@@ -551,3 +551,70 @@ The results do not establish whether the increase in 2026 represents sustained g
 
 Consequently, neither trend specification provides a sufficiently robust basis for selecting a definitive GPU forecast. Both are retained as exploratory scenarios, with additional consideration of historical conversion uncertainty required before projecting demand through 2030.
 
+## Historical GPU Conversion Scenario Assessment
+
+The historical GPU conversion scenarios developed in Chapter 05 provide an indication of how assumptions about service-unit conversion affect estimated GPU resource requirements.
+
+For 2014 - 2021, the low, baseline, and high GPU-hour series are hypothetical conversion scenarios rather than independently observed GPU demand. They should therefore not be treated as additional historical observations or automatically included in the recent-period GPU forecasting models.
+
+The baseline scenario uses an assumed conversion of 36 service units per GPU-hour. Alternative conversion assumptions generate different GPU-hour estimates from the same underlying service-unit quantities.
+
+These scenarios represent measurement and conversion uncertainty, rather than evidence of alternative historical demand growth patterns.
+
+### Historical Scenario Consistency
+
+```{r gpu-historical-scenario-check}
+# Load historical GPU conversion scenarios
+historical_gpu_scenarios <- readRDS(
+  "assets/data/data converted/historical_gpu_scenarios.rds"
+)
+
+# Validate scenario coverage and ordering
+stopifnot(
+  isTRUE(all.equal(
+    sort(as.numeric(historical_gpu_scenarios$year)),
+    as.numeric(2014:2021)
+  )),
+  all(
+    historical_gpu_scenarios$demand_gpu_hours_low <=
+      historical_gpu_scenarios$demand_gpu_hours_baseline
+  ),
+  all(
+    historical_gpu_scenarios$demand_gpu_hours_baseline <=
+      historical_gpu_scenarios$demand_gpu_hours_high
+  )
+)
+
+# Compare scenario values with the converted baseline
+gpu_baseline_check <- historical_gpu_scenarios |>
+  dplyr::select(
+    year,
+    demand_gpu_hours_baseline
+  ) |>
+  dplyr::left_join(
+    forecast_data |>
+      dplyr::select(year, demand_gpu_hours),
+    by = "year"
+  )
+
+stopifnot(
+  isTRUE(all.equal(
+    gpu_baseline_check$demand_gpu_hours_baseline,
+    gpu_baseline_check$demand_gpu_hours,
+    tolerance = 1e-6
+  ))
+)
+
+cat(
+  "Historical GPU scenario period: 2014–2021\n",
+  "Scenario observations:", nrow(historical_gpu_scenarios), "\n",
+  "Baseline consistency: confirmed\n"
+)
+```
+
+This validation confirms that the historical GPU conversion scenarios cover 2014 - 2021, preserve the expected low-to-high ordering, and reproduce the baseline GPU demand estimates contained in the converted annual dataset.
+
+The scenarios will be retained as evidence of historical conversion uncertainty. They will not be treated as observed GPU demand when fitting the 2022 - 2026 exploratory trend models.
+
+Any future low, baseline, and high GPU demand projections must distinguish uncertainty in the historical conversion assumptions from uncertainty in future demand growth.
+
