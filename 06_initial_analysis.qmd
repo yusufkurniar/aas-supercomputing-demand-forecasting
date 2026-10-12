@@ -6,7 +6,7 @@ The purpose of this stage is to examine historical demand and allocation pattern
 
 The analysis focuses on identifying trends in computational resource demand, allocation levels, and potential differences between requested and allocated resources. CPU core-hours and GPU-hours are examined separately because they represent distinct computational resource types and cannot be directly combined.
 
-The analysis also explores the distribution of HPC allocations across Fields of Research (FoR) to understand how computational resource requirements vary between research disciplines.
+The analysis also examines the distribution of HPC allocations across Fields of Research (FoR) to identify how allocated computational resources are distributed among research disciplines and how these patterns have changed over time.
 
 Particular attention is given to historical reporting differences, conversion assumptions, and estimated resource values. These limitations are considered when interpreting trends and assessing the suitability of the data for forecasting.
 
@@ -28,30 +28,125 @@ historical_gpu_scenarios <- readRDS(
 
 ## Historical Demand and Allocation
 
-Historical requested and allocated compute are examined over time to understand how the use of national HPC resources has changed.
+Historical HPC demand and allocation are examined across the 2014 - 2026 analytical period to identify changes in requested computational resources, awarded allocations, and the difference between them.
 
-The analysis considers:
+Requested compute is used as an indicator of researcher demand, while allocated compute reflects the resources awarded within available infrastructure and programme constraints. These measures are therefore interpreted separately.
 
-- changes in requested compute
-- changes in allocated compute
-- the gap between requested and allocated resources
-- fulfilment rates
-- periods of unusually high or low growth
+The analysis uses the converted annual kSU series to examine demand and allocation trends, annual growth rates, request allocation gaps, and fulfilment rates. However, historical values include directly reported observations, derived estimates, and capacity-based proxies. Consequently, observed changes may partly reflect reporting differences or changes in infrastructure rather than underlying demand alone.
 
-Requested and allocated compute are interpreted separately because allocation is constrained by available capacity and does not necessarily represent total research demand.
+### Annual Data Validation
 
-## CPU and GPU Resources
+```{r}
+library(dplyr)
+library(ggplot2)
 
-Where sufficient information is available, CPU and GPU resources are analysed separately.
+# Inspect the annual demand and allocation series
+annual_converted |>
+  select(
+    year,
+    demand_ksu,
+    allocation_ksu,
+    conversion_status,
+    conversion_note
+  ) |>
+  arrange(year) |>
+  print(n = Inf, width = Inf)
 
-This allows the analysis to examine:
+# Check coverage and completeness
+stopifnot(
+  nrow(annual_converted) == 13,
+  all(sort(annual_converted$year) == 2014:2026),
+  all(!is.na(annual_converted$demand_ksu)),
+  all(!is.na(annual_converted$allocation_ksu)),
+  all(annual_converted$demand_ksu > 0),
+  all(annual_converted$allocation_ksu >= 0)
+)
+```
 
-- historical CPU demand and allocation
-- historical GPU demand and allocation
-- changes in the composition of national HPC usage
-- the increasing role of GPU-based computing
+### Annual Analytical Indicators
 
-CPU core-hours and GPU hours are not combined into a single physical compute measure.
+```{r}
+annual_analysis <- annual_converted |>
+  arrange(year) |>
+  mutate(
+    demand_allocation_gap_ksu =
+      demand_ksu - allocation_ksu,
+
+    fulfilment_rate_pct =
+      100 * allocation_ksu / demand_ksu,
+
+    demand_growth_pct =
+      100 * (demand_ksu / lag(demand_ksu) - 1),
+
+    allocation_growth_pct =
+      100 * (allocation_ksu / lag(allocation_ksu) - 1)
+  )
+
+annual_analysis |>
+  select(
+    year,
+    demand_ksu,
+    allocation_ksu,
+    demand_allocation_gap_ksu,
+    fulfilment_rate_pct,
+    demand_growth_pct,
+    allocation_growth_pct
+  ) |>
+  print(n = Inf)
+```
+
+### Annual Demand and Allocation Trends
+
+```{r}
+annual_plot_data <- annual_analysis |>
+  select(
+    year,
+    Demand = demand_ksu,
+    Allocation = allocation_ksu
+  ) |>
+  tidyr::pivot_longer(
+    cols = c(Demand, Allocation),
+    names_to = "measure",
+    values_to = "value_ksu"
+  )
+
+ggplot(
+  annual_plot_data,
+  aes(
+    x = year,
+    y = value_ksu,
+    colour = measure
+  )
+) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 2) +
+  scale_x_continuous(breaks = 2014:2026) +
+  scale_y_continuous(
+    labels = scales::label_comma()
+  ) +
+  labs(
+    title = "Historical HPC Demand and Allocation",
+    subtitle = "Analytical years 2014–2026",
+    x = "Year",
+    y = "Compute (kSU)",
+    colour = NULL
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "bottom"
+  )
+```
+
+### Initial Findings
+
+The annual HPC demand and allocation series show an overall upward trend between 2014 and 2026. Reported or estimated demand increases from approximately 131,356 kSU in 2014 to 2,242,817 kSU in 2026, while allocation increases from approximately 83,505 kSU to 872,288 kSU.
+
+Demand exceeds allocation in every analytical year. The largest absolute gap occurs in 2026, when demand exceeds allocation by approximately 1.37 million kSU. The corresponding fulfilment rate is approximately 38.9%, compared with 56.0% in 2025.
+
+The series also exhibits periods of substantial change, particularly around 2018, 2021, and 2026. However, these changes should not automatically be interpreted as equivalent increases in underlying researcher demand. Historical conversion assumptions, differences in reporting scope, capacity-based allocation proxies, and changes in HPC systems may contribute to the observed variation.
+
+These findings suggest a persistent difference between requested and allocated computational resources. Further analysis of CPU and GPU resources is required to understand whether similar patterns are present across distinct computational resource types.
 
 ## Field of Research
 

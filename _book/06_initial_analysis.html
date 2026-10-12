@@ -228,15 +228,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#purpose" id="toc-purpose" class="nav-link active" data-scroll-target="#purpose"><span class="header-section-number">7.1</span> Purpose</a></li>
-  <li><a href="#historical-demand-and-allocation" id="toc-historical-demand-and-allocation" class="nav-link" data-scroll-target="#historical-demand-and-allocation"><span class="header-section-number">7.2</span> Historical Demand and Allocation</a></li>
-  <li><a href="#cpu-and-gpu-resources" id="toc-cpu-and-gpu-resources" class="nav-link" data-scroll-target="#cpu-and-gpu-resources"><span class="header-section-number">7.3</span> CPU and GPU Resources</a></li>
-  <li><a href="#field-of-research" id="toc-field-of-research" class="nav-link" data-scroll-target="#field-of-research"><span class="header-section-number">7.4</span> Field of Research</a></li>
-  <li><a href="#institutional-distribution" id="toc-institutional-distribution" class="nav-link" data-scroll-target="#institutional-distribution"><span class="header-section-number">7.5</span> Institutional Distribution</a></li>
-  <li><a href="#potential-demand-drivers" id="toc-potential-demand-drivers" class="nav-link" data-scroll-target="#potential-demand-drivers"><span class="header-section-number">7.6</span> Potential Demand Drivers</a></li>
-  <li><a href="#data-manipulation-for-modelling" id="toc-data-manipulation-for-modelling" class="nav-link" data-scroll-target="#data-manipulation-for-modelling"><span class="header-section-number">7.7</span> Data Manipulation for Modelling</a></li>
-  <li><a href="#exploratory-analysis" id="toc-exploratory-analysis" class="nav-link" data-scroll-target="#exploratory-analysis"><span class="header-section-number">7.8</span> Exploratory Analysis</a></li>
-  <li><a href="#data-readiness-for-modelling" id="toc-data-readiness-for-modelling" class="nav-link" data-scroll-target="#data-readiness-for-modelling"><span class="header-section-number">7.9</span> Data Readiness for Modelling</a></li>
-  <li><a href="#output" id="toc-output" class="nav-link" data-scroll-target="#output"><span class="header-section-number">7.10</span> Output</a></li>
+  <li><a href="#historical-demand-and-allocation" id="toc-historical-demand-and-allocation" class="nav-link" data-scroll-target="#historical-demand-and-allocation"><span class="header-section-number">7.2</span> Historical Demand and Allocation</a>
+  <ul class="collapse">
+  <li><a href="#annual-data-validation" id="toc-annual-data-validation" class="nav-link" data-scroll-target="#annual-data-validation"><span class="header-section-number">7.2.1</span> Annual Data Validation</a></li>
+  <li><a href="#annual-analytical-indicators" id="toc-annual-analytical-indicators" class="nav-link" data-scroll-target="#annual-analytical-indicators"><span class="header-section-number">7.2.2</span> Annual Analytical Indicators</a></li>
+  <li><a href="#annual-demand-and-allocation-trends" id="toc-annual-demand-and-allocation-trends" class="nav-link" data-scroll-target="#annual-demand-and-allocation-trends"><span class="header-section-number">7.2.3</span> Annual Demand and Allocation Trends</a></li>
+  <li><a href="#initial-findings" id="toc-initial-findings" class="nav-link" data-scroll-target="#initial-findings"><span class="header-section-number">7.2.4</span> Initial Findings</a></li>
+  </ul></li>
+  <li><a href="#field-of-research" id="toc-field-of-research" class="nav-link" data-scroll-target="#field-of-research"><span class="header-section-number">7.3</span> Field of Research</a></li>
+  <li><a href="#institutional-distribution" id="toc-institutional-distribution" class="nav-link" data-scroll-target="#institutional-distribution"><span class="header-section-number">7.4</span> Institutional Distribution</a></li>
+  <li><a href="#potential-demand-drivers" id="toc-potential-demand-drivers" class="nav-link" data-scroll-target="#potential-demand-drivers"><span class="header-section-number">7.5</span> Potential Demand Drivers</a></li>
+  <li><a href="#data-manipulation-for-modelling" id="toc-data-manipulation-for-modelling" class="nav-link" data-scroll-target="#data-manipulation-for-modelling"><span class="header-section-number">7.6</span> Data Manipulation for Modelling</a></li>
+  <li><a href="#exploratory-analysis" id="toc-exploratory-analysis" class="nav-link" data-scroll-target="#exploratory-analysis"><span class="header-section-number">7.7</span> Exploratory Analysis</a></li>
+  <li><a href="#data-readiness-for-modelling" id="toc-data-readiness-for-modelling" class="nav-link" data-scroll-target="#data-readiness-for-modelling"><span class="header-section-number">7.8</span> Data Readiness for Modelling</a></li>
+  <li><a href="#output" id="toc-output" class="nav-link" data-scroll-target="#output"><span class="header-section-number">7.9</span> Output</a></li>
   </ul>
 </nav>
     </div>
@@ -266,7 +271,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 data-number="7.1" class="anchored" data-anchor-id="purpose"><span class="header-section-number">7.1</span> Purpose</h2>
 <p>The purpose of this stage is to examine historical demand and allocation patterns for Australian national High-Performance Computing (HPC) resources from 2014 to 2026, using the converted datasets produced in Chapter 05.</p>
 <p>The analysis focuses on identifying trends in computational resource demand, allocation levels, and potential differences between requested and allocated resources. CPU core-hours and GPU-hours are examined separately because they represent distinct computational resource types and cannot be directly combined.</p>
-<p>The analysis also explores the distribution of HPC allocations across Fields of Research (FoR) to understand how computational resource requirements vary between research disciplines.</p>
+<p>The analysis also examines the distribution of HPC allocations across Fields of Research (FoR) to identify how allocated computational resources are distributed among research disciplines and how these patterns have changed over time.</p>
 <p>Particular attention is given to historical reporting differences, conversion assumptions, and estimated resource values. These limitations are considered when interpreting trends and assessing the suitability of the data for forecasting.</p>
 <p>The findings from this stage will inform subsequent forecasting model development, evaluation, and scenario analysis through 2030.</p>
 <div class="cell">
@@ -288,41 +293,203 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="historical-demand-and-allocation" class="level2" data-number="7.2">
 <h2 data-number="7.2" class="anchored" data-anchor-id="historical-demand-and-allocation"><span class="header-section-number">7.2</span> Historical Demand and Allocation</h2>
-<p>Historical requested and allocated compute are examined over time to understand how the use of national HPC resources has changed.</p>
-<p>The analysis considers:</p>
-<ul>
-<li>changes in requested compute</li>
-<li>changes in allocated compute</li>
-<li>the gap between requested and allocated resources</li>
-<li>fulfilment rates</li>
-<li>periods of unusually high or low growth</li>
-</ul>
-<p>Requested and allocated compute are interpreted separately because allocation is constrained by available capacity and does not necessarily represent total research demand.</p>
+<p>Historical HPC demand and allocation are examined across the 2014 - 2026 analytical period to identify changes in requested computational resources, awarded allocations, and the difference between them.</p>
+<p>Requested compute is used as an indicator of researcher demand, while allocated compute reflects the resources awarded within available infrastructure and programme constraints. These measures are therefore interpreted separately.</p>
+<p>The analysis uses the converted annual kSU series to examine demand and allocation trends, annual growth rates, request allocation gaps, and fulfilment rates. However, historical values include directly reported observations, derived estimates, and capacity-based proxies. Consequently, observed changes may partly reflect reporting differences or changes in infrastructure rather than underlying demand alone.</p>
+<section id="annual-data-validation" class="level3" data-number="7.2.1">
+<h3 data-number="7.2.1" class="anchored" data-anchor-id="annual-data-validation"><span class="header-section-number">7.2.1</span> Annual Data Validation</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect the annual demand and allocation series</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>annual_converted <span class="sc">|&gt;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    year,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    demand_ksu,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    allocation_ksu,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    conversion_status,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    conversion_note</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(year) <span class="sc">|&gt;</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="at">n =</span> <span class="cn">Inf</span>, <span class="at">width =</span> <span class="cn">Inf</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 13 × 5
+    year demand_ksu allocation_ksu conversion_status                            
+   &lt;dbl&gt;      &lt;dbl&gt;          &lt;dbl&gt; &lt;chr&gt;                                        
+ 1  2014    131356           83505 Reported kSU; resource conversion assumed    
+ 2  2015    202500           88731 Demand kSU estimated; allocation kSU reported
+ 3  2016    225000           97112 Demand kSU estimated; allocation kSU reported
+ 4  2017    200000          100000 Both kSU estimated; capacity proxy used      
+ 5  2018    528571.         222000 Both kSU estimated; allocation reported      
+ 6  2019    660000          220000 Both kSU estimated; capacity proxy used      
+ 7  2020    607980          255148 Original kSU retained                        
+ 8  2021   1193811          397937 Original kSU retained                        
+ 9  2022   1162230          581115 Original kSU retained                        
+10  2023   1333240          817956 Original kSU retained                        
+11  2024   1425560.         812569 Original kSU retained                        
+12  2025   1564643.         876200 Original kSU retained                        
+13  2026   2242817          872288 Original kSU retained                        
+   conversion_note                                                              
+   &lt;chr&gt;                                                                        
+ 1 Original reported kSU retained; CPU/GPU resource split not established.      
+ 2 Demand million hours x 1,000,000 x assumed 1 SU/hour / 1,000; allocation kSU…
+ 3 Demand million hours x 1,000,000 x assumed 1 SU/hour / 1,000; allocation kSU…
+ 4 Million core-hours converted using assumed 1 SU/core-hour; capacity is an al…
+ 5 Million hours converted using assumed 1 SU/hour; original rounded values ret…
+ 6 Million CPU-hours converted using assumed 1 SU/CPU-hour; available capacity …
+ 7 &lt;NA&gt;                                                                         
+ 8 &lt;NA&gt;                                                                         
+ 9 &lt;NA&gt;                                                                         
+10 &lt;NA&gt;                                                                         
+11 &lt;NA&gt;                                                                         
+12 &lt;NA&gt;                                                                         
+13 &lt;NA&gt;                                                                         </code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check coverage and completeness</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nrow</span>(annual_converted) <span class="sc">==</span> <span class="dv">13</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">all</span>(<span class="fu">sort</span>(annual_converted<span class="sc">$</span>year) <span class="sc">==</span> <span class="dv">2014</span><span class="sc">:</span><span class="dv">2026</span>),</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">all</span>(<span class="sc">!</span><span class="fu">is.na</span>(annual_converted<span class="sc">$</span>demand_ksu)),</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">all</span>(<span class="sc">!</span><span class="fu">is.na</span>(annual_converted<span class="sc">$</span>allocation_ksu)),</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">all</span>(annual_converted<span class="sc">$</span>demand_ksu <span class="sc">&gt;</span> <span class="dv">0</span>),</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">all</span>(annual_converted<span class="sc">$</span>allocation_ksu <span class="sc">&gt;=</span> <span class="dv">0</span>)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
 </section>
-<section id="cpu-and-gpu-resources" class="level2" data-number="7.3">
-<h2 data-number="7.3" class="anchored" data-anchor-id="cpu-and-gpu-resources"><span class="header-section-number">7.3</span> CPU and GPU Resources</h2>
-<p>Where sufficient information is available, CPU and GPU resources are analysed separately.</p>
-<p>This allows the analysis to examine:</p>
-<ul>
-<li>historical CPU demand and allocation</li>
-<li>historical GPU demand and allocation</li>
-<li>changes in the composition of national HPC usage</li>
-<li>the increasing role of GPU-based computing</li>
-</ul>
-<p>CPU core-hours and GPU hours are not combined into a single physical compute measure.</p>
+<section id="annual-analytical-indicators" class="level3" data-number="7.2.2">
+<h3 data-number="7.2.2" class="anchored" data-anchor-id="annual-analytical-indicators"><span class="header-section-number">7.2.2</span> Annual Analytical Indicators</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>annual_analysis <span class="ot">&lt;-</span> annual_converted <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(year) <span class="sc">|&gt;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">demand_allocation_gap_ksu =</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>      demand_ksu <span class="sc">-</span> allocation_ksu,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">fulfilment_rate_pct =</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>      <span class="dv">100</span> <span class="sc">*</span> allocation_ksu <span class="sc">/</span> demand_ksu,</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">demand_growth_pct =</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>      <span class="dv">100</span> <span class="sc">*</span> (demand_ksu <span class="sc">/</span> <span class="fu">lag</span>(demand_ksu) <span class="sc">-</span> <span class="dv">1</span>),</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">allocation_growth_pct =</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>      <span class="dv">100</span> <span class="sc">*</span> (allocation_ksu <span class="sc">/</span> <span class="fu">lag</span>(allocation_ksu) <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>annual_analysis <span class="sc">|&gt;</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    year,</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    demand_ksu,</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    allocation_ksu,</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    demand_allocation_gap_ksu,</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    fulfilment_rate_pct,</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    demand_growth_pct,</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    allocation_growth_pct</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="at">n =</span> <span class="cn">Inf</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 13 × 7
+    year demand_ksu allocation_ksu demand_allocation_gap_ksu fulfilment_rate_pct
+   &lt;dbl&gt;      &lt;dbl&gt;          &lt;dbl&gt;                     &lt;dbl&gt;               &lt;dbl&gt;
+ 1  2014    131356           83505                    47851                 63.6
+ 2  2015    202500           88731                   113769                 43.8
+ 3  2016    225000           97112                   127888                 43.2
+ 4  2017    200000          100000                   100000                 50  
+ 5  2018    528571.         222000                   306571.                42.0
+ 6  2019    660000          220000                   440000                 33.3
+ 7  2020    607980          255148                   352832                 42.0
+ 8  2021   1193811          397937                   795874                 33.3
+ 9  2022   1162230          581115                   581115                 50  
+10  2023   1333240          817956                   515284                 61.4
+11  2024   1425560.         812569                   612991.                57  
+12  2025   1564643.         876200                   688443.                56  
+13  2026   2242817          872288                  1370529                 38.9
+# ℹ 2 more variables: demand_growth_pct &lt;dbl&gt;, allocation_growth_pct &lt;dbl&gt;</code></pre>
+</div>
+</div>
 </section>
-<section id="field-of-research" class="level2" data-number="7.4">
-<h2 data-number="7.4" class="anchored" data-anchor-id="field-of-research"><span class="header-section-number">7.4</span> Field of Research</h2>
+<section id="annual-demand-and-allocation-trends" class="level3" data-number="7.2.3">
+<h3 data-number="7.2.3" class="anchored" data-anchor-id="annual-demand-and-allocation-trends"><span class="header-section-number">7.2.3</span> Annual Demand and Allocation Trends</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>annual_plot_data <span class="ot">&lt;-</span> annual_analysis <span class="sc">|&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    year,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">Demand =</span> demand_ksu,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Allocation =</span> allocation_ksu</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_longer</span>(</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">c</span>(Demand, Allocation),</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"measure"</span>,</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"value_ksu"</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  annual_plot_data,</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> year,</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> value_ksu,</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> measure</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="dv">2014</span><span class="sc">:</span><span class="dv">2026</span>) <span class="sc">+</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">label_comma</span>()</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Historical HPC Demand and Allocation"</span>,</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Analytical years 2014–2026"</span>,</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Year"</span>,</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Compute (kSU)"</span>,</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="cn">NULL</span></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span></span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="06_initial_analysis_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="initial-findings" class="level3" data-number="7.2.4">
+<h3 data-number="7.2.4" class="anchored" data-anchor-id="initial-findings"><span class="header-section-number">7.2.4</span> Initial Findings</h3>
+<p>The annual HPC demand and allocation series show an overall upward trend between 2014 and 2026. Reported or estimated demand increases from approximately 131,356 kSU in 2014 to 2,242,817 kSU in 2026, while allocation increases from approximately 83,505 kSU to 872,288 kSU.</p>
+<p>Demand exceeds allocation in every analytical year. The largest absolute gap occurs in 2026, when demand exceeds allocation by approximately 1.37 million kSU. The corresponding fulfilment rate is approximately 38.9%, compared with 56.0% in 2025.</p>
+<p>The series also exhibits periods of substantial change, particularly around 2018, 2021, and 2026. However, these changes should not automatically be interpreted as equivalent increases in underlying researcher demand. Historical conversion assumptions, differences in reporting scope, capacity-based allocation proxies, and changes in HPC systems may contribute to the observed variation.</p>
+<p>These findings suggest a persistent difference between requested and allocated computational resources. Further analysis of CPU and GPU resources is required to understand whether similar patterns are present across distinct computational resource types.</p>
+</section>
+</section>
+<section id="field-of-research" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="field-of-research"><span class="header-section-number">7.3</span> Field of Research</h2>
 <p>The distribution of HPC resources across Fields of Research is examined to identify which research areas account for the largest shares of national compute allocation and how this composition has changed over time.</p>
 <p>Where FoR data represent allocation rather than requested compute, this distinction is retained when interpreting the results.</p>
 </section>
-<section id="institutional-distribution" class="level2" data-number="7.5">
-<h2 data-number="7.5" class="anchored" data-anchor-id="institutional-distribution"><span class="header-section-number">7.5</span> Institutional Distribution</h2>
+<section id="institutional-distribution" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="institutional-distribution"><span class="header-section-number">7.4</span> Institutional Distribution</h2>
 <p>Where institution-level data are available, allocations are examined across universities and research organisations.</p>
 <p>This provides an indication of how national HPC resources are distributed across institutions and whether the distribution has changed over time.</p>
 </section>
-<section id="potential-demand-drivers" class="level2" data-number="7.6">
-<h2 data-number="7.6" class="anchored" data-anchor-id="potential-demand-drivers"><span class="header-section-number">7.6</span> Potential Demand Drivers</h2>
+<section id="potential-demand-drivers" class="level2" data-number="7.5">
+<h2 data-number="7.5" class="anchored" data-anchor-id="potential-demand-drivers"><span class="header-section-number">7.5</span> Potential Demand Drivers</h2>
 <p>Potential structural drivers are explored alongside the HPC data.</p>
 <p>These may include:</p>
 <ul>
@@ -335,8 +502,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p>The purpose of this analysis is to identify variables that may be useful for the modelling stage rather than assuming that every available variable should be included.</p>
 </section>
-<section id="data-manipulation-for-modelling" class="level2" data-number="7.7">
-<h2 data-number="7.7" class="anchored" data-anchor-id="data-manipulation-for-modelling"><span class="header-section-number">7.7</span> Data Manipulation for Modelling</h2>
+<section id="data-manipulation-for-modelling" class="level2" data-number="7.6">
+<h2 data-number="7.6" class="anchored" data-anchor-id="data-manipulation-for-modelling"><span class="header-section-number">7.6</span> Data Manipulation for Modelling</h2>
 <p>Additional variables required for analysis and modelling are created where appropriate.</p>
 <p>These may include:</p>
 <ul>
@@ -350,14 +517,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p>Any derived variables and assumptions are documented so that they can be reproduced.</p>
 </section>
-<section id="exploratory-analysis" class="level2" data-number="7.8">
-<h2 data-number="7.8" class="anchored" data-anchor-id="exploratory-analysis"><span class="header-section-number">7.8</span> Exploratory Analysis</h2>
+<section id="exploratory-analysis" class="level2" data-number="7.7">
+<h2 data-number="7.7" class="anchored" data-anchor-id="exploratory-analysis"><span class="header-section-number">7.7</span> Exploratory Analysis</h2>
 <p>Visual and statistical analysis is used to examine trends, relationships and potential structural changes in the data.</p>
 <p>This includes time-series plots, comparisons between requested and allocated compute, FoR composition, and relationships between HPC demand and potential structural drivers.</p>
 <p>Particular attention is given to major changes in national HPC infrastructure because increases in observed allocation may reflect changes in available capacity rather than equivalent increases in underlying demand.</p>
 </section>
-<section id="data-readiness-for-modelling" class="level2" data-number="7.9">
-<h2 data-number="7.9" class="anchored" data-anchor-id="data-readiness-for-modelling"><span class="header-section-number">7.9</span> Data Readiness for Modelling</h2>
+<section id="data-readiness-for-modelling" class="level2" data-number="7.8">
+<h2 data-number="7.8" class="anchored" data-anchor-id="data-readiness-for-modelling"><span class="header-section-number">7.8</span> Data Readiness for Modelling</h2>
 <p>Before moving to model development, the prepared data are assessed for:</p>
 <ul>
 <li>sufficient historical coverage</li>
@@ -372,8 +539,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p>Variables that are not sufficiently comparable or supported by the available data are either excluded from modelling or treated separately.</p>
 </section>
-<section id="output" class="level2" data-number="7.10">
-<h2 data-number="7.10" class="anchored" data-anchor-id="output"><span class="header-section-number">7.10</span> Output</h2>
+<section id="output" class="level2" data-number="7.9">
+<h2 data-number="7.9" class="anchored" data-anchor-id="output"><span class="header-section-number">7.9</span> Output</h2>
 <p>The output of this step is a modelling-ready dataset together with an initial understanding of historical HPC demand, allocation, research composition and potential demand drivers.</p>
 <p>These findings provide the basis for model development and benchmarking in the next step.</p>
 
@@ -846,133 +1013,228 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Initial Analysis</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">## Purpose</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>The purpose of this stage is to examine historical demand and allocation patterns for Australian national High-Performance Computing (HPC) resources from 2014 to 2026, using the converted datasets produced in Chapter 05.</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>The analysis focuses on identifying trends in computational resource demand, allocation levels, and potential differences between requested and allocated resources. CPU core-hours and GPU-hours are examined separately because they represent distinct computational resource types and cannot be directly combined.</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>The analysis also explores the distribution of HPC allocations across Fields of Research (FoR) to understand how computational resource requirements vary between research disciplines.</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>Particular attention is given to historical reporting differences, conversion assumptions, and estimated resource values. These limitations are considered when interpreting trends and assessing the suitability of the data for forecasting.</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>The findings from this stage will inform subsequent forecasting model development, evaluation, and scenario analysis through 2030.</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>annual_converted <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assets/data/data converted/annual_demand_allocation_converted.rds"</span></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>for_converted <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assets/data/data converted/field_of_research_converted.rds"</span></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>historical_gpu_scenarios <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(</span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assets/data/data converted/historical_gpu_scenarios.rds"</span></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="fu">## Historical Demand and Allocation</span></span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>Historical requested and allocated compute are examined over time to understand how the use of national HPC resources has changed.</span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>The analysis considers:</span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>changes in requested compute</span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>changes in allocated compute</span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>the gap between requested and allocated resources</span>
-<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>fulfilment rates</span>
-<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>periods of unusually high or low growth</span>
-<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>Requested and allocated compute are interpreted separately because allocation is constrained by available capacity and does not necessarily represent total research demand.</span>
-<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a><span class="fu">## CPU and GPU Resources</span></span>
-<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>Where sufficient information is available, CPU and GPU resources are analysed separately.</span>
-<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>This allows the analysis to examine:</span>
-<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>historical CPU demand and allocation</span>
-<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>historical GPU demand and allocation</span>
-<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>changes in the composition of national HPC usage</span>
-<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>the increasing role of GPU-based computing</span>
-<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>CPU core-hours and GPU hours are not combined into a single physical compute measure.</span>
-<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a><span class="fu">## Field of Research</span></span>
-<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>The distribution of HPC resources across Fields of Research is examined to identify which research areas account for the largest shares of national compute allocation and how this composition has changed over time.</span>
-<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>Where FoR data represent allocation rather than requested compute, this distinction is retained when interpreting the results.</span>
-<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a><span class="fu">## Institutional Distribution</span></span>
-<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>Where institution-level data are available, allocations are examined across universities and research organisations.</span>
-<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>This provides an indication of how national HPC resources are distributed across institutions and whether the distribution has changed over time.</span>
-<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a><span class="fu">## Potential Demand Drivers</span></span>
-<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>Potential structural drivers are explored alongside the HPC data.</span>
-<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>These may include:</span>
-<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>research funding</span>
-<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>research workforce</span>
-<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>research activity</span>
-<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>grant funding in compute-intensive fields</span>
-<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>changes in compute intensity</span>
-<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>changes in HPC infrastructure</span>
-<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a>The purpose of this analysis is to identify variables that may be useful for the modelling stage rather than assuming that every available variable should be included.</span>
-<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a><span class="fu">## Data Manipulation for Modelling</span></span>
-<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a>Additional variables required for analysis and modelling are created where appropriate.</span>
-<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a>These may include:</span>
-<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>annual growth rates</span>
-<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>request-allocation gaps</span>
-<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>fulfilment rates</span>
-<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>lagged funding variables</span>
-<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>FoR shares</span>
-<span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>indicators for major system changes</span>
-<span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>CPU and GPU measures</span>
-<span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-99"><a href="#cb2-99" aria-hidden="true" tabindex="-1"></a>Any derived variables and assumptions are documented so that they can be reproduced.</span>
-<span id="cb2-100"><a href="#cb2-100" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-101"><a href="#cb2-101" aria-hidden="true" tabindex="-1"></a><span class="fu">## Exploratory Analysis</span></span>
-<span id="cb2-102"><a href="#cb2-102" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-103"><a href="#cb2-103" aria-hidden="true" tabindex="-1"></a>Visual and statistical analysis is used to examine trends, relationships and potential structural changes in the data.</span>
-<span id="cb2-104"><a href="#cb2-104" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-105"><a href="#cb2-105" aria-hidden="true" tabindex="-1"></a>This includes time-series plots, comparisons between requested and allocated compute, FoR composition, and relationships between HPC demand and potential structural drivers.</span>
-<span id="cb2-106"><a href="#cb2-106" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-107"><a href="#cb2-107" aria-hidden="true" tabindex="-1"></a>Particular attention is given to major changes in national HPC infrastructure because increases in observed allocation may reflect changes in available capacity rather than equivalent increases in underlying demand.</span>
-<span id="cb2-108"><a href="#cb2-108" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-109"><a href="#cb2-109" aria-hidden="true" tabindex="-1"></a><span class="fu">## Data Readiness for Modelling</span></span>
-<span id="cb2-110"><a href="#cb2-110" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-111"><a href="#cb2-111" aria-hidden="true" tabindex="-1"></a>Before moving to model development, the prepared data are assessed for:</span>
-<span id="cb2-112"><a href="#cb2-112" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-113"><a href="#cb2-113" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>sufficient historical coverage</span>
-<span id="cb2-114"><a href="#cb2-114" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>consistency of units</span>
-<span id="cb2-115"><a href="#cb2-115" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>CPU and GPU separation</span>
-<span id="cb2-116"><a href="#cb2-116" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>availability of requested and allocated values</span>
-<span id="cb2-117"><a href="#cb2-117" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>direct versus derived or proxy observations</span>
-<span id="cb2-118"><a href="#cb2-118" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>changes in HPC systems</span>
-<span id="cb2-119"><a href="#cb2-119" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>changes in FoR classifications</span>
-<span id="cb2-120"><a href="#cb2-120" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>missing values</span>
-<span id="cb2-121"><a href="#cb2-121" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>potential structural breaks</span>
-<span id="cb2-122"><a href="#cb2-122" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-123"><a href="#cb2-123" aria-hidden="true" tabindex="-1"></a>Variables that are not sufficiently comparable or supported by the available data are either excluded from modelling or treated separately.</span>
-<span id="cb2-124"><a href="#cb2-124" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-125"><a href="#cb2-125" aria-hidden="true" tabindex="-1"></a><span class="fu">## Output</span></span>
-<span id="cb2-126"><a href="#cb2-126" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-127"><a href="#cb2-127" aria-hidden="true" tabindex="-1"></a>The output of this step is a modelling-ready dataset together with an initial understanding of historical HPC demand, allocation, research composition and potential demand drivers.</span>
-<span id="cb2-128"><a href="#cb2-128" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-129"><a href="#cb2-129" aria-hidden="true" tabindex="-1"></a>These findings provide the basis for model development and benchmarking in the next step.</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Initial Analysis</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">## Purpose</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>The purpose of this stage is to examine historical demand and allocation patterns for Australian national High-Performance Computing (HPC) resources from 2014 to 2026, using the converted datasets produced in Chapter 05.</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>The analysis focuses on identifying trends in computational resource demand, allocation levels, and potential differences between requested and allocated resources. CPU core-hours and GPU-hours are examined separately because they represent distinct computational resource types and cannot be directly combined.</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>The analysis also examines the distribution of HPC allocations across Fields of Research (FoR) to identify how allocated computational resources are distributed among research disciplines and how these patterns have changed over time.</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>Particular attention is given to historical reporting differences, conversion assumptions, and estimated resource values. These limitations are considered when interpreting trends and assessing the suitability of the data for forecasting.</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>The findings from this stage will inform subsequent forecasting model development, evaluation, and scenario analysis through 2030.</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>annual_converted <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assets/data/data converted/annual_demand_allocation_converted.rds"</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>for_converted <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assets/data/data converted/field_of_research_converted.rds"</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>historical_gpu_scenarios <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assets/data/data converted/historical_gpu_scenarios.rds"</span></span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a><span class="fu">## Historical Demand and Allocation</span></span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>Historical HPC demand and allocation are examined across the 2014 - 2026 analytical period to identify changes in requested computational resources, awarded allocations, and the difference between them.</span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>Requested compute is used as an indicator of researcher demand, while allocated compute reflects the resources awarded within available infrastructure and programme constraints. These measures are therefore interpreted separately.</span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>The analysis uses the converted annual kSU series to examine demand and allocation trends, annual growth rates, request allocation gaps, and fulfilment rates. However, historical values include directly reported observations, derived estimates, and capacity-based proxies. Consequently, observed changes may partly reflect reporting differences or changes in infrastructure rather than underlying demand alone.</span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a><span class="fu">### Annual Data Validation</span></span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect the annual demand and allocation series</span></span>
+<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a>annual_converted <span class="sc">|&gt;</span></span>
+<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a>    year,</span>
+<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a>    demand_ksu,</span>
+<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a>    allocation_ksu,</span>
+<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a>    conversion_status,</span>
+<span id="cb8-54"><a href="#cb8-54" aria-hidden="true" tabindex="-1"></a>    conversion_note</span>
+<span id="cb8-55"><a href="#cb8-55" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb8-56"><a href="#cb8-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(year) <span class="sc">|&gt;</span></span>
+<span id="cb8-57"><a href="#cb8-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="at">n =</span> <span class="cn">Inf</span>, <span class="at">width =</span> <span class="cn">Inf</span>)</span>
+<span id="cb8-58"><a href="#cb8-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-59"><a href="#cb8-59" aria-hidden="true" tabindex="-1"></a><span class="co"># Check coverage and completeness</span></span>
+<span id="cb8-60"><a href="#cb8-60" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(</span>
+<span id="cb8-61"><a href="#cb8-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nrow</span>(annual_converted) <span class="sc">==</span> <span class="dv">13</span>,</span>
+<span id="cb8-62"><a href="#cb8-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">all</span>(<span class="fu">sort</span>(annual_converted<span class="sc">$</span>year) <span class="sc">==</span> <span class="dv">2014</span><span class="sc">:</span><span class="dv">2026</span>),</span>
+<span id="cb8-63"><a href="#cb8-63" aria-hidden="true" tabindex="-1"></a>  <span class="fu">all</span>(<span class="sc">!</span><span class="fu">is.na</span>(annual_converted<span class="sc">$</span>demand_ksu)),</span>
+<span id="cb8-64"><a href="#cb8-64" aria-hidden="true" tabindex="-1"></a>  <span class="fu">all</span>(<span class="sc">!</span><span class="fu">is.na</span>(annual_converted<span class="sc">$</span>allocation_ksu)),</span>
+<span id="cb8-65"><a href="#cb8-65" aria-hidden="true" tabindex="-1"></a>  <span class="fu">all</span>(annual_converted<span class="sc">$</span>demand_ksu <span class="sc">&gt;</span> <span class="dv">0</span>),</span>
+<span id="cb8-66"><a href="#cb8-66" aria-hidden="true" tabindex="-1"></a>  <span class="fu">all</span>(annual_converted<span class="sc">$</span>allocation_ksu <span class="sc">&gt;=</span> <span class="dv">0</span>)</span>
+<span id="cb8-67"><a href="#cb8-67" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-68"><a href="#cb8-68" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb8-69"><a href="#cb8-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-70"><a href="#cb8-70" aria-hidden="true" tabindex="-1"></a><span class="fu">### Annual Analytical Indicators</span></span>
+<span id="cb8-71"><a href="#cb8-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-74"><a href="#cb8-74" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb8-75"><a href="#cb8-75" aria-hidden="true" tabindex="-1"></a>annual_analysis <span class="ot">&lt;-</span> annual_converted <span class="sc">|&gt;</span></span>
+<span id="cb8-76"><a href="#cb8-76" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(year) <span class="sc">|&gt;</span></span>
+<span id="cb8-77"><a href="#cb8-77" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb8-78"><a href="#cb8-78" aria-hidden="true" tabindex="-1"></a>    <span class="at">demand_allocation_gap_ksu =</span></span>
+<span id="cb8-79"><a href="#cb8-79" aria-hidden="true" tabindex="-1"></a>      demand_ksu <span class="sc">-</span> allocation_ksu,</span>
+<span id="cb8-80"><a href="#cb8-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-81"><a href="#cb8-81" aria-hidden="true" tabindex="-1"></a>    <span class="at">fulfilment_rate_pct =</span></span>
+<span id="cb8-82"><a href="#cb8-82" aria-hidden="true" tabindex="-1"></a>      <span class="dv">100</span> <span class="sc">*</span> allocation_ksu <span class="sc">/</span> demand_ksu,</span>
+<span id="cb8-83"><a href="#cb8-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-84"><a href="#cb8-84" aria-hidden="true" tabindex="-1"></a>    <span class="at">demand_growth_pct =</span></span>
+<span id="cb8-85"><a href="#cb8-85" aria-hidden="true" tabindex="-1"></a>      <span class="dv">100</span> <span class="sc">*</span> (demand_ksu <span class="sc">/</span> <span class="fu">lag</span>(demand_ksu) <span class="sc">-</span> <span class="dv">1</span>),</span>
+<span id="cb8-86"><a href="#cb8-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-87"><a href="#cb8-87" aria-hidden="true" tabindex="-1"></a>    <span class="at">allocation_growth_pct =</span></span>
+<span id="cb8-88"><a href="#cb8-88" aria-hidden="true" tabindex="-1"></a>      <span class="dv">100</span> <span class="sc">*</span> (allocation_ksu <span class="sc">/</span> <span class="fu">lag</span>(allocation_ksu) <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb8-89"><a href="#cb8-89" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-90"><a href="#cb8-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-91"><a href="#cb8-91" aria-hidden="true" tabindex="-1"></a>annual_analysis <span class="sc">|&gt;</span></span>
+<span id="cb8-92"><a href="#cb8-92" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb8-93"><a href="#cb8-93" aria-hidden="true" tabindex="-1"></a>    year,</span>
+<span id="cb8-94"><a href="#cb8-94" aria-hidden="true" tabindex="-1"></a>    demand_ksu,</span>
+<span id="cb8-95"><a href="#cb8-95" aria-hidden="true" tabindex="-1"></a>    allocation_ksu,</span>
+<span id="cb8-96"><a href="#cb8-96" aria-hidden="true" tabindex="-1"></a>    demand_allocation_gap_ksu,</span>
+<span id="cb8-97"><a href="#cb8-97" aria-hidden="true" tabindex="-1"></a>    fulfilment_rate_pct,</span>
+<span id="cb8-98"><a href="#cb8-98" aria-hidden="true" tabindex="-1"></a>    demand_growth_pct,</span>
+<span id="cb8-99"><a href="#cb8-99" aria-hidden="true" tabindex="-1"></a>    allocation_growth_pct</span>
+<span id="cb8-100"><a href="#cb8-100" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb8-101"><a href="#cb8-101" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="at">n =</span> <span class="cn">Inf</span>)</span>
+<span id="cb8-102"><a href="#cb8-102" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb8-103"><a href="#cb8-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-104"><a href="#cb8-104" aria-hidden="true" tabindex="-1"></a><span class="fu">### Annual Demand and Allocation Trends</span></span>
+<span id="cb8-105"><a href="#cb8-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-108"><a href="#cb8-108" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb8-109"><a href="#cb8-109" aria-hidden="true" tabindex="-1"></a>annual_plot_data <span class="ot">&lt;-</span> annual_analysis <span class="sc">|&gt;</span></span>
+<span id="cb8-110"><a href="#cb8-110" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb8-111"><a href="#cb8-111" aria-hidden="true" tabindex="-1"></a>    year,</span>
+<span id="cb8-112"><a href="#cb8-112" aria-hidden="true" tabindex="-1"></a>    <span class="at">Demand =</span> demand_ksu,</span>
+<span id="cb8-113"><a href="#cb8-113" aria-hidden="true" tabindex="-1"></a>    <span class="at">Allocation =</span> allocation_ksu</span>
+<span id="cb8-114"><a href="#cb8-114" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb8-115"><a href="#cb8-115" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_longer</span>(</span>
+<span id="cb8-116"><a href="#cb8-116" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">c</span>(Demand, Allocation),</span>
+<span id="cb8-117"><a href="#cb8-117" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"measure"</span>,</span>
+<span id="cb8-118"><a href="#cb8-118" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"value_ksu"</span></span>
+<span id="cb8-119"><a href="#cb8-119" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-120"><a href="#cb8-120" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-121"><a href="#cb8-121" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
+<span id="cb8-122"><a href="#cb8-122" aria-hidden="true" tabindex="-1"></a>  annual_plot_data,</span>
+<span id="cb8-123"><a href="#cb8-123" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
+<span id="cb8-124"><a href="#cb8-124" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> year,</span>
+<span id="cb8-125"><a href="#cb8-125" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> value_ksu,</span>
+<span id="cb8-126"><a href="#cb8-126" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> measure</span>
+<span id="cb8-127"><a href="#cb8-127" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-128"><a href="#cb8-128" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb8-129"><a href="#cb8-129" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb8-130"><a href="#cb8-130" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb8-131"><a href="#cb8-131" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="dv">2014</span><span class="sc">:</span><span class="dv">2026</span>) <span class="sc">+</span></span>
+<span id="cb8-132"><a href="#cb8-132" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(</span>
+<span id="cb8-133"><a href="#cb8-133" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">label_comma</span>()</span>
+<span id="cb8-134"><a href="#cb8-134" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb8-135"><a href="#cb8-135" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb8-136"><a href="#cb8-136" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Historical HPC Demand and Allocation"</span>,</span>
+<span id="cb8-137"><a href="#cb8-137" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Analytical years 2014–2026"</span>,</span>
+<span id="cb8-138"><a href="#cb8-138" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Year"</span>,</span>
+<span id="cb8-139"><a href="#cb8-139" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Compute (kSU)"</span>,</span>
+<span id="cb8-140"><a href="#cb8-140" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="cn">NULL</span></span>
+<span id="cb8-141"><a href="#cb8-141" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb8-142"><a href="#cb8-142" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb8-143"><a href="#cb8-143" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb8-144"><a href="#cb8-144" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb8-145"><a href="#cb8-145" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span></span>
+<span id="cb8-146"><a href="#cb8-146" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-147"><a href="#cb8-147" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb8-148"><a href="#cb8-148" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-149"><a href="#cb8-149" aria-hidden="true" tabindex="-1"></a><span class="fu">### Initial Findings</span></span>
+<span id="cb8-150"><a href="#cb8-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-151"><a href="#cb8-151" aria-hidden="true" tabindex="-1"></a>The annual HPC demand and allocation series show an overall upward trend between 2014 and 2026. Reported or estimated demand increases from approximately 131,356 kSU in 2014 to 2,242,817 kSU in 2026, while allocation increases from approximately 83,505 kSU to 872,288 kSU.</span>
+<span id="cb8-152"><a href="#cb8-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-153"><a href="#cb8-153" aria-hidden="true" tabindex="-1"></a>Demand exceeds allocation in every analytical year. The largest absolute gap occurs in 2026, when demand exceeds allocation by approximately 1.37 million kSU. The corresponding fulfilment rate is approximately 38.9%, compared with 56.0% in 2025.</span>
+<span id="cb8-154"><a href="#cb8-154" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-155"><a href="#cb8-155" aria-hidden="true" tabindex="-1"></a>The series also exhibits periods of substantial change, particularly around 2018, 2021, and 2026. However, these changes should not automatically be interpreted as equivalent increases in underlying researcher demand. Historical conversion assumptions, differences in reporting scope, capacity-based allocation proxies, and changes in HPC systems may contribute to the observed variation.</span>
+<span id="cb8-156"><a href="#cb8-156" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-157"><a href="#cb8-157" aria-hidden="true" tabindex="-1"></a>These findings suggest a persistent difference between requested and allocated computational resources. Further analysis of CPU and GPU resources is required to understand whether similar patterns are present across distinct computational resource types.</span>
+<span id="cb8-158"><a href="#cb8-158" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-159"><a href="#cb8-159" aria-hidden="true" tabindex="-1"></a><span class="fu">## Field of Research</span></span>
+<span id="cb8-160"><a href="#cb8-160" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-161"><a href="#cb8-161" aria-hidden="true" tabindex="-1"></a>The distribution of HPC resources across Fields of Research is examined to identify which research areas account for the largest shares of national compute allocation and how this composition has changed over time.</span>
+<span id="cb8-162"><a href="#cb8-162" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-163"><a href="#cb8-163" aria-hidden="true" tabindex="-1"></a>Where FoR data represent allocation rather than requested compute, this distinction is retained when interpreting the results.</span>
+<span id="cb8-164"><a href="#cb8-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-165"><a href="#cb8-165" aria-hidden="true" tabindex="-1"></a><span class="fu">## Institutional Distribution</span></span>
+<span id="cb8-166"><a href="#cb8-166" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-167"><a href="#cb8-167" aria-hidden="true" tabindex="-1"></a>Where institution-level data are available, allocations are examined across universities and research organisations.</span>
+<span id="cb8-168"><a href="#cb8-168" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-169"><a href="#cb8-169" aria-hidden="true" tabindex="-1"></a>This provides an indication of how national HPC resources are distributed across institutions and whether the distribution has changed over time.</span>
+<span id="cb8-170"><a href="#cb8-170" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-171"><a href="#cb8-171" aria-hidden="true" tabindex="-1"></a><span class="fu">## Potential Demand Drivers</span></span>
+<span id="cb8-172"><a href="#cb8-172" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-173"><a href="#cb8-173" aria-hidden="true" tabindex="-1"></a>Potential structural drivers are explored alongside the HPC data.</span>
+<span id="cb8-174"><a href="#cb8-174" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-175"><a href="#cb8-175" aria-hidden="true" tabindex="-1"></a>These may include:</span>
+<span id="cb8-176"><a href="#cb8-176" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-177"><a href="#cb8-177" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>research funding</span>
+<span id="cb8-178"><a href="#cb8-178" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>research workforce</span>
+<span id="cb8-179"><a href="#cb8-179" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>research activity</span>
+<span id="cb8-180"><a href="#cb8-180" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>grant funding in compute-intensive fields</span>
+<span id="cb8-181"><a href="#cb8-181" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>changes in compute intensity</span>
+<span id="cb8-182"><a href="#cb8-182" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>changes in HPC infrastructure</span>
+<span id="cb8-183"><a href="#cb8-183" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-184"><a href="#cb8-184" aria-hidden="true" tabindex="-1"></a>The purpose of this analysis is to identify variables that may be useful for the modelling stage rather than assuming that every available variable should be included.</span>
+<span id="cb8-185"><a href="#cb8-185" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-186"><a href="#cb8-186" aria-hidden="true" tabindex="-1"></a><span class="fu">## Data Manipulation for Modelling</span></span>
+<span id="cb8-187"><a href="#cb8-187" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-188"><a href="#cb8-188" aria-hidden="true" tabindex="-1"></a>Additional variables required for analysis and modelling are created where appropriate.</span>
+<span id="cb8-189"><a href="#cb8-189" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-190"><a href="#cb8-190" aria-hidden="true" tabindex="-1"></a>These may include:</span>
+<span id="cb8-191"><a href="#cb8-191" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-192"><a href="#cb8-192" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>annual growth rates</span>
+<span id="cb8-193"><a href="#cb8-193" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>request-allocation gaps</span>
+<span id="cb8-194"><a href="#cb8-194" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>fulfilment rates</span>
+<span id="cb8-195"><a href="#cb8-195" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>lagged funding variables</span>
+<span id="cb8-196"><a href="#cb8-196" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>FoR shares</span>
+<span id="cb8-197"><a href="#cb8-197" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>indicators for major system changes</span>
+<span id="cb8-198"><a href="#cb8-198" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>CPU and GPU measures</span>
+<span id="cb8-199"><a href="#cb8-199" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-200"><a href="#cb8-200" aria-hidden="true" tabindex="-1"></a>Any derived variables and assumptions are documented so that they can be reproduced.</span>
+<span id="cb8-201"><a href="#cb8-201" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-202"><a href="#cb8-202" aria-hidden="true" tabindex="-1"></a><span class="fu">## Exploratory Analysis</span></span>
+<span id="cb8-203"><a href="#cb8-203" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-204"><a href="#cb8-204" aria-hidden="true" tabindex="-1"></a>Visual and statistical analysis is used to examine trends, relationships and potential structural changes in the data.</span>
+<span id="cb8-205"><a href="#cb8-205" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-206"><a href="#cb8-206" aria-hidden="true" tabindex="-1"></a>This includes time-series plots, comparisons between requested and allocated compute, FoR composition, and relationships between HPC demand and potential structural drivers.</span>
+<span id="cb8-207"><a href="#cb8-207" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-208"><a href="#cb8-208" aria-hidden="true" tabindex="-1"></a>Particular attention is given to major changes in national HPC infrastructure because increases in observed allocation may reflect changes in available capacity rather than equivalent increases in underlying demand.</span>
+<span id="cb8-209"><a href="#cb8-209" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-210"><a href="#cb8-210" aria-hidden="true" tabindex="-1"></a><span class="fu">## Data Readiness for Modelling</span></span>
+<span id="cb8-211"><a href="#cb8-211" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-212"><a href="#cb8-212" aria-hidden="true" tabindex="-1"></a>Before moving to model development, the prepared data are assessed for:</span>
+<span id="cb8-213"><a href="#cb8-213" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-214"><a href="#cb8-214" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>sufficient historical coverage</span>
+<span id="cb8-215"><a href="#cb8-215" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>consistency of units</span>
+<span id="cb8-216"><a href="#cb8-216" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>CPU and GPU separation</span>
+<span id="cb8-217"><a href="#cb8-217" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>availability of requested and allocated values</span>
+<span id="cb8-218"><a href="#cb8-218" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>direct versus derived or proxy observations</span>
+<span id="cb8-219"><a href="#cb8-219" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>changes in HPC systems</span>
+<span id="cb8-220"><a href="#cb8-220" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>changes in FoR classifications</span>
+<span id="cb8-221"><a href="#cb8-221" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>missing values</span>
+<span id="cb8-222"><a href="#cb8-222" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>potential structural breaks</span>
+<span id="cb8-223"><a href="#cb8-223" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-224"><a href="#cb8-224" aria-hidden="true" tabindex="-1"></a>Variables that are not sufficiently comparable or supported by the available data are either excluded from modelling or treated separately.</span>
+<span id="cb8-225"><a href="#cb8-225" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-226"><a href="#cb8-226" aria-hidden="true" tabindex="-1"></a><span class="fu">## Output</span></span>
+<span id="cb8-227"><a href="#cb8-227" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-228"><a href="#cb8-228" aria-hidden="true" tabindex="-1"></a>The output of this step is a modelling-ready dataset together with an initial understanding of historical HPC demand, allocation, research composition and potential demand drivers.</span>
+<span id="cb8-229"><a href="#cb8-229" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-230"><a href="#cb8-230" aria-hidden="true" tabindex="-1"></a>These findings provide the basis for model development and benchmarking in the next step.</span>
 </code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
