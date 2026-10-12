@@ -384,44 +384,64 @@ Historical uncertainty, system transitions, and the limited availability of dire
 
 ## Field of Research
 
-The Field of Research (FoR) analysis examines the distribution of national HPC allocations across research disciplines during the 2014 – 2026 analytical period.
+The Field of Research (FoR) analysis examines the distribution of HPC
+allocations across research disciplines during the 2014–2026 analytical period.
 
-The analysis uses the standardised research-field classifications and converted allocation measures produced in Chapters 04 and 05. It focuses on identifying the largest research-field allocation shares, changes in disciplinary composition over time, and differences in allocated CPU and GPU resources.
+For the overall longitudinal analysis, the original `research_field_reported`
+variable is harmonised into broad analytical groups using consistent mapping
+rules across all years. This approach avoids relying on the period-dependent
+`for_analysis_group` variable.
 
-FoR-level CPU core-hours and GPU-hours are estimated using each field's share of annual HPC allocations. Consequently, these resource-specific estimates reflect proportional allocation assumptions rather than directly observed CPU or GPU usage by individual research disciplines.
+The broad groups are intended for exploratory comparison and do not represent
+official ANZSRC divisions. Original research-field labels and classification
+codes remain unchanged in the underlying datasets.
 
-The 2017 observation is interpreted cautiously because its FoR reporting scope differs from the NCMAS-based observations used in other years.
+The analysis examines allocation composition rather than directly observed
+researcher demand. FoR-specific kSU, CPU core-hours and GPU-hours are derived
+using allocation shares and should not be interpreted as independently
+measured resource consumption by each discipline.
 
-The objective is to identify historical allocation patterns that may inform subsequent forecasting, without interpreting allocation shares as direct measures of researcher demand.
+The 2017 observation is interpreted cautiously because its Pawsey-wide
+reporting scope differs from the other observations. Other source and
+classification limitations also affect longitudinal comparability.
 
 ### Validate the Field of Research series
 
 ```{r}
-# Inspect the converted Field of Research dataset
+#| label: validate-for-series
+
+# Inspect the original research-field labels and converted measures
 for_converted |>
   dplyr::select(
     year,
-    for_analysis_group,
+    research_field_reported,
     allocation_share_for,
     allocation_for_ksu,
     allocation_for_cpu_core_hours,
     allocation_for_gpu_hours,
     for_resource_scope_flag
   ) |>
-  dplyr::arrange(year, dplyr::desc(allocation_share_for)) |>
+  dplyr::arrange(
+    year,
+    dplyr::desc(allocation_share_for)
+  ) |>
   print(n = 20, width = Inf)
 
-# Check coverage and completeness
+# Validate coverage and completeness
 stopifnot(
   nrow(for_converted) == 133,
-  all(sort(unique(for_converted$year)) == 2014:2026),
+  identical(
+    sort(unique(for_converted$year)),
+    as.numeric(2014:2026)
+  ),
+  all(!is.na(for_converted$research_field_reported)),
   all(!is.na(for_converted$allocation_share_for)),
   all(!is.na(for_converted$allocation_for_ksu)),
   all(!is.na(for_converted$allocation_for_cpu_core_hours)),
   all(!is.na(for_converted$allocation_for_gpu_hours))
 )
 
-# Summarise allocation shares by year
+# Check annual allocation shares
 for_share_summary <- for_converted |>
   dplyr::group_by(year) |>
   dplyr::summarise(
@@ -430,10 +450,8 @@ for_share_summary <- for_converted |>
     .groups = "drop"
   )
 
-for_share_summary |>
-  print(n = Inf)
+print(for_share_summary, n = Inf)
 
-# Confirm annual FoR shares total approximately 100%
 stopifnot(
   all(abs(for_share_summary$total_share - 1) < 1e-6)
 )
@@ -441,9 +459,15 @@ stopifnot(
 
 ### Research Field Allocation Composition
 
+The original research-field labels are reviewed before harmonisation.
+Reported categories may differ in terminology, granularity and
+classification structure across years.
+
 ```{r}
+#| label: review-reported-for
+
 for_category_review <- for_converted |>
-  dplyr::group_by(for_analysis_group) |>
+  dplyr::group_by(research_field_reported) |>
   dplyr::summarise(
     n_years = dplyr::n_distinct(year),
     first_year = min(year),
@@ -454,103 +478,137 @@ for_category_review <- for_converted |>
     ),
     .groups = "drop"
   ) |>
-  dplyr::arrange(for_analysis_group)
+  dplyr::arrange(research_field_reported)
 
 print(for_category_review, n = Inf, width = Inf)
 ```
 
-```{r}
-# --------------------------------------------------
-# Create broad FoR analytical groups for visualisation
-# --------------------------------------------------
+### Harmonise Research Fields for Longitudinal Comparison
 
+For the 2014–2026 comparison, original reported labels are consolidated
+into nine broad analytical groups.
+
+Physical Sciences and Chemical Sciences remain separate. Earth and
+Environmental Sciences are combined where source reporting differs in
+granularity. Engineering and Technology are similarly grouped for
+longitudinal visualisation.
+
+The mappings are analytical decisions, not official one-to-one
+classification conversions.
+
+```{r}
+#| label: prepare-overall-for
+
+# Create broad analytical groups from original reported labels
 for_visual_data <- for_converted |>
   dplyr::mutate(
+    reported_clean = research_field_reported |>
+      stringr::str_remove("^\\s*\\d{2}\\s+") |>
+      stringr::str_to_lower() |>
+      stringr::str_replace_all("&", " and ") |>
+      stringr::str_squish(),
+
     for_visual_group = dplyr::case_when(
 
-      for_analysis_group %in% c(
-        "Physical Sciences",
-        "Physical sciences",
-        "Chemical Sciences",
-        "Chemical sciences"
+      # Physical Sciences
+      stringr::str_detect(
+        reported_clean,
+        "physical sciences|radioastronomy|radio astronomy"
       ) ~ "Physical Sciences",
 
-      for_analysis_group %in% c(
-        "Earth & Environmental Sciences",
-        "Earth sciences",
-        "Environmental sciences",
-        "Earth sciences + Environmental sciences"
+      # Chemical Sciences - kept separate
+      stringr::str_detect(
+        reported_clean,
+        "chemical sciences"
+      ) ~ "Chemical Sciences",
+
+      # Earth and Environmental Sciences
+      stringr::str_detect(
+        reported_clean,
+        "earth|environmental|geoscien"
       ) ~ "Earth & Environmental Sciences",
 
-      for_analysis_group %in% c(
-        "Engineering",
-        "Engineering & Technology",
-        "Engineering + Technology"
+      # Engineering and Technology
+      stringr::str_detect(
+        reported_clean,
+        "engineering|technology"
       ) ~ "Engineering & Technology",
 
-      for_analysis_group %in% c(
-        "Biological Sciences",
-        "Biological sciences",
-        "Agricultural And Veterinary Sciences",
-        "Agricultural, veterinary and food sciences"
+      # Biological and Agricultural Sciences
+      stringr::str_detect(
+        reported_clean,
+        "biological|agricultural|veterinary|food sciences"
       ) ~ "Biological & Agricultural Sciences",
 
-      for_analysis_group %in% c(
-        "Medical & Health Sciences",
-        "Biomedical and clinical sciences",
-        "Biomedical and clinical sciences + Health sciences"
+      # Medical and Health Sciences
+      stringr::str_detect(
+        reported_clean,
+        "medical|health|biomedical|clinical"
       ) ~ "Medical & Health Sciences",
 
-      for_analysis_group %in% c(
-        "Mathematical Sciences",
-        "Mathematical sciences",
-        "Information & Computing Sciences",
-        "Information and computing sciences"
+      # Mathematics and Computing
+      stringr::str_detect(
+        reported_clean,
+        "mathematical|computing|information"
       ) ~ "Mathematics & Computing",
 
-      for_analysis_group %in% c(
-        "Built Environment and Design",
-        "Built environment and design",
-        "Economics",
-        "History and Archaeology",
-        "History, heritage and archaeology",
-        "Human society",
-        "Language, communication and culture",
-        "Philosophy and religious studies",
-        "Psychology"
+      # Social Sciences, Humanities and Built Environment
+      stringr::str_detect(
+        reported_clean,
+        paste0(
+          "psychology|economics|history|archaeology|",
+          "human society|language|communication|culture|",
+          "philosophy|religious|built environment|design"
+        )
       ) ~ "Social Sciences, Humanities & Built Environment",
 
-      for_analysis_group %in% c(
-        "Other / Unclassified",
-        "Pawsey Operations"
-      ) |
-        grepl(
-          "^Technology\\s*[-–—]",
-          for_analysis_group
-        ) ~ "Unclassified & Operational",
+      # Unclassified and operational categories
+      stringr::str_detect(
+        reported_clean,
+        "other|unreported|unclassified|pawsey operations"
+      ) ~ "Unclassified & Operational",
 
       TRUE ~ NA_character_
     )
   )
 
-# Check for categories that have not been mapped
+# Review original labels and assigned groups
+for_mapping_review <- for_visual_data |>
+  dplyr::distinct(
+    research_field_reported,
+    for_visual_group
+  ) |>
+  dplyr::arrange(
+    for_visual_group,
+    research_field_reported
+  )
+
+print(for_mapping_review, n = Inf, width = Inf)
+
+# Check for unmapped categories
 unmapped_for <- for_visual_data |>
   dplyr::filter(is.na(for_visual_group)) |>
-  dplyr::distinct(for_analysis_group)
+  dplyr::distinct(research_field_reported)
 
 print(unmapped_for, n = Inf)
 
 stopifnot(nrow(unmapped_for) == 0)
+
+# Confirm nine broad groups
+stopifnot(
+  dplyr::n_distinct(for_visual_data$for_visual_group) == 9
+)
 ```
 
+### Annual Research Field Allocation Composition, 2014–2026
 
 ```{r}
-# --------------------------------------------------
-# 6. Plot annual FoR allocation composition
-# --------------------------------------------------
+#| label: plot-overall-for
+#| fig-width: 15
+#| fig-height: 9
+#| out-width: 100%
 
-# Summarise the eight broad FoR groups
-# for_visual_data must be created in an earlier chunk
+# Aggregate allocation shares by year and analytical group
 for_plot_data <- for_visual_data |>
   dplyr::group_by(year, for_visual_group) |>
   dplyr::summarise(
@@ -558,23 +616,42 @@ for_plot_data <- for_visual_data |>
     .groups = "drop"
   )
 
-# Validate the plotting data
-stopifnot(
-  all(!is.na(for_plot_data$for_visual_group)),
-  all(
-    abs(
-      for_plot_data |>
-        dplyr::group_by(year) |>
-        dplyr::summarise(
-          total = sum(allocation_share),
-          .groups = "drop"
-        ) |>
-        dplyr::pull(total) - 1
-    ) < 1e-6
+# Validate annual allocation shares
+for_plot_validation <- for_plot_data |>
+  dplyr::group_by(year) |>
+  dplyr::summarise(
+    total_share = sum(allocation_share),
+    .groups = "drop"
   )
+
+stopifnot(
+  all(abs(for_plot_validation$total_share - 1) < 1e-6)
 )
 
-# Plot annual allocation composition
+# Rank groups by average share across all 13 years
+for_group_order <- for_plot_data |>
+  tidyr::complete(
+    year = 2014:2026,
+    for_visual_group,
+    fill = list(allocation_share = 0)
+  ) |>
+  dplyr::group_by(for_visual_group) |>
+  dplyr::summarise(
+    average_share = mean(allocation_share),
+    .groups = "drop"
+  ) |>
+  dplyr::arrange(dplyr::desc(average_share)) |>
+  dplyr::pull(for_visual_group)
+
+for_plot_data <- for_plot_data |>
+  dplyr::mutate(
+    for_visual_group = factor(
+      for_visual_group,
+      levels = for_group_order
+    )
+  )
+
+# Plot
 ggplot(
   for_plot_data,
   aes(
@@ -583,7 +660,37 @@ ggplot(
     fill = for_visual_group
   )
 ) +
-  geom_col(width = 0.8) +
+  geom_col(
+    width = 0.8,
+    position = position_stack(reverse = TRUE)
+  ) +
+  geom_text(
+    aes(
+      label = ifelse(
+        allocation_share >= 0.15,
+        paste0(
+          stringr::str_wrap(
+            as.character(for_visual_group),
+            width = 15
+          ),
+          "\n",
+          scales::percent(
+            allocation_share,
+            accuracy = 1
+          )
+        ),
+        ""
+      )
+    ),
+    position = position_stack(
+      vjust = 0.5,
+      reverse = TRUE
+    ),
+    size = 2.1,
+    colour = "black",
+    fontface = "bold",
+    lineheight = 0.9
+  ) +
   scale_y_continuous(
     labels = scales::label_percent(),
     breaks = seq(0, 1, 0.25)
@@ -591,13 +698,15 @@ ggplot(
   coord_cartesian(ylim = c(0, 1)) +
   labs(
     title = "HPC Allocation by Field of Research",
-    subtitle = "Broad analytical groups, 2014–2026",
+    subtitle = "Harmonised broad analytical groups, 2014–2026",
     x = "Year",
     y = "Share of annual allocation",
-    fill = "Field of Research",
+    fill = "Research field",
     caption = paste(
-      "Broad analytical groups are not official ANZSRC categories.",
-      "2017 uses Pawsey-wide FoR reporting."
+      "Groups derived from original reported FoR labels;",
+      "not official ANZSRC divisions.",
+      "2017 reflects Pawsey-wide reporting.",
+      "Allocation shares do not measure unmet research demand."
     )
   ) +
   theme_minimal() +
@@ -606,10 +715,389 @@ ggplot(
       angle = 45,
       hjust = 1
     ),
-    legend.position = "bottom"
+    legend.position = "bottom",
+    legend.text = element_text(size = 9),
+    plot.caption = element_text(size = 8)
+  ) +
+  guides(
+    fill = guide_legend(ncol = 3)
   )
 ```
 
-For longitudinal comparison, the original FoR classifications are consolidated into eight broader analytical groups. These groupings reduce inconsistencies arising from differences in naming conventions and classification structures across reporting years. They are intended for exploratory visualisation and do not represent official ANZSRC categories. Records without a reliable disciplinary classification, including operational allocations and categories without a direct FoR alignment, are retained separately as Unclassified & Operational.
+For longitudinal comparison, original reported FoR categories are
+harmonised into nine broad analytical groups. Physical Sciences and
+Chemical Sciences are retained separately to avoid obscuring their
+individual allocation patterns.
 
+These groupings reduce differences in naming and reporting granularity,
+but they do not eliminate all classification or scope inconsistencies.
+In particular, 2017 uses Pawsey-wide reporting, and historical
+Technology categories are grouped with Engineering for analytical
+visualisation without implying a verified official FoR 2020 alignment.
 
+The resulting chart describes changes in the composition of allocated
+HPC resources, not directly observed researcher demand.
+
+### Field of Research Reporting Periods
+
+The 2014–2020 and 2021–2026 periods are examined separately to assess differences in research-field allocation composition.
+
+The earlier period uses FoR 2008 division codes, while the later period uses the existing FoR 2020 mappings. These are analytical reporting periods and do not imply that all source datasets adopted a new classification system in the same year.
+
+Physical Sciences and Chemical Sciences are retained separately in both periods. Combined categories are used where necessary to improve visual consistency, without modifying the original classifications.
+
+Allocation shares represent the distribution of allocated HPC resources, not directly observed researcher demand. The 2017 FoR data have a different Pawsey-wide reporting scope and should be interpreted cautiously.
+
+#### Earlier Reporting Period: 2014–2020
+
+```{r}
+#| label: prepare-for-2008
+
+for_2008_detail <- for_converted |>
+  dplyr::filter(dplyr::between(year, 2014, 2020)) |>
+  dplyr::mutate(
+    for_standard_2008 = dplyr::case_when(
+      for_2008_division_code == "01" ~ "Mathematical Sciences",
+      for_2008_division_code == "02" ~ "Physical Sciences",
+      for_2008_division_code == "03" ~ "Chemical Sciences",
+      for_2008_division_code %in% c(
+        "04", "05", "04 + 05"
+      ) ~ "Earth & Environmental Sciences",
+      for_2008_division_code == "06" ~ "Biological Sciences",
+      for_2008_division_code == "07" ~ "Agricultural & Veterinary Sciences",
+      for_2008_division_code == "08" ~ "Information & Computing Sciences",
+      for_2008_division_code %in% c(
+        "09", "10", "09 + 10"
+      ) ~ "Engineering & Technology",
+      for_2008_division_code == "11" ~ "Medical & Health Sciences",
+      for_2008_division_code == "12" ~ "Built Environment & Design",
+      for_2008_division_code == "21" ~ "History & Archaeology",
+      is.na(for_2008_division_code) ~ "Other / Unclassified",
+      TRUE ~ NA_character_
+    )
+  )
+
+# Check unmatched classifications
+unmapped_2008 <- for_2008_detail |>
+  dplyr::filter(is.na(for_standard_2008)) |>
+  dplyr::distinct(
+    year,
+    research_field_reported,
+    for_2008_division_code
+  )
+
+print(unmapped_2008, n = Inf)
+
+stopifnot(nrow(unmapped_2008) == 0)
+
+# Aggregate allocation shares
+for_2008_plot <- for_2008_detail |>
+  dplyr::group_by(year, for_standard_2008) |>
+  dplyr::summarise(
+    allocation_share = sum(allocation_share_for),
+    .groups = "drop"
+  )
+```
+
+```{r}
+#| label: plot-for-2008
+#| fig-width: 13
+#| fig-height: 8
+#| out-width: 100%
+
+# Order categories by average allocation share
+for_2008_order <- for_2008_plot |>
+  dplyr::group_by(for_standard_2008) |>
+  dplyr::summarise(
+    average_share = sum(allocation_share) / 7,
+    .groups = "drop"
+  ) |>
+  dplyr::arrange(dplyr::desc(average_share)) |>
+  dplyr::pull(for_standard_2008)
+
+for_2008_plot <- for_2008_plot |>
+  dplyr::mutate(
+    for_standard_2008 = factor(
+      for_standard_2008,
+      levels = for_2008_order
+    )
+  )
+
+ggplot(
+  for_2008_plot,
+  aes(
+    x = factor(year),
+    y = allocation_share,
+    fill = for_standard_2008
+  )
+) +
+  geom_col(
+    width = 0.8,
+    position = position_stack(reverse = TRUE)
+  ) +
+  geom_text(
+    aes(
+      label = ifelse(
+        allocation_share >= 0.12,
+        paste0(
+          stringr::str_wrap(
+            as.character(for_standard_2008),
+            width = 15
+          ),
+          "\n",
+          scales::percent(
+            allocation_share,
+            accuracy = 1
+          )
+        ),
+        ""
+      )
+    ),
+    position = position_stack(
+      vjust = 0.5,
+      reverse = TRUE
+    ),
+    size = 2.4,
+    colour = "black",
+    fontface = "bold",
+    lineheight = 0.9
+  ) +
+  scale_y_continuous(
+    labels = scales::label_percent(),
+    breaks = seq(0, 1, 0.25)
+  ) +
+  coord_cartesian(ylim = c(0, 1)) +
+  labs(
+    title = "HPC Allocation by Field of Research",
+    subtitle = "Earlier reporting period, 2014–2020 (FoR 2008-based grouping)",
+    x = "Year",
+    y = "Share of annual allocation",
+    fill = "Research field",
+    caption = paste(
+      "Combined categories are analytical groupings.",
+      "2017 reflects Pawsey-wide FoR reporting."
+    )
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "right",
+    legend.text = element_text(size = 8)
+  )
+```
+
+#### Later Reporting Period: 2021–2026
+
+```{r}
+#| label: prepare-for-2020
+
+for_2020_detail <- for_converted |>
+  dplyr::filter(dplyr::between(year, 2021, 2026)) |>
+  dplyr::mutate(
+    for_2020_visual = dplyr::case_when(
+
+      for_standard_2020 %in% c(
+        "Engineering",
+        "Engineering + Technology",
+        "Technology — no direct FoR 2020 alignment"
+      ) ~ "Engineering & Technology",
+
+      for_standard_2020 == "Physical sciences" ~
+        "Physical Sciences",
+
+      for_standard_2020 == "Chemical sciences" ~
+        "Chemical Sciences",
+
+      for_standard_2020 %in% c(
+        "Earth sciences",
+        "Environmental sciences",
+        "Earth sciences + Environmental sciences"
+      ) ~ "Earth & Environmental Sciences",
+
+      for_standard_2020 %in% c(
+        "Biological sciences",
+        "Agricultural, veterinary and food sciences"
+      ) ~ "Biological & Agricultural Sciences",
+
+      for_standard_2020 %in% c(
+        "Biomedical and clinical sciences",
+        "Health sciences",
+        "Biomedical and clinical sciences + Health sciences"
+      ) ~ "Medical & Health Sciences",
+
+      for_standard_2020 %in% c(
+        "Mathematical sciences",
+        "Information and computing sciences"
+      ) ~ "Mathematics & Computing",
+
+      for_standard_2020 %in% c(
+        "Psychology",
+        "Economics",
+        "History, heritage and archaeology",
+        "Language, communication and culture",
+        "Philosophy and religious studies",
+        "Human society",
+        "Built environment and design"
+      ) ~ "Social Sciences, Humanities & Built Environment",
+
+      for_standard_2020 == "Other / Unclassified" ~
+        "Other / Unclassified",
+
+      TRUE ~ NA_character_
+    )
+  )
+
+# Check unmatched classifications
+unmapped_2020 <- for_2020_detail |>
+  dplyr::filter(is.na(for_2020_visual)) |>
+  dplyr::distinct(
+    year,
+    research_field_reported,
+    for_standard_2020
+  )
+
+print(unmapped_2020, n = Inf)
+
+stopifnot(nrow(unmapped_2020) == 0)
+
+# Aggregate allocation shares
+for_2020_plot <- for_2020_detail |>
+  dplyr::group_by(year, for_2020_visual) |>
+  dplyr::summarise(
+    allocation_share = sum(allocation_share_for),
+    .groups = "drop"
+  )
+```
+
+```{r}
+#| label: plot-for-2020
+#| fig-width: 13
+#| fig-height: 8
+#| out-width: 100%
+
+# Order categories by average allocation share
+for_2020_order <- for_2020_plot |>
+  dplyr::group_by(for_2020_visual) |>
+  dplyr::summarise(
+    average_share = sum(allocation_share) / 6,
+    .groups = "drop"
+  ) |>
+  dplyr::arrange(dplyr::desc(average_share)) |>
+  dplyr::pull(for_2020_visual)
+
+for_2020_plot <- for_2020_plot |>
+  dplyr::mutate(
+    for_2020_visual = factor(
+      for_2020_visual,
+      levels = for_2020_order
+    )
+  )
+
+ggplot(
+  for_2020_plot,
+  aes(
+    x = factor(year),
+    y = allocation_share,
+    fill = for_2020_visual
+  )
+) +
+  geom_col(
+    width = 0.8,
+    position = position_stack(reverse = TRUE)
+  ) +
+  geom_text(
+    aes(
+      label = ifelse(
+        allocation_share >= 0.12,
+        paste0(
+          stringr::str_wrap(
+            as.character(for_2020_visual),
+            width = 15
+          ),
+          "\n",
+          scales::percent(
+            allocation_share,
+            accuracy = 1
+          )
+        ),
+        ""
+      )
+    ),
+    position = position_stack(
+      vjust = 0.5,
+      reverse = TRUE
+    ),
+    size = 2.4,
+    colour = "black",
+    fontface = "bold",
+    lineheight = 0.9
+  ) +
+  scale_y_continuous(
+    labels = scales::label_percent(),
+    breaks = seq(0, 1, 0.25)
+  ) +
+  coord_cartesian(ylim = c(0, 1)) +
+  labs(
+    title = "HPC Allocation by Field of Research",
+    subtitle = "Later reporting period, 2021–2026 (FoR 2020-based grouping)",
+    x = "Year",
+    y = "Share of annual allocation",
+    fill = "Research field",
+    caption = paste(
+      "Broad analytical groups derived from FoR 2020 mappings.",
+      "Technology without direct alignment is grouped with Engineering",
+      "for visualisation only."
+    )
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "right",
+    legend.text = element_text(size = 8)
+  )
+```
+
+#### Validation of Reporting-Period Allocations
+
+```{r}
+#| label: validate-for-periods
+
+for_period_validation <- dplyr::bind_rows(
+  for_2008_plot |>
+    dplyr::transmute(
+      year,
+      allocation_share,
+      period = "2014–2020"
+    ),
+  for_2020_plot |>
+    dplyr::transmute(
+      year,
+      allocation_share,
+      period = "2021–2026"
+    )
+) |>
+  dplyr::group_by(period, year) |>
+  dplyr::summarise(
+    total_share = sum(allocation_share),
+    .groups = "drop"
+  )
+
+print(for_period_validation, n = Inf)
+
+stopifnot(
+  nrow(for_period_validation) == 13,
+  all(abs(for_period_validation$total_share - 1) < 1e-6)
+)
+```
+
+The two reporting-period charts provide complementary views of historical
+FoR allocation composition. The earlier chart uses FoR 2008 division-based
+groupings, while the later chart uses existing FoR 2020 mappings.
+
+These analytical categories are not necessarily equivalent to individual
+official ANZSRC divisions. Physical Sciences and Chemical Sciences are
+kept separate in both periods to improve interpretability.
+
+The 2017 Pawsey-wide observation remains subject to a reporting-scope
+limitation. Changes in allocation composition should therefore not be
+interpreted as changes in researcher demand without further evidence.
