@@ -137,17 +137,12 @@ summary(overall_linear)
 summary(overall_loglinear)
 ```
 
-The linear model estimates an annual absolute change in HPC demand,
-whereas the log-linear model estimates an approximately constant
+The linear model estimates an annual absolute change in HPC demand, whereas the log-linear model estimates an approximately constant
 annual percentage growth rate.
 
-The log-linear model's fitted values must be back-transformed to kSU
-for comparison with observed demand. Simple exponentiation produces
-median predictions under a log-normal error assumption; mean
-predictions require appropriate bias adjustment.
+The log-linear model's fitted values must be back-transformed to kSU for comparison with observed demand. Simple exponentiation produces median predictions under a log-normal error assumption; mean predictions require appropriate bias adjustment.
 
-Model performance and forecast accuracy will be evaluated in
-Chapter 08 using consistent original-scale error measures.
+Model performance and forecast accuracy will be evaluated in Chapter 08 using consistent original-scale error measures.
 
 ### Initial Model Findings
 
@@ -161,4 +156,82 @@ Although both models exhibit relatively high in-sample R-squared values, these s
 and cannot be used directly to select the preferred model.
 
 Given the limited historical sample, heterogeneous demand estimates, and uncertainty surrounding the 2026 observation, neither model is selected at this stage. Their predictive performance will be assessed using consistent original-scale forecast errors in Chapter 08.
+
+## Sensitivity Analysis: Influence of 2026
+
+The substantial increase in reported HPC demand in 2026 introduces uncertainty into the estimation of future demand trends.
+
+To assess the influence of this observation, the linear and log-linear trend models are refitted using historical observations from 2014 - 2025. These results are compared with the corresponding models fitted to the complete 2014–2026 dataset.
+
+This analysis does not assume that the 2026 observation is incorrect or should be excluded from the final forecasting model. Instead,
+it evaluates how sensitive the estimated trend is to the inclusion of the latest observation.
+
+### Trend Sensitivity Comparison
+
+```{r overall-trend-sensitivity}
+# Historical data excluding 2026
+overall_pre2026_data <- overall_model_data |>
+  dplyr::filter(year <= 2025)
+
+# Refit the same model specifications
+overall_linear_pre2026 <- lm(
+  demand_ksu ~ time,
+  data = overall_pre2026_data
+)
+
+overall_loglinear_pre2026 <- lm(
+  log(demand_ksu) ~ time,
+  data = overall_pre2026_data
+)
+
+# Compare trend coefficients
+trend_sensitivity <- data.frame(
+  model = c("Linear trend", "Log-linear trend"),
+  full_2014_2026 = c(
+    coef(overall_linear)[["time"]],
+    coef(overall_loglinear)[["time"]]
+  ),
+  excluding_2026 = c(
+    coef(overall_linear_pre2026)[["time"]],
+    coef(overall_loglinear_pre2026)[["time"]]
+  )
+)
+
+trend_sensitivity$percentage_change <- with(
+  trend_sensitivity,
+  100 * (full_2014_2026 - excluding_2026) /
+    abs(excluding_2026)
+)
+
+knitr::kable(
+  trend_sensitivity,
+  digits = 3,
+  col.names = c(
+    "Model",
+    "Trend with 2026",
+    "Trend without 2026",
+    "Change (%)"
+  ),
+  caption = "Sensitivity of estimated HPC demand trends to the inclusion of 2026"
+)
+```
+
+The comparison evaluates changes in the estimated annual trend coefficients. For the linear model, the coefficient represents the
+annual absolute change in demand measured in kSU. For the log-linear model, the coefficient represents the annual change in log demand, which can be converted into an implied compounded growth rate.
+
+Changes in these coefficients indicate how strongly the latest observation influences the fitted historical trend. They do not,
+on their own, establish whether the 2026 increase represents a structural change in underlying researcher demand.
+
+### Sensitivity Analysis Findings
+
+Including the 2026 observation increases the estimated linear trend from approximately 144,357 to 161,992 kSU per year, representing
+a 12.2% increase in the annual absolute growth coefficient.
+
+In contrast, the log-linear trend coefficient decreases slightly when 2026 is included, from approximately 0.239 to 0.233, equivalent to a reduction of approximately 2.4% in the estimated log-scale trend coefficient.
+
+These results indicate that the latest observation has a greater relative influence on the estimated absolute growth rate than on the proportional growth trend.
+
+Nevertheless, the relatively small change in the log-linear coefficient does not necessarily imply that its future forecasts are insensitive to 2026, since changes in the fitted intercept may also influence projected demand levels.
+
+The analysis therefore supports retaining both model specifications for further evaluation. It does not establish whether the 2026 increase represents a temporary fluctuation or a sustained change in researcher demand.
 
