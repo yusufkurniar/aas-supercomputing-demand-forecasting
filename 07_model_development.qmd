@@ -850,12 +850,82 @@ The historical 2014–2021 GPU conversion scenarios remain separate from these f
 
 Further model evaluation and explicit scenario development will be required before selecting a preferred GPU demand projection for infrastructure planning.
 
+## Field of Research Demand Modelling Framework
+
+### Purpose and Modelling Approach
+
+Field of Research (FoR) demand is considered as an additional dimension of national HPC planning, complementing the overall HPC, CPU, and GPU demand projections developed in this chapter.
+
+Unlike the aggregate and resource-specific demand measures, the harmonised FoR dataset primarily describes the distribution of allocated computing resources across research fields.
+
+Consequently, FoR-specific demand cannot be treated as independently observed researcher demand.
+
+A top-down allocation-share approach is therefore proposed to estimate indicative FoR-level demand through 2030.
+
+Under this approach, the selected overall HPC demand forecast will be distributed across harmonised FoR groups using explicit assumptions about their future allocation shares.
+
+The modelling relationship is:
+
+$$
+\widehat{D}_{f,t} = \widehat{D}_{t} \times s_{f,t}
+$$
+
+where:
+
+- $\widehat{D}_{f,t}$ represents indicative demand for FoR group
+  $f$ in year $t$, expressed in kSU.
+- $\widehat{D}_{t}$ represents the selected overall HPC demand
+  forecast in year $t$, expressed in kSU.
+- $s_{f,t}$ represents the assumed allocation share of FoR group
+  $f$ in year $t$.
+
+The assumed shares will be constrained to be non-negative and sum to one within each forecast year, ensuring that the indicative FoR demand estimates reconcile with the overall HPC demand projection.
+
+### Historical FoR Data Suitability
+
+The historical FoR analysis in Chapter 06 covers 2014 - 2026 and includes changes in research classification standards, reporting coverage, and analytical grouping.
+
+The earlier period (2014 - 2020) is primarily organised using FoR 2008 classifications, while the later period (2021 - 2026) uses FoR 2020 classifications.
+
+Although Chapter 06 harmonised these classifications into broader analytical groups for visualisation, the resulting categories are not perfectly equivalent across periods.
+
+Furthermore, allocation shares reflect the distribution of computing resources awarded to research fields, rather than the full amount of computing resources requested by researchers.
+
+For these reasons, historical FoR allocation shares will be treated as indicators of research activity composition rather than direct measures of FoR demand.
+
+### FoR Allocation-Share Scenarios
+
+Three approaches will be considered for developing future FoR allocation-share assumptions:
+
+1. Recent composition: hold the latest available harmonised FoR allocation shares constant through 2030.
+2. Recent-period average: use average allocation shares from the FoR 2020 reporting period (2021 - 2026).
+3. Composition-change sensitivity: examine how alternative share assumptions affect indicative demand across broad research fields.
+
+These approaches are proposed modelling assumptions, not statistically validated predictions of future research-field composition.
+
+The suitability of the historical shares and their variation across recent years will be assessed in Chapter 08.
+
+Final assumptions will be selected in Chapter 09, and indicative FoR demand scenarios for 2027 - 2030 will be generated in Chapter 10.
+
+### Interpretation and Limitations
+
+The resulting FoR projections will represent indicative distributions of overall forecast HPC demand under specified allocation-share assumptions.
+
+They should not be interpreted as independently forecast researcher requests by FoR, nor as evidence that historical allocation shares fully capture unmet computing demand.
+
+Differences in FoR classification, facility coverage, and allocation practices may affect the comparability of historical shares.
+
+The top-down approach preserves consistency with the selected overall HPC demand projection while making the underlying assumptions transparent.
+
+These limitations will be retained when interpreting FoR-specific planning implications.
+
 ## Modelling Summary and Limitations
 
 ### Summary of Candidate Demand Projections
 
-This chapter developed linear and log-linear forecasting models for three measures of Australian national research supercomputing
-demand: overall HPC demand in kSU, CPU demand in core-hours, and GPU demand in GPU-hours.
+This chapter developed linear and log-linear forecasting models for three quantitative measures of Australian national research supercomputing demand: overall HPC demand in kSU, CPU demand in core-hours, and GPU demand in GPU-hours.
+
+In addition, a top-down allocation-share framework was established to develop indicative Field of Research (FoR) demand scenarios. Unlike the three quantitative forecasting targets, FoR-specific demand is not independently modelled from observed researcher requests.
 
 The models were fitted using harmonised historical estimates, with alternative specifications excluding 2026 to assess the influence of the latest observation.
 
@@ -879,6 +949,8 @@ GPU demand exhibits substantially greater uncertainty. The exploratory models us
 
 Both GPU trend specifications are sensitive to the inclusion of 2026, and neither provides strong statistical evidence of a stable historical growth pattern. Consequently, GPU projections should be interpreted as exploratory trajectories rather than reliable long-term forecasts.
 
+For Field of Research, the proposed modelling approach distributes the selected overall HPC demand forecast across harmonised research fields using explicit allocation-share assumptions. This approach preserves consistency with aggregate demand projections while recognising that historical FoR allocation shares do not directly measure researcher demand. The resulting FoR projections will be developed as indicative planning scenarios rather than independently estimated demand forecasts.
+
 ### Limitations and Implications for Forecast Evaluation
 
 Several limitations affect the interpretation of the candidate projections.
@@ -891,7 +963,15 @@ Third, the historical GPU conversion scenarios for 2014 - 2021 represent hypothe
 
 Fourth, the substantial increase in reported demand in 2026 has not been established as a sustained structural change. Its influence is therefore examined through alternative model specifications rather than assumed to persist.
 
+Fifth, the FoR modelling framework relies on historical allocation shares rather than directly observed research-field demand. Changes in FoR classification standards, reporting coverage, and allocation practices limit historical comparability. Consequently, FoR-level projections will depend on explicit assumptions about future research-field composition.
+
 Finally, the candidate models have not yet been selected using out-of-sample predictive accuracy. In-sample fit statistics alone are insufficient for identifying the most defensible forecasting approach.
 
-Chapter 08 will evaluate the candidate models using time-series cross-validation, consistent forecast error measures, and residual diagnostics where appropriate. The evaluation will inform model selection and the development of defensible demand projections for
-national HPC infrastructure planning.
+Chapter 08 will evaluate the overall HPC, CPU, and GPU candidate models using time-series cross-validation, consistent forecast
+error measures, and residual diagnostics where appropriate.
+
+It will also examine the stability and comparability of historical FoR allocation shares to inform the development of FoR-specific
+planning scenarios.
+
+The resulting evidence will support model selection in Chapter 09 and the development of national HPC demand scenarios through
+2030 in Chapter 10.
