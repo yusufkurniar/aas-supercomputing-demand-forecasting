@@ -317,7 +317,7 @@ ggplot() +
   ) +
   labs(
     title = "Historical GPU Demand and Allocation",
-    subtitle = "2014–2021: low–high scenario bands; 2022–2026: mixed reported/estimated",
+    subtitle = "2014 – 2021: low–high scenario bands; 2022 – 2026: mixed reported/estimated",
     x = "Year",
     y = "GPU-hours (millions)",
     colour = NULL,
@@ -362,7 +362,7 @@ The resource-specific analysis indicates an overall increase in estimated CPU an
 
 Estimated CPU demand increases from approximately 130.0 million CPU core-hours in 2014 to 1,235.0 million CPU core-hours in 2026. Over the same period, CPU allocation increases from approximately 82.7 million to 518.6 million CPU core-hours.
 
-CPU demand remains above allocation throughout the analytical period. Substantial fluctuations are visible around 2018–2022, followed by a sustained increase in estimated demand from 2022 to 2026. In contrast, CPU allocation remains relatively stable between 2023 and 2026, at approximately 491–528 million CPU core-hours.
+CPU demand remains above allocation throughout the analytical period. Substantial fluctuations are visible around 2018 – 2022, followed by a sustained increase in estimated demand from 2022 to 2026. In contrast, CPU allocation remains relatively stable between 2023 and 2026, at approximately 491 – 528 million CPU core-hours.
 
 The widening difference between CPU demand and allocation in recent years suggests increasing pressure on allocated CPU resources. However, the magnitude of historical changes should be interpreted cautiously because earlier observations include assumed conversion factors, capacity proxies, and estimated CPU/GPU resource shares.
 
@@ -381,3 +381,235 @@ Furthermore, GPU allocation from 2022 onward is derived from reported system-lev
 The CPU and GPU series suggest different historical demand patterns and should be considered separately during forecasting model development. The observed differences between demand and allocation also reinforce the importance of distinguishing researcher demand from computational resources awarded under capacity constraints.
 
 Historical uncertainty, system transitions, and the limited availability of directly observed GPU demand should be considered when selecting modelling periods and evaluating forecast reliability. Scenario analysis will be particularly important for assessing the sensitivity of GPU forecasts to historical conversion assumptions.
+
+## Field of Research
+
+The Field of Research (FoR) analysis examines the distribution of national HPC allocations across research disciplines during the 2014 – 2026 analytical period.
+
+The analysis uses the standardised research-field classifications and converted allocation measures produced in Chapters 04 and 05. It focuses on identifying the largest research-field allocation shares, changes in disciplinary composition over time, and differences in allocated CPU and GPU resources.
+
+FoR-level CPU core-hours and GPU-hours are estimated using each field's share of annual HPC allocations. Consequently, these resource-specific estimates reflect proportional allocation assumptions rather than directly observed CPU or GPU usage by individual research disciplines.
+
+The 2017 observation is interpreted cautiously because its FoR reporting scope differs from the NCMAS-based observations used in other years.
+
+The objective is to identify historical allocation patterns that may inform subsequent forecasting, without interpreting allocation shares as direct measures of researcher demand.
+
+### Validate the Field of Research series
+
+```{r}
+# Inspect the converted Field of Research dataset
+for_converted |>
+  dplyr::select(
+    year,
+    for_analysis_group,
+    allocation_share_for,
+    allocation_for_ksu,
+    allocation_for_cpu_core_hours,
+    allocation_for_gpu_hours,
+    for_resource_scope_flag
+  ) |>
+  dplyr::arrange(year, dplyr::desc(allocation_share_for)) |>
+  print(n = 20, width = Inf)
+
+# Check coverage and completeness
+stopifnot(
+  nrow(for_converted) == 133,
+  all(sort(unique(for_converted$year)) == 2014:2026),
+  all(!is.na(for_converted$allocation_share_for)),
+  all(!is.na(for_converted$allocation_for_ksu)),
+  all(!is.na(for_converted$allocation_for_cpu_core_hours)),
+  all(!is.na(for_converted$allocation_for_gpu_hours))
+)
+
+# Summarise allocation shares by year
+for_share_summary <- for_converted |>
+  dplyr::group_by(year) |>
+  dplyr::summarise(
+    n_fields = dplyr::n(),
+    total_share = sum(allocation_share_for),
+    .groups = "drop"
+  )
+
+for_share_summary |>
+  print(n = Inf)
+
+# Confirm annual FoR shares total approximately 100%
+stopifnot(
+  all(abs(for_share_summary$total_share - 1) < 1e-6)
+)
+```
+
+### Research Field Allocation Composition
+
+```{r}
+for_category_review <- for_converted |>
+  dplyr::group_by(for_analysis_group) |>
+  dplyr::summarise(
+    n_years = dplyr::n_distinct(year),
+    first_year = min(year),
+    last_year = max(year),
+    total_allocation_share = sum(
+      allocation_share_for,
+      na.rm = TRUE
+    ),
+    .groups = "drop"
+  ) |>
+  dplyr::arrange(for_analysis_group)
+
+print(for_category_review, n = Inf, width = Inf)
+```
+
+```{r}
+# --------------------------------------------------
+# Create broad FoR analytical groups for visualisation
+# --------------------------------------------------
+
+for_visual_data <- for_converted |>
+  dplyr::mutate(
+    for_visual_group = dplyr::case_when(
+
+      for_analysis_group %in% c(
+        "Physical Sciences",
+        "Physical sciences",
+        "Chemical Sciences",
+        "Chemical sciences"
+      ) ~ "Physical Sciences",
+
+      for_analysis_group %in% c(
+        "Earth & Environmental Sciences",
+        "Earth sciences",
+        "Environmental sciences",
+        "Earth sciences + Environmental sciences"
+      ) ~ "Earth & Environmental Sciences",
+
+      for_analysis_group %in% c(
+        "Engineering",
+        "Engineering & Technology",
+        "Engineering + Technology"
+      ) ~ "Engineering & Technology",
+
+      for_analysis_group %in% c(
+        "Biological Sciences",
+        "Biological sciences",
+        "Agricultural And Veterinary Sciences",
+        "Agricultural, veterinary and food sciences"
+      ) ~ "Biological & Agricultural Sciences",
+
+      for_analysis_group %in% c(
+        "Medical & Health Sciences",
+        "Biomedical and clinical sciences",
+        "Biomedical and clinical sciences + Health sciences"
+      ) ~ "Medical & Health Sciences",
+
+      for_analysis_group %in% c(
+        "Mathematical Sciences",
+        "Mathematical sciences",
+        "Information & Computing Sciences",
+        "Information and computing sciences"
+      ) ~ "Mathematics & Computing",
+
+      for_analysis_group %in% c(
+        "Built Environment and Design",
+        "Built environment and design",
+        "Economics",
+        "History and Archaeology",
+        "History, heritage and archaeology",
+        "Human society",
+        "Language, communication and culture",
+        "Philosophy and religious studies",
+        "Psychology"
+      ) ~ "Social Sciences, Humanities & Built Environment",
+
+      for_analysis_group %in% c(
+        "Other / Unclassified",
+        "Pawsey Operations"
+      ) |
+        grepl(
+          "^Technology\\s*[-–—]",
+          for_analysis_group
+        ) ~ "Unclassified & Operational",
+
+      TRUE ~ NA_character_
+    )
+  )
+
+# Check for categories that have not been mapped
+unmapped_for <- for_visual_data |>
+  dplyr::filter(is.na(for_visual_group)) |>
+  dplyr::distinct(for_analysis_group)
+
+print(unmapped_for, n = Inf)
+
+stopifnot(nrow(unmapped_for) == 0)
+```
+
+
+```{r}
+# --------------------------------------------------
+# 6. Plot annual FoR allocation composition
+# --------------------------------------------------
+
+# Summarise the eight broad FoR groups
+# for_visual_data must be created in an earlier chunk
+for_plot_data <- for_visual_data |>
+  dplyr::group_by(year, for_visual_group) |>
+  dplyr::summarise(
+    allocation_share = sum(allocation_share_for),
+    .groups = "drop"
+  )
+
+# Validate the plotting data
+stopifnot(
+  all(!is.na(for_plot_data$for_visual_group)),
+  all(
+    abs(
+      for_plot_data |>
+        dplyr::group_by(year) |>
+        dplyr::summarise(
+          total = sum(allocation_share),
+          .groups = "drop"
+        ) |>
+        dplyr::pull(total) - 1
+    ) < 1e-6
+  )
+)
+
+# Plot annual allocation composition
+ggplot(
+  for_plot_data,
+  aes(
+    x = factor(year),
+    y = allocation_share,
+    fill = for_visual_group
+  )
+) +
+  geom_col(width = 0.8) +
+  scale_y_continuous(
+    labels = scales::label_percent(),
+    breaks = seq(0, 1, 0.25)
+  ) +
+  coord_cartesian(ylim = c(0, 1)) +
+  labs(
+    title = "HPC Allocation by Field of Research",
+    subtitle = "Broad analytical groups, 2014–2026",
+    x = "Year",
+    y = "Share of annual allocation",
+    fill = "Field of Research",
+    caption = paste(
+      "Broad analytical groups are not official ANZSRC categories.",
+      "2017 uses Pawsey-wide FoR reporting."
+    )
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(
+      angle = 45,
+      hjust = 1
+    ),
+    legend.position = "bottom"
+  )
+```
+
+For longitudinal comparison, the original FoR classifications are consolidated into eight broader analytical groups. These groupings reduce inconsistencies arising from differences in naming conventions and classification structures across reporting years. They are intended for exploratory visualisation and do not represent official ANZSRC categories. Records without a reliable disciplinary classification, including operational allocations and categories without a direct FoR alignment, are retained separately as Unclassified & Operational.
+
+
