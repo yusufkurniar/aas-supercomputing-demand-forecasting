@@ -766,3 +766,87 @@ The results indicate that projected CPU demand is more sensitive to the choice o
 However, these trajectories remain preliminary and are conditional on historical reporting methods, conversion assumptions, and model specifications. They should not be interpreted as validated forecasts or formal uncertainty bounds.
 
 The preferred CPU forecasting approach will be determined through model evaluation and predictive accuracy assessment in Chapter 08.
+
+### GPU Demand Projections
+
+Four exploratory GPU demand trajectories are generated for 2027 - 2030 using the previously fitted linear and log-linear trend models.
+
+The full-period specifications use GPU demand estimates from 2022 - 2026, while the sensitivity specifications use 2022 - 2025, excluding the 2026 observation.
+
+GPU demand is expressed in millions of GPU-hours, consistent with the resource-specific analysis in Chapter 06.
+
+Unlike the overall HPC and CPU projections, these trajectories are based on a very short and heterogeneous historical series. The estimates combine reported Setonix-based GPU demand with values derived from allocation shares and working conversion factors.
+
+Consequently, the projections are exploratory model trajectories rather than validated forecasts of future GPU requirements.
+
+```{r gpu-demand-projections}
+# Prepare the 2027–2030 forecast horizon
+gpu_future_years <- data.frame(
+  year = 2027:2030,
+  time = (2027:2030) - 2022
+)
+
+# Generate exploratory GPU demand projections
+gpu_projections <- gpu_future_years |>
+  dplyr::transmute(
+    year,
+    linear_full = as.numeric(
+      predict(gpu_linear, newdata = gpu_future_years)
+    ),
+    loglinear_full = exp(as.numeric(
+      predict(gpu_loglinear, newdata = gpu_future_years)
+    )),
+    linear_pre2026 = as.numeric(
+      predict(gpu_linear_pre2026, newdata = gpu_future_years)
+    ),
+    loglinear_pre2026 = exp(as.numeric(
+      predict(gpu_loglinear_pre2026, newdata = gpu_future_years)
+    ))
+  )
+
+knitr::kable(
+  gpu_projections,
+  digits = 3,
+  col.names = c(
+    "Year",
+    "Linear (Full)",
+    "Log-linear (Full)",
+    "Linear (Excl. 2026)",
+    "Log-linear (Excl. 2026)"
+  ),
+  caption = paste(
+    "Exploratory GPU demand projections,",
+    "2027–2030 (million GPU-hours)"
+  )
+)
+```
+
+The linear specifications extrapolate constant annual absolute changes in GPU demand, while the log-linear specifications extrapolate compounded proportional growth.
+
+Exponentiating the log-linear predictions produces central trajectories on the original scale, not bias-adjusted conditional mean forecasts.
+
+The historical GPU conversion scenarios for 2014–2021 are not included as additional observations in these models. Those scenarios represent conversion uncertainty rather than directly observed GPU demand.
+
+Given the limited number of recent observations, differences in data provenance, and strong sensitivity to the inclusion of 2026, these projections should not be interpreted as reliable estimates of future GPU demand or as formal uncertainty intervals.
+
+Their suitability for forecasting will be considered further in Chapter 08.
+
+### GPU Projection Findings
+
+The exploratory GPU demand models produce different projections for 2027 - 2030, reflecting both their growth assumptions and
+sensitivity to the inclusion of 2026.
+
+Under the linear specifications, projected GPU demand in 2030 ranges from approximately 2.252 to 3.371 million GPU-hours. The log-linear specifications produce projections ranging from approximately 2.406 to 3.681 million GPU-hours.
+
+Excluding 2026 substantially reduces the projected GPU demand under both model specifications. For the linear model, the 2030 projection increases by approximately 49.7% when 2026 is included.
+
+These results indicate that GPU projections are particularly sensitive to the historical modelling period. This contrasts with the CPU projections, where differences between linear and log-linear growth assumptions were more pronounced.
+
+However, the GPU modelling sample contains only five annual estimates, with a mixture of reported Setonix-based demand and allocation-share-derived values. The models also exhibit weak evidence of a stable historical growth trend.
+
+Consequently, the projected trajectories should be interpreted as exploratory illustrations of possible GPU demand growth, rather than reliable forecasts or formal uncertainty bounds.
+
+The historical 2014–2021 GPU conversion scenarios remain separate from these future growth projections, as they represent uncertainty in conversion assumptions rather than independently observed historical GPU demand.
+
+Further model evaluation and explicit scenario development will be required before selecting a preferred GPU demand projection for infrastructure planning.
+
