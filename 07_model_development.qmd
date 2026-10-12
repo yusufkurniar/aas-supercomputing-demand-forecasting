@@ -17,127 +17,37 @@ Following expert statistical feedback, particular emphasis is placed on model si
 
 The forecasts are intended to provide evidence-informed planning scenarios rather than precise predictions of future researcher demand.
 
-## Forecast Target
+## Forecast Target and Data Suitability
 
-The primary forecasting target is Australian research demand for national HPC resources.
+### Forecast Target
 
-Where the available data support it, CPU and GPU demand are modelled separately because they represent different types of computational resources and have different historical growth patterns.
+The primary forecasting target is annual researcher demand for Australian national research supercomputing resources, expressed in millions of CPU-equivalent core-hours.
 
-Allocated compute is treated separately from demand because allocation is constrained by available national HPC capacity.
+This measure represents estimated computing resources requested by researchers, rather than resources allocated by HPC facilities or the computational capacity available to them. Maintaining this distinction is essential because historical allocations may be constrained by infrastructure availability and therefore do not necessarily reflect underlying researcher demand.
 
-## Benchmark Models
+The analysis uses the harmonised annual demand series developed in Chapters 03–05 and examined in Chapter 06. The historical period covers 2014–2026, comprising 13 annual observations, with forecasts extending from 2027 to 2030.
 
-Simple forecasting models are used to provide a baseline against which more complex models can be compared.
+### Historical Data Suitability
 
-The benchmark models considered include:
+The historical demand series provides a consistent analytical unit for forecasting, but it should not be interpreted as a fully homogeneous set of directly observed demand measurements.
 
-- naïve
-- drift
-- linear trend
-- exponential smoothing (ETS)
-- ARIMA
+Depending on the year and reporting source, historical estimates include directly reported demand, derived estimates, and proxy-based measures. Differences in facility coverage, reporting definitions, and CPU/GPU conversion assumptions introduce uncertainty into comparisons across years.
 
-These models provide different representations of the historical trend without requiring external explanatory variables.
+The relatively small number of annual observations also limits the complexity of forecasting models that can be estimated reliably. Consequently, simple trend-based models will be prioritised, while more flexible time-series approaches will be used as benchmarks.
 
-## Structural Demand Model
+The substantial increase in reported demand in 2026 presents an additional uncertainty. Available historical observations do not establish whether this increase represents a sustained shift in researcher demand, a temporary fluctuation, or a difference in measurement or reporting scope.
 
-In addition to the benchmark models, a structural modelling approach is considered to explain HPC demand using potential demand drivers.
+Accordingly, the modelling analysis will consider both the complete historical series (2014–2026) and a sensitivity specification excluding 2026 (2014–2025). The latter is not treated as a more accurate historical dataset, but as a means of assessing how strongly the latest observation influences projected demand.
 
-Potential drivers identified in the earlier stages include:
+### Forecasting Horizon
 
-- research funding
-- research workforce
-- research activity
-- funding in compute-intensive research fields
-- compute intensity
-- changes in CPU and GPU use
+The forecasting horizon covers four annual periods:
 
-A general form of the structural model is:
+- 2027
+- 2028
+- 2029
+- 2030
 
-$$
-D_t =
-\beta_0 +
-\beta_1 X_{1,t} +
-\beta_2 X_{2,t} +
-\cdots +
-\beta_k X_{k,t} +
-\varepsilon_t
-$$
+All projections will be expressed in millions of CPU-equivalent core-hours to maintain consistency with the historical analysis.
 
-where $D_t$ represents HPC demand and $X_{1,t}, \ldots, X_{k,t}$ represent selected demand drivers.
-
-## Leading Indicators
-
-Some structural variables may influence HPC demand with a delay.
-
-For example, research funding may be considered as a leading indicator because funded research projects may require HPC resources after funding has been awarded.
-
-Where supported by the data, lagged variables are therefore considered:
-
-$$
-D_t =
-\beta_0 +
-\beta_1 Funding_{t-1} +
-\beta_2 Workforce_t +
-\beta_3 ComputeIntensity_t +
-\varepsilon_t
-$$
-
-The appropriate lag structure is determined using the available data and the expected relationship between each driver and HPC demand.
-
-## Variable Selection
-
-The number of predictors included in the structural model is kept small because the historical annual dataset contains a limited number of observations.
-
-Variables are considered based on:
-
-- theoretical relationship with HPC demand
-- historical data availability
-- consistency across years
-- exploratory relationships with demand
-- availability of future values or assumptions to 2030
-- interpretability for policy analysis
-
-Variables are not included solely because they improve in-sample model fit.
-
-## Model Benchmarking
-
-The candidate models are compared using a consistent evaluation framework.
-
-Where possible, rolling-origin time-series cross-validation is used so that models are evaluated using only information that would have been available at the time of each forecast.
-
-Forecast accuracy measures considered include:
-
-- Mean Absolute Error (MAE)
-- Root Mean Squared Error (RMSE)
-- Mean Absolute Percentage Error (MAPE), where appropriate
-
-Forecast behaviour and interpretability are also considered alongside numerical accuracy.
-
-## CPU and GPU Modelling
-
-Where sufficient historical information is available, CPU and GPU demand are modelled separately.
-
-This is particularly important for GPU resources because growth in AI, machine learning and other accelerator-intensive research may result in a different demand trajectory from traditional CPU computing.
-
-If the historical GPU series is insufficient for reliable standalone forecasting, alternative scenario-based assumptions are considered rather than fitting an unnecessarily complex statistical model.
-
-## Modelling Limitations
-
-The modelling approach is affected by several limitations:
-
-- a relatively short annual time series
-- changes in HPC systems and accounting methods
-- incomplete historical requested-demand information
-- supply constraints affecting observed allocations
-- limited historical GPU observations
-- changes in research classifications
-- some values being derived or estimated rather than directly reported
-
-These limitations are considered when interpreting model performance and selecting the final forecasting approach.
-
-## Output
-
-The output of this step is a set of candidate forecasting models and benchmark results.
-
-These models are evaluated in the next step before the final forecasting approach is selected for scenario analysis to 2030.
+The resulting forecasts are conditional projections based on historical patterns and modelling assumptions. They should not be interpreted as precise estimates of future HPC requirements, particularly given uncertainty surrounding emerging GPU-intensive workloads, changes in research activity, and future infrastructure investment.
