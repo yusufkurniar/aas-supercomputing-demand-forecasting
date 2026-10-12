@@ -1,75 +1,78 @@
-# Model Selection
+# Model Evaluation
 
 ## Purpose
 
-The purpose of this step is to select the modelling approach that will be used to forecast Australian research HPC demand to 2030.
+This chapter evaluates the predictive performance and statistical suitability of the candidate forecasting models developed in Chapter 07.
 
-The selection is based on the evaluation results from the previous step. Forecast accuracy is considered alongside model stability, interpretability, forecast behaviour and suitability for scenario analysis.
+The evaluation considers three distinct measures of Australian national research supercomputing demand:
 
-## Selection Criteria
+1. Overall HPC demand, expressed in thousands of service units (kSU).
+2. CPU demand, expressed in millions of CPU core-hours.
+3. GPU demand, expressed in millions of GPU-hours.
 
-Candidate models are compared using several criteria:
+The objective is to identify forecasting approaches that provide a defensible basis for estimating researcher demand through 2030,
+while recognising limitations in historical data quality, comparability, and sample size.
 
-- out-of-sample forecast accuracy
-- residual diagnostics
-- stability of the model
-- plausibility of the resulting forecasts
-- interpretability
-- suitability for the available historical data
-- ability to support forecasting to 2030
-- suitability for scenario analysis
+Model selection will prioritise predictive accuracy, simplicity, interpretability, and robustness to influential observations, particularly the increase in reported demand in 2026.
 
-No model is selected based on a single accuracy measure.
+## Evaluation Framework
 
-## Benchmark and Structural Models
+### Candidate Models and Benchmarks
 
-The performance of the structural demand models is compared with the simpler benchmark models.
+The evaluation considers four forecasting approaches:
 
-Benchmark models provide a useful reference for determining whether additional structural variables improve the forecasting approach.
+1. Naïve benchmark: forecasts future demand using the most recent available observation.
+2. Drift benchmark: extrapolates the average annual change between the first and most recent observations in the training sample.
+3. Linear trend: estimates a constant annual absolute change in demand.
+4. Log-linear trend: estimates approximately constant proportional growth using a regression model fitted to log-transformed demand.
 
-Where a more complex model does not provide a meaningful improvement over a simpler model, the simpler model may be preferred.
+Naïve and drift forecasts provide simple reference points against which the regression-based models can be evaluated.
 
-## Structural Driver Selection
+The linear and log-linear specifications follow the modelling framework established in Chapter 07, including sensitivity analyses excluding the 2026 observation.
 
-For structural models, the final set of explanatory variables is selected based on both statistical performance and their relationship with HPC demand.
+More complex models will not be prioritised unless their additional complexity can be justified by the available data and demonstrated predictive performance.
 
-The selected variables should:
+### Time-Series Cross-Validation
 
-- have a clear relationship with HPC demand
-- have sufficient historical coverage
-- be reasonably consistent over time
-- avoid unnecessary model complexity
-- support assumptions or projections to 2030
-- provide a useful interpretation for policy analysis
+Forecast accuracy will be assessed using rolling-origin time-series cross-validation.
 
-Given the limited number of annual observations, the final model is kept parsimonious.
+At each evaluation origin, models will be estimated using only observations available up to that year. Forecasts will then be compared with subsequent historical observations.
 
-## CPU and GPU Modelling Approach
+This approach preserves chronological ordering and avoids using future observations to estimate models evaluated on earlier periods.
 
-CPU and GPU resources are considered separately when selecting the final forecasting approach.
+One-step-ahead evaluation will provide the primary comparison because the historical series are relatively short.
 
-Different models may be selected for CPU and GPU demand if the historical data and demand patterns support different approaches.
+Where sufficient observations are available, additional forecast horizons may be examined to assess the stability of longer-term extrapolations.
 
-Where the GPU time series is too limited for reliable statistical forecasting, a scenario-based approach may be used instead.
+The evaluation will distinguish between the longer overall HPC and CPU series covering 2014–2026 and the shorter GPU modelling series covering 2022 - 2026.
 
-## Expert Review
+For GPU demand, the small number of recent observations severely limits the number of meaningful cross-validation origins. Any accuracy comparisons will therefore be considered exploratory.
 
-The modelling results and assumptions may also be reviewed with relevant HPC experts.
+### Forecast Accuracy Measures
 
-Expert feedback is used to assess whether the model assumptions, historical interpretation and resulting forecasts are reasonable in the context of Australian national research computing.
+Forecast errors will be evaluated on the original scale of each demand measure using:
 
-Any changes resulting from expert feedback are documented.
+1. Root Mean Squared Error (RMSE), which gives greater weight to larger forecast errors.
+2. Mean Absolute Error (MAE), which measures the average absolute forecast error.
 
-## Final Model Selection
+Accuracy measures will be calculated separately for overall HPC, CPU, and GPU demand because their units are different.
 
-The final model or combination of models is selected after considering the quantitative evaluation results and the broader analytical requirements of the project.
+For log-linear models, predictions will be back-transformed to the original demand scale before calculating forecast errors. The evaluation will distinguish exponentiated log-scale predictions from bias-adjusted mean forecasts where relevant.
 
-The selected approach should provide a reasonable balance between forecasting performance, interpretability and robustness given the limitations of the historical data.
+Models will be compared using common evaluation origins within each demand measure to ensure a fair comparison.
 
-The rationale for the final selection will be documented together with the model specification and key assumptions.
+### Model Selection Principles
 
-## Output
+The preferred forecasting approach will not be selected solely on the basis of the lowest numerical error.
 
-The output of this step is the selected forecasting approach for projecting Australian research HPC demand to 2030.
+Model selection will also consider:
 
-The selected model is then used as the basis for scenario forecasting and capacity-gap analysis in the final step.
+- Stability across evaluation periods and forecast origins.
+- Sensitivity to the inclusion of the 2026 observation.
+- Residual behaviour and evidence of systematic model errors.
+- Interpretability and consistency with historical data provenance.
+- The risks of extrapolating growth patterns through 2030.
+
+Particular caution will be applied to GPU demand because its historical modelling period is short and includes estimates derived from different reporting and conversion methods.
+
+The evaluation results presented in this chapter will provide the statistical evidence for model selection in Chapter 09 and the development of demand scenarios in Chapter 10.

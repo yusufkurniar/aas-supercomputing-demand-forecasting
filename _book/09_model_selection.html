@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>10&nbsp; Model Selection – Forecasting Demand for National Research Supercomputing</title>
+<title>10&nbsp; Model Evaluation – Forecasting Demand for National Research Supercomputing</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -120,7 +120,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./09_model_selection.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Model Selection</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./09_model_selection.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Model Evaluation</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -202,7 +202,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./09_model_selection.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Model Selection</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Model Evaluation</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -228,13 +228,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#purpose" id="toc-purpose" class="nav-link active" data-scroll-target="#purpose"><span class="header-section-number">10.1</span> Purpose</a></li>
-  <li><a href="#selection-criteria" id="toc-selection-criteria" class="nav-link" data-scroll-target="#selection-criteria"><span class="header-section-number">10.2</span> Selection Criteria</a></li>
-  <li><a href="#benchmark-and-structural-models" id="toc-benchmark-and-structural-models" class="nav-link" data-scroll-target="#benchmark-and-structural-models"><span class="header-section-number">10.3</span> Benchmark and Structural Models</a></li>
-  <li><a href="#structural-driver-selection" id="toc-structural-driver-selection" class="nav-link" data-scroll-target="#structural-driver-selection"><span class="header-section-number">10.4</span> Structural Driver Selection</a></li>
-  <li><a href="#cpu-and-gpu-modelling-approach" id="toc-cpu-and-gpu-modelling-approach" class="nav-link" data-scroll-target="#cpu-and-gpu-modelling-approach"><span class="header-section-number">10.5</span> CPU and GPU Modelling Approach</a></li>
-  <li><a href="#expert-review" id="toc-expert-review" class="nav-link" data-scroll-target="#expert-review"><span class="header-section-number">10.6</span> Expert Review</a></li>
-  <li><a href="#final-model-selection" id="toc-final-model-selection" class="nav-link" data-scroll-target="#final-model-selection"><span class="header-section-number">10.7</span> Final Model Selection</a></li>
-  <li><a href="#output" id="toc-output" class="nav-link" data-scroll-target="#output"><span class="header-section-number">10.8</span> Output</a></li>
+  <li><a href="#evaluation-framework" id="toc-evaluation-framework" class="nav-link" data-scroll-target="#evaluation-framework"><span class="header-section-number">10.2</span> Evaluation Framework</a>
+  <ul class="collapse">
+  <li><a href="#candidate-models-and-benchmarks" id="toc-candidate-models-and-benchmarks" class="nav-link" data-scroll-target="#candidate-models-and-benchmarks"><span class="header-section-number">10.2.1</span> Candidate Models and Benchmarks</a></li>
+  <li><a href="#time-series-cross-validation" id="toc-time-series-cross-validation" class="nav-link" data-scroll-target="#time-series-cross-validation"><span class="header-section-number">10.2.2</span> Time-Series Cross-Validation</a></li>
+  <li><a href="#forecast-accuracy-measures" id="toc-forecast-accuracy-measures" class="nav-link" data-scroll-target="#forecast-accuracy-measures"><span class="header-section-number">10.2.3</span> Forecast Accuracy Measures</a></li>
+  <li><a href="#model-selection-principles" id="toc-model-selection-principles" class="nav-link" data-scroll-target="#model-selection-principles"><span class="header-section-number">10.2.4</span> Model Selection Principles</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -243,7 +243,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Model Selection</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Model Evaluation</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
 
@@ -262,70 +262,70 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="purpose" class="level2" data-number="10.1">
 <h2 data-number="10.1" class="anchored" data-anchor-id="purpose"><span class="header-section-number">10.1</span> Purpose</h2>
-<p>The purpose of this step is to select the modelling approach that will be used to forecast Australian research HPC demand to 2030.</p>
-<p>The selection is based on the evaluation results from the previous step. Forecast accuracy is considered alongside model stability, interpretability, forecast behaviour and suitability for scenario analysis.</p>
+<p>This chapter evaluates the predictive performance and statistical suitability of the candidate forecasting models developed in Chapter 07.</p>
+<p>The evaluation considers three distinct measures of Australian national research supercomputing demand:</p>
+<ol type="1">
+<li>Overall HPC demand, expressed in thousands of service units (kSU).</li>
+<li>CPU demand, expressed in millions of CPU core-hours.</li>
+<li>GPU demand, expressed in millions of GPU-hours.</li>
+</ol>
+<p>The objective is to identify forecasting approaches that provide a defensible basis for estimating researcher demand through 2030, while recognising limitations in historical data quality, comparability, and sample size.</p>
+<p>Model selection will prioritise predictive accuracy, simplicity, interpretability, and robustness to influential observations, particularly the increase in reported demand in 2026.</p>
 </section>
-<section id="selection-criteria" class="level2" data-number="10.2">
-<h2 data-number="10.2" class="anchored" data-anchor-id="selection-criteria"><span class="header-section-number">10.2</span> Selection Criteria</h2>
-<p>Candidate models are compared using several criteria:</p>
+<section id="evaluation-framework" class="level2" data-number="10.2">
+<h2 data-number="10.2" class="anchored" data-anchor-id="evaluation-framework"><span class="header-section-number">10.2</span> Evaluation Framework</h2>
+<section id="candidate-models-and-benchmarks" class="level3" data-number="10.2.1">
+<h3 data-number="10.2.1" class="anchored" data-anchor-id="candidate-models-and-benchmarks"><span class="header-section-number">10.2.1</span> Candidate Models and Benchmarks</h3>
+<p>The evaluation considers four forecasting approaches:</p>
+<ol type="1">
+<li>Naïve benchmark: forecasts future demand using the most recent available observation.</li>
+<li>Drift benchmark: extrapolates the average annual change between the first and most recent observations in the training sample.</li>
+<li>Linear trend: estimates a constant annual absolute change in demand.</li>
+<li>Log-linear trend: estimates approximately constant proportional growth using a regression model fitted to log-transformed demand.</li>
+</ol>
+<p>Naïve and drift forecasts provide simple reference points against which the regression-based models can be evaluated.</p>
+<p>The linear and log-linear specifications follow the modelling framework established in Chapter 07, including sensitivity analyses excluding the 2026 observation.</p>
+<p>More complex models will not be prioritised unless their additional complexity can be justified by the available data and demonstrated predictive performance.</p>
+</section>
+<section id="time-series-cross-validation" class="level3" data-number="10.2.2">
+<h3 data-number="10.2.2" class="anchored" data-anchor-id="time-series-cross-validation"><span class="header-section-number">10.2.2</span> Time-Series Cross-Validation</h3>
+<p>Forecast accuracy will be assessed using rolling-origin time-series cross-validation.</p>
+<p>At each evaluation origin, models will be estimated using only observations available up to that year. Forecasts will then be compared with subsequent historical observations.</p>
+<p>This approach preserves chronological ordering and avoids using future observations to estimate models evaluated on earlier periods.</p>
+<p>One-step-ahead evaluation will provide the primary comparison because the historical series are relatively short.</p>
+<p>Where sufficient observations are available, additional forecast horizons may be examined to assess the stability of longer-term extrapolations.</p>
+<p>The evaluation will distinguish between the longer overall HPC and CPU series covering 2014–2026 and the shorter GPU modelling series covering 2022 - 2026.</p>
+<p>For GPU demand, the small number of recent observations severely limits the number of meaningful cross-validation origins. Any accuracy comparisons will therefore be considered exploratory.</p>
+</section>
+<section id="forecast-accuracy-measures" class="level3" data-number="10.2.3">
+<h3 data-number="10.2.3" class="anchored" data-anchor-id="forecast-accuracy-measures"><span class="header-section-number">10.2.3</span> Forecast Accuracy Measures</h3>
+<p>Forecast errors will be evaluated on the original scale of each demand measure using:</p>
+<ol type="1">
+<li>Root Mean Squared Error (RMSE), which gives greater weight to larger forecast errors.</li>
+<li>Mean Absolute Error (MAE), which measures the average absolute forecast error.</li>
+</ol>
+<p>Accuracy measures will be calculated separately for overall HPC, CPU, and GPU demand because their units are different.</p>
+<p>For log-linear models, predictions will be back-transformed to the original demand scale before calculating forecast errors. The evaluation will distinguish exponentiated log-scale predictions from bias-adjusted mean forecasts where relevant.</p>
+<p>Models will be compared using common evaluation origins within each demand measure to ensure a fair comparison.</p>
+</section>
+<section id="model-selection-principles" class="level3" data-number="10.2.4">
+<h3 data-number="10.2.4" class="anchored" data-anchor-id="model-selection-principles"><span class="header-section-number">10.2.4</span> Model Selection Principles</h3>
+<p>The preferred forecasting approach will not be selected solely on the basis of the lowest numerical error.</p>
+<p>Model selection will also consider:</p>
 <ul>
-<li>out-of-sample forecast accuracy</li>
-<li>residual diagnostics</li>
-<li>stability of the model</li>
-<li>plausibility of the resulting forecasts</li>
-<li>interpretability</li>
-<li>suitability for the available historical data</li>
-<li>ability to support forecasting to 2030</li>
-<li>suitability for scenario analysis</li>
+<li>Stability across evaluation periods and forecast origins.</li>
+<li>Sensitivity to the inclusion of the 2026 observation.</li>
+<li>Residual behaviour and evidence of systematic model errors.</li>
+<li>Interpretability and consistency with historical data provenance.</li>
+<li>The risks of extrapolating growth patterns through 2030.</li>
 </ul>
-<p>No model is selected based on a single accuracy measure.</p>
-</section>
-<section id="benchmark-and-structural-models" class="level2" data-number="10.3">
-<h2 data-number="10.3" class="anchored" data-anchor-id="benchmark-and-structural-models"><span class="header-section-number">10.3</span> Benchmark and Structural Models</h2>
-<p>The performance of the structural demand models is compared with the simpler benchmark models.</p>
-<p>Benchmark models provide a useful reference for determining whether additional structural variables improve the forecasting approach.</p>
-<p>Where a more complex model does not provide a meaningful improvement over a simpler model, the simpler model may be preferred.</p>
-</section>
-<section id="structural-driver-selection" class="level2" data-number="10.4">
-<h2 data-number="10.4" class="anchored" data-anchor-id="structural-driver-selection"><span class="header-section-number">10.4</span> Structural Driver Selection</h2>
-<p>For structural models, the final set of explanatory variables is selected based on both statistical performance and their relationship with HPC demand.</p>
-<p>The selected variables should:</p>
-<ul>
-<li>have a clear relationship with HPC demand</li>
-<li>have sufficient historical coverage</li>
-<li>be reasonably consistent over time</li>
-<li>avoid unnecessary model complexity</li>
-<li>support assumptions or projections to 2030</li>
-<li>provide a useful interpretation for policy analysis</li>
-</ul>
-<p>Given the limited number of annual observations, the final model is kept parsimonious.</p>
-</section>
-<section id="cpu-and-gpu-modelling-approach" class="level2" data-number="10.5">
-<h2 data-number="10.5" class="anchored" data-anchor-id="cpu-and-gpu-modelling-approach"><span class="header-section-number">10.5</span> CPU and GPU Modelling Approach</h2>
-<p>CPU and GPU resources are considered separately when selecting the final forecasting approach.</p>
-<p>Different models may be selected for CPU and GPU demand if the historical data and demand patterns support different approaches.</p>
-<p>Where the GPU time series is too limited for reliable statistical forecasting, a scenario-based approach may be used instead.</p>
-</section>
-<section id="expert-review" class="level2" data-number="10.6">
-<h2 data-number="10.6" class="anchored" data-anchor-id="expert-review"><span class="header-section-number">10.6</span> Expert Review</h2>
-<p>The modelling results and assumptions may also be reviewed with relevant HPC experts.</p>
-<p>Expert feedback is used to assess whether the model assumptions, historical interpretation and resulting forecasts are reasonable in the context of Australian national research computing.</p>
-<p>Any changes resulting from expert feedback are documented.</p>
-</section>
-<section id="final-model-selection" class="level2" data-number="10.7">
-<h2 data-number="10.7" class="anchored" data-anchor-id="final-model-selection"><span class="header-section-number">10.7</span> Final Model Selection</h2>
-<p>The final model or combination of models is selected after considering the quantitative evaluation results and the broader analytical requirements of the project.</p>
-<p>The selected approach should provide a reasonable balance between forecasting performance, interpretability and robustness given the limitations of the historical data.</p>
-<p>The rationale for the final selection will be documented together with the model specification and key assumptions.</p>
-</section>
-<section id="output" class="level2" data-number="10.8">
-<h2 data-number="10.8" class="anchored" data-anchor-id="output"><span class="header-section-number">10.8</span> Output</h2>
-<p>The output of this step is the selected forecasting approach for projecting Australian research HPC demand to 2030.</p>
-<p>The selected model is then used as the basis for scenario forecasting and capacity-gap analysis in the final step.</p>
+<p>Particular caution will be applied to GPU demand because its historical modelling period is short and includes estimates derived from different reporting and conversion methods.</p>
+<p>The evaluation results presented in this chapter will provide the statistical evidence for model selection in Chapter 09 and the development of demand scenarios in Chapter 10.</p>
 
 
 <!-- -->
 
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -792,81 +792,84 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Model Selection</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Model Evaluation</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">## Purpose</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>The purpose of this step is to select the modelling approach that will be used to forecast Australian research HPC demand to 2030.</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>This chapter evaluates the predictive performance and statistical suitability of the candidate forecasting models developed in Chapter 07.</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>The selection is based on the evaluation results from the previous step. Forecast accuracy is considered alongside model stability, interpretability, forecast behaviour and suitability for scenario analysis.</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>The evaluation considers three distinct measures of Australian national research supercomputing demand:</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">## Selection Criteria</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>Candidate models are compared using several criteria:</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Overall HPC demand, expressed in thousands of service units (kSU).</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>CPU demand, expressed in millions of CPU core-hours.</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>GPU demand, expressed in millions of GPU-hours.</span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>out-of-sample forecast accuracy</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>residual diagnostics</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>stability of the model</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>plausibility of the resulting forecasts</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>interpretability</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>suitability for the available historical data</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>ability to support forecasting to 2030</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>suitability for scenario analysis</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>The objective is to identify forecasting approaches that provide a defensible basis for estimating researcher demand through 2030,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>while recognising limitations in historical data quality, comparability, and sample size.</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>Model selection will prioritise predictive accuracy, simplicity, interpretability, and robustness to influential observations, particularly the increase in reported demand in 2026.</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="fu">## Evaluation Framework</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="fu">### Candidate Models and Benchmarks</span></span>
 <span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>No model is selected based on a single accuracy measure.</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>The evaluation considers four forecasting approaches:</span>
 <span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="fu">## Benchmark and Structural Models</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>The performance of the structural demand models is compared with the simpler benchmark models.</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>Benchmark models provide a useful reference for determining whether additional structural variables improve the forecasting approach.</span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>Where a more complex model does not provide a meaningful improvement over a simpler model, the simpler model may be preferred.</span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="fu">## Structural Driver Selection</span></span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>For structural models, the final set of explanatory variables is selected based on both statistical performance and their relationship with HPC demand.</span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>The selected variables should:</span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>have a clear relationship with HPC demand</span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>have sufficient historical coverage</span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>be reasonably consistent over time</span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>avoid unnecessary model complexity</span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>support assumptions or projections to 2030</span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>provide a useful interpretation for policy analysis</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Naïve benchmark: forecasts future demand using the most recent available observation.</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Drift benchmark: extrapolates the average annual change between the first and most recent observations in the training sample.</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>Linear trend: estimates a constant annual absolute change in demand.</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>Log-linear trend: estimates approximately constant proportional growth using a regression model fitted to log-transformed demand.</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>Naïve and drift forecasts provide simple reference points against which the regression-based models can be evaluated.</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>The linear and log-linear specifications follow the modelling framework established in Chapter 07, including sensitivity analyses excluding the 2026 observation.</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>More complex models will not be prioritised unless their additional complexity can be justified by the available data and demonstrated predictive performance.</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="fu">### Time-Series Cross-Validation</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>Forecast accuracy will be assessed using rolling-origin time-series cross-validation.</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>At each evaluation origin, models will be estimated using only observations available up to that year. Forecasts will then be compared with subsequent historical observations.</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>This approach preserves chronological ordering and avoids using future observations to estimate models evaluated on earlier periods.</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>One-step-ahead evaluation will provide the primary comparison because the historical series are relatively short.</span>
 <span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>Given the limited number of annual observations, the final model is kept parsimonious.</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>Where sufficient observations are available, additional forecast horizons may be examined to assess the stability of longer-term extrapolations.</span>
 <span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a><span class="fu">## CPU and GPU Modelling Approach</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>The evaluation will distinguish between the longer overall HPC and CPU series covering 2014–2026 and the shorter GPU modelling series covering 2022 - 2026.</span>
 <span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>CPU and GPU resources are considered separately when selecting the final forecasting approach.</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>For GPU demand, the small number of recent observations severely limits the number of meaningful cross-validation origins. Any accuracy comparisons will therefore be considered exploratory.</span>
 <span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>Different models may be selected for CPU and GPU demand if the historical data and demand patterns support different approaches.</span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a><span class="fu">### Forecast Accuracy Measures</span></span>
 <span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>Where the GPU time series is too limited for reliable statistical forecasting, a scenario-based approach may be used instead.</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>Forecast errors will be evaluated on the original scale of each demand measure using:</span>
 <span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a><span class="fu">## Expert Review</span></span>
-<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>The modelling results and assumptions may also be reviewed with relevant HPC experts.</span>
-<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>Expert feedback is used to assess whether the model assumptions, historical interpretation and resulting forecasts are reasonable in the context of Australian national research computing.</span>
-<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>Any changes resulting from expert feedback are documented.</span>
-<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a><span class="fu">## Final Model Selection</span></span>
-<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>The final model or combination of models is selected after considering the quantitative evaluation results and the broader analytical requirements of the project.</span>
-<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>The selected approach should provide a reasonable balance between forecasting performance, interpretability and robustness given the limitations of the historical data.</span>
-<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>The rationale for the final selection will be documented together with the model specification and key assumptions.</span>
-<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a><span class="fu">## Output</span></span>
-<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>The output of this step is the selected forecasting approach for projecting Australian research HPC demand to 2030.</span>
-<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a>The selected model is then used as the basis for scenario forecasting and capacity-gap analysis in the final step.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Root Mean Squared Error (RMSE), which gives greater weight to larger forecast errors.</span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Mean Absolute Error (MAE), which measures the average absolute forecast error.</span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>Accuracy measures will be calculated separately for overall HPC, CPU, and GPU demand because their units are different.</span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>For log-linear models, predictions will be back-transformed to the original demand scale before calculating forecast errors. The evaluation will distinguish exponentiated log-scale predictions from bias-adjusted mean forecasts where relevant.</span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>Models will be compared using common evaluation origins within each demand measure to ensure a fair comparison.</span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a><span class="fu">### Model Selection Principles</span></span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>The preferred forecasting approach will not be selected solely on the basis of the lowest numerical error.</span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>Model selection will also consider:</span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Stability across evaluation periods and forecast origins.</span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Sensitivity to the inclusion of the 2026 observation.</span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Residual behaviour and evidence of systematic model errors.</span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Interpretability and consistency with historical data provenance.</span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>The risks of extrapolating growth patterns through 2030.</span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a>Particular caution will be applied to GPU demand because its historical modelling period is short and includes estimates derived from different reporting and conversion methods.</span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a>The evaluation results presented in this chapter will provide the statistical evidence for model selection in Chapter 09 and the development of demand scenarios in Chapter 10.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 
