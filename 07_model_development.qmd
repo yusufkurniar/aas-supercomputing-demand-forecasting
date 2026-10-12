@@ -371,5 +371,51 @@ The sensitivity analysis does not establish whether the 2026 increase represents
 
 Both linear and log-linear CPU models are therefore retained for subsequent forecast evaluation in Chapter 08.
 
+## GPU Demand Forecasting Models
 
+GPU demand is analysed separately from overall HPC and CPU demand because GPU-hours represent a distinct resource measure with
+different conversion assumptions and reporting characteristics.
+
+The harmonised GPU demand series covers 2014 - 2026. However, the historical observations are not equally suitable for forecasting.
+
+For 2014 - 2021, GPU demand values were constructed using hypothetical conversion scenarios rather than directly reported GPU demand. These estimates are useful for exploring historical resource requirements but should not be treated as independently observed GPU demand.
+
+For 2022 - 2026, the dataset contains a combination of reported and derived GPU demand estimates. Consequently, the later observations provide a more relevant basis for preliminary GPU forecasting, although they remain subject to reporting and conversion uncertainty.
+
+Given these limitations, the initial GPU modelling analysis will focus on 2022–2026. Any fitted trends will be interpreted as exploratory scenarios rather than reliable estimates of long-term GPU demand growth.
+
+### GPU Data Provenance and Modelling Period
+
+```{r gpu-modelling-data}
+# Retain GPU demand and its methodological metadata
+gpu_model_data <- annual_converted |>
+  dplyr::transmute(
+    year = as.integer(year),
+    gpu_million_hours = as.numeric(demand_gpu_hours) / 1e6,
+    gpu_demand_method = gpu_demand_method,
+    gpu_demand_confidence = gpu_demand_confidence
+  ) |>
+  dplyr::arrange(year)
+
+# Define the later historical period for exploratory modelling
+gpu_recent_data <- gpu_model_data |>
+  dplyr::filter(year >= 2022, year <= 2026) |>
+  dplyr::mutate(time = year - 2022)
+
+# Validate recent GPU demand values
+stopifnot(
+  identical(gpu_recent_data$year, 2022:2026),
+  all(is.finite(gpu_recent_data$gpu_million_hours)),
+  all(gpu_recent_data$gpu_million_hours > 0)
+)
+
+# Review the values and provenance used for modelling
+print(gpu_recent_data, n = Inf)
+```
+
+The 2022–2026 modelling period contains only five annual observations. This substantially limits the reliability of estimated growth trends and makes complex time-series models inappropriate.
+
+The provenance information is retained to distinguish reported GPU demand from estimates derived using allocation shares or conversion assumptions.
+
+The resulting models will be used to explore plausible growth trajectories and assess sensitivity to assumptions, rather than to claim a statistically established long-term GPU demand trend.
 
