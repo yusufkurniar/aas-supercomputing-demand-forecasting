@@ -273,6 +273,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#gpu-demand-projections" id="toc-gpu-demand-projections" class="nav-link" data-scroll-target="#gpu-demand-projections"><span class="header-section-number">8.9.5</span> GPU Demand Projections</a></li>
   <li><a href="#gpu-projection-findings" id="toc-gpu-projection-findings" class="nav-link" data-scroll-target="#gpu-projection-findings"><span class="header-section-number">8.9.6</span> GPU Projection Findings</a></li>
   </ul></li>
+  <li><a href="#modelling-summary-and-limitations" id="toc-modelling-summary-and-limitations" class="nav-link" data-scroll-target="#modelling-summary-and-limitations"><span class="header-section-number">8.10</span> Modelling Summary and Limitations</a>
+  <ul class="collapse">
+  <li><a href="#summary-of-candidate-demand-projections" id="toc-summary-of-candidate-demand-projections" class="nav-link" data-scroll-target="#summary-of-candidate-demand-projections"><span class="header-section-number">8.10.1</span> Summary of Candidate Demand Projections</a></li>
+  <li><a href="#key-modelling-findings" id="toc-key-modelling-findings" class="nav-link" data-scroll-target="#key-modelling-findings"><span class="header-section-number">8.10.2</span> Key Modelling Findings</a></li>
+  <li><a href="#limitations-and-implications-for-forecast-evaluation" id="toc-limitations-and-implications-for-forecast-evaluation" class="nav-link" data-scroll-target="#limitations-and-implications-for-forecast-evaluation"><span class="header-section-number">8.10.3</span> Limitations and Implications for Forecast Evaluation</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -1411,6 +1417,69 @@ F-statistic: 0.6324 on 1 and 3 DF,  p-value: 0.4846</code></pre>
 <p>Consequently, the projected trajectories should be interpreted as exploratory illustrations of possible GPU demand growth, rather than reliable forecasts or formal uncertainty bounds.</p>
 <p>The historical 2014–2021 GPU conversion scenarios remain separate from these future growth projections, as they represent uncertainty in conversion assumptions rather than independently observed historical GPU demand.</p>
 <p>Further model evaluation and explicit scenario development will be required before selecting a preferred GPU demand projection for infrastructure planning.</p>
+</section>
+</section>
+<section id="modelling-summary-and-limitations" class="level2" data-number="8.10">
+<h2 data-number="8.10" class="anchored" data-anchor-id="modelling-summary-and-limitations"><span class="header-section-number">8.10</span> Modelling Summary and Limitations</h2>
+<section id="summary-of-candidate-demand-projections" class="level3" data-number="8.10.1">
+<h3 data-number="8.10.1" class="anchored" data-anchor-id="summary-of-candidate-demand-projections"><span class="header-section-number">8.10.1</span> Summary of Candidate Demand Projections</h3>
+<p>This chapter developed linear and log-linear forecasting models for three measures of Australian national research supercomputing demand: overall HPC demand in kSU, CPU demand in core-hours, and GPU demand in GPU-hours.</p>
+<p>The models were fitted using harmonised historical estimates, with alternative specifications excluding 2026 to assess the influence of the latest observation.</p>
+<p>The resulting candidate projections for 2030 are summarised below.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 21%">
+<col style="width: 28%">
+<col style="width: 28%">
+<col style="width: 21%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Demand measure</th>
+<th style="text-align: right;">Linear models</th>
+<th style="text-align: right;">Log-linear models</th>
+<th>Unit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Overall HPC</td>
+<td style="text-align: right;">2.29–2.50 million</td>
+<td style="text-align: right;">6.48–6.96 million</td>
+<td>kSU</td>
+</tr>
+<tr class="even">
+<td>CPU</td>
+<td style="text-align: right;">1,263.85–1,369.90 million</td>
+<td style="text-align: right;">2,479.16–2,502.07 million</td>
+<td>CPU core-hours</td>
+</tr>
+<tr class="odd">
+<td>GPU</td>
+<td style="text-align: right;">2.252–3.371 million</td>
+<td style="text-align: right;">2.406–3.681 million</td>
+<td>GPU-hours</td>
+</tr>
+</tbody>
+</table>
+<p>These ranges reflect the alternative full-period and 2026-excluded model specifications. They are not statistical prediction intervals or validated low, baseline, and high demand scenarios.</p>
+</section>
+<section id="key-modelling-findings" class="level3" data-number="8.10.2">
+<h3 data-number="8.10.2" class="anchored" data-anchor-id="key-modelling-findings"><span class="header-section-number">8.10.2</span> Key Modelling Findings</h3>
+<p>The overall HPC and CPU analyses identify substantial historical demand growth. However, projected demand through 2030 differs considerably between linear and log-linear specifications, particularly because compounded proportional growth produces increasingly divergent trajectories.</p>
+<p>For overall HPC and CPU demand, excluding 2026 increases or decreases projected demand depending on the model specification. The estimated log-linear growth coefficients are comparatively stable, although changes in fitted intercepts can still affect future projections.</p>
+<p>GPU demand exhibits substantially greater uncertainty. The exploratory models use only five annual estimates from 2022 - 2026, combining reported Setonix-based demand with allocation-share-derived estimates.</p>
+<p>Both GPU trend specifications are sensitive to the inclusion of 2026, and neither provides strong statistical evidence of a stable historical growth pattern. Consequently, GPU projections should be interpreted as exploratory trajectories rather than reliable long-term forecasts.</p>
+</section>
+<section id="limitations-and-implications-for-forecast-evaluation" class="level3" data-number="8.10.3">
+<h3 data-number="8.10.3" class="anchored" data-anchor-id="limitations-and-implications-for-forecast-evaluation"><span class="header-section-number">8.10.3</span> Limitations and Implications for Forecast Evaluation</h3>
+<p>Several limitations affect the interpretation of the candidate projections.</p>
+<p>First, the historical demand series combines directly reported, derived, and proxy-based estimates, with differences in reporting coverage and conversion assumptions.</p>
+<p>Second, the overall HPC and CPU models are fitted to only 13 annual observations, limiting the reliability of complex forecasting approaches and long-horizon extrapolation.</p>
+<p>Third, the historical GPU conversion scenarios for 2014 - 2021 represent hypothetical estimates rather than independently observed demand. They are retained as evidence of conversion uncertainty but are not included in the recent-period GPU trend models.</p>
+<p>Fourth, the substantial increase in reported demand in 2026 has not been established as a sustained structural change. Its influence is therefore examined through alternative model specifications rather than assumed to persist.</p>
+<p>Finally, the candidate models have not yet been selected using out-of-sample predictive accuracy. In-sample fit statistics alone are insufficient for identifying the most defensible forecasting approach.</p>
+<p>Chapter 08 will evaluate the candidate models using time-series cross-validation, consistent forecast error measures, and residual diagnostics where appropriate. The evaluation will inform model selection and the development of defensible demand projections for national HPC infrastructure planning.</p>
 
 
 <!-- -->
@@ -2732,7 +2801,53 @@ F-statistic: 0.6324 on 1 and 3 DF,  p-value: 0.4846</code></pre>
 <span id="cb25-848"><a href="#cb25-848" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb25-849"><a href="#cb25-849" aria-hidden="true" tabindex="-1"></a>The historical 2014–2021 GPU conversion scenarios remain separate from these future growth projections, as they represent uncertainty in conversion assumptions rather than independently observed historical GPU demand.</span>
 <span id="cb25-850"><a href="#cb25-850" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-851"><a href="#cb25-851" aria-hidden="true" tabindex="-1"></a>Further model evaluation and explicit scenario development will be required before selecting a preferred GPU demand projection for infrastructure planning.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<span id="cb25-851"><a href="#cb25-851" aria-hidden="true" tabindex="-1"></a>Further model evaluation and explicit scenario development will be required before selecting a preferred GPU demand projection for infrastructure planning.</span>
+<span id="cb25-852"><a href="#cb25-852" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-853"><a href="#cb25-853" aria-hidden="true" tabindex="-1"></a><span class="fu">## Modelling Summary and Limitations</span></span>
+<span id="cb25-854"><a href="#cb25-854" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-855"><a href="#cb25-855" aria-hidden="true" tabindex="-1"></a><span class="fu">### Summary of Candidate Demand Projections</span></span>
+<span id="cb25-856"><a href="#cb25-856" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-857"><a href="#cb25-857" aria-hidden="true" tabindex="-1"></a>This chapter developed linear and log-linear forecasting models for three measures of Australian national research supercomputing</span>
+<span id="cb25-858"><a href="#cb25-858" aria-hidden="true" tabindex="-1"></a>demand: overall HPC demand in kSU, CPU demand in core-hours, and GPU demand in GPU-hours.</span>
+<span id="cb25-859"><a href="#cb25-859" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-860"><a href="#cb25-860" aria-hidden="true" tabindex="-1"></a>The models were fitted using harmonised historical estimates, with alternative specifications excluding 2026 to assess the influence of the latest observation.</span>
+<span id="cb25-861"><a href="#cb25-861" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-862"><a href="#cb25-862" aria-hidden="true" tabindex="-1"></a>The resulting candidate projections for 2030 are summarised below.</span>
+<span id="cb25-863"><a href="#cb25-863" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-864"><a href="#cb25-864" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Demand measure <span class="pp">|</span> Linear models <span class="pp">|</span> Log-linear models <span class="pp">|</span> Unit <span class="pp">|</span></span>
+<span id="cb25-865"><a href="#cb25-865" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---:|---:|---|</span></span>
+<span id="cb25-866"><a href="#cb25-866" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Overall HPC <span class="pp">|</span> 2.29–2.50 million <span class="pp">|</span> 6.48–6.96 million <span class="pp">|</span> kSU <span class="pp">|</span></span>
+<span id="cb25-867"><a href="#cb25-867" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> CPU <span class="pp">|</span> 1,263.85–1,369.90 million <span class="pp">|</span> 2,479.16–2,502.07 million <span class="pp">|</span> CPU core-hours <span class="pp">|</span></span>
+<span id="cb25-868"><a href="#cb25-868" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> GPU <span class="pp">|</span> 2.252–3.371 million <span class="pp">|</span> 2.406–3.681 million <span class="pp">|</span> GPU-hours <span class="pp">|</span></span>
+<span id="cb25-869"><a href="#cb25-869" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-870"><a href="#cb25-870" aria-hidden="true" tabindex="-1"></a>These ranges reflect the alternative full-period and 2026-excluded model specifications. They are not statistical prediction intervals or validated low, baseline, and high demand scenarios.</span>
+<span id="cb25-871"><a href="#cb25-871" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-872"><a href="#cb25-872" aria-hidden="true" tabindex="-1"></a><span class="fu">### Key Modelling Findings</span></span>
+<span id="cb25-873"><a href="#cb25-873" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-874"><a href="#cb25-874" aria-hidden="true" tabindex="-1"></a>The overall HPC and CPU analyses identify substantial historical demand growth. However, projected demand through 2030 differs considerably between linear and log-linear specifications, particularly because compounded proportional growth produces increasingly divergent trajectories.</span>
+<span id="cb25-875"><a href="#cb25-875" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-876"><a href="#cb25-876" aria-hidden="true" tabindex="-1"></a>For overall HPC and CPU demand, excluding 2026 increases or decreases projected demand depending on the model specification. The estimated log-linear growth coefficients are comparatively stable, although changes in fitted intercepts can still affect future projections.</span>
+<span id="cb25-877"><a href="#cb25-877" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-878"><a href="#cb25-878" aria-hidden="true" tabindex="-1"></a>GPU demand exhibits substantially greater uncertainty. The exploratory models use only five annual estimates from 2022 - 2026, combining reported Setonix-based demand with allocation-share-derived estimates.</span>
+<span id="cb25-879"><a href="#cb25-879" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-880"><a href="#cb25-880" aria-hidden="true" tabindex="-1"></a>Both GPU trend specifications are sensitive to the inclusion of 2026, and neither provides strong statistical evidence of a stable historical growth pattern. Consequently, GPU projections should be interpreted as exploratory trajectories rather than reliable long-term forecasts.</span>
+<span id="cb25-881"><a href="#cb25-881" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-882"><a href="#cb25-882" aria-hidden="true" tabindex="-1"></a><span class="fu">### Limitations and Implications for Forecast Evaluation</span></span>
+<span id="cb25-883"><a href="#cb25-883" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-884"><a href="#cb25-884" aria-hidden="true" tabindex="-1"></a>Several limitations affect the interpretation of the candidate projections.</span>
+<span id="cb25-885"><a href="#cb25-885" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-886"><a href="#cb25-886" aria-hidden="true" tabindex="-1"></a>First, the historical demand series combines directly reported, derived, and proxy-based estimates, with differences in reporting coverage and conversion assumptions.</span>
+<span id="cb25-887"><a href="#cb25-887" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-888"><a href="#cb25-888" aria-hidden="true" tabindex="-1"></a>Second, the overall HPC and CPU models are fitted to only 13 annual observations, limiting the reliability of complex forecasting approaches and long-horizon extrapolation.</span>
+<span id="cb25-889"><a href="#cb25-889" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-890"><a href="#cb25-890" aria-hidden="true" tabindex="-1"></a>Third, the historical GPU conversion scenarios for 2014 - 2021 represent hypothetical estimates rather than independently observed demand. They are retained as evidence of conversion uncertainty but are not included in the recent-period GPU trend models.</span>
+<span id="cb25-891"><a href="#cb25-891" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-892"><a href="#cb25-892" aria-hidden="true" tabindex="-1"></a>Fourth, the substantial increase in reported demand in 2026 has not been established as a sustained structural change. Its influence is therefore examined through alternative model specifications rather than assumed to persist.</span>
+<span id="cb25-893"><a href="#cb25-893" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-894"><a href="#cb25-894" aria-hidden="true" tabindex="-1"></a>Finally, the candidate models have not yet been selected using out-of-sample predictive accuracy. In-sample fit statistics alone are insufficient for identifying the most defensible forecasting approach.</span>
+<span id="cb25-895"><a href="#cb25-895" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-896"><a href="#cb25-896" aria-hidden="true" tabindex="-1"></a>Chapter 08 will evaluate the candidate models using time-series cross-validation, consistent forecast error measures, and residual diagnostics where appropriate. The evaluation will inform model selection and the development of defensible demand projections for</span>
+<span id="cb25-897"><a href="#cb25-897" aria-hidden="true" tabindex="-1"></a>national HPC infrastructure planning.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 

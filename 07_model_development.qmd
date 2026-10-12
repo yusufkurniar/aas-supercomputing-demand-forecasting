@@ -850,3 +850,48 @@ The historical 2014–2021 GPU conversion scenarios remain separate from these f
 
 Further model evaluation and explicit scenario development will be required before selecting a preferred GPU demand projection for infrastructure planning.
 
+## Modelling Summary and Limitations
+
+### Summary of Candidate Demand Projections
+
+This chapter developed linear and log-linear forecasting models for three measures of Australian national research supercomputing
+demand: overall HPC demand in kSU, CPU demand in core-hours, and GPU demand in GPU-hours.
+
+The models were fitted using harmonised historical estimates, with alternative specifications excluding 2026 to assess the influence of the latest observation.
+
+The resulting candidate projections for 2030 are summarised below.
+
+| Demand measure | Linear models | Log-linear models | Unit |
+|---|---:|---:|---|
+| Overall HPC | 2.29–2.50 million | 6.48–6.96 million | kSU |
+| CPU | 1,263.85–1,369.90 million | 2,479.16–2,502.07 million | CPU core-hours |
+| GPU | 2.252–3.371 million | 2.406–3.681 million | GPU-hours |
+
+These ranges reflect the alternative full-period and 2026-excluded model specifications. They are not statistical prediction intervals or validated low, baseline, and high demand scenarios.
+
+### Key Modelling Findings
+
+The overall HPC and CPU analyses identify substantial historical demand growth. However, projected demand through 2030 differs considerably between linear and log-linear specifications, particularly because compounded proportional growth produces increasingly divergent trajectories.
+
+For overall HPC and CPU demand, excluding 2026 increases or decreases projected demand depending on the model specification. The estimated log-linear growth coefficients are comparatively stable, although changes in fitted intercepts can still affect future projections.
+
+GPU demand exhibits substantially greater uncertainty. The exploratory models use only five annual estimates from 2022 - 2026, combining reported Setonix-based demand with allocation-share-derived estimates.
+
+Both GPU trend specifications are sensitive to the inclusion of 2026, and neither provides strong statistical evidence of a stable historical growth pattern. Consequently, GPU projections should be interpreted as exploratory trajectories rather than reliable long-term forecasts.
+
+### Limitations and Implications for Forecast Evaluation
+
+Several limitations affect the interpretation of the candidate projections.
+
+First, the historical demand series combines directly reported, derived, and proxy-based estimates, with differences in reporting coverage and conversion assumptions.
+
+Second, the overall HPC and CPU models are fitted to only 13 annual observations, limiting the reliability of complex forecasting approaches and long-horizon extrapolation.
+
+Third, the historical GPU conversion scenarios for 2014 - 2021 represent hypothetical estimates rather than independently observed demand. They are retained as evidence of conversion uncertainty but are not included in the recent-period GPU trend models.
+
+Fourth, the substantial increase in reported demand in 2026 has not been established as a sustained structural change. Its influence is therefore examined through alternative model specifications rather than assumed to persist.
+
+Finally, the candidate models have not yet been selected using out-of-sample predictive accuracy. In-sample fit statistics alone are insufficient for identifying the most defensible forecasting approach.
+
+Chapter 08 will evaluate the candidate models using time-series cross-validation, consistent forecast error measures, and residual diagnostics where appropriate. The evaluation will inform model selection and the development of defensible demand projections for
+national HPC infrastructure planning.
