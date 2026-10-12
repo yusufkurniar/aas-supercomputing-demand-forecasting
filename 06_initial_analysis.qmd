@@ -148,6 +148,11 @@ The series also exhibits periods of substantial change, particularly around 2018
 
 These findings suggest a persistent difference between requested and allocated computational resources. Further analysis of CPU and GPU resources is required to understand whether similar patterns are present across distinct computational resource types.
 
+#### Interpretation of the 2026 Demand Increase
+
+The marked increase in reported demand in 2026 requires particular caution. It is not yet established whether this represents a sustained increase in underlying researcher demand, a temporary change, or an effect of reporting scope and conversion assumptions. Following expert statistical feedback, subsequent forecasting will examine the sensitivity of trend estimates to the inclusion of
+2026 and compare simple linear and log-linear models.
+
 ## CPU and GPU Resources
 
 CPU and GPU resources are examined separately to identify historical patterns in computational demand and allocation across the 2014–2026 analytical period.

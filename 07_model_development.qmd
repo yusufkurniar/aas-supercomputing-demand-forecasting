@@ -1,12 +1,21 @@
-# Model Development and Benchmarking
+# Forecasting Models
 
 ## Purpose
 
-The purpose of this step is to develop forecasting models for Australian research HPC demand and compare their performance.
+This chapter aims to develop transparent, reproducible, and statistically defensible forecasting models to estimate Australian national research supercomputing demand through 2030.
 
-The modelling approach includes simple benchmark models as well as models that incorporate potential structural drivers of HPC demand.
+Building on the harmonised historical dataset and initial findings presented in Chapters 03 - 06, the analysis evaluates alternative approaches for modelling annual researcher demand, expressed in CPU-equivalent core-hours.
 
-Because the historical dataset is relatively short and includes changes in HPC systems, reporting methods and resource types, the models are kept relatively simple and interpretable.
+The modelling framework has four objectives:
+
+1. Establish a suitable historical demand series for forecasting, accounting for data quality, reporting differences, and conversion assumptions.
+2. Develop and compare candidate forecasting models, prioritising simple and interpretable approaches such as linear and log-linear trends.
+3. Examine the sensitivity of projected demand to the substantial increase observed in 2026, distinguishing potential structural changes from temporary fluctuations.
+4. Generate alternative demand projections for 2027 - 2030 to support national HPC infrastructure planning and policy discussions.
+
+Following expert statistical feedback, particular emphasis is placed on model simplicity, transparent assumptions, and the limitations of extrapolating trends from a relatively short and heterogeneous historical dataset.
+
+The forecasts are intended to provide evidence-informed planning scenarios rather than precise predictions of future researcher demand.
 
 ## Forecast Target
 
