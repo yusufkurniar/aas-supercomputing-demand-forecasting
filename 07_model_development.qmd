@@ -419,3 +419,52 @@ The provenance information is retained to distinguish reported GPU demand from e
 
 The resulting models will be used to explore plausible growth trajectories and assess sensitivity to assumptions, rather than to claim a statistically established long-term GPU demand trend.
 
+### GPU Linear and Log-Linear Trends
+
+Two exploratory trend models are fitted to GPU demand estimates for 2022–2026. The linear specification assumes a constant
+annual absolute change in GPU-hours, while the log-linear specification assumes approximately constant proportional growth.
+
+Given the short modelling period and differences in data provenance, these models are intended to illustrate possible
+growth trajectories rather than establish reliable long-term GPU demand forecasts.
+
+```{r gpu-trend-models}
+# Linear trend: GPU demand in millions of GPU-hours
+gpu_linear <- lm(
+  gpu_million_hours ~ time,
+  data = gpu_recent_data
+)
+
+# Log-linear trend: natural logarithm of GPU demand
+gpu_loglinear <- lm(
+  log(gpu_million_hours) ~ time,
+  data = gpu_recent_data
+)
+
+# Inspect fitted coefficients
+summary(gpu_linear)
+summary(gpu_loglinear)
+```
+
+The linear model estimates the annual absolute change in GPU demand, measured in millions of GPU-hours.
+
+The log-linear model estimates the proportional annual growth trend, which can be expressed as a compounded percentage rate using the exponential transformation of its time coefficient.
+
+The two specifications are not directly comparable using their in-sample R-squared values because they use different response scales.
+
+With only five annual estimates, model coefficients are highly sensitive to individual observations, conversion assumptions, and changes in reporting coverage. Any projections derived from these models will therefore be presented as exploratory scenarios with substantial uncertainty.
+
+### GPU Trend Findings
+
+The linear trend model estimates an annual increase in GPU demand of approximately 0.172 million GPU-hours over 2022–2026.
+
+The log-linear model estimates an implied compounded annual growth rate of approximately 8.5%. However, neither trend coefficient is statistically significant at the 5% level.
+
+Both models exhibit relatively low in-sample explanatory power, with R-squared values of approximately 0.193 and 0.174, respectively. These values are calculated on different response scales and should not be directly compared to select a model.
+
+The historical GPU demand estimates fluctuate substantially across the five-year period. Furthermore, the series combines reported Setonix-based demand with estimates derived from GPU allocation shares and working conversion factors.
+
+Consequently, the fitted trends provide limited evidence of a stable historical GPU demand growth pattern. The absence of a statistically significant trend should not be interpreted as evidence that future GPU demand will remain unchanged.
+
+Given the small sample size and differences in data provenance, both models are retained only as exploratory forecasting scenarios. Further sensitivity analysis and explicit treatment of conversion uncertainty are necessary before drawing conclusions about GPU demand through 2030.
+
+
