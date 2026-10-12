@@ -148,75 +148,236 @@ The series also exhibits periods of substantial change, particularly around 2018
 
 These findings suggest a persistent difference between requested and allocated computational resources. Further analysis of CPU and GPU resources is required to understand whether similar patterns are present across distinct computational resource types.
 
-## Field of Research
+## CPU and GPU Resources
 
-The distribution of HPC resources across Fields of Research is examined to identify which research areas account for the largest shares of national compute allocation and how this composition has changed over time.
+CPU and GPU resources are examined separately to identify historical patterns in computational demand and allocation across the 2014–2026 analytical period.
 
-Where FoR data represent allocation rather than requested compute, this distinction is retained when interpreting the results.
+The analysis uses the converted CPU core-hours and GPU-hours produced in Chapter 05. These measures provide resource-specific perspectives on HPC demand and allocation, although their interpretation remains subject to system-level accounting conventions and historical conversion assumptions.
 
-## Institutional Distribution
+Historical CPU estimates are influenced by the assumed resource composition and conversion factors applied to earlier observations. GPU estimates for 2014 - 2021 are based on low, baseline, and high scenarios rather than directly observed resource-level demand and allocation. GPU values for 2022 - 2026 use reported system-level allocations and a combination of reported and estimated demand.
 
-Where institution-level data are available, allocations are examined across universities and research organisations.
+CPU core-hours and GPU-hours are therefore analysed independently and are not added together. The objective is to examine trends within each resource category while retaining the distinction between reported observations and modelled estimates.
 
-This provides an indication of how national HPC resources are distributed across institutions and whether the distribution has changed over time.
+### Validate the converted CPU and GPU series
 
-## Potential Demand Drivers
+```{r}
+# Inspect converted CPU and GPU resources
+annual_converted |>
+  select(
+    year,
+    demand_cpu_core_hours,
+    allocation_cpu_core_hours,
+    demand_gpu_hours,
+    allocation_gpu_hours
+  ) |>
+  arrange(year) |>
+  print(n = Inf)
 
-Potential structural drivers are explored alongside the HPC data.
+# Check completeness and non-negative values
+resource_columns <- c(
+  "demand_cpu_core_hours",
+  "allocation_cpu_core_hours",
+  "demand_gpu_hours",
+  "allocation_gpu_hours"
+)
 
-These may include:
+stopifnot(
+  nrow(annual_converted) == 13,
+  all(sort(annual_converted$year) == 2014:2026),
+  all(!is.na(annual_converted[resource_columns])),
+  all(as.matrix(annual_converted[resource_columns]) >= 0)
+)
+```
 
-- research funding
-- research workforce
-- research activity
-- grant funding in compute-intensive fields
-- changes in compute intensity
-- changes in HPC infrastructure
+### Create CPU and GPU trend charts
 
-The purpose of this analysis is to identify variables that may be useful for the modelling stage rather than assuming that every available variable should be included.
+```{r}
+# CPU demand and allocation trends
+cpu_plot_data <- annual_converted |>
+  select(
+    year,
+    Demand = demand_cpu_core_hours,
+    Allocation = allocation_cpu_core_hours
+  ) |>
+  tidyr::pivot_longer(
+    cols = c(Demand, Allocation),
+    names_to = "measure",
+    values_to = "cpu_core_hours"
+  )
 
-## Data Manipulation for Modelling
+ggplot(
+  cpu_plot_data,
+  aes(
+    x = year,
+    y = cpu_core_hours,
+    colour = measure
+  )
+) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 2) +
+  scale_x_continuous(breaks = 2014:2026) +
+  scale_y_continuous(
+    labels = scales::label_number(
+      scale = 1e-6,
+      accuracy = 1
+    )
+  ) +
+  labs(
+    title = "Historical CPU Demand and Allocation",
+    subtitle = "2014–2026; historical values include estimates",
+    x = "Year",
+    y = "CPU core-hours (millions)",
+    colour = NULL
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "bottom"
+  )
+```
 
-Additional variables required for analysis and modelling are created where appropriate.
+The CPU demand and allocation trends represent converted baseline estimates. Historical CPU values are subject to uncertainty arising from system-specific accounting conventions, assumed CPU/GPU resource composition, and the use of capacity proxies in selected years. Unlike the historical GPU analysis, separate low and high CPU core-hour scenarios have not been established. Therefore, the CPU chart presents the baseline series without uncertainty bands, and historical fluctuations should be interpreted cautiously.
 
-These may include:
+```{r}
+# Prepare GPU demand and allocation data
+gpu_plot_data <- annual_converted |>
+  dplyr::select(
+    year,
+    Demand = demand_gpu_hours,
+    Allocation = allocation_gpu_hours
+  ) |>
+  tidyr::pivot_longer(
+    cols = c(Demand, Allocation),
+    names_to = "measure",
+    values_to = "gpu_hours"
+  )
 
-- annual growth rates
-- request-allocation gaps
-- fulfilment rates
-- lagged funding variables
-- FoR shares
-- indicators for major system changes
-- CPU and GPU measures
+# Use the existing historical low/high GPU scenarios
+gpu_uncertainty_data <- historical_gpu_scenarios |>
+  dplyr::select(
+    year,
+    demand_gpu_hours_low,
+    demand_gpu_hours_high,
+    allocation_gpu_hours_low,
+    allocation_gpu_hours_high
+  ) |>
+  tidyr::pivot_longer(
+    cols = -year,
+    names_to = c("measure", ".value"),
+    names_pattern = "(demand|allocation)_(gpu_hours_low|gpu_hours_high)"
+  ) |>
+  dplyr::mutate(
+    measure = dplyr::recode(
+      measure,
+      demand = "Demand",
+      allocation = "Allocation"
+    )
+  )
 
-Any derived variables and assumptions are documented so that they can be reproduced.
+# Plot baseline trends with historical uncertainty bands
+ggplot() +
+  geom_ribbon(
+    data = gpu_uncertainty_data,
+    aes(
+      x = year,
+      ymin = gpu_hours_low,
+      ymax = gpu_hours_high,
+      fill = measure,
+      group = measure
+    ),
+    alpha = 0.18,
+    colour = NA
+  ) +
+  geom_line(
+    data = gpu_plot_data,
+    aes(
+      x = year,
+      y = gpu_hours,
+      colour = measure
+    ),
+    linewidth = 1
+  ) +
+  geom_point(
+    data = gpu_plot_data,
+    aes(
+      x = year,
+      y = gpu_hours,
+      colour = measure
+    ),
+    size = 2
+  ) +
+  scale_x_continuous(
+    breaks = 2014:2026
+  ) +
+  scale_y_continuous(
+    labels = scales::label_number(
+      scale = 1e-6,
+      accuracy = 0.1
+    )
+  ) +
+  labs(
+    title = "Historical GPU Demand and Allocation",
+    subtitle = "2014–2021: low–high scenario bands; 2022–2026: mixed reported/estimated",
+    x = "Year",
+    y = "GPU-hours (millions)",
+    colour = NULL,
+    fill = NULL,
+    caption = paste(
+      "Shaded bands represent assumed historical GPU scenarios,",
+      "not statistical confidence intervals."
+    )
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(
+      angle = 45,
+      hjust = 1
+    ),
+    legend.position = "bottom"
+  )
+```
 
-## Exploratory Analysis
+The shaded bands represent the range between the low and high historical GPU estimation scenarios for 2014 - 2021, while the solid lines represent the baseline demand and allocation estimates. These bands illustrate sensitivity to assumed historical GPU resource shares rather than statistical confidence intervals. No equivalent uncertainty bands are shown for 2022 - 2026, although those observations remain subject to conversion assumptions and, for some years, estimated GPU demand.
 
-Visual and statistical analysis is used to examine trends, relationships and potential structural changes in the data.
+```{r}
+historical_gpu_scenarios |>
+  select(
+    year,
+    allocation_gpu_hours_low,
+    allocation_gpu_hours_baseline,
+    allocation_gpu_hours_high,
+    demand_gpu_hours_low,
+    demand_gpu_hours_baseline,
+    demand_gpu_hours_high
+  ) |>
+  arrange(year) |>
+  print(n = Inf)
+```
 
-This includes time-series plots, comparisons between requested and allocated compute, FoR composition, and relationships between HPC demand and potential structural drivers.
+### Initial Findings
 
-Particular attention is given to major changes in national HPC infrastructure because increases in observed allocation may reflect changes in available capacity rather than equivalent increases in underlying demand.
+The resource-specific analysis indicates an overall increase in estimated CPU and GPU demand between 2014 and 2026, although the two series exhibit different patterns and levels of uncertainty.
 
-## Data Readiness for Modelling
+**CPU Resources**
 
-Before moving to model development, the prepared data are assessed for:
+Estimated CPU demand increases from approximately 130.0 million CPU core-hours in 2014 to 1,235.0 million CPU core-hours in 2026. Over the same period, CPU allocation increases from approximately 82.7 million to 518.6 million CPU core-hours.
 
-- sufficient historical coverage
-- consistency of units
-- CPU and GPU separation
-- availability of requested and allocated values
-- direct versus derived or proxy observations
-- changes in HPC systems
-- changes in FoR classifications
-- missing values
-- potential structural breaks
+CPU demand remains above allocation throughout the analytical period. Substantial fluctuations are visible around 2018–2022, followed by a sustained increase in estimated demand from 2022 to 2026. In contrast, CPU allocation remains relatively stable between 2023 and 2026, at approximately 491–528 million CPU core-hours.
 
-Variables that are not sufficiently comparable or supported by the available data are either excluded from modelling or treated separately.
+The widening difference between CPU demand and allocation in recent years suggests increasing pressure on allocated CPU resources. However, the magnitude of historical changes should be interpreted cautiously because earlier observations include assumed conversion factors, capacity proxies, and estimated CPU/GPU resource shares.
 
-## Output
+**GPU Resources**
 
-The output of this step is a modelling-ready dataset together with an initial understanding of historical HPC demand, allocation, research composition and potential demand drivers.
+Estimated GPU demand increases from approximately 0.04 million GPU-hours in 2014 to 3.00 million GPU-hours in 2026. GPU allocation increases from approximately 0.02 million to 1.25 million GPU-hours over the same period.
 
-These findings provide the basis for model development and benchmarking in the next step.
+The GPU series shows a pronounced increase between 2021 and 2022, followed by fluctuations in estimated demand and comparatively stable allocations during 2022–2026. By 2026, estimated GPU demand is approximately 2.4 times the allocated GPU-hours.
+
+However, the historical GPU series requires particular caution. Values for 2014–2021 are based on assumed GPU resource shares and a provisional conversion factor rather than directly observed GPU demand and allocation. The low, baseline, and high scenarios demonstrate that historical GPU estimates are sensitive to these assumptions.
+
+Furthermore, GPU allocation from 2022 onward is derived from reported system-level service units using a working conversion factor, while GPU demand includes both directly reported and estimated values. The apparent increase around 2022 may therefore partly reflect changes in reporting coverage, infrastructure, and conversion methodology rather than an equivalent increase in underlying GPU demand.
+
+**Implications for Forecasting**
+
+The CPU and GPU series suggest different historical demand patterns and should be considered separately during forecasting model development. The observed differences between demand and allocation also reinforce the importance of distinguishing researcher demand from computational resources awarded under capacity constraints.
+
+Historical uncertainty, system transitions, and the limited availability of directly observed GPU demand should be considered when selecting modelling periods and evaluating forecast reliability. Scenario analysis will be particularly important for assessing the sensitivity of GPU forecasts to historical conversion assumptions.
