@@ -235,3 +235,141 @@ Nevertheless, the relatively small change in the log-linear coefficient does not
 
 The analysis therefore supports retaining both model specifications for further evaluation. It does not establish whether the 2026 increase represents a temporary fluctuation or a sustained change in researcher demand.
 
+## CPU Demand Forecasting Models
+
+CPU demand is modelled separately from overall HPC demand to examine the historical growth of CPU-related computing requirements.
+
+The analysis uses the harmonised annual CPU demand estimates from 2014–2026, expressed in millions of CPU core-hours for readability. These values include directly reported and derived estimates, and therefore remain subject to the conversion assumptions documented in Chapter 05.
+
+As with overall HPC demand, two simple trend specifications are initially considered: linear and log-linear regression.
+
+### CPU Linear and Log-Linear Trends
+
+```{r cpu-trend-models}
+# Prepare CPU demand in millions of core-hours
+cpu_model_data <- forecast_data |>
+  dplyr::transmute(
+    year,
+    time = year - 2014,
+    cpu_million_hours = demand_cpu_core_hours / 1e6
+  )
+
+# Linear trend
+cpu_linear <- lm(
+  cpu_million_hours ~ time,
+  data = cpu_model_data
+)
+
+# Log-linear trend
+cpu_loglinear <- lm(
+  log(cpu_million_hours) ~ time,
+  data = cpu_model_data
+)
+
+# Inspect fitted coefficients
+summary(cpu_linear)
+summary(cpu_loglinear)
+```
+
+The linear model estimates the annual absolute change in CPU demand, measured in millions of core-hours. The log-linear model estimates the proportional growth trend.
+
+Both specifications are retained for subsequent evaluation. Their in-sample R-squared values are not directly comparable because the models use different response scales.
+
+The analysis does not assume that all historical CPU demand estimates are equally reliable. Differences in reporting methods, resource allocation shares, and conversion assumptions remain relevant when interpreting the fitted trends.
+
+### CPU Trend Findings
+
+The linear trend model estimates an average annual increase in CPU demand of approximately 81.01 million core-hours over 2014 - 2026.
+
+The log-linear model estimates a compounded annual growth rate of approximately 18.5%, indicating substantial proportional growth in the harmonised historical CPU demand series.
+
+Both models identify an increasing trend, although the estimated growth patterns differ. The linear model assumes constant absolute growth, whereas the log-linear model assumes approximately constant proportional growth.
+
+The models' in-sample R-squared values cannot be directly compared because their dependent variables are expressed on different scales. Forecast accuracy will therefore be evaluated using consistent original-scale error measures in Chapter 08.
+
+The findings should also be interpreted cautiously because historical CPU demand includes derived estimates based on allocation shares and conversion assumptions. Consequently, the fitted trends may reflect changes in measurement and reporting practices as well as changes in underlying researcher demand.
+
+Neither specification is selected as the preferred CPU forecasting model at this stage.
+
+### CPU Demand Sensitivity Analysis
+
+The influence of the 2026 observation is assessed by comparing CPU demand trends fitted over 2014–2026 with equivalent models fitted
+over 2014 - 2025.
+
+This sensitivity analysis examines whether the latest observation materially changes the estimated absolute and proportional growth
+rates. Excluding 2026 is a modelling sensitivity specification, not a correction to the historical dataset.
+
+```{r cpu-trend-sensitivity}
+# Prepare historical CPU demand excluding 2026
+cpu_pre2026_data <- cpu_model_data |>
+  dplyr::filter(year <= 2025)
+
+# Refit linear and log-linear models
+cpu_linear_pre2026 <- lm(
+  cpu_million_hours ~ time,
+  data = cpu_pre2026_data
+)
+
+cpu_loglinear_pre2026 <- lm(
+  log(cpu_million_hours) ~ time,
+  data = cpu_pre2026_data
+)
+
+# Compare estimated trend coefficients
+cpu_trend_sensitivity <- data.frame(
+  model = c("Linear trend", "Log-linear trend"),
+  full_2014_2026 = c(
+    coef(cpu_linear)[["time"]],
+    coef(cpu_loglinear)[["time"]]
+  ),
+  excluding_2026 = c(
+    coef(cpu_linear_pre2026)[["time"]],
+    coef(cpu_loglinear_pre2026)[["time"]]
+  )
+)
+
+# Calculate percentage change in trend coefficients
+cpu_trend_sensitivity$percentage_change <- with(
+  cpu_trend_sensitivity,
+  100 * (full_2014_2026 - excluding_2026) /
+    abs(excluding_2026)
+)
+
+knitr::kable(
+  cpu_trend_sensitivity,
+  digits = 3,
+  col.names = c(
+    "Model",
+    "Trend with 2026",
+    "Trend without 2026",
+    "Change (%)"
+  ),
+  caption = "Sensitivity of CPU demand trends to the inclusion of 2026"
+)
+```
+
+The linear trend coefficient represents the estimated annual absolute change in CPU demand, measured in millions of core-hours.
+
+The log-linear coefficient represents annual change in log demand and can be converted into an implied compounded growth rate.
+
+Differences between the fitted coefficients indicate the sensitivity of estimated historical CPU demand trends to the latest observation. They do not establish whether changes in 2026 are temporary or structural, nor do they determine which model has superior
+
+### CPU Sensitivity Findings
+
+Including the 2026 observation increases the estimated linear CPU demand trend from approximately 72.41 to 81.01 million core-hours
+per year, representing an increase of 11.9% in the annual absolute growth coefficient.
+
+In contrast, the log-linear trend coefficient changes only slightly, decreasing by approximately 0.4% when 2026 is included.
+
+These results suggest that the 2026 observation has a greater relative influence on the estimated absolute CPU demand growth
+rate than on the proportional growth trend.
+
+However, the limited change in the log-linear coefficient does not necessarily imply that projected CPU demand is insensitive
+to 2026, as changes in the fitted intercept may also affect future forecasts.
+
+The sensitivity analysis does not establish whether the 2026 increase represents a sustained change in underlying researcher demand or reflects temporary conditions, reporting differences, or conversion assumptions.
+
+Both linear and log-linear CPU models are therefore retained for subsequent forecast evaluation in Chapter 08.
+
+
+

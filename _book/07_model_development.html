@@ -245,6 +245,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#trend-sensitivity-comparison" id="toc-trend-sensitivity-comparison" class="nav-link" data-scroll-target="#trend-sensitivity-comparison"><span class="header-section-number">8.5.1</span> Trend Sensitivity Comparison</a></li>
   <li><a href="#sensitivity-analysis-findings" id="toc-sensitivity-analysis-findings" class="nav-link" data-scroll-target="#sensitivity-analysis-findings"><span class="header-section-number">8.5.2</span> Sensitivity Analysis Findings</a></li>
   </ul></li>
+  <li><a href="#cpu-demand-forecasting-models" id="toc-cpu-demand-forecasting-models" class="nav-link" data-scroll-target="#cpu-demand-forecasting-models"><span class="header-section-number">8.6</span> CPU Demand Forecasting Models</a>
+  <ul class="collapse">
+  <li><a href="#cpu-linear-and-log-linear-trends" id="toc-cpu-linear-and-log-linear-trends" class="nav-link" data-scroll-target="#cpu-linear-and-log-linear-trends"><span class="header-section-number">8.6.1</span> CPU Linear and Log-Linear Trends</a></li>
+  <li><a href="#cpu-trend-findings" id="toc-cpu-trend-findings" class="nav-link" data-scroll-target="#cpu-trend-findings"><span class="header-section-number">8.6.2</span> CPU Trend Findings</a></li>
+  <li><a href="#cpu-demand-sensitivity-analysis" id="toc-cpu-demand-sensitivity-analysis" class="nav-link" data-scroll-target="#cpu-demand-sensitivity-analysis"><span class="header-section-number">8.6.3</span> CPU Demand Sensitivity Analysis</a></li>
+  <li><a href="#cpu-sensitivity-findings" id="toc-cpu-sensitivity-findings" class="nav-link" data-scroll-target="#cpu-sensitivity-findings"><span class="header-section-number">8.6.4</span> CPU Sensitivity Findings</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -544,6 +551,193 @@ F-statistic: 158.7 on 1 and 11 DF,  p-value: 7.054e-08</code></pre>
 <p>These results indicate that the latest observation has a greater relative influence on the estimated absolute growth rate than on the proportional growth trend.</p>
 <p>Nevertheless, the relatively small change in the log-linear coefficient does not necessarily imply that its future forecasts are insensitive to 2026, since changes in the fitted intercept may also influence projected demand levels.</p>
 <p>The analysis therefore supports retaining both model specifications for further evaluation. It does not establish whether the 2026 increase represents a temporary fluctuation or a sustained change in researcher demand.</p>
+</section>
+</section>
+<section id="cpu-demand-forecasting-models" class="level2" data-number="8.6">
+<h2 data-number="8.6" class="anchored" data-anchor-id="cpu-demand-forecasting-models"><span class="header-section-number">8.6</span> CPU Demand Forecasting Models</h2>
+<p>CPU demand is modelled separately from overall HPC demand to examine the historical growth of CPU-related computing requirements.</p>
+<p>The analysis uses the harmonised annual CPU demand estimates from 2014–2026, expressed in millions of CPU core-hours for readability. These values include directly reported and derived estimates, and therefore remain subject to the conversion assumptions documented in Chapter 05.</p>
+<p>As with overall HPC demand, two simple trend specifications are initially considered: linear and log-linear regression.</p>
+<section id="cpu-linear-and-log-linear-trends" class="level3" data-number="8.6.1">
+<h3 data-number="8.6.1" class="anchored" data-anchor-id="cpu-linear-and-log-linear-trends"><span class="header-section-number">8.6.1</span> CPU Linear and Log-Linear Trends</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare CPU demand in millions of core-hours</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>cpu_model_data <span class="ot">&lt;-</span> forecast_data <span class="sc">|&gt;</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">transmute</span>(</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    year,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">time =</span> year <span class="sc">-</span> <span class="dv">2014</span>,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">cpu_million_hours =</span> demand_cpu_core_hours <span class="sc">/</span> <span class="fl">1e6</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Linear trend</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>cpu_linear <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  cpu_million_hours <span class="sc">~</span> time,</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> cpu_model_data</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Log-linear trend</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>cpu_loglinear <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">log</span>(cpu_million_hours) <span class="sc">~</span> time,</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> cpu_model_data</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect fitted coefficients</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cpu_linear)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = cpu_million_hours ~ time, data = cpu_model_data)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-264.98  -27.39  -14.20   95.63  189.16 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)    73.81      73.88   0.999    0.339    
+time           81.01      10.45   7.753 8.79e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 141 on 11 degrees of freedom
+Multiple R-squared:  0.8453,    Adjusted R-squared:  0.8312 
+F-statistic: 60.11 on 1 and 11 DF,  p-value: 8.792e-06</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cpu_loglinear)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = log(cpu_million_hours) ~ time, data = cpu_model_data)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.42810 -0.19869 -0.03323  0.03456  0.52239 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  5.09400    0.15779  32.284 3.00e-12 ***
+time         0.17010    0.02231   7.623 1.03e-05 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.301 on 11 degrees of freedom
+Multiple R-squared:  0.8408,    Adjusted R-squared:  0.8264 
+F-statistic: 58.11 on 1 and 11 DF,  p-value: 1.03e-05</code></pre>
+</div>
+</div>
+<p>The linear model estimates the annual absolute change in CPU demand, measured in millions of core-hours. The log-linear model estimates the proportional growth trend.</p>
+<p>Both specifications are retained for subsequent evaluation. Their in-sample R-squared values are not directly comparable because the models use different response scales.</p>
+<p>The analysis does not assume that all historical CPU demand estimates are equally reliable. Differences in reporting methods, resource allocation shares, and conversion assumptions remain relevant when interpreting the fitted trends.</p>
+</section>
+<section id="cpu-trend-findings" class="level3" data-number="8.6.2">
+<h3 data-number="8.6.2" class="anchored" data-anchor-id="cpu-trend-findings"><span class="header-section-number">8.6.2</span> CPU Trend Findings</h3>
+<p>The linear trend model estimates an average annual increase in CPU demand of approximately 81.01 million core-hours over 2014 - 2026.</p>
+<p>The log-linear model estimates a compounded annual growth rate of approximately 18.5%, indicating substantial proportional growth in the harmonised historical CPU demand series.</p>
+<p>Both models identify an increasing trend, although the estimated growth patterns differ. The linear model assumes constant absolute growth, whereas the log-linear model assumes approximately constant proportional growth.</p>
+<p>The models’ in-sample R-squared values cannot be directly compared because their dependent variables are expressed on different scales. Forecast accuracy will therefore be evaluated using consistent original-scale error measures in Chapter 08.</p>
+<p>The findings should also be interpreted cautiously because historical CPU demand includes derived estimates based on allocation shares and conversion assumptions. Consequently, the fitted trends may reflect changes in measurement and reporting practices as well as changes in underlying researcher demand.</p>
+<p>Neither specification is selected as the preferred CPU forecasting model at this stage.</p>
+</section>
+<section id="cpu-demand-sensitivity-analysis" class="level3" data-number="8.6.3">
+<h3 data-number="8.6.3" class="anchored" data-anchor-id="cpu-demand-sensitivity-analysis"><span class="header-section-number">8.6.3</span> CPU Demand Sensitivity Analysis</h3>
+<p>The influence of the 2026 observation is assessed by comparing CPU demand trends fitted over 2014–2026 with equivalent models fitted over 2014 - 2025.</p>
+<p>This sensitivity analysis examines whether the latest observation materially changes the estimated absolute and proportional growth rates. Excluding 2026 is a modelling sensitivity specification, not a correction to the historical dataset.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare historical CPU demand excluding 2026</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>cpu_pre2026_data <span class="ot">&lt;-</span> cpu_model_data <span class="sc">|&gt;</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(year <span class="sc">&lt;=</span> <span class="dv">2025</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Refit linear and log-linear models</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>cpu_linear_pre2026 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  cpu_million_hours <span class="sc">~</span> time,</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> cpu_pre2026_data</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>cpu_loglinear_pre2026 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">log</span>(cpu_million_hours) <span class="sc">~</span> time,</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> cpu_pre2026_data</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare estimated trend coefficients</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>cpu_trend_sensitivity <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">model =</span> <span class="fu">c</span>(<span class="st">"Linear trend"</span>, <span class="st">"Log-linear trend"</span>),</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">full_2014_2026 =</span> <span class="fu">c</span>(</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coef</span>(cpu_linear)[[<span class="st">"time"</span>]],</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coef</span>(cpu_loglinear)[[<span class="st">"time"</span>]]</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">excluding_2026 =</span> <span class="fu">c</span>(</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coef</span>(cpu_linear_pre2026)[[<span class="st">"time"</span>]],</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coef</span>(cpu_loglinear_pre2026)[[<span class="st">"time"</span>]]</span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate percentage change in trend coefficients</span></span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>cpu_trend_sensitivity<span class="sc">$</span>percentage_change <span class="ot">&lt;-</span> <span class="fu">with</span>(</span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>  cpu_trend_sensitivity,</span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>  <span class="dv">100</span> <span class="sc">*</span> (full_2014_2026 <span class="sc">-</span> excluding_2026) <span class="sc">/</span></span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">abs</span>(excluding_2026)</span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a>  cpu_trend_sensitivity,</span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a>  <span class="at">digits =</span> <span class="dv">3</span>,</span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a>  <span class="at">col.names =</span> <span class="fu">c</span>(</span>
+<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Model"</span>,</span>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Trend with 2026"</span>,</span>
+<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Trend without 2026"</span>,</span>
+<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Change (%)"</span></span>
+<span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">"Sensitivity of CPU demand trends to the inclusion of 2026"</span></span>
+<span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Sensitivity of CPU demand trends to the inclusion of 2026</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Model</th>
+<th style="text-align: right;">Trend with 2026</th>
+<th style="text-align: right;">Trend without 2026</th>
+<th style="text-align: right;">Change (%)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Linear trend</td>
+<td style="text-align: right;">81.005</td>
+<td style="text-align: right;">72.407</td>
+<td style="text-align: right;">11.875</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Log-linear trend</td>
+<td style="text-align: right;">0.170</td>
+<td style="text-align: right;">0.171</td>
+<td style="text-align: right;">-0.436</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The linear trend coefficient represents the estimated annual absolute change in CPU demand, measured in millions of core-hours.</p>
+<p>The log-linear coefficient represents annual change in log demand and can be converted into an implied compounded growth rate.</p>
+<p>Differences between the fitted coefficients indicate the sensitivity of estimated historical CPU demand trends to the latest observation. They do not establish whether changes in 2026 are temporary or structural, nor do they determine which model has superior</p>
+</section>
+<section id="cpu-sensitivity-findings" class="level3" data-number="8.6.4">
+<h3 data-number="8.6.4" class="anchored" data-anchor-id="cpu-sensitivity-findings"><span class="header-section-number">8.6.4</span> CPU Sensitivity Findings</h3>
+<p>Including the 2026 observation increases the estimated linear CPU demand trend from approximately 72.41 to 81.01 million core-hours per year, representing an increase of 11.9% in the annual absolute growth coefficient.</p>
+<p>In contrast, the log-linear trend coefficient changes only slightly, decreasing by approximately 0.4% when 2026 is included.</p>
+<p>These results suggest that the 2026 observation has a greater relative influence on the estimated absolute CPU demand growth rate than on the proportional growth trend.</p>
+<p>However, the limited change in the log-linear coefficient does not necessarily imply that projected CPU demand is insensitive to 2026, as changes in the fitted intercept may also affect future forecasts.</p>
+<p>The sensitivity analysis does not establish whether the 2026 increase represents a sustained change in underlying researcher demand or reflects temporary conditions, reporting differences, or conversion assumptions.</p>
+<p>Both linear and log-linear CPU models are therefore retained for subsequent forecast evaluation in Chapter 08.</p>
 
 
 <!-- -->
@@ -1015,242 +1209,380 @@ F-statistic: 158.7 on 1 and 11 DF,  p-value: 7.054e-08</code></pre>
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Forecasting Models</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">## Purpose</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>This chapter aims to develop transparent, reproducible, and statistically defensible forecasting models to estimate Australian national research supercomputing demand through 2030.</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>Building on the harmonised historical dataset and initial findings presented in Chapters 03 - 06, the analysis evaluates alternative approaches for modelling annual researcher demand, expressed in CPU-equivalent core-hours.</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>The modelling framework has four objectives:</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Establish a suitable historical demand series for forecasting, accounting for data quality, reporting differences, and conversion assumptions.</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Develop and compare candidate forecasting models, prioritising simple and interpretable approaches such as linear and log-linear trends.</span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>Examine the sensitivity of projected demand to the substantial increase observed in 2026, distinguishing potential structural changes from temporary fluctuations.</span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>Generate alternative demand projections for 2027 - 2030 to support national HPC infrastructure planning and policy discussions.</span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>Following expert statistical feedback, particular emphasis is placed on model simplicity, transparent assumptions, and the limitations of extrapolating trends from a relatively short and heterogeneous historical dataset.</span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>The forecasts are intended to provide evidence-informed planning scenarios rather than precise predictions of future researcher demand.</span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="fu">## Forecast Target and Data Suitability</span></span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="fu">### Forecast Target</span></span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>The forecasting analysis considers three related but distinct measures of Australian national research supercomputing demand:</span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Overall HPC demand, expressed in thousands of service units (kSU).</span>
-<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>CPU demand, expressed in CPU core-hours.</span>
-<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>GPU demand, expressed in GPU-hours.</span>
-<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>These measures represent harmonised estimates of computing resources requested by researchers, rather than allocated resources or available computing capacity. CPU and GPU demand are modelled separately because their resource units and conversion assumptions are not directly interchangeable.</span>
-<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>The overall kSU series provides a reference for aggregate demand, while the CPU and GPU series support resource-specific forecasts</span>
-<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>relevant to future infrastructure planning.</span>
-<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a><span class="fu">### Historical Data Suitability</span></span>
-<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>The historical demand series provides a consistent analytical unit for forecasting, but it should not be interpreted as a fully homogeneous set of directly observed demand measurements.</span>
-<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>Depending on the year and reporting source, historical estimates include directly reported demand, derived estimates, and proxy-based measures. Differences in facility coverage, reporting definitions, and CPU/GPU conversion assumptions introduce uncertainty into comparisons across years.</span>
-<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>The relatively small number of annual observations also limits the complexity of forecasting models that can be estimated reliably. Consequently, simple trend-based models will be prioritised, while more flexible time-series approaches will be used as benchmarks.</span>
-<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>The substantial increase in reported demand in 2026 presents an additional uncertainty. Available historical observations do not establish whether this increase represents a sustained shift in researcher demand, a temporary fluctuation, or a difference in measurement or reporting scope.</span>
-<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>Accordingly, the modelling analysis will consider both the complete historical series (2014–2026) and a sensitivity specification excluding 2026 (2014–2025). The latter is not treated as a more accurate historical dataset, but as a means of assessing how strongly the latest observation influences projected demand.</span>
-<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a><span class="fu">### Forecasting Horizon</span></span>
-<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>The forecasting horizon covers four annual periods:</span>
-<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>2027</span>
-<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>2028</span>
-<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>2029</span>
-<span id="cb8-54"><a href="#cb8-54" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>2030</span>
-<span id="cb8-55"><a href="#cb8-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-56"><a href="#cb8-56" aria-hidden="true" tabindex="-1"></a>Forecasts will be reported in the original units of each target: kSU for overall HPC demand, CPU core-hours for CPU demand, and GPU-hours for GPU demand.</span>
-<span id="cb8-57"><a href="#cb8-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-58"><a href="#cb8-58" aria-hidden="true" tabindex="-1"></a>The GPU analysis will explicitly distinguish historical scenario-based estimates from later reported or derived values, rather than treating all historical GPU observations as equally reliable.</span>
-<span id="cb8-59"><a href="#cb8-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-60"><a href="#cb8-60" aria-hidden="true" tabindex="-1"></a>The resulting forecasts are conditional projections based on historical patterns and modelling assumptions. They should not be interpreted as precise estimates of future HPC requirements, particularly given uncertainty surrounding emerging GPU-intensive workloads, changes in research activity, and future infrastructure investment.</span>
-<span id="cb8-61"><a href="#cb8-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-62"><a href="#cb8-62" aria-hidden="true" tabindex="-1"></a><span class="fu">## Data Preparation and Validation</span></span>
-<span id="cb8-63"><a href="#cb8-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-64"><a href="#cb8-64" aria-hidden="true" tabindex="-1"></a>The forecasting analysis uses the converted annual demand and allocation dataset produced in Chapter 05. The dataset is loaded directly from its saved RDS file to ensure that this chapter can be executed independently of the preceding analysis.</span>
-<span id="cb8-65"><a href="#cb8-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-66"><a href="#cb8-66" aria-hidden="true" tabindex="-1"></a>The preparation process retains the historical demand observations without modifying their original values. Validation checks confirm</span>
-<span id="cb8-67"><a href="#cb8-67" aria-hidden="true" tabindex="-1"></a>the expected annual coverage, uniqueness of observations, and availability of positive demand values.</span>
-<span id="cb8-68"><a href="#cb8-68" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-69"><a href="#cb8-69" aria-hidden="true" tabindex="-1"></a><span class="in">```{r prepare-forecast-data}</span></span>
-<span id="cb8-70"><a href="#cb8-70" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the converted annual dataset</span></span>
-<span id="cb8-71"><a href="#cb8-71" aria-hidden="true" tabindex="-1"></a>annual_converted <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(</span>
-<span id="cb8-72"><a href="#cb8-72" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assets/data/data converted/annual_demand_allocation_converted.rds"</span></span>
-<span id="cb8-73"><a href="#cb8-73" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb8-74"><a href="#cb8-74" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-75"><a href="#cb8-75" aria-hidden="true" tabindex="-1"></a><span class="co"># Retain the three forecasting targets</span></span>
-<span id="cb8-76"><a href="#cb8-76" aria-hidden="true" tabindex="-1"></a>forecast_data <span class="ot">&lt;-</span> annual_converted <span class="sc">|&gt;</span></span>
-<span id="cb8-77"><a href="#cb8-77" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">transmute</span>(</span>
-<span id="cb8-78"><a href="#cb8-78" aria-hidden="true" tabindex="-1"></a>    <span class="at">year =</span> <span class="fu">as.integer</span>(year),</span>
-<span id="cb8-79"><a href="#cb8-79" aria-hidden="true" tabindex="-1"></a>    <span class="at">demand_ksu =</span> <span class="fu">as.numeric</span>(demand_ksu),</span>
-<span id="cb8-80"><a href="#cb8-80" aria-hidden="true" tabindex="-1"></a>    <span class="at">demand_cpu_core_hours =</span> <span class="fu">as.numeric</span>(demand_cpu_core_hours),</span>
-<span id="cb8-81"><a href="#cb8-81" aria-hidden="true" tabindex="-1"></a>    <span class="at">demand_gpu_hours =</span> <span class="fu">as.numeric</span>(demand_gpu_hours)</span>
-<span id="cb8-82"><a href="#cb8-82" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb8-83"><a href="#cb8-83" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">arrange</span>(year)</span>
-<span id="cb8-84"><a href="#cb8-84" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-85"><a href="#cb8-85" aria-hidden="true" tabindex="-1"></a><span class="co"># Validate annual coverage and values</span></span>
-<span id="cb8-86"><a href="#cb8-86" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(</span>
-<span id="cb8-87"><a href="#cb8-87" aria-hidden="true" tabindex="-1"></a>  <span class="fu">identical</span>(forecast_data<span class="sc">$</span>year, <span class="dv">2014</span><span class="sc">:</span><span class="dv">2026</span>),</span>
-<span id="cb8-88"><a href="#cb8-88" aria-hidden="true" tabindex="-1"></a>  <span class="sc">!</span><span class="fu">anyDuplicated</span>(forecast_data<span class="sc">$</span>year),</span>
-<span id="cb8-89"><a href="#cb8-89" aria-hidden="true" tabindex="-1"></a>  <span class="fu">all</span>(<span class="fu">is.finite</span>(<span class="fu">as.matrix</span>(forecast_data[, <span class="sc">-</span><span class="dv">1</span>]))),</span>
-<span id="cb8-90"><a href="#cb8-90" aria-hidden="true" tabindex="-1"></a>  <span class="fu">all</span>(<span class="fu">as.matrix</span>(forecast_data[, <span class="sc">-</span><span class="dv">1</span>]) <span class="sc">&gt;=</span> <span class="dv">0</span>),</span>
-<span id="cb8-91"><a href="#cb8-91" aria-hidden="true" tabindex="-1"></a>  <span class="fu">all</span>(forecast_data<span class="sc">$</span>demand_ksu <span class="sc">&gt;</span> <span class="dv">0</span>),</span>
-<span id="cb8-92"><a href="#cb8-92" aria-hidden="true" tabindex="-1"></a>  <span class="fu">all</span>(forecast_data<span class="sc">$</span>demand_cpu_core_hours <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
-<span id="cb8-93"><a href="#cb8-93" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb8-94"><a href="#cb8-94" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-95"><a href="#cb8-95" aria-hidden="true" tabindex="-1"></a><span class="co"># Confirm historical coverage</span></span>
-<span id="cb8-96"><a href="#cb8-96" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(</span>
-<span id="cb8-97"><a href="#cb8-97" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Historical period:"</span>, <span class="fu">min</span>(forecast_data<span class="sc">$</span>year),</span>
-<span id="cb8-98"><a href="#cb8-98" aria-hidden="true" tabindex="-1"></a>  <span class="st">"-"</span>, <span class="fu">max</span>(forecast_data<span class="sc">$</span>year), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>,</span>
-<span id="cb8-99"><a href="#cb8-99" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Observations:"</span>, <span class="fu">nrow</span>(forecast_data), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span></span>
-<span id="cb8-100"><a href="#cb8-100" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb8-101"><a href="#cb8-101" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb8-102"><a href="#cb8-102" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-103"><a href="#cb8-103" aria-hidden="true" tabindex="-1"></a><span class="fu">## Candidate Forecasting Models</span></span>
-<span id="cb8-104"><a href="#cb8-104" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-105"><a href="#cb8-105" aria-hidden="true" tabindex="-1"></a><span class="fu">### Overall HPC Demand: Linear and Log-Linear Trends</span></span>
-<span id="cb8-106"><a href="#cb8-106" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-107"><a href="#cb8-107" aria-hidden="true" tabindex="-1"></a>Two initial trend models are fitted to the harmonised annual HPC demand</span>
-<span id="cb8-108"><a href="#cb8-108" aria-hidden="true" tabindex="-1"></a>series for 2014–2026.</span>
-<span id="cb8-109"><a href="#cb8-109" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-110"><a href="#cb8-110" aria-hidden="true" tabindex="-1"></a>The linear trend models demand directly in kSU, assuming a constant</span>
-<span id="cb8-111"><a href="#cb8-111" aria-hidden="true" tabindex="-1"></a>absolute change over time. The log-linear trend models the natural</span>
-<span id="cb8-112"><a href="#cb8-112" aria-hidden="true" tabindex="-1"></a>logarithm of demand, allowing for approximately constant proportional</span>
-<span id="cb8-113"><a href="#cb8-113" aria-hidden="true" tabindex="-1"></a>growth.</span>
-<span id="cb8-114"><a href="#cb8-114" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-115"><a href="#cb8-115" aria-hidden="true" tabindex="-1"></a>Both specifications are retained for subsequent evaluation. Neither</span>
-<span id="cb8-116"><a href="#cb8-116" aria-hidden="true" tabindex="-1"></a>is assumed to be the preferred model before out-of-sample validation.</span>
-<span id="cb8-117"><a href="#cb8-117" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-118"><a href="#cb8-118" aria-hidden="true" tabindex="-1"></a><span class="in">```{r overall-trend-models}</span></span>
-<span id="cb8-119"><a href="#cb8-119" aria-hidden="true" tabindex="-1"></a><span class="co"># Use a centred time index for numerical stability</span></span>
-<span id="cb8-120"><a href="#cb8-120" aria-hidden="true" tabindex="-1"></a>overall_model_data <span class="ot">&lt;-</span> forecast_data <span class="sc">|&gt;</span></span>
-<span id="cb8-121"><a href="#cb8-121" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">time =</span> year <span class="sc">-</span> <span class="dv">2014</span>)</span>
-<span id="cb8-122"><a href="#cb8-122" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-123"><a href="#cb8-123" aria-hidden="true" tabindex="-1"></a><span class="co"># Linear trend: demand in kSU</span></span>
-<span id="cb8-124"><a href="#cb8-124" aria-hidden="true" tabindex="-1"></a>overall_linear <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
-<span id="cb8-125"><a href="#cb8-125" aria-hidden="true" tabindex="-1"></a>  demand_ksu <span class="sc">~</span> time,</span>
-<span id="cb8-126"><a href="#cb8-126" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> overall_model_data</span>
-<span id="cb8-127"><a href="#cb8-127" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb8-128"><a href="#cb8-128" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-129"><a href="#cb8-129" aria-hidden="true" tabindex="-1"></a><span class="co"># Log-linear trend: log(demand in kSU)</span></span>
-<span id="cb8-130"><a href="#cb8-130" aria-hidden="true" tabindex="-1"></a>overall_loglinear <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
-<span id="cb8-131"><a href="#cb8-131" aria-hidden="true" tabindex="-1"></a>  <span class="fu">log</span>(demand_ksu) <span class="sc">~</span> time,</span>
-<span id="cb8-132"><a href="#cb8-132" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> overall_model_data</span>
-<span id="cb8-133"><a href="#cb8-133" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb8-134"><a href="#cb8-134" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-135"><a href="#cb8-135" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect fitted coefficients</span></span>
-<span id="cb8-136"><a href="#cb8-136" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(overall_linear)</span>
-<span id="cb8-137"><a href="#cb8-137" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(overall_loglinear)</span>
-<span id="cb8-138"><a href="#cb8-138" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb8-139"><a href="#cb8-139" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-140"><a href="#cb8-140" aria-hidden="true" tabindex="-1"></a>The linear model estimates an annual absolute change in HPC demand, whereas the log-linear model estimates an approximately constant</span>
-<span id="cb8-141"><a href="#cb8-141" aria-hidden="true" tabindex="-1"></a>annual percentage growth rate.</span>
-<span id="cb8-142"><a href="#cb8-142" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-143"><a href="#cb8-143" aria-hidden="true" tabindex="-1"></a>The log-linear model's fitted values must be back-transformed to kSU for comparison with observed demand. Simple exponentiation produces median predictions under a log-normal error assumption; mean predictions require appropriate bias adjustment.</span>
-<span id="cb8-144"><a href="#cb8-144" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-145"><a href="#cb8-145" aria-hidden="true" tabindex="-1"></a>Model performance and forecast accuracy will be evaluated in Chapter 08 using consistent original-scale error measures.</span>
-<span id="cb8-146"><a href="#cb8-146" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-147"><a href="#cb8-147" aria-hidden="true" tabindex="-1"></a><span class="fu">### Initial Model Findings</span></span>
-<span id="cb8-148"><a href="#cb8-148" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-149"><a href="#cb8-149" aria-hidden="true" tabindex="-1"></a>The linear trend model estimates an average annual increase of approximately 161,992 kSU over 2014–2026. In contrast, the log-linear</span>
-<span id="cb8-150"><a href="#cb8-150" aria-hidden="true" tabindex="-1"></a>model estimates an annual compounded growth rate of approximately 26.3%.</span>
-<span id="cb8-151"><a href="#cb8-151" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-152"><a href="#cb8-152" aria-hidden="true" tabindex="-1"></a>Both models indicate an increasing historical demand trend. However, their assumptions differ substantially: the linear specification</span>
-<span id="cb8-153"><a href="#cb8-153" aria-hidden="true" tabindex="-1"></a>implies constant absolute growth, while the log-linear specification implies exponential growth.</span>
-<span id="cb8-154"><a href="#cb8-154" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-155"><a href="#cb8-155" aria-hidden="true" tabindex="-1"></a>Although both models exhibit relatively high in-sample R-squared values, these statistics are calculated on different response scales</span>
-<span id="cb8-156"><a href="#cb8-156" aria-hidden="true" tabindex="-1"></a>and cannot be used directly to select the preferred model.</span>
-<span id="cb8-157"><a href="#cb8-157" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-158"><a href="#cb8-158" aria-hidden="true" tabindex="-1"></a>Given the limited historical sample, heterogeneous demand estimates, and uncertainty surrounding the 2026 observation, neither model is selected at this stage. Their predictive performance will be assessed using consistent original-scale forecast errors in Chapter 08.</span>
-<span id="cb8-159"><a href="#cb8-159" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-160"><a href="#cb8-160" aria-hidden="true" tabindex="-1"></a><span class="fu">## Sensitivity Analysis: Influence of 2026</span></span>
-<span id="cb8-161"><a href="#cb8-161" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-162"><a href="#cb8-162" aria-hidden="true" tabindex="-1"></a>The substantial increase in reported HPC demand in 2026 introduces uncertainty into the estimation of future demand trends.</span>
-<span id="cb8-163"><a href="#cb8-163" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-164"><a href="#cb8-164" aria-hidden="true" tabindex="-1"></a>To assess the influence of this observation, the linear and log-linear trend models are refitted using historical observations from 2014 - 2025. These results are compared with the corresponding models fitted to the complete 2014–2026 dataset.</span>
-<span id="cb8-165"><a href="#cb8-165" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-166"><a href="#cb8-166" aria-hidden="true" tabindex="-1"></a>This analysis does not assume that the 2026 observation is incorrect or should be excluded from the final forecasting model. Instead,</span>
-<span id="cb8-167"><a href="#cb8-167" aria-hidden="true" tabindex="-1"></a>it evaluates how sensitive the estimated trend is to the inclusion of the latest observation.</span>
-<span id="cb8-168"><a href="#cb8-168" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-169"><a href="#cb8-169" aria-hidden="true" tabindex="-1"></a><span class="fu">### Trend Sensitivity Comparison</span></span>
-<span id="cb8-170"><a href="#cb8-170" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-171"><a href="#cb8-171" aria-hidden="true" tabindex="-1"></a><span class="in">```{r overall-trend-sensitivity}</span></span>
-<span id="cb8-172"><a href="#cb8-172" aria-hidden="true" tabindex="-1"></a><span class="co"># Historical data excluding 2026</span></span>
-<span id="cb8-173"><a href="#cb8-173" aria-hidden="true" tabindex="-1"></a>overall_pre2026_data <span class="ot">&lt;-</span> overall_model_data <span class="sc">|&gt;</span></span>
-<span id="cb8-174"><a href="#cb8-174" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(year <span class="sc">&lt;=</span> <span class="dv">2025</span>)</span>
-<span id="cb8-175"><a href="#cb8-175" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-176"><a href="#cb8-176" aria-hidden="true" tabindex="-1"></a><span class="co"># Refit the same model specifications</span></span>
-<span id="cb8-177"><a href="#cb8-177" aria-hidden="true" tabindex="-1"></a>overall_linear_pre2026 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
-<span id="cb8-178"><a href="#cb8-178" aria-hidden="true" tabindex="-1"></a>  demand_ksu <span class="sc">~</span> time,</span>
-<span id="cb8-179"><a href="#cb8-179" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> overall_pre2026_data</span>
-<span id="cb8-180"><a href="#cb8-180" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb8-181"><a href="#cb8-181" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-182"><a href="#cb8-182" aria-hidden="true" tabindex="-1"></a>overall_loglinear_pre2026 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
-<span id="cb8-183"><a href="#cb8-183" aria-hidden="true" tabindex="-1"></a>  <span class="fu">log</span>(demand_ksu) <span class="sc">~</span> time,</span>
-<span id="cb8-184"><a href="#cb8-184" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> overall_pre2026_data</span>
-<span id="cb8-185"><a href="#cb8-185" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb8-186"><a href="#cb8-186" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-187"><a href="#cb8-187" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare trend coefficients</span></span>
-<span id="cb8-188"><a href="#cb8-188" aria-hidden="true" tabindex="-1"></a>trend_sensitivity <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb8-189"><a href="#cb8-189" aria-hidden="true" tabindex="-1"></a>  <span class="at">model =</span> <span class="fu">c</span>(<span class="st">"Linear trend"</span>, <span class="st">"Log-linear trend"</span>),</span>
-<span id="cb8-190"><a href="#cb8-190" aria-hidden="true" tabindex="-1"></a>  <span class="at">full_2014_2026 =</span> <span class="fu">c</span>(</span>
-<span id="cb8-191"><a href="#cb8-191" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coef</span>(overall_linear)[[<span class="st">"time"</span>]],</span>
-<span id="cb8-192"><a href="#cb8-192" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coef</span>(overall_loglinear)[[<span class="st">"time"</span>]]</span>
-<span id="cb8-193"><a href="#cb8-193" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb8-194"><a href="#cb8-194" aria-hidden="true" tabindex="-1"></a>  <span class="at">excluding_2026 =</span> <span class="fu">c</span>(</span>
-<span id="cb8-195"><a href="#cb8-195" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coef</span>(overall_linear_pre2026)[[<span class="st">"time"</span>]],</span>
-<span id="cb8-196"><a href="#cb8-196" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coef</span>(overall_loglinear_pre2026)[[<span class="st">"time"</span>]]</span>
-<span id="cb8-197"><a href="#cb8-197" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb8-198"><a href="#cb8-198" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb8-199"><a href="#cb8-199" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-200"><a href="#cb8-200" aria-hidden="true" tabindex="-1"></a>trend_sensitivity<span class="sc">$</span>percentage_change <span class="ot">&lt;-</span> <span class="fu">with</span>(</span>
-<span id="cb8-201"><a href="#cb8-201" aria-hidden="true" tabindex="-1"></a>  trend_sensitivity,</span>
-<span id="cb8-202"><a href="#cb8-202" aria-hidden="true" tabindex="-1"></a>  <span class="dv">100</span> <span class="sc">*</span> (full_2014_2026 <span class="sc">-</span> excluding_2026) <span class="sc">/</span></span>
-<span id="cb8-203"><a href="#cb8-203" aria-hidden="true" tabindex="-1"></a>    <span class="fu">abs</span>(excluding_2026)</span>
-<span id="cb8-204"><a href="#cb8-204" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb8-205"><a href="#cb8-205" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-206"><a href="#cb8-206" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
-<span id="cb8-207"><a href="#cb8-207" aria-hidden="true" tabindex="-1"></a>  trend_sensitivity,</span>
-<span id="cb8-208"><a href="#cb8-208" aria-hidden="true" tabindex="-1"></a>  <span class="at">digits =</span> <span class="dv">3</span>,</span>
-<span id="cb8-209"><a href="#cb8-209" aria-hidden="true" tabindex="-1"></a>  <span class="at">col.names =</span> <span class="fu">c</span>(</span>
-<span id="cb8-210"><a href="#cb8-210" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Model"</span>,</span>
-<span id="cb8-211"><a href="#cb8-211" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Trend with 2026"</span>,</span>
-<span id="cb8-212"><a href="#cb8-212" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Trend without 2026"</span>,</span>
-<span id="cb8-213"><a href="#cb8-213" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Change (%)"</span></span>
-<span id="cb8-214"><a href="#cb8-214" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb8-215"><a href="#cb8-215" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">"Sensitivity of estimated HPC demand trends to the inclusion of 2026"</span></span>
-<span id="cb8-216"><a href="#cb8-216" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb8-217"><a href="#cb8-217" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb8-218"><a href="#cb8-218" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-219"><a href="#cb8-219" aria-hidden="true" tabindex="-1"></a>The comparison evaluates changes in the estimated annual trend coefficients. For the linear model, the coefficient represents the</span>
-<span id="cb8-220"><a href="#cb8-220" aria-hidden="true" tabindex="-1"></a>annual absolute change in demand measured in kSU. For the log-linear model, the coefficient represents the annual change in log demand, which can be converted into an implied compounded growth rate.</span>
-<span id="cb8-221"><a href="#cb8-221" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-222"><a href="#cb8-222" aria-hidden="true" tabindex="-1"></a>Changes in these coefficients indicate how strongly the latest observation influences the fitted historical trend. They do not,</span>
-<span id="cb8-223"><a href="#cb8-223" aria-hidden="true" tabindex="-1"></a>on their own, establish whether the 2026 increase represents a structural change in underlying researcher demand.</span>
-<span id="cb8-224"><a href="#cb8-224" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-225"><a href="#cb8-225" aria-hidden="true" tabindex="-1"></a><span class="fu">### Sensitivity Analysis Findings</span></span>
-<span id="cb8-226"><a href="#cb8-226" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-227"><a href="#cb8-227" aria-hidden="true" tabindex="-1"></a>Including the 2026 observation increases the estimated linear trend from approximately 144,357 to 161,992 kSU per year, representing</span>
-<span id="cb8-228"><a href="#cb8-228" aria-hidden="true" tabindex="-1"></a>a 12.2% increase in the annual absolute growth coefficient.</span>
-<span id="cb8-229"><a href="#cb8-229" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-230"><a href="#cb8-230" aria-hidden="true" tabindex="-1"></a>In contrast, the log-linear trend coefficient decreases slightly when 2026 is included, from approximately 0.239 to 0.233, equivalent to a reduction of approximately 2.4% in the estimated log-scale trend coefficient.</span>
-<span id="cb8-231"><a href="#cb8-231" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-232"><a href="#cb8-232" aria-hidden="true" tabindex="-1"></a>These results indicate that the latest observation has a greater relative influence on the estimated absolute growth rate than on the proportional growth trend.</span>
-<span id="cb8-233"><a href="#cb8-233" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-234"><a href="#cb8-234" aria-hidden="true" tabindex="-1"></a>Nevertheless, the relatively small change in the log-linear coefficient does not necessarily imply that its future forecasts are insensitive to 2026, since changes in the fitted intercept may also influence projected demand levels.</span>
-<span id="cb8-235"><a href="#cb8-235" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-236"><a href="#cb8-236" aria-hidden="true" tabindex="-1"></a>The analysis therefore supports retaining both model specifications for further evaluation. It does not establish whether the 2026 increase represents a temporary fluctuation or a sustained change in researcher demand.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Forecasting Models</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">## Purpose</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>This chapter aims to develop transparent, reproducible, and statistically defensible forecasting models to estimate Australian national research supercomputing demand through 2030.</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>Building on the harmonised historical dataset and initial findings presented in Chapters 03 - 06, the analysis evaluates alternative approaches for modelling annual researcher demand, expressed in CPU-equivalent core-hours.</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>The modelling framework has four objectives:</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Establish a suitable historical demand series for forecasting, accounting for data quality, reporting differences, and conversion assumptions.</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Develop and compare candidate forecasting models, prioritising simple and interpretable approaches such as linear and log-linear trends.</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>Examine the sensitivity of projected demand to the substantial increase observed in 2026, distinguishing potential structural changes from temporary fluctuations.</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>Generate alternative demand projections for 2027 - 2030 to support national HPC infrastructure planning and policy discussions.</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>Following expert statistical feedback, particular emphasis is placed on model simplicity, transparent assumptions, and the limitations of extrapolating trends from a relatively short and heterogeneous historical dataset.</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>The forecasts are intended to provide evidence-informed planning scenarios rather than precise predictions of future researcher demand.</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a><span class="fu">## Forecast Target and Data Suitability</span></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a><span class="fu">### Forecast Target</span></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>The forecasting analysis considers three related but distinct measures of Australian national research supercomputing demand:</span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Overall HPC demand, expressed in thousands of service units (kSU).</span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>CPU demand, expressed in CPU core-hours.</span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>GPU demand, expressed in GPU-hours.</span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>These measures represent harmonised estimates of computing resources requested by researchers, rather than allocated resources or available computing capacity. CPU and GPU demand are modelled separately because their resource units and conversion assumptions are not directly interchangeable.</span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>The overall kSU series provides a reference for aggregate demand, while the CPU and GPU series support resource-specific forecasts</span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a>relevant to future infrastructure planning.</span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a><span class="fu">### Historical Data Suitability</span></span>
+<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a>The historical demand series provides a consistent analytical unit for forecasting, but it should not be interpreted as a fully homogeneous set of directly observed demand measurements.</span>
+<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a>Depending on the year and reporting source, historical estimates include directly reported demand, derived estimates, and proxy-based measures. Differences in facility coverage, reporting definitions, and CPU/GPU conversion assumptions introduce uncertainty into comparisons across years.</span>
+<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-41"><a href="#cb13-41" aria-hidden="true" tabindex="-1"></a>The relatively small number of annual observations also limits the complexity of forecasting models that can be estimated reliably. Consequently, simple trend-based models will be prioritised, while more flexible time-series approaches will be used as benchmarks.</span>
+<span id="cb13-42"><a href="#cb13-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-43"><a href="#cb13-43" aria-hidden="true" tabindex="-1"></a>The substantial increase in reported demand in 2026 presents an additional uncertainty. Available historical observations do not establish whether this increase represents a sustained shift in researcher demand, a temporary fluctuation, or a difference in measurement or reporting scope.</span>
+<span id="cb13-44"><a href="#cb13-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-45"><a href="#cb13-45" aria-hidden="true" tabindex="-1"></a>Accordingly, the modelling analysis will consider both the complete historical series (2014–2026) and a sensitivity specification excluding 2026 (2014–2025). The latter is not treated as a more accurate historical dataset, but as a means of assessing how strongly the latest observation influences projected demand.</span>
+<span id="cb13-46"><a href="#cb13-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-47"><a href="#cb13-47" aria-hidden="true" tabindex="-1"></a><span class="fu">### Forecasting Horizon</span></span>
+<span id="cb13-48"><a href="#cb13-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-49"><a href="#cb13-49" aria-hidden="true" tabindex="-1"></a>The forecasting horizon covers four annual periods:</span>
+<span id="cb13-50"><a href="#cb13-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-51"><a href="#cb13-51" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>2027</span>
+<span id="cb13-52"><a href="#cb13-52" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>2028</span>
+<span id="cb13-53"><a href="#cb13-53" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>2029</span>
+<span id="cb13-54"><a href="#cb13-54" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>2030</span>
+<span id="cb13-55"><a href="#cb13-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-56"><a href="#cb13-56" aria-hidden="true" tabindex="-1"></a>Forecasts will be reported in the original units of each target: kSU for overall HPC demand, CPU core-hours for CPU demand, and GPU-hours for GPU demand.</span>
+<span id="cb13-57"><a href="#cb13-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-58"><a href="#cb13-58" aria-hidden="true" tabindex="-1"></a>The GPU analysis will explicitly distinguish historical scenario-based estimates from later reported or derived values, rather than treating all historical GPU observations as equally reliable.</span>
+<span id="cb13-59"><a href="#cb13-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-60"><a href="#cb13-60" aria-hidden="true" tabindex="-1"></a>The resulting forecasts are conditional projections based on historical patterns and modelling assumptions. They should not be interpreted as precise estimates of future HPC requirements, particularly given uncertainty surrounding emerging GPU-intensive workloads, changes in research activity, and future infrastructure investment.</span>
+<span id="cb13-61"><a href="#cb13-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-62"><a href="#cb13-62" aria-hidden="true" tabindex="-1"></a><span class="fu">## Data Preparation and Validation</span></span>
+<span id="cb13-63"><a href="#cb13-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-64"><a href="#cb13-64" aria-hidden="true" tabindex="-1"></a>The forecasting analysis uses the converted annual demand and allocation dataset produced in Chapter 05. The dataset is loaded directly from its saved RDS file to ensure that this chapter can be executed independently of the preceding analysis.</span>
+<span id="cb13-65"><a href="#cb13-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-66"><a href="#cb13-66" aria-hidden="true" tabindex="-1"></a>The preparation process retains the historical demand observations without modifying their original values. Validation checks confirm</span>
+<span id="cb13-67"><a href="#cb13-67" aria-hidden="true" tabindex="-1"></a>the expected annual coverage, uniqueness of observations, and availability of positive demand values.</span>
+<span id="cb13-68"><a href="#cb13-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-69"><a href="#cb13-69" aria-hidden="true" tabindex="-1"></a><span class="in">```{r prepare-forecast-data}</span></span>
+<span id="cb13-70"><a href="#cb13-70" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the converted annual dataset</span></span>
+<span id="cb13-71"><a href="#cb13-71" aria-hidden="true" tabindex="-1"></a>annual_converted <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(</span>
+<span id="cb13-72"><a href="#cb13-72" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assets/data/data converted/annual_demand_allocation_converted.rds"</span></span>
+<span id="cb13-73"><a href="#cb13-73" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-74"><a href="#cb13-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-75"><a href="#cb13-75" aria-hidden="true" tabindex="-1"></a><span class="co"># Retain the three forecasting targets</span></span>
+<span id="cb13-76"><a href="#cb13-76" aria-hidden="true" tabindex="-1"></a>forecast_data <span class="ot">&lt;-</span> annual_converted <span class="sc">|&gt;</span></span>
+<span id="cb13-77"><a href="#cb13-77" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">transmute</span>(</span>
+<span id="cb13-78"><a href="#cb13-78" aria-hidden="true" tabindex="-1"></a>    <span class="at">year =</span> <span class="fu">as.integer</span>(year),</span>
+<span id="cb13-79"><a href="#cb13-79" aria-hidden="true" tabindex="-1"></a>    <span class="at">demand_ksu =</span> <span class="fu">as.numeric</span>(demand_ksu),</span>
+<span id="cb13-80"><a href="#cb13-80" aria-hidden="true" tabindex="-1"></a>    <span class="at">demand_cpu_core_hours =</span> <span class="fu">as.numeric</span>(demand_cpu_core_hours),</span>
+<span id="cb13-81"><a href="#cb13-81" aria-hidden="true" tabindex="-1"></a>    <span class="at">demand_gpu_hours =</span> <span class="fu">as.numeric</span>(demand_gpu_hours)</span>
+<span id="cb13-82"><a href="#cb13-82" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb13-83"><a href="#cb13-83" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">arrange</span>(year)</span>
+<span id="cb13-84"><a href="#cb13-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-85"><a href="#cb13-85" aria-hidden="true" tabindex="-1"></a><span class="co"># Validate annual coverage and values</span></span>
+<span id="cb13-86"><a href="#cb13-86" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(</span>
+<span id="cb13-87"><a href="#cb13-87" aria-hidden="true" tabindex="-1"></a>  <span class="fu">identical</span>(forecast_data<span class="sc">$</span>year, <span class="dv">2014</span><span class="sc">:</span><span class="dv">2026</span>),</span>
+<span id="cb13-88"><a href="#cb13-88" aria-hidden="true" tabindex="-1"></a>  <span class="sc">!</span><span class="fu">anyDuplicated</span>(forecast_data<span class="sc">$</span>year),</span>
+<span id="cb13-89"><a href="#cb13-89" aria-hidden="true" tabindex="-1"></a>  <span class="fu">all</span>(<span class="fu">is.finite</span>(<span class="fu">as.matrix</span>(forecast_data[, <span class="sc">-</span><span class="dv">1</span>]))),</span>
+<span id="cb13-90"><a href="#cb13-90" aria-hidden="true" tabindex="-1"></a>  <span class="fu">all</span>(<span class="fu">as.matrix</span>(forecast_data[, <span class="sc">-</span><span class="dv">1</span>]) <span class="sc">&gt;=</span> <span class="dv">0</span>),</span>
+<span id="cb13-91"><a href="#cb13-91" aria-hidden="true" tabindex="-1"></a>  <span class="fu">all</span>(forecast_data<span class="sc">$</span>demand_ksu <span class="sc">&gt;</span> <span class="dv">0</span>),</span>
+<span id="cb13-92"><a href="#cb13-92" aria-hidden="true" tabindex="-1"></a>  <span class="fu">all</span>(forecast_data<span class="sc">$</span>demand_cpu_core_hours <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb13-93"><a href="#cb13-93" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-94"><a href="#cb13-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-95"><a href="#cb13-95" aria-hidden="true" tabindex="-1"></a><span class="co"># Confirm historical coverage</span></span>
+<span id="cb13-96"><a href="#cb13-96" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(</span>
+<span id="cb13-97"><a href="#cb13-97" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Historical period:"</span>, <span class="fu">min</span>(forecast_data<span class="sc">$</span>year),</span>
+<span id="cb13-98"><a href="#cb13-98" aria-hidden="true" tabindex="-1"></a>  <span class="st">"-"</span>, <span class="fu">max</span>(forecast_data<span class="sc">$</span>year), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>,</span>
+<span id="cb13-99"><a href="#cb13-99" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Observations:"</span>, <span class="fu">nrow</span>(forecast_data), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span></span>
+<span id="cb13-100"><a href="#cb13-100" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-101"><a href="#cb13-101" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-102"><a href="#cb13-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-103"><a href="#cb13-103" aria-hidden="true" tabindex="-1"></a><span class="fu">## Candidate Forecasting Models</span></span>
+<span id="cb13-104"><a href="#cb13-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-105"><a href="#cb13-105" aria-hidden="true" tabindex="-1"></a><span class="fu">### Overall HPC Demand: Linear and Log-Linear Trends</span></span>
+<span id="cb13-106"><a href="#cb13-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-107"><a href="#cb13-107" aria-hidden="true" tabindex="-1"></a>Two initial trend models are fitted to the harmonised annual HPC demand</span>
+<span id="cb13-108"><a href="#cb13-108" aria-hidden="true" tabindex="-1"></a>series for 2014–2026.</span>
+<span id="cb13-109"><a href="#cb13-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-110"><a href="#cb13-110" aria-hidden="true" tabindex="-1"></a>The linear trend models demand directly in kSU, assuming a constant</span>
+<span id="cb13-111"><a href="#cb13-111" aria-hidden="true" tabindex="-1"></a>absolute change over time. The log-linear trend models the natural</span>
+<span id="cb13-112"><a href="#cb13-112" aria-hidden="true" tabindex="-1"></a>logarithm of demand, allowing for approximately constant proportional</span>
+<span id="cb13-113"><a href="#cb13-113" aria-hidden="true" tabindex="-1"></a>growth.</span>
+<span id="cb13-114"><a href="#cb13-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-115"><a href="#cb13-115" aria-hidden="true" tabindex="-1"></a>Both specifications are retained for subsequent evaluation. Neither</span>
+<span id="cb13-116"><a href="#cb13-116" aria-hidden="true" tabindex="-1"></a>is assumed to be the preferred model before out-of-sample validation.</span>
+<span id="cb13-117"><a href="#cb13-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-118"><a href="#cb13-118" aria-hidden="true" tabindex="-1"></a><span class="in">```{r overall-trend-models}</span></span>
+<span id="cb13-119"><a href="#cb13-119" aria-hidden="true" tabindex="-1"></a><span class="co"># Use a centred time index for numerical stability</span></span>
+<span id="cb13-120"><a href="#cb13-120" aria-hidden="true" tabindex="-1"></a>overall_model_data <span class="ot">&lt;-</span> forecast_data <span class="sc">|&gt;</span></span>
+<span id="cb13-121"><a href="#cb13-121" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">time =</span> year <span class="sc">-</span> <span class="dv">2014</span>)</span>
+<span id="cb13-122"><a href="#cb13-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-123"><a href="#cb13-123" aria-hidden="true" tabindex="-1"></a><span class="co"># Linear trend: demand in kSU</span></span>
+<span id="cb13-124"><a href="#cb13-124" aria-hidden="true" tabindex="-1"></a>overall_linear <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb13-125"><a href="#cb13-125" aria-hidden="true" tabindex="-1"></a>  demand_ksu <span class="sc">~</span> time,</span>
+<span id="cb13-126"><a href="#cb13-126" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> overall_model_data</span>
+<span id="cb13-127"><a href="#cb13-127" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-128"><a href="#cb13-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-129"><a href="#cb13-129" aria-hidden="true" tabindex="-1"></a><span class="co"># Log-linear trend: log(demand in kSU)</span></span>
+<span id="cb13-130"><a href="#cb13-130" aria-hidden="true" tabindex="-1"></a>overall_loglinear <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb13-131"><a href="#cb13-131" aria-hidden="true" tabindex="-1"></a>  <span class="fu">log</span>(demand_ksu) <span class="sc">~</span> time,</span>
+<span id="cb13-132"><a href="#cb13-132" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> overall_model_data</span>
+<span id="cb13-133"><a href="#cb13-133" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-134"><a href="#cb13-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-135"><a href="#cb13-135" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect fitted coefficients</span></span>
+<span id="cb13-136"><a href="#cb13-136" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(overall_linear)</span>
+<span id="cb13-137"><a href="#cb13-137" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(overall_loglinear)</span>
+<span id="cb13-138"><a href="#cb13-138" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-139"><a href="#cb13-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-140"><a href="#cb13-140" aria-hidden="true" tabindex="-1"></a>The linear model estimates an annual absolute change in HPC demand, whereas the log-linear model estimates an approximately constant</span>
+<span id="cb13-141"><a href="#cb13-141" aria-hidden="true" tabindex="-1"></a>annual percentage growth rate.</span>
+<span id="cb13-142"><a href="#cb13-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-143"><a href="#cb13-143" aria-hidden="true" tabindex="-1"></a>The log-linear model's fitted values must be back-transformed to kSU for comparison with observed demand. Simple exponentiation produces median predictions under a log-normal error assumption; mean predictions require appropriate bias adjustment.</span>
+<span id="cb13-144"><a href="#cb13-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-145"><a href="#cb13-145" aria-hidden="true" tabindex="-1"></a>Model performance and forecast accuracy will be evaluated in Chapter 08 using consistent original-scale error measures.</span>
+<span id="cb13-146"><a href="#cb13-146" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-147"><a href="#cb13-147" aria-hidden="true" tabindex="-1"></a><span class="fu">### Initial Model Findings</span></span>
+<span id="cb13-148"><a href="#cb13-148" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-149"><a href="#cb13-149" aria-hidden="true" tabindex="-1"></a>The linear trend model estimates an average annual increase of approximately 161,992 kSU over 2014–2026. In contrast, the log-linear</span>
+<span id="cb13-150"><a href="#cb13-150" aria-hidden="true" tabindex="-1"></a>model estimates an annual compounded growth rate of approximately 26.3%.</span>
+<span id="cb13-151"><a href="#cb13-151" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-152"><a href="#cb13-152" aria-hidden="true" tabindex="-1"></a>Both models indicate an increasing historical demand trend. However, their assumptions differ substantially: the linear specification</span>
+<span id="cb13-153"><a href="#cb13-153" aria-hidden="true" tabindex="-1"></a>implies constant absolute growth, while the log-linear specification implies exponential growth.</span>
+<span id="cb13-154"><a href="#cb13-154" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-155"><a href="#cb13-155" aria-hidden="true" tabindex="-1"></a>Although both models exhibit relatively high in-sample R-squared values, these statistics are calculated on different response scales</span>
+<span id="cb13-156"><a href="#cb13-156" aria-hidden="true" tabindex="-1"></a>and cannot be used directly to select the preferred model.</span>
+<span id="cb13-157"><a href="#cb13-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-158"><a href="#cb13-158" aria-hidden="true" tabindex="-1"></a>Given the limited historical sample, heterogeneous demand estimates, and uncertainty surrounding the 2026 observation, neither model is selected at this stage. Their predictive performance will be assessed using consistent original-scale forecast errors in Chapter 08.</span>
+<span id="cb13-159"><a href="#cb13-159" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-160"><a href="#cb13-160" aria-hidden="true" tabindex="-1"></a><span class="fu">## Sensitivity Analysis: Influence of 2026</span></span>
+<span id="cb13-161"><a href="#cb13-161" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-162"><a href="#cb13-162" aria-hidden="true" tabindex="-1"></a>The substantial increase in reported HPC demand in 2026 introduces uncertainty into the estimation of future demand trends.</span>
+<span id="cb13-163"><a href="#cb13-163" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-164"><a href="#cb13-164" aria-hidden="true" tabindex="-1"></a>To assess the influence of this observation, the linear and log-linear trend models are refitted using historical observations from 2014 - 2025. These results are compared with the corresponding models fitted to the complete 2014–2026 dataset.</span>
+<span id="cb13-165"><a href="#cb13-165" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-166"><a href="#cb13-166" aria-hidden="true" tabindex="-1"></a>This analysis does not assume that the 2026 observation is incorrect or should be excluded from the final forecasting model. Instead,</span>
+<span id="cb13-167"><a href="#cb13-167" aria-hidden="true" tabindex="-1"></a>it evaluates how sensitive the estimated trend is to the inclusion of the latest observation.</span>
+<span id="cb13-168"><a href="#cb13-168" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-169"><a href="#cb13-169" aria-hidden="true" tabindex="-1"></a><span class="fu">### Trend Sensitivity Comparison</span></span>
+<span id="cb13-170"><a href="#cb13-170" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-171"><a href="#cb13-171" aria-hidden="true" tabindex="-1"></a><span class="in">```{r overall-trend-sensitivity}</span></span>
+<span id="cb13-172"><a href="#cb13-172" aria-hidden="true" tabindex="-1"></a><span class="co"># Historical data excluding 2026</span></span>
+<span id="cb13-173"><a href="#cb13-173" aria-hidden="true" tabindex="-1"></a>overall_pre2026_data <span class="ot">&lt;-</span> overall_model_data <span class="sc">|&gt;</span></span>
+<span id="cb13-174"><a href="#cb13-174" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(year <span class="sc">&lt;=</span> <span class="dv">2025</span>)</span>
+<span id="cb13-175"><a href="#cb13-175" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-176"><a href="#cb13-176" aria-hidden="true" tabindex="-1"></a><span class="co"># Refit the same model specifications</span></span>
+<span id="cb13-177"><a href="#cb13-177" aria-hidden="true" tabindex="-1"></a>overall_linear_pre2026 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb13-178"><a href="#cb13-178" aria-hidden="true" tabindex="-1"></a>  demand_ksu <span class="sc">~</span> time,</span>
+<span id="cb13-179"><a href="#cb13-179" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> overall_pre2026_data</span>
+<span id="cb13-180"><a href="#cb13-180" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-181"><a href="#cb13-181" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-182"><a href="#cb13-182" aria-hidden="true" tabindex="-1"></a>overall_loglinear_pre2026 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb13-183"><a href="#cb13-183" aria-hidden="true" tabindex="-1"></a>  <span class="fu">log</span>(demand_ksu) <span class="sc">~</span> time,</span>
+<span id="cb13-184"><a href="#cb13-184" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> overall_pre2026_data</span>
+<span id="cb13-185"><a href="#cb13-185" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-186"><a href="#cb13-186" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-187"><a href="#cb13-187" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare trend coefficients</span></span>
+<span id="cb13-188"><a href="#cb13-188" aria-hidden="true" tabindex="-1"></a>trend_sensitivity <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb13-189"><a href="#cb13-189" aria-hidden="true" tabindex="-1"></a>  <span class="at">model =</span> <span class="fu">c</span>(<span class="st">"Linear trend"</span>, <span class="st">"Log-linear trend"</span>),</span>
+<span id="cb13-190"><a href="#cb13-190" aria-hidden="true" tabindex="-1"></a>  <span class="at">full_2014_2026 =</span> <span class="fu">c</span>(</span>
+<span id="cb13-191"><a href="#cb13-191" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coef</span>(overall_linear)[[<span class="st">"time"</span>]],</span>
+<span id="cb13-192"><a href="#cb13-192" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coef</span>(overall_loglinear)[[<span class="st">"time"</span>]]</span>
+<span id="cb13-193"><a href="#cb13-193" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb13-194"><a href="#cb13-194" aria-hidden="true" tabindex="-1"></a>  <span class="at">excluding_2026 =</span> <span class="fu">c</span>(</span>
+<span id="cb13-195"><a href="#cb13-195" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coef</span>(overall_linear_pre2026)[[<span class="st">"time"</span>]],</span>
+<span id="cb13-196"><a href="#cb13-196" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coef</span>(overall_loglinear_pre2026)[[<span class="st">"time"</span>]]</span>
+<span id="cb13-197"><a href="#cb13-197" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb13-198"><a href="#cb13-198" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-199"><a href="#cb13-199" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-200"><a href="#cb13-200" aria-hidden="true" tabindex="-1"></a>trend_sensitivity<span class="sc">$</span>percentage_change <span class="ot">&lt;-</span> <span class="fu">with</span>(</span>
+<span id="cb13-201"><a href="#cb13-201" aria-hidden="true" tabindex="-1"></a>  trend_sensitivity,</span>
+<span id="cb13-202"><a href="#cb13-202" aria-hidden="true" tabindex="-1"></a>  <span class="dv">100</span> <span class="sc">*</span> (full_2014_2026 <span class="sc">-</span> excluding_2026) <span class="sc">/</span></span>
+<span id="cb13-203"><a href="#cb13-203" aria-hidden="true" tabindex="-1"></a>    <span class="fu">abs</span>(excluding_2026)</span>
+<span id="cb13-204"><a href="#cb13-204" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-205"><a href="#cb13-205" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-206"><a href="#cb13-206" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb13-207"><a href="#cb13-207" aria-hidden="true" tabindex="-1"></a>  trend_sensitivity,</span>
+<span id="cb13-208"><a href="#cb13-208" aria-hidden="true" tabindex="-1"></a>  <span class="at">digits =</span> <span class="dv">3</span>,</span>
+<span id="cb13-209"><a href="#cb13-209" aria-hidden="true" tabindex="-1"></a>  <span class="at">col.names =</span> <span class="fu">c</span>(</span>
+<span id="cb13-210"><a href="#cb13-210" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Model"</span>,</span>
+<span id="cb13-211"><a href="#cb13-211" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Trend with 2026"</span>,</span>
+<span id="cb13-212"><a href="#cb13-212" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Trend without 2026"</span>,</span>
+<span id="cb13-213"><a href="#cb13-213" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Change (%)"</span></span>
+<span id="cb13-214"><a href="#cb13-214" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb13-215"><a href="#cb13-215" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">"Sensitivity of estimated HPC demand trends to the inclusion of 2026"</span></span>
+<span id="cb13-216"><a href="#cb13-216" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-217"><a href="#cb13-217" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-218"><a href="#cb13-218" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-219"><a href="#cb13-219" aria-hidden="true" tabindex="-1"></a>The comparison evaluates changes in the estimated annual trend coefficients. For the linear model, the coefficient represents the</span>
+<span id="cb13-220"><a href="#cb13-220" aria-hidden="true" tabindex="-1"></a>annual absolute change in demand measured in kSU. For the log-linear model, the coefficient represents the annual change in log demand, which can be converted into an implied compounded growth rate.</span>
+<span id="cb13-221"><a href="#cb13-221" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-222"><a href="#cb13-222" aria-hidden="true" tabindex="-1"></a>Changes in these coefficients indicate how strongly the latest observation influences the fitted historical trend. They do not,</span>
+<span id="cb13-223"><a href="#cb13-223" aria-hidden="true" tabindex="-1"></a>on their own, establish whether the 2026 increase represents a structural change in underlying researcher demand.</span>
+<span id="cb13-224"><a href="#cb13-224" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-225"><a href="#cb13-225" aria-hidden="true" tabindex="-1"></a><span class="fu">### Sensitivity Analysis Findings</span></span>
+<span id="cb13-226"><a href="#cb13-226" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-227"><a href="#cb13-227" aria-hidden="true" tabindex="-1"></a>Including the 2026 observation increases the estimated linear trend from approximately 144,357 to 161,992 kSU per year, representing</span>
+<span id="cb13-228"><a href="#cb13-228" aria-hidden="true" tabindex="-1"></a>a 12.2% increase in the annual absolute growth coefficient.</span>
+<span id="cb13-229"><a href="#cb13-229" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-230"><a href="#cb13-230" aria-hidden="true" tabindex="-1"></a>In contrast, the log-linear trend coefficient decreases slightly when 2026 is included, from approximately 0.239 to 0.233, equivalent to a reduction of approximately 2.4% in the estimated log-scale trend coefficient.</span>
+<span id="cb13-231"><a href="#cb13-231" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-232"><a href="#cb13-232" aria-hidden="true" tabindex="-1"></a>These results indicate that the latest observation has a greater relative influence on the estimated absolute growth rate than on the proportional growth trend.</span>
+<span id="cb13-233"><a href="#cb13-233" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-234"><a href="#cb13-234" aria-hidden="true" tabindex="-1"></a>Nevertheless, the relatively small change in the log-linear coefficient does not necessarily imply that its future forecasts are insensitive to 2026, since changes in the fitted intercept may also influence projected demand levels.</span>
+<span id="cb13-235"><a href="#cb13-235" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-236"><a href="#cb13-236" aria-hidden="true" tabindex="-1"></a>The analysis therefore supports retaining both model specifications for further evaluation. It does not establish whether the 2026 increase represents a temporary fluctuation or a sustained change in researcher demand.</span>
+<span id="cb13-237"><a href="#cb13-237" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-238"><a href="#cb13-238" aria-hidden="true" tabindex="-1"></a><span class="fu">## CPU Demand Forecasting Models</span></span>
+<span id="cb13-239"><a href="#cb13-239" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-240"><a href="#cb13-240" aria-hidden="true" tabindex="-1"></a>CPU demand is modelled separately from overall HPC demand to examine the historical growth of CPU-related computing requirements.</span>
+<span id="cb13-241"><a href="#cb13-241" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-242"><a href="#cb13-242" aria-hidden="true" tabindex="-1"></a>The analysis uses the harmonised annual CPU demand estimates from 2014–2026, expressed in millions of CPU core-hours for readability. These values include directly reported and derived estimates, and therefore remain subject to the conversion assumptions documented in Chapter 05.</span>
+<span id="cb13-243"><a href="#cb13-243" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-244"><a href="#cb13-244" aria-hidden="true" tabindex="-1"></a>As with overall HPC demand, two simple trend specifications are initially considered: linear and log-linear regression.</span>
+<span id="cb13-245"><a href="#cb13-245" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-246"><a href="#cb13-246" aria-hidden="true" tabindex="-1"></a><span class="fu">### CPU Linear and Log-Linear Trends</span></span>
+<span id="cb13-247"><a href="#cb13-247" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-248"><a href="#cb13-248" aria-hidden="true" tabindex="-1"></a><span class="in">```{r cpu-trend-models}</span></span>
+<span id="cb13-249"><a href="#cb13-249" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare CPU demand in millions of core-hours</span></span>
+<span id="cb13-250"><a href="#cb13-250" aria-hidden="true" tabindex="-1"></a>cpu_model_data <span class="ot">&lt;-</span> forecast_data <span class="sc">|&gt;</span></span>
+<span id="cb13-251"><a href="#cb13-251" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">transmute</span>(</span>
+<span id="cb13-252"><a href="#cb13-252" aria-hidden="true" tabindex="-1"></a>    year,</span>
+<span id="cb13-253"><a href="#cb13-253" aria-hidden="true" tabindex="-1"></a>    <span class="at">time =</span> year <span class="sc">-</span> <span class="dv">2014</span>,</span>
+<span id="cb13-254"><a href="#cb13-254" aria-hidden="true" tabindex="-1"></a>    <span class="at">cpu_million_hours =</span> demand_cpu_core_hours <span class="sc">/</span> <span class="fl">1e6</span></span>
+<span id="cb13-255"><a href="#cb13-255" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb13-256"><a href="#cb13-256" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-257"><a href="#cb13-257" aria-hidden="true" tabindex="-1"></a><span class="co"># Linear trend</span></span>
+<span id="cb13-258"><a href="#cb13-258" aria-hidden="true" tabindex="-1"></a>cpu_linear <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb13-259"><a href="#cb13-259" aria-hidden="true" tabindex="-1"></a>  cpu_million_hours <span class="sc">~</span> time,</span>
+<span id="cb13-260"><a href="#cb13-260" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> cpu_model_data</span>
+<span id="cb13-261"><a href="#cb13-261" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-262"><a href="#cb13-262" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-263"><a href="#cb13-263" aria-hidden="true" tabindex="-1"></a><span class="co"># Log-linear trend</span></span>
+<span id="cb13-264"><a href="#cb13-264" aria-hidden="true" tabindex="-1"></a>cpu_loglinear <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb13-265"><a href="#cb13-265" aria-hidden="true" tabindex="-1"></a>  <span class="fu">log</span>(cpu_million_hours) <span class="sc">~</span> time,</span>
+<span id="cb13-266"><a href="#cb13-266" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> cpu_model_data</span>
+<span id="cb13-267"><a href="#cb13-267" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-268"><a href="#cb13-268" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-269"><a href="#cb13-269" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect fitted coefficients</span></span>
+<span id="cb13-270"><a href="#cb13-270" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cpu_linear)</span>
+<span id="cb13-271"><a href="#cb13-271" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cpu_loglinear)</span>
+<span id="cb13-272"><a href="#cb13-272" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-273"><a href="#cb13-273" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-274"><a href="#cb13-274" aria-hidden="true" tabindex="-1"></a>The linear model estimates the annual absolute change in CPU demand, measured in millions of core-hours. The log-linear model estimates the proportional growth trend.</span>
+<span id="cb13-275"><a href="#cb13-275" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-276"><a href="#cb13-276" aria-hidden="true" tabindex="-1"></a>Both specifications are retained for subsequent evaluation. Their in-sample R-squared values are not directly comparable because the models use different response scales.</span>
+<span id="cb13-277"><a href="#cb13-277" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-278"><a href="#cb13-278" aria-hidden="true" tabindex="-1"></a>The analysis does not assume that all historical CPU demand estimates are equally reliable. Differences in reporting methods, resource allocation shares, and conversion assumptions remain relevant when interpreting the fitted trends.</span>
+<span id="cb13-279"><a href="#cb13-279" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-280"><a href="#cb13-280" aria-hidden="true" tabindex="-1"></a><span class="fu">### CPU Trend Findings</span></span>
+<span id="cb13-281"><a href="#cb13-281" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-282"><a href="#cb13-282" aria-hidden="true" tabindex="-1"></a>The linear trend model estimates an average annual increase in CPU demand of approximately 81.01 million core-hours over 2014 - 2026.</span>
+<span id="cb13-283"><a href="#cb13-283" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-284"><a href="#cb13-284" aria-hidden="true" tabindex="-1"></a>The log-linear model estimates a compounded annual growth rate of approximately 18.5%, indicating substantial proportional growth in the harmonised historical CPU demand series.</span>
+<span id="cb13-285"><a href="#cb13-285" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-286"><a href="#cb13-286" aria-hidden="true" tabindex="-1"></a>Both models identify an increasing trend, although the estimated growth patterns differ. The linear model assumes constant absolute growth, whereas the log-linear model assumes approximately constant proportional growth.</span>
+<span id="cb13-287"><a href="#cb13-287" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-288"><a href="#cb13-288" aria-hidden="true" tabindex="-1"></a>The models' in-sample R-squared values cannot be directly compared because their dependent variables are expressed on different scales. Forecast accuracy will therefore be evaluated using consistent original-scale error measures in Chapter 08.</span>
+<span id="cb13-289"><a href="#cb13-289" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-290"><a href="#cb13-290" aria-hidden="true" tabindex="-1"></a>The findings should also be interpreted cautiously because historical CPU demand includes derived estimates based on allocation shares and conversion assumptions. Consequently, the fitted trends may reflect changes in measurement and reporting practices as well as changes in underlying researcher demand.</span>
+<span id="cb13-291"><a href="#cb13-291" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-292"><a href="#cb13-292" aria-hidden="true" tabindex="-1"></a>Neither specification is selected as the preferred CPU forecasting model at this stage.</span>
+<span id="cb13-293"><a href="#cb13-293" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-294"><a href="#cb13-294" aria-hidden="true" tabindex="-1"></a><span class="fu">### CPU Demand Sensitivity Analysis</span></span>
+<span id="cb13-295"><a href="#cb13-295" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-296"><a href="#cb13-296" aria-hidden="true" tabindex="-1"></a>The influence of the 2026 observation is assessed by comparing CPU demand trends fitted over 2014–2026 with equivalent models fitted</span>
+<span id="cb13-297"><a href="#cb13-297" aria-hidden="true" tabindex="-1"></a>over 2014 - 2025.</span>
+<span id="cb13-298"><a href="#cb13-298" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-299"><a href="#cb13-299" aria-hidden="true" tabindex="-1"></a>This sensitivity analysis examines whether the latest observation materially changes the estimated absolute and proportional growth</span>
+<span id="cb13-300"><a href="#cb13-300" aria-hidden="true" tabindex="-1"></a>rates. Excluding 2026 is a modelling sensitivity specification, not a correction to the historical dataset.</span>
+<span id="cb13-301"><a href="#cb13-301" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-302"><a href="#cb13-302" aria-hidden="true" tabindex="-1"></a><span class="in">```{r cpu-trend-sensitivity}</span></span>
+<span id="cb13-303"><a href="#cb13-303" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare historical CPU demand excluding 2026</span></span>
+<span id="cb13-304"><a href="#cb13-304" aria-hidden="true" tabindex="-1"></a>cpu_pre2026_data <span class="ot">&lt;-</span> cpu_model_data <span class="sc">|&gt;</span></span>
+<span id="cb13-305"><a href="#cb13-305" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(year <span class="sc">&lt;=</span> <span class="dv">2025</span>)</span>
+<span id="cb13-306"><a href="#cb13-306" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-307"><a href="#cb13-307" aria-hidden="true" tabindex="-1"></a><span class="co"># Refit linear and log-linear models</span></span>
+<span id="cb13-308"><a href="#cb13-308" aria-hidden="true" tabindex="-1"></a>cpu_linear_pre2026 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb13-309"><a href="#cb13-309" aria-hidden="true" tabindex="-1"></a>  cpu_million_hours <span class="sc">~</span> time,</span>
+<span id="cb13-310"><a href="#cb13-310" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> cpu_pre2026_data</span>
+<span id="cb13-311"><a href="#cb13-311" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-312"><a href="#cb13-312" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-313"><a href="#cb13-313" aria-hidden="true" tabindex="-1"></a>cpu_loglinear_pre2026 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb13-314"><a href="#cb13-314" aria-hidden="true" tabindex="-1"></a>  <span class="fu">log</span>(cpu_million_hours) <span class="sc">~</span> time,</span>
+<span id="cb13-315"><a href="#cb13-315" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> cpu_pre2026_data</span>
+<span id="cb13-316"><a href="#cb13-316" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-317"><a href="#cb13-317" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-318"><a href="#cb13-318" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare estimated trend coefficients</span></span>
+<span id="cb13-319"><a href="#cb13-319" aria-hidden="true" tabindex="-1"></a>cpu_trend_sensitivity <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb13-320"><a href="#cb13-320" aria-hidden="true" tabindex="-1"></a>  <span class="at">model =</span> <span class="fu">c</span>(<span class="st">"Linear trend"</span>, <span class="st">"Log-linear trend"</span>),</span>
+<span id="cb13-321"><a href="#cb13-321" aria-hidden="true" tabindex="-1"></a>  <span class="at">full_2014_2026 =</span> <span class="fu">c</span>(</span>
+<span id="cb13-322"><a href="#cb13-322" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coef</span>(cpu_linear)[[<span class="st">"time"</span>]],</span>
+<span id="cb13-323"><a href="#cb13-323" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coef</span>(cpu_loglinear)[[<span class="st">"time"</span>]]</span>
+<span id="cb13-324"><a href="#cb13-324" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb13-325"><a href="#cb13-325" aria-hidden="true" tabindex="-1"></a>  <span class="at">excluding_2026 =</span> <span class="fu">c</span>(</span>
+<span id="cb13-326"><a href="#cb13-326" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coef</span>(cpu_linear_pre2026)[[<span class="st">"time"</span>]],</span>
+<span id="cb13-327"><a href="#cb13-327" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coef</span>(cpu_loglinear_pre2026)[[<span class="st">"time"</span>]]</span>
+<span id="cb13-328"><a href="#cb13-328" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb13-329"><a href="#cb13-329" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-330"><a href="#cb13-330" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-331"><a href="#cb13-331" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate percentage change in trend coefficients</span></span>
+<span id="cb13-332"><a href="#cb13-332" aria-hidden="true" tabindex="-1"></a>cpu_trend_sensitivity<span class="sc">$</span>percentage_change <span class="ot">&lt;-</span> <span class="fu">with</span>(</span>
+<span id="cb13-333"><a href="#cb13-333" aria-hidden="true" tabindex="-1"></a>  cpu_trend_sensitivity,</span>
+<span id="cb13-334"><a href="#cb13-334" aria-hidden="true" tabindex="-1"></a>  <span class="dv">100</span> <span class="sc">*</span> (full_2014_2026 <span class="sc">-</span> excluding_2026) <span class="sc">/</span></span>
+<span id="cb13-335"><a href="#cb13-335" aria-hidden="true" tabindex="-1"></a>    <span class="fu">abs</span>(excluding_2026)</span>
+<span id="cb13-336"><a href="#cb13-336" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-337"><a href="#cb13-337" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-338"><a href="#cb13-338" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb13-339"><a href="#cb13-339" aria-hidden="true" tabindex="-1"></a>  cpu_trend_sensitivity,</span>
+<span id="cb13-340"><a href="#cb13-340" aria-hidden="true" tabindex="-1"></a>  <span class="at">digits =</span> <span class="dv">3</span>,</span>
+<span id="cb13-341"><a href="#cb13-341" aria-hidden="true" tabindex="-1"></a>  <span class="at">col.names =</span> <span class="fu">c</span>(</span>
+<span id="cb13-342"><a href="#cb13-342" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Model"</span>,</span>
+<span id="cb13-343"><a href="#cb13-343" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Trend with 2026"</span>,</span>
+<span id="cb13-344"><a href="#cb13-344" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Trend without 2026"</span>,</span>
+<span id="cb13-345"><a href="#cb13-345" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Change (%)"</span></span>
+<span id="cb13-346"><a href="#cb13-346" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb13-347"><a href="#cb13-347" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">"Sensitivity of CPU demand trends to the inclusion of 2026"</span></span>
+<span id="cb13-348"><a href="#cb13-348" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-349"><a href="#cb13-349" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-350"><a href="#cb13-350" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-351"><a href="#cb13-351" aria-hidden="true" tabindex="-1"></a>The linear trend coefficient represents the estimated annual absolute change in CPU demand, measured in millions of core-hours.</span>
+<span id="cb13-352"><a href="#cb13-352" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-353"><a href="#cb13-353" aria-hidden="true" tabindex="-1"></a>The log-linear coefficient represents annual change in log demand and can be converted into an implied compounded growth rate.</span>
+<span id="cb13-354"><a href="#cb13-354" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-355"><a href="#cb13-355" aria-hidden="true" tabindex="-1"></a>Differences between the fitted coefficients indicate the sensitivity of estimated historical CPU demand trends to the latest observation. They do not establish whether changes in 2026 are temporary or structural, nor do they determine which model has superior</span>
+<span id="cb13-356"><a href="#cb13-356" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-357"><a href="#cb13-357" aria-hidden="true" tabindex="-1"></a><span class="fu">### CPU Sensitivity Findings</span></span>
+<span id="cb13-358"><a href="#cb13-358" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-359"><a href="#cb13-359" aria-hidden="true" tabindex="-1"></a>Including the 2026 observation increases the estimated linear CPU demand trend from approximately 72.41 to 81.01 million core-hours</span>
+<span id="cb13-360"><a href="#cb13-360" aria-hidden="true" tabindex="-1"></a>per year, representing an increase of 11.9% in the annual absolute growth coefficient.</span>
+<span id="cb13-361"><a href="#cb13-361" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-362"><a href="#cb13-362" aria-hidden="true" tabindex="-1"></a>In contrast, the log-linear trend coefficient changes only slightly, decreasing by approximately 0.4% when 2026 is included.</span>
+<span id="cb13-363"><a href="#cb13-363" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-364"><a href="#cb13-364" aria-hidden="true" tabindex="-1"></a>These results suggest that the 2026 observation has a greater relative influence on the estimated absolute CPU demand growth</span>
+<span id="cb13-365"><a href="#cb13-365" aria-hidden="true" tabindex="-1"></a>rate than on the proportional growth trend.</span>
+<span id="cb13-366"><a href="#cb13-366" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-367"><a href="#cb13-367" aria-hidden="true" tabindex="-1"></a>However, the limited change in the log-linear coefficient does not necessarily imply that projected CPU demand is insensitive</span>
+<span id="cb13-368"><a href="#cb13-368" aria-hidden="true" tabindex="-1"></a>to 2026, as changes in the fitted intercept may also affect future forecasts.</span>
+<span id="cb13-369"><a href="#cb13-369" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-370"><a href="#cb13-370" aria-hidden="true" tabindex="-1"></a>The sensitivity analysis does not establish whether the 2026 increase represents a sustained change in underlying researcher demand or reflects temporary conditions, reporting differences, or conversion assumptions.</span>
+<span id="cb13-371"><a href="#cb13-371" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-372"><a href="#cb13-372" aria-hidden="true" tabindex="-1"></a>Both linear and log-linear CPU models are therefore retained for subsequent forecast evaluation in Chapter 08.</span>
+<span id="cb13-373"><a href="#cb13-373" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-374"><a href="#cb13-374" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 
