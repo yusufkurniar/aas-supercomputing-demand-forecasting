@@ -618,3 +618,74 @@ The scenarios will be retained as evidence of historical conversion uncertainty.
 
 Any future low, baseline, and high GPU demand projections must distinguish uncertainty in the historical conversion assumptions from uncertainty in future demand growth.
 
+## Demand Projections for 2027–2030
+
+### Overall HPC Demand Projections
+
+Four candidate projection trajectories are generated for overall HPC demand using the previously fitted linear and log-linear trend models.
+
+The projections include full-history specifications fitted over 2014 - 2026 and sensitivity specifications fitted over 2014 - 2025.
+
+This comparison illustrates the effects of model functional form and the inclusion of the 2026 observation on projected demand through 2030.
+
+```{r overall-demand-projections}
+# Forecast horizon
+future_years <- data.frame(
+  year = 2027:2030,
+  time = 2027:2030 - 2014
+)
+
+# Generate projections in kSU
+overall_projections <- future_years |>
+  dplyr::transmute(
+    year,
+    linear_full = as.numeric(
+      predict(overall_linear, newdata = future_years)
+    ),
+    loglinear_full = exp(as.numeric(
+      predict(overall_loglinear, newdata = future_years)
+    )),
+    linear_pre2026 = as.numeric(
+      predict(overall_linear_pre2026, newdata = future_years)
+    ),
+    loglinear_pre2026 = exp(as.numeric(
+      predict(overall_loglinear_pre2026, newdata = future_years)
+    ))
+  )
+
+knitr::kable(
+  overall_projections,
+  digits = 0,
+  format.args = list(big.mark = ","),
+  col.names = c(
+    "Year",
+    "Linear (Full)",
+    "Log-linear (Full)",
+    "Linear (Excl. 2026)",
+    "Log-linear (Excl. 2026)"
+  ),
+  caption = "Candidate overall HPC demand projections, 2027–2030 (kSU)"
+)
+```
+
+The linear models project demand based on constant annual absolute growth, while the log-linear models project demand based on approximately constant proportional growth.
+
+The log-linear projections are obtained by exponentiating predicted log demand. These represent back-transformed central trajectories, rather than bias-adjusted conditional mean forecasts.
+
+The differences between trajectories reflect model specification and sensitivity to the 2026 observation. They should not be interpreted as formal prediction intervals or statistically established uncertainty bounds.
+
+Final model selection and forecast accuracy assessment will be conducted in Chapter 08.
+
+### Overall HPC Projection Findings
+
+The candidate models produce substantially different projections of overall HPC demand through 2030.
+
+Under the linear trend specifications, projected demand in 2030 ranges from approximately 2.29 million to 2.50 million kSU. The log-linear specifications produce considerably higher projections, ranging from approximately 6.48 million to 6.96 million kSU.
+
+The differences reflect the models' underlying growth assumptions. Linear models extrapolate constant annual absolute increases, whereas log-linear models extrapolate compounded proportional growth.
+
+Excluding the 2026 observation reduces the 2030 linear projection but increases the corresponding log-linear projection. This demonstrates that the effect of the latest observation depends on the functional form of the forecasting model.
+
+The wide range of projected outcomes highlights the importance of model selection and forecast evaluation, particularly given the short and heterogeneous historical dataset.
+
+These trajectories are preliminary model-based projections, not formal prediction intervals or validated low, baseline, and high demand scenarios. Their relative predictive accuracy will be evaluated in Chapter 08 before selecting a preferred forecasting approach.
