@@ -76,3 +76,191 @@ Model selection will also consider:
 Particular caution will be applied to GPU demand because its historical modelling period is short and includes estimates derived from different reporting and conversion methods.
 
 The evaluation results presented in this chapter will provide the statistical evidence for model selection in Chapter 09 and the development of demand scenarios in Chapter 10.
+
+## Rolling-Origin Cross-Validation
+
+### Overall HPC Demand: One-Step-Ahead Evaluation
+
+The initial evaluation focuses on overall HPC demand, measured in thousands of service units (kSU).
+
+Rolling-origin cross-validation is applied using an initial training period of 2014 - 2020. At each subsequent origin, the training sample expands by one year, and a one-step-ahead forecast is generated for the following year.
+
+This produces six evaluation years, from 2021 to 2026.
+
+Four forecasting approaches are evaluated using identical training periods and forecast origins:
+
+1. Naïve benchmark.
+2. Drift benchmark.
+3. Linear trend.
+4. Log-linear trend.
+
+Each model is re-estimated using only the observations available at the corresponding forecast origin. This avoids information leakage from future observations.
+
+```{r overall-cv-predictions}
+# Load harmonised annual demand data
+annual_converted <- readRDS(
+  "assets/data/data converted/annual_demand_allocation_converted.rds"
+)
+
+# Prepare overall HPC demand series
+overall_cv_data <- annual_converted |>
+  dplyr::transmute(
+    year = as.integer(year),
+    demand_ksu = as.numeric(demand_ksu)
+  ) |>
+  dplyr::arrange(year)
+
+# Validate historical series
+stopifnot(
+  identical(overall_cv_data$year, 2014:2026),
+  all(is.finite(overall_cv_data$demand_ksu)),
+  all(overall_cv_data$demand_ksu > 0)
+)
+
+# Define common one-step-ahead evaluation years
+cv_test_years <- 2021:2026
+
+# Generate forecasts using expanding training windows
+overall_cv_predictions <- dplyr::bind_rows(
+  lapply(cv_test_years, function(test_year) {
+
+    training <- overall_cv_data |>
+      dplyr::filter(year < test_year) |>
+      dplyr::mutate(time = year - 2014)
+
+    actual <- overall_cv_data$demand_ksu[
+      overall_cv_data$year == test_year
+    ]
+
+    future <- data.frame(time = test_year - 2014)
+
+    # Naïve: last observed demand
+    naive_forecast <- tail(training$demand_ksu, 1)
+
+    # Drift: average change from first to last observation
+    drift_forecast <- tail(training$demand_ksu, 1) +
+      (
+        tail(training$demand_ksu, 1) -
+          training$demand_ksu[1]
+      ) / (nrow(training) - 1)
+
+    # Linear trend fitted only to training data
+    linear_fit <- lm(
+      demand_ksu ~ time,
+      data = training
+    )
+
+    linear_forecast <- as.numeric(
+      predict(linear_fit, newdata = future)
+    )
+
+    # Log-linear trend fitted only to training data
+    loglinear_fit <- lm(
+      log(demand_ksu) ~ time,
+      data = training
+    )
+
+    loglinear_forecast <- exp(as.numeric(
+      predict(loglinear_fit, newdata = future)
+    ))
+
+    data.frame(
+      year = test_year,
+      actual = actual,
+      naive = naive_forecast,
+      drift = drift_forecast,
+      linear = linear_forecast,
+      loglinear = loglinear_forecast
+    )
+  })
+)
+
+# Display the predictions for inspection
+knitr::kable(
+  overall_cv_predictions,
+  digits = 0,
+  format.args = list(big.mark = ","),
+  col.names = c(
+    "Year",
+    "Actual (kSU)",
+    "Naïve",
+    "Drift",
+    "Linear",
+    "Log-linear"
+  ),
+  caption = paste(
+    "Rolling-origin one-step-ahead predictions",
+    "for overall HPC demand, 2021–2026 (kSU)"
+  )
+)
+```
+
+All four approaches produce forecasts for the same six test years, allowing their prediction errors to be compared consistently.
+
+The log-linear forecasts are exponentiated predictions from the fitted log-demand models. They are evaluated on the original
+kSU scale and represent back-transformed central predictions, rather than bias-adjusted conditional means.
+
+The resulting predictions will be used to calculate RMSE and MAE in the next stage of the evaluation.
+
+### Overall HPC Forecast Accuracy
+
+Forecast accuracy is evaluated using root mean squared error (RMSE) and mean absolute error (MAE) across the six one-step-ahead predictions for 2021 - 2026.
+
+Both measures are calculated on the original kSU scale. Lower values indicate better historical predictive accuracy over the common evaluation period.
+
+```{r overall-cv-accuracy}
+# Calculate forecast accuracy for each candidate model
+overall_cv_accuracy <- dplyr::bind_rows(
+  lapply(
+    c("naive", "drift", "linear", "loglinear"),
+    function(model_name) {
+
+      errors <- overall_cv_predictions[[model_name]] -
+        overall_cv_predictions$actual
+
+      data.frame(
+        model = model_name,
+        RMSE = sqrt(mean(errors^2)),
+        MAE = mean(abs(errors))
+      )
+    }
+  )
+) |>
+  dplyr::arrange(RMSE)
+
+knitr::kable(
+  overall_cv_accuracy,
+  digits = 0,
+  format.args = list(big.mark = ","),
+  col.names = c("Model", "RMSE (kSU)", "MAE (kSU)"),
+  caption = paste(
+    "One-step-ahead cross-validation accuracy",
+    "for overall HPC demand, 2021–2026"
+  )
+)
+```
+
+The accuracy comparison uses identical test years for all four models, ensuring that differences in RMSE and MAE are not
+caused by different evaluation periods.
+
+RMSE places greater weight on large forecast errors, whereas MAE provides a measure of typical absolute forecast error.
+
+These metrics provide evidence for subsequent model selection in Chapter 09, alongside considerations of model simplicity, data provenance, and sensitivity to influential observations.
+
+### Overall HPC Accuracy Findings
+
+Rolling-origin one-step-ahead cross-validation over 2021–2026 indicates that the linear trend model achieves the lowest forecast errors among the four evaluated approaches.
+
+The linear model records an RMSE of approximately 290,898 kSU and an MAE of 198,295 kSU. The drift benchmark ranks second, with an RMSE of 314,588 kSU and an MAE of 221,778 kSU.
+
+The naïve benchmark produces an RMSE of 378,864 kSU, while the log-linear model records the highest RMSE of 511,614 kSU and MAE of 466,991 kSU.
+
+These findings indicate that the linear trend provides the strongest one-step-ahead predictive performance over the selected evaluation period.
+
+Although the log-linear model exhibited a relatively high in-sample R-squared value in Chapter 07, its weaker cross-validation accuracy demonstrates that in-sample fit alone is insufficient for selecting a forecasting model.
+
+The evaluation is nevertheless based on only six forecast errors and includes the substantial demand increase in 2026. Consequently, the model rankings may be sensitive to the selected evaluation period and individual observations.
+
+Furthermore, one-step-ahead accuracy does not necessarily translate into superior multi-year forecasting performance through 2030.
+
+The linear trend is therefore identified as the strongest candidate under the current evaluation criteria, rather than selected as the final forecasting model. Model selection will be addressed in Chapter 09.
