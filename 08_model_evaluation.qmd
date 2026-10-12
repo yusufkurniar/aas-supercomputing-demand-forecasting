@@ -2,142 +2,429 @@
 
 ## Purpose
 
-The purpose of this step is to evaluate the forecasting models developed in the previous step and assess how well they represent historical HPC demand.
+This chapter evaluates the predictive performance and statistical suitability of the candidate forecasting models developed in Chapter 07.
 
-Model evaluation considers forecast accuracy, residual behaviour, forecast behaviour and interpretability. The aim is not only to identify models with low forecast errors, but also to ensure that the resulting forecasts are reasonable for the available data and the purpose of the project.
+The evaluation considers three distinct measures of Australian national research supercomputing demand:
 
-## Evaluation Approach
+1. Overall HPC demand, expressed in thousands of service units (kSU).
+2. CPU demand, expressed in millions of CPU core-hours.
+3. GPU demand, expressed in millions of GPU-hours.
 
-The candidate models are evaluated using a consistent framework.
+The objective is to identify forecasting approaches that provide a defensible basis for estimating researcher demand through 2030,
+while recognising limitations in historical data quality, comparability, and sample size.
 
-Where possible, time-series cross-validation is used to assess how the models would have performed when forecasting observations that were not used during model estimation.
+Model selection will prioritise predictive accuracy, simplicity, interpretability, and robustness to influential observations, particularly the increase in reported demand in 2026.
 
-This is particularly important because evaluating models only on their in-sample fit may give an overly optimistic view of forecasting performance.
+## Evaluation Framework
 
-## Time-Series Cross-Validation
+### Candidate Models and Benchmarks
 
-Rolling-origin time-series cross-validation is used where the available historical data allow it.
+The evaluation considers four forecasting approaches:
 
-At each evaluation point, the model is estimated using observations available up to that point and then used to forecast future observations.
+1. Naïve benchmark: forecasts future demand using the most recent available observation.
+2. Drift benchmark: extrapolates the average annual change between the first and most recent observations in the training sample.
+3. Linear trend: estimates a constant annual absolute change in demand.
+4. Log-linear trend: estimates approximately constant proportional growth using a regression model fitted to log-transformed demand.
 
-The forecasting origin is progressively moved forward through the historical period.
+Naïve and drift forecasts provide simple reference points against which the regression-based models can be evaluated.
 
-This approach maintains the chronological order of the data and avoids using future information to predict the past.
+The linear and log-linear specifications follow the modelling framework established in Chapter 07, including sensitivity analyses excluding the 2026 observation.
 
-## Forecast Accuracy
+More complex models will not be prioritised unless their additional complexity can be justified by the available data and demonstrated predictive performance.
 
-Forecast accuracy is assessed using measures such as:
+### Time-Series Cross-Validation
 
-### Mean Absolute Error
+Forecast accuracy will be assessed using rolling-origin time-series cross-validation.
 
-$$
-MAE =
-\frac{1}{n}
-\sum_{t=1}^{n}
-|y_t-\hat{y}_t|
-$$
+At each evaluation origin, models will be estimated using only observations available up to that year. Forecasts will then be compared with subsequent historical observations.
 
-MAE measures the average absolute difference between observed and forecast values.
+This approach preserves chronological ordering and avoids using future observations to estimate models evaluated on earlier periods.
 
-### Root Mean Squared Error
+One-step-ahead evaluation will provide the primary comparison because the historical series are relatively short.
 
-$$
-RMSE =
-\sqrt{
-\frac{1}{n}
-\sum_{t=1}^{n}
-(y_t-\hat{y}_t)^2
-}
-$$
+Where sufficient observations are available, additional forecast horizons may be examined to assess the stability of longer-term extrapolations.
 
-RMSE gives greater weight to larger forecast errors.
+The evaluation will distinguish between the longer overall HPC and CPU series covering 2014–2026 and the shorter GPU modelling series covering 2022 - 2026.
 
-### Mean Absolute Percentage Error
+For GPU demand, the small number of recent observations severely limits the number of meaningful cross-validation origins. Any accuracy comparisons will therefore be considered exploratory.
 
-$$
-MAPE =
-\frac{100}{n}
-\sum_{t=1}^{n}
-\left|
-\frac{y_t-\hat{y}_t}{y_t}
-\right|
-$$
+### Forecast Accuracy Measures
 
-MAPE may be used as a supplementary measure where the observed values make percentage errors meaningful.
+Forecast errors will be evaluated on the original scale of each demand measure using:
 
-No single accuracy measure is used in isolation when comparing the models.
+1. Root Mean Squared Error (RMSE), which gives greater weight to larger forecast errors.
+2. Mean Absolute Error (MAE), which measures the average absolute forecast error.
 
-## Residual Diagnostics
+Accuracy measures will be calculated separately for overall HPC, CPU, and GPU demand because their units are different.
 
-Residuals are examined to determine whether important patterns remain unexplained by the model.
+For log-linear models, predictions will be back-transformed to the original demand scale before calculating forecast errors. The evaluation will distinguish exponentiated log-scale predictions from bias-adjusted mean forecasts where relevant.
 
-The evaluation considers:
+Models will be compared using common evaluation origins within each demand measure to ensure a fair comparison.
 
-- residuals over time
-- residual autocorrelation
-- unusually large residuals
-- systematic over- or under-forecasting
-- residual distribution
+### Model Selection Principles
 
-A well-performing forecasting model should not leave strong systematic patterns in its residuals.
+The preferred forecasting approach will not be selected solely on the basis of the lowest numerical error.
 
-## Forecast Behaviour
+Model selection will also consider:
 
-The resulting forecasts are also examined visually.
+- Stability across evaluation periods and forecast origins.
+- Sensitivity to the inclusion of the 2026 observation.
+- Residual behaviour and evidence of systematic model errors.
+- Interpretability and consistency with historical data provenance.
+- The risks of extrapolating growth patterns through 2030.
 
-This is important because a model can achieve relatively good historical accuracy while producing unrealistic long-term forecasts.
+Particular caution will be applied to GPU demand because its historical modelling period is short and includes estimates derived from different reporting and conversion methods.
 
-The evaluation therefore considers whether:
+The evaluation results presented in this chapter will provide the statistical evidence for model selection in Chapter 09 and the development of demand scenarios in Chapter 10.
 
-- the direction of the forecast is reasonable
-- long-term growth is plausible
-- forecasts become unstable
-- prediction intervals appropriately reflect uncertainty
-- forecasts respond reasonably to the historical data
+## Rolling-Origin Cross-Validation
 
-## Structural Model Evaluation
+### Overall HPC Demand: One-Step-Ahead Evaluation
 
-For models containing structural demand drivers, evaluation also considers whether the estimated relationships are interpretable and consistent with the expected relationship between the variables and HPC demand.
+The initial evaluation focuses on overall HPC demand, measured in thousands of service units (kSU).
 
-Particular attention is given to:
+Rolling-origin cross-validation is applied using an initial training period of 2014 - 2020. At each subsequent origin, the training sample expands by one year, and a one-step-ahead forecast is generated for the following year.
 
-- coefficient direction
-- sensitivity to individual observations
-- model complexity
-- stability of estimated relationships
-- contribution of the selected drivers
+This produces six evaluation years, from 2021 to 2026.
 
-Given the limited number of annual observations, model complexity is considered carefully.
+Four forecasting approaches are evaluated using identical training periods and forecast origins:
 
-## Comparison with Benchmark Models
+1. Naïve benchmark.
+2. Drift benchmark.
+3. Linear trend.
+4. Log-linear trend.
 
-The structural models are compared with the simpler benchmark models developed in Step 7.
+Each model is re-estimated using only the observations available at the corresponding forecast origin. This avoids information leakage from future observations.
 
-A more complex model is not automatically preferred simply because it contains additional explanatory variables.
+```{r overall-cv-predictions}
+# Load harmonised annual demand data
+annual_converted <- readRDS(
+  "assets/data/data converted/annual_demand_allocation_converted.rds"
+)
 
-The additional complexity should provide useful forecasting performance or interpretation relative to simpler alternatives.
+# Prepare overall HPC demand series
+overall_cv_data <- annual_converted |>
+  dplyr::transmute(
+    year = as.integer(year),
+    demand_ksu = as.numeric(demand_ksu)
+  ) |>
+  dplyr::arrange(year)
 
-## CPU and GPU Evaluation
+# Validate historical series
+stopifnot(
+  identical(overall_cv_data$year, 2014:2026),
+  all(is.finite(overall_cv_data$demand_ksu)),
+  all(overall_cv_data$demand_ksu > 0)
+)
 
-Where CPU and GPU demand are modelled separately, their models are evaluated independently.
+# Define common one-step-ahead evaluation years
+cv_test_years <- 2021:2026
 
-This allows the evaluation approach to reflect differences in historical data availability and demand patterns between the two resource types.
+# Generate forecasts using expanding training windows
+overall_cv_predictions <- dplyr::bind_rows(
+  lapply(cv_test_years, function(test_year) {
 
-## Evaluation Limitations
+    training <- overall_cv_data |>
+      dplyr::filter(year < test_year) |>
+      dplyr::mutate(time = year - 2014)
 
-Model evaluation is constrained by the relatively short historical dataset.
+    actual <- overall_cv_data$demand_ksu[
+      overall_cv_data$year == test_year
+    ]
 
-As a result:
+    future <- data.frame(time = test_year - 2014)
 
-- the number of cross-validation periods may be limited
-- accuracy measures may be sensitive to individual years
-- structural changes may affect historical model performance
-- GPU evaluation may be based on fewer observations than CPU evaluation
+    # Naïve: last observed demand
+    naive_forecast <- tail(training$demand_ksu, 1)
 
-These limitations are considered when interpreting differences in model performance.
+    # Drift: average change from first to last observation
+    drift_forecast <- tail(training$demand_ksu, 1) +
+      (
+        tail(training$demand_ksu, 1) -
+          training$demand_ksu[1]
+      ) / (nrow(training) - 1)
 
-## Output
+    # Linear trend fitted only to training data
+    linear_fit <- lm(
+      demand_ksu ~ time,
+      data = training
+    )
 
-The output of this step is a comparison of candidate models based on forecast accuracy, residual diagnostics, forecast behaviour and interpretability.
+    linear_forecast <- as.numeric(
+      predict(linear_fit, newdata = future)
+    )
 
-The evaluation results are then used to support model selection in the next step.
+    # Log-linear trend fitted only to training data
+    loglinear_fit <- lm(
+      log(demand_ksu) ~ time,
+      data = training
+    )
+
+    loglinear_forecast <- exp(as.numeric(
+      predict(loglinear_fit, newdata = future)
+    ))
+
+    data.frame(
+      year = test_year,
+      actual = actual,
+      naive = naive_forecast,
+      drift = drift_forecast,
+      linear = linear_forecast,
+      loglinear = loglinear_forecast
+    )
+  })
+)
+
+# Display the predictions for inspection
+knitr::kable(
+  overall_cv_predictions,
+  digits = 0,
+  format.args = list(big.mark = ","),
+  col.names = c(
+    "Year",
+    "Actual (kSU)",
+    "Naïve",
+    "Drift",
+    "Linear",
+    "Log-linear"
+  ),
+  caption = paste(
+    "Rolling-origin one-step-ahead predictions",
+    "for overall HPC demand, 2021–2026 (kSU)"
+  )
+)
+```
+
+All four approaches produce forecasts for the same six test years, allowing their prediction errors to be compared consistently.
+
+The log-linear forecasts are exponentiated predictions from the fitted log-demand models. They are evaluated on the original
+kSU scale and represent back-transformed central predictions, rather than bias-adjusted conditional means.
+
+The resulting predictions will be used to calculate RMSE and MAE in the next stage of the evaluation.
+
+### Overall HPC Forecast Accuracy
+
+Forecast accuracy is evaluated using root mean squared error (RMSE) and mean absolute error (MAE) across the six one-step-ahead predictions for 2021 - 2026.
+
+Both measures are calculated on the original kSU scale. Lower values indicate better historical predictive accuracy over the common evaluation period.
+
+```{r overall-cv-accuracy}
+# Calculate forecast accuracy for each candidate model
+overall_cv_accuracy <- dplyr::bind_rows(
+  lapply(
+    c("naive", "drift", "linear", "loglinear"),
+    function(model_name) {
+
+      errors <- overall_cv_predictions[[model_name]] -
+        overall_cv_predictions$actual
+
+      data.frame(
+        model = model_name,
+        RMSE = sqrt(mean(errors^2)),
+        MAE = mean(abs(errors))
+      )
+    }
+  )
+) |>
+  dplyr::arrange(RMSE)
+
+knitr::kable(
+  overall_cv_accuracy,
+  digits = 0,
+  format.args = list(big.mark = ","),
+  col.names = c("Model", "RMSE (kSU)", "MAE (kSU)"),
+  caption = paste(
+    "One-step-ahead cross-validation accuracy",
+    "for overall HPC demand, 2021–2026"
+  )
+)
+```
+
+The accuracy comparison uses identical test years for all four models, ensuring that differences in RMSE and MAE are not
+caused by different evaluation periods.
+
+RMSE places greater weight on large forecast errors, whereas MAE provides a measure of typical absolute forecast error.
+
+These metrics provide evidence for subsequent model selection in Chapter 09, alongside considerations of model simplicity, data provenance, and sensitivity to influential observations.
+
+### Overall HPC Accuracy Findings
+
+Rolling-origin one-step-ahead cross-validation over 2021–2026 indicates that the linear trend model achieves the lowest forecast errors among the four evaluated approaches.
+
+The linear model records an RMSE of approximately 290,898 kSU and an MAE of 198,295 kSU. The drift benchmark ranks second, with an RMSE of 314,588 kSU and an MAE of 221,778 kSU.
+
+The naïve benchmark produces an RMSE of 378,864 kSU, while the log-linear model records the highest RMSE of 511,614 kSU and MAE of 466,991 kSU.
+
+These findings indicate that the linear trend provides the strongest one-step-ahead predictive performance over the selected evaluation period.
+
+Although the log-linear model exhibited a relatively high in-sample R-squared value in Chapter 07, its weaker cross-validation accuracy demonstrates that in-sample fit alone is insufficient for selecting a forecasting model.
+
+The evaluation is nevertheless based on only six forecast errors and includes the substantial demand increase in 2026. Consequently, the model rankings may be sensitive to the selected evaluation period and individual observations.
+
+Furthermore, one-step-ahead accuracy does not necessarily translate into superior multi-year forecasting performance through 2030.
+
+### CPU Demand: One-Step-Ahead Evaluation
+
+CPU demand is evaluated using expanding-window rolling-origin cross-validation, consistent with the methodology applied to overall HPC demand.
+
+The initial training period covers 2014–2020, with one-step-ahead forecasts generated for each year from 2021 to 2026.
+
+Four approaches are evaluated: naïve, drift, linear trend, and log-linear trend. Each model uses only observations available before its corresponding evaluation year.
+
+CPU demand is expressed in millions of core-hours, consistent with the modelling approach established in Chapter 07.
+
+```{r cpu-cv-predictions}
+# Prepare CPU demand in millions of core-hours
+cpu_cv_data <- annual_converted |>
+  dplyr::transmute(
+    year = as.integer(year),
+    cpu_million_hours = as.numeric(demand_cpu_core_hours) / 1e6
+  ) |>
+  dplyr::arrange(year)
+
+# Validate the CPU demand series
+stopifnot(
+  identical(cpu_cv_data$year, 2014:2026),
+  all(is.finite(cpu_cv_data$cpu_million_hours)),
+  all(cpu_cv_data$cpu_million_hours > 0)
+)
+
+# Use the same evaluation years as overall HPC
+cpu_cv_predictions <- dplyr::bind_rows(
+  lapply(2021:2026, function(test_year) {
+
+    training <- cpu_cv_data |>
+      dplyr::filter(year < test_year) |>
+      dplyr::mutate(time = year - 2014)
+
+    actual <- cpu_cv_data$cpu_million_hours[
+      cpu_cv_data$year == test_year
+    ]
+
+    future <- data.frame(time = test_year - 2014)
+
+    # Naïve benchmark
+    naive_forecast <- tail(training$cpu_million_hours, 1)
+
+    # Drift benchmark
+    drift_forecast <- tail(training$cpu_million_hours, 1) +
+      (
+        tail(training$cpu_million_hours, 1) -
+          training$cpu_million_hours[1]
+      ) / (nrow(training) - 1)
+
+    # Linear trend
+    linear_fit <- lm(
+      cpu_million_hours ~ time,
+      data = training
+    )
+
+    linear_forecast <- as.numeric(
+      predict(linear_fit, newdata = future)
+    )
+
+    # Log-linear trend
+    loglinear_fit <- lm(
+      log(cpu_million_hours) ~ time,
+      data = training
+    )
+
+    loglinear_forecast <- exp(as.numeric(
+      predict(loglinear_fit, newdata = future)
+    ))
+
+    data.frame(
+      year = test_year,
+      actual = actual,
+      naive = naive_forecast,
+      drift = drift_forecast,
+      linear = linear_forecast,
+      loglinear = loglinear_forecast
+    )
+  })
+)
+
+knitr::kable(
+  cpu_cv_predictions,
+  digits = 2,
+  format.args = list(big.mark = ","),
+  col.names = c(
+    "Year",
+    "Actual (million core-hours)",
+    "Naïve",
+    "Drift",
+    "Linear",
+    "Log-linear"
+  ),
+  caption = paste(
+    "Rolling-origin one-step-ahead CPU demand predictions,",
+    "2021–2026 (million core-hours)"
+  )
+)
+```
+
+The evaluation uses identical forecast origins across all four models, allowing a consistent comparison of their predictive performance.
+
+The log-linear forecasts are back-transformed to the original CPU demand scale before evaluation. These exponentiated values represent central predictions rather than bias-adjusted conditional mean forecasts.
+
+The resulting predictions will be used to calculate RMSE and MAE in the next stage.
+
+### CPU Forecast Accuracy
+
+Forecast accuracy is assessed using root mean squared error (RMSE) and mean absolute error (MAE), calculated from the six rolling-origin one-step-ahead predictions for 2021 - 2026.
+
+Both measures are expressed in millions of CPU core-hours.
+
+```{r cpu-cv-accuracy}
+# Calculate CPU forecast accuracy
+cpu_cv_accuracy <- dplyr::bind_rows(
+  lapply(c("naive", "drift", "linear", "loglinear"), function(model) {
+
+    errors <- cpu_cv_predictions[[model]] -
+      cpu_cv_predictions$actual
+
+    data.frame(
+      model = model,
+      RMSE = sqrt(mean(errors^2)),
+      MAE = mean(abs(errors))
+    )
+  })
+) |>
+  dplyr::arrange(RMSE)
+
+knitr::kable(
+  cpu_cv_accuracy,
+  digits = 2,
+  col.names = c(
+    "Model",
+    "RMSE (million core-hours)",
+    "MAE (million core-hours)"
+  ),
+  caption = "CPU demand forecast accuracy, 2021–2026"
+)
+```
+
+Lower RMSE and MAE values indicate better predictive accuracy. RMSE places greater weight on large forecast errors, while MAE represents the average absolute deviation between predicted and actual CPU demand.
+
+### CPU Accuracy Findings
+
+Rolling-origin one-step-ahead cross-validation over 2021 - 2026 indicates that the linear and log-linear trend models provide
+the strongest predictive performance among the four evaluated CPU forecasting approaches.
+
+The linear model achieves the lowest RMSE of 157.72 million CPU core-hours, followed closely by the log-linear model at 160.18 million CPU core-hours.
+
+However, the log-linear model achieves the lowest MAE of 133.74 million CPU core-hours, compared with 138.65 million CPU core-hours for the linear model.
+
+Both trend models outperform the drift and naïve benchmarks under both accuracy measures.
+
+The difference in model rankings indicates that no single CPU trend specification dominates across both evaluation criteria. The linear model performs slightly better under RMSE, which places greater weight on larger errors, while the log-linear model performs slightly better under MAE.
+
+These findings also demonstrate the importance of out-of-sample evaluation rather than relying solely on
+in-sample model fit.
+
+Nevertheless, the evaluation is based on only six one-step-ahead forecast errors. Model rankings may be sensitive to individual observations, particularly the substantial increase in CPU demand observed in 2026.
+
+Furthermore, one-step-ahead predictive accuracy does not necessarily establish superior performance for multi-year
+projections through 2030.
+
+Both linear and log-linear trend models are therefore retained as competitive candidates for CPU demand forecasting. Final model selection will be addressed in Chapter 09.
