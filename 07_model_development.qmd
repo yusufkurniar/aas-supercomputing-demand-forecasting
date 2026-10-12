@@ -21,11 +21,16 @@ The forecasts are intended to provide evidence-informed planning scenarios rathe
 
 ### Forecast Target
 
-The primary forecasting target is annual researcher demand for Australian national research supercomputing resources, expressed in millions of CPU-equivalent core-hours.
+The forecasting analysis considers three related but distinct measures of Australian national research supercomputing demand:
 
-This measure represents estimated computing resources requested by researchers, rather than resources allocated by HPC facilities or the computational capacity available to them. Maintaining this distinction is essential because historical allocations may be constrained by infrastructure availability and therefore do not necessarily reflect underlying researcher demand.
+1. Overall HPC demand, expressed in thousands of service units (kSU).
+2. CPU demand, expressed in CPU core-hours.
+3. GPU demand, expressed in GPU-hours.
 
-The analysis uses the harmonised annual demand series developed in Chapters 03–05 and examined in Chapter 06. The historical period covers 2014–2026, comprising 13 annual observations, with forecasts extending from 2027 to 2030.
+These measures represent harmonised estimates of computing resources requested by researchers, rather than allocated resources or available computing capacity. CPU and GPU demand are modelled separately because their resource units and conversion assumptions are not directly interchangeable.
+
+The overall kSU series provides a reference for aggregate demand, while the CPU and GPU series support resource-specific forecasts
+relevant to future infrastructure planning.
 
 ### Historical Data Suitability
 
@@ -48,6 +53,112 @@ The forecasting horizon covers four annual periods:
 - 2029
 - 2030
 
-All projections will be expressed in millions of CPU-equivalent core-hours to maintain consistency with the historical analysis.
+Forecasts will be reported in the original units of each target: kSU for overall HPC demand, CPU core-hours for CPU demand, and GPU-hours for GPU demand.
+
+The GPU analysis will explicitly distinguish historical scenario-based estimates from later reported or derived values, rather than treating all historical GPU observations as equally reliable.
 
 The resulting forecasts are conditional projections based on historical patterns and modelling assumptions. They should not be interpreted as precise estimates of future HPC requirements, particularly given uncertainty surrounding emerging GPU-intensive workloads, changes in research activity, and future infrastructure investment.
+
+## Data Preparation and Validation
+
+The forecasting analysis uses the converted annual demand and allocation dataset produced in Chapter 05. The dataset is loaded directly from its saved RDS file to ensure that this chapter can be executed independently of the preceding analysis.
+
+The preparation process retains the historical demand observations without modifying their original values. Validation checks confirm
+the expected annual coverage, uniqueness of observations, and availability of positive demand values.
+
+```{r prepare-forecast-data}
+# Load the converted annual dataset
+annual_converted <- readRDS(
+  "assets/data/data converted/annual_demand_allocation_converted.rds"
+)
+
+# Retain the three forecasting targets
+forecast_data <- annual_converted |>
+  dplyr::transmute(
+    year = as.integer(year),
+    demand_ksu = as.numeric(demand_ksu),
+    demand_cpu_core_hours = as.numeric(demand_cpu_core_hours),
+    demand_gpu_hours = as.numeric(demand_gpu_hours)
+  ) |>
+  dplyr::arrange(year)
+
+# Validate annual coverage and values
+stopifnot(
+  identical(forecast_data$year, 2014:2026),
+  !anyDuplicated(forecast_data$year),
+  all(is.finite(as.matrix(forecast_data[, -1]))),
+  all(as.matrix(forecast_data[, -1]) >= 0),
+  all(forecast_data$demand_ksu > 0),
+  all(forecast_data$demand_cpu_core_hours > 0)
+)
+
+# Confirm historical coverage
+cat(
+  "Historical period:", min(forecast_data$year),
+  "-", max(forecast_data$year), "\n",
+  "Observations:", nrow(forecast_data), "\n"
+)
+```
+
+## Candidate Forecasting Models
+
+### Overall HPC Demand: Linear and Log-Linear Trends
+
+Two initial trend models are fitted to the harmonised annual HPC demand
+series for 2014–2026.
+
+The linear trend models demand directly in kSU, assuming a constant
+absolute change over time. The log-linear trend models the natural
+logarithm of demand, allowing for approximately constant proportional
+growth.
+
+Both specifications are retained for subsequent evaluation. Neither
+is assumed to be the preferred model before out-of-sample validation.
+
+```{r overall-trend-models}
+# Use a centred time index for numerical stability
+overall_model_data <- forecast_data |>
+  dplyr::mutate(time = year - 2014)
+
+# Linear trend: demand in kSU
+overall_linear <- lm(
+  demand_ksu ~ time,
+  data = overall_model_data
+)
+
+# Log-linear trend: log(demand in kSU)
+overall_loglinear <- lm(
+  log(demand_ksu) ~ time,
+  data = overall_model_data
+)
+
+# Inspect fitted coefficients
+summary(overall_linear)
+summary(overall_loglinear)
+```
+
+The linear model estimates an annual absolute change in HPC demand,
+whereas the log-linear model estimates an approximately constant
+annual percentage growth rate.
+
+The log-linear model's fitted values must be back-transformed to kSU
+for comparison with observed demand. Simple exponentiation produces
+median predictions under a log-normal error assumption; mean
+predictions require appropriate bias adjustment.
+
+Model performance and forecast accuracy will be evaluated in
+Chapter 08 using consistent original-scale error measures.
+
+### Initial Model Findings
+
+The linear trend model estimates an average annual increase of approximately 161,992 kSU over 2014–2026. In contrast, the log-linear
+model estimates an annual compounded growth rate of approximately 26.3%.
+
+Both models indicate an increasing historical demand trend. However, their assumptions differ substantially: the linear specification
+implies constant absolute growth, while the log-linear specification implies exponential growth.
+
+Although both models exhibit relatively high in-sample R-squared values, these statistics are calculated on different response scales
+and cannot be used directly to select the preferred model.
+
+Given the limited historical sample, heterogeneous demand estimates, and uncertainty surrounding the 2026 observation, neither model is selected at this stage. Their predictive performance will be assessed using consistent original-scale forecast errors in Chapter 08.
+
