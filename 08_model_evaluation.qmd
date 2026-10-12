@@ -847,3 +847,129 @@ FoR-specific demand.
 The recent FoR 2020 reporting period (2021–2026) therefore
 provides the more relevant basis for evaluating allocation-share
 assumptions for subsequent scenario development.
+
+
+### Earlier FoR Allocation-Share Variation, 2014–2020
+
+The earlier reporting period is evaluated separately to examine historical HPC allocation composition under the FoR 2008 classification framework.
+
+The analysis uses the harmonised analytical groups developed in Chapter 06. For each group, the average, minimum, maximum, and range of annual allocation shares are calculated over 2014–2020. These measures provide descriptive evidence of allocation-share variation within the earlier reporting period.
+
+```{r for-earlier-stability}
+for_earlier <- for_longterm |>
+  dplyr::filter(dplyr::between(year, 2014, 2020))
+
+for_earlier_stability <- for_earlier |>
+  dplyr::group_by(for_visual_group) |>
+  dplyr::summarise(
+    years_observed = dplyr::n_distinct(year),
+    average_share = mean(allocation_share),
+    minimum_share = min(allocation_share),
+    maximum_share = max(allocation_share),
+    share_range_pp = (maximum_share - minimum_share) * 100,
+    .groups = "drop"
+  ) |>
+  dplyr::arrange(dplyr::desc(average_share))
+
+knitr::kable(
+  for_earlier_stability |>
+    dplyr::mutate(
+      dplyr::across(
+        c(average_share, minimum_share, maximum_share),
+        ~ .x * 100
+      )
+    ),
+  digits = 2,
+  col.names = c(
+    "FoR Group",
+    "Years",
+    "Average (%)",
+    "Minimum (%)",
+    "Maximum (%)",
+    "Range (pp)"
+  ),
+  caption = "FoR allocation-share variation, 2014–2020"
+)
+```
+
+The analysis retains groups with incomplete annual coverage rather than assuming that missing records represent zero allocation. Historical variation may also reflect differences in reporting scope and allocation practices.
+
+The earlier reporting period (2014–2020) was characterised by the largest average allocation share in Earth & Environmental Sciences (31.62%), followed by Chemical Sciences (19.02%), Physical Sciences (16.92%), and Engineering & Technology (16.90%).
+
+Allocation-share variation differed across research fields. Earth & Environmental Sciences exhibited a range of 23.91 percentage points, while Physical Sciences and Engineering & Technology varied by 21.57 and 20.50 percentage points, respectively. Chemical Sciences showed a narrower range of 4.00 percentage points across all seven years.
+
+Several groups had incomplete annual coverage, including Mathematics & Computing (six years), Medical & Health Sciences (four years), and Social Sciences, Humanities & Built Environment (one year). Consequently, ranges calculated from limited observations should not be interpreted as evidence of stable allocation composition.
+
+These results describe historical resource allocation patterns under the earlier FoR reporting framework, rather than directly observed research-field demand.
+
+
+### Comparison of FoR Reporting Periods, 2014–2020 and 2021–2026
+
+The earlier and recent reporting periods are compared using the harmonised analytical groups established in Chapter 06.
+
+The comparison examines differences in average annual allocation shares between 2014–2020 and 2021–2026. Using a common analytical grouping supports broad longitudinal comparison, although it does not eliminate differences between FoR classification standards or reporting coverage.
+
+```{r for-period-comparison}
+# Calculate average allocation shares within each reporting period
+for_period_summary <- for_longterm |>
+  dplyr::mutate(
+    reporting_period = dplyr::if_else(
+      year <= 2020,
+      "2014–2020",
+      "2021–2026"
+    )
+  ) |>
+  dplyr::group_by(for_visual_group, reporting_period) |>
+  dplyr::summarise(
+    years_observed = dplyr::n_distinct(year),
+    average_share = mean(allocation_share),
+    .groups = "drop"
+  )
+
+# Compare period averages for each harmonised FoR group
+for_period_comparison <- for_period_summary |>
+  tidyr::pivot_wider(
+    names_from = reporting_period,
+    values_from = c(average_share, years_observed),
+    names_glue = "{.value}_{reporting_period}"
+  ) |>
+  dplyr::mutate(
+    change_pp =
+      (`average_share_2021–2026` -
+       `average_share_2014–2020`) * 100
+  ) |>
+  dplyr::arrange(dplyr::desc(
+    `average_share_2021–2026`
+  ))
+
+# Display percentage shares and percentage-point differences
+knitr::kable(
+  for_period_comparison |>
+    dplyr::transmute(
+      `FoR Group` = for_visual_group,
+      `Earlier Years` = `years_observed_2014–2020`,
+      `Recent Years` = `years_observed_2021–2026`,
+      `2014–2020 Average (%)` =
+        `average_share_2014–2020` * 100,
+      `2021–2026 Average (%)` =
+        `average_share_2021–2026` * 100,
+      `Difference (pp)` = change_pp
+    ),
+  digits = 2,
+  caption = "Comparison of harmonised FoR allocation shares across reporting periods"
+)
+```
+
+A positive percentage-point difference indicates a higher average recorded allocation share in 2021–2026 than in 2014–2020; a negative difference indicates a lower average share. These differences should not automatically be interpreted as changes in researcher demand, particularly where classification, category coverage, or reporting scope differs between periods.
+
+
+The comparison indicates substantial differences in recorded allocation composition between the two FoR reporting periods.
+
+Engineering & Technology increased from an average allocation share of 16.90% in 2014–2020 to 34.88% in 2021–2026, a difference of +17.98 percentage points. In contrast, Earth & Environmental Sciences decreased from 31.62% to 14.00%, a difference of −17.61 percentage points. Physical Sciences also recorded a higher average share in the recent period (+5.21 percentage points), while Mathematics & Computing recorded a lower average (−2.46 percentage points).
+
+These differences should not be interpreted as directly observed changes in research-field demand. The comparison spans different FoR classification standards and potentially different reporting scopes. Although the analytical grouping supports broad longitudinal comparison, it does not establish complete equivalence between research fields across periods.
+
+Furthermore, period averages are calculated across available annual observations, and some categories have incomplete coverage. For these groups, differences may partly reflect the number and timing of recorded observations rather than sustained changes in allocation composition.
+
+Overall, the results demonstrate the importance of evaluating the two reporting periods separately. The 2014–2020 data provide historical context, while the more recent 2021–2026 allocation composition provides a more relevant reference for assessing potential FoR share assumptions for the 2030 scenarios.
+
