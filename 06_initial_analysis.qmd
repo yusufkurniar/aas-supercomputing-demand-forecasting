@@ -710,6 +710,12 @@ for_plot_data <- for_plot_data |>
     )
   )
 
+# Save harmonised FoR shares for longitudinal evaluation
+saveRDS(
+  for_plot_data,
+  "assets/data/data converted/for_2014_2026_harmonised_shares.rds"
+)
+
 # Plot
 ggplot(
   for_plot_data,
@@ -1026,6 +1032,12 @@ for_2020_plot <- for_2020_detail |>
     allocation_share = sum(allocation_share_for),
     .groups = "drop"
   )
+
+# Save harmonised FoR 2020 shares for recent-period evaluation
+saveRDS(
+  for_2020_plot,
+  "assets/data/data converted/for_2020_harmonised_shares.rds"
+)
 ```
 
 ```{r}

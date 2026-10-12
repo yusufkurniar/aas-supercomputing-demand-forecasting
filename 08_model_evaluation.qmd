@@ -601,3 +601,249 @@ In particular, the naïve model's superior performance over 2025 - 2026 does not
 The naïve benchmark is therefore identified as the strongest candidate under the current evaluation criteria, rather than selected as the final GPU forecasting model.
 
 Final model selection and consideration of alternative GPU demand scenarios will be addressed in Chapter 09.
+
+## Field of Research Allocation-Share Evaluation
+
+### Purpose and Evaluation Approach
+
+The Field of Research (FoR) evaluation examines the historical distribution and stability of HPC resource allocations across research fields.
+
+Unlike the overall HPC, CPU, and GPU evaluations, this analysis does not assess independently observed FoR-specific researcher demand forecasts.
+
+Instead, it evaluates whether historical allocation shares provide a sufficiently consistent basis for developing indicative FoR demand scenarios through 2030.
+
+The analysis focuses on 2021–2026, corresponding to the FoR 2020 classification period used in Chapter 06.
+
+Three considerations guide the evaluation:
+
+1. Historical stability of FoR allocation shares.
+2. Variation between the latest-year composition and the recent-period average.
+3. Sensitivity to classification, reporting coverage, and allocation-based measurement assumptions.
+
+The results will inform the selection of FoR share assumptions in Chapter 09 and their application to overall HPC demand forecasts in Chapter 10.
+
+### Harmonised FoR Data Preparation
+
+The FoR evaluation reuses the harmonised allocation-share datasets developed in Chapter 06, ensuring consistency between historical analysis and model evaluation.
+
+Two reporting periods are considered:
+
+- The full historical period (2014 - 2026), using broad harmonised analytical groups to examine long-term allocation composition.
+- The recent period (2021–2026), using FoR 2020-based analytical groups to evaluate recent allocation-share stability.
+
+The full-period analysis provides historical context, while the recent-period analysis informs the assumptions used for indicative FoR demand scenarios.
+
+```{r for-harmonised-data}
+# Load the harmonised datasets saved in Chapter 06
+for_longterm <- readRDS(
+  "assets/data/data converted/for_2014_2026_harmonised_shares.rds"
+)
+
+for_recent <- readRDS(
+  "assets/data/data converted/for_2020_harmonised_shares.rds"
+)
+
+# Inspect structure and coverage
+cat("Long-term FoR data:\n")
+print(names(for_longterm))
+print(range(for_longterm$year))
+cat("Rows:", nrow(for_longterm), "\n\n")
+
+cat("Recent-period FoR data:\n")
+print(names(for_recent))
+print(range(for_recent$year))
+cat("Rows:", nrow(for_recent), "\n")
+```
+
+These datasets preserve the research-field grouping established
+in Chapter 06. No additional classification mapping is applied
+during model evaluation.
+
+### Historical FoR Allocation-Share Stability
+
+Historical FoR allocation shares are examined over 2021 - 2026 to assess changes in the distribution of HPC resources across research fields.
+
+The analysis uses the harmonised analytical groups established in Chapter 06. These groups provide a consistent reporting structure for comparison but should not be interpreted as perfectly equivalent official FoR classifications.
+
+For each research group, the evaluation calculates:
+
+- Average allocation share over 2021 - 2026.
+- Latest allocation share in 2026.
+- Minimum and maximum annual allocation shares.
+- Difference between the 2026 share and the historical average.
+
+These descriptive measures assess the stability of historical resource allocation composition. They do not directly measure FoR-specific researcher demand.
+
+```{r for-share-validation}
+# Validate long-term allocation shares
+for_longterm_totals <- for_longterm |>
+  dplyr::group_by(year) |>
+  dplyr::summarise(
+    total_share = sum(allocation_share),
+    .groups = "drop"
+  )
+
+# Validate recent-period allocation shares
+for_recent_totals <- for_recent |>
+  dplyr::group_by(year) |>
+  dplyr::summarise(
+    total_share = sum(allocation_share),
+    .groups = "drop"
+  )
+
+knitr::kable(
+  for_longterm_totals,
+  digits = 4,
+  caption = "Annual FoR allocation-share totals, 2014–2026"
+)
+
+knitr::kable(
+  for_recent_totals,
+  digits = 4,
+  caption = "Annual FoR allocation-share totals, 2021–2026"
+)
+```
+
+The difference between the latest-year allocation share and the recent-period average is expressed in percentage points.
+
+Large differences may indicate changing research-field composition, reporting effects, or variation in allocation practices. They should not automatically be interpreted as changes in underlying researcher demand.
+
+```{r for-share-stability}
+# Summarise recent FoR allocation-share stability (2021–2026)
+for_share_stability <- for_recent |>
+  dplyr::group_by(for_2020_visual) |>
+  dplyr::summarise(
+    years_observed = dplyr::n_distinct(year),
+    average_share = mean(allocation_share),
+    latest_share = allocation_share[year == 2026][1],
+    minimum_share = min(allocation_share),
+    maximum_share = max(allocation_share),
+    .groups = "drop"
+  ) |>
+  dplyr::mutate(
+    change_percentage_points =
+      (latest_share - average_share) * 100
+  ) |>
+  dplyr::arrange(dplyr::desc(average_share))
+
+knitr::kable(
+  for_share_stability |>
+    dplyr::mutate(
+      dplyr::across(
+        c(average_share, latest_share, minimum_share, maximum_share),
+        ~ .x * 100
+      )
+    ),
+  digits = 2,
+  col.names = c(
+    "FoR Group",
+    "Years",
+    "Average (%)",
+    "2026 (%)",
+    "Minimum (%)",
+    "Maximum (%)",
+    "2026 vs Average (pp)"
+  ),
+  caption = "FoR allocation-share stability, 2021–2026"
+)
+```
+
+Engineering & Technology accounted for the largest average allocation share during 2021–2026 (34.88%), followed by Physical Sciences (22.13%) and Chemical Sciences (17.84%). Compared with their recent-period averages, the 2026 shares were higher for Biological & Agricultural Sciences (+2.29 percentage points) and Mathematics & Computing (+2.09 percentage points). Two categories were not represented in the 2026 summary and therefore have no calculated latest-year difference. These results describe changes in allocation composition rather than directly observed FoR-specific researcher demand.
+
+```{r for-category-coverage}
+for_recent |>
+  dplyr::group_by(for_2020_visual) |>
+  dplyr::summarise(
+    years_present = paste(sort(unique(year)), collapse = ", "),
+    years_observed = dplyr::n_distinct(year),
+    .groups = "drop"
+  ) |>
+  knitr::kable(
+    caption = "FoR category coverage, 2021–2026"
+  )
+```
+
+Seven harmonised FoR groups have allocation-share observations for all six years from 2021 to 2026. Two additional groups have incomplete coverage: Other / Unclassified appears in 2021 and 2024, while Social Sciences, Humanities & Built Environment appears from 2022 to 2025.
+
+Consequently, the latest-year comparisons are restricted to groups with observed 2026 allocation shares. The incomplete categories are retained for transparency, but their absence in particular years is not automatically interpreted as zero allocation or zero researcher demand.
+
+```{r}
+print(for_longterm_totals, n = Inf)
+```
+
+### Long-Term FoR Allocation-Share Variation, 2014–2026
+
+The harmonised historical dataset is examined to assess variation
+in research-field allocation composition across 2014–2026.
+
+Unlike the recent-period evaluation, this analysis covers both
+FoR reporting standards. The harmonised analytical groups
+support broad historical comparison, but classification and
+reporting-coverage differences remain important limitations.
+
+```{r for-longterm-stability}
+# Summarise long-term allocation-share variation
+for_longterm_stability <- for_longterm |>
+  dplyr::group_by(for_visual_group) |>
+  dplyr::summarise(
+    years_observed = dplyr::n_distinct(year),
+    average_share = mean(allocation_share),
+    minimum_share = min(allocation_share),
+    maximum_share = max(allocation_share),
+    share_range_pp = (maximum_share - minimum_share) * 100,
+    .groups = "drop"
+  ) |>
+  dplyr::arrange(dplyr::desc(average_share))
+
+knitr::kable(
+  for_longterm_stability |>
+    dplyr::mutate(
+      dplyr::across(
+        c(average_share, minimum_share, maximum_share),
+        ~ .x * 100
+      )
+    ),
+  digits = 2,
+  col.names = c(
+    "FoR Group",
+    "Years",
+    "Average (%)",
+    "Minimum (%)",
+    "Maximum (%)",
+    "Range (pp)"
+  ),
+  caption = "Long-term FoR allocation-share variation, 2014–2026"
+)
+```
+
+The range is measured in percentage points and describes the
+difference between the highest and lowest observed annual
+allocation shares within each harmonised group.
+
+These measures provide descriptive historical context rather
+than a direct assessment of FoR-specific researcher demand.
+
+The long-term evaluation shows substantial variation in allocation
+composition across several harmonised research-field groups.
+
+Engineering & Technology recorded the largest average allocation
+share (25.20%), followed by Earth & Environmental Sciences (23.49%),
+Physical Sciences (19.33%), and Chemical Sciences (18.48%).
+
+Engineering & Technology and Earth & Environmental Sciences
+each exhibited a range of 29.65 percentage points, while
+Mathematics & Computing varied by 23.42 percentage points.
+In contrast, Chemical Sciences showed a narrower range
+of 4.69 percentage points.
+
+These historical differences should be interpreted cautiously.
+The series spans changes in FoR classification standards and
+reporting coverage, while several categories have incomplete
+annual observations. Consequently, the full historical period
+provides contextual evidence of allocation-composition variation
+rather than a directly comparable basis for extrapolating
+FoR-specific demand.
+
+The recent FoR 2020 reporting period (2021–2026) therefore
+provides the more relevant basis for evaluating allocation-share
+assumptions for subsequent scenario development.
