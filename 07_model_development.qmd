@@ -689,3 +689,80 @@ Excluding the 2026 observation reduces the 2030 linear projection but increases 
 The wide range of projected outcomes highlights the importance of model selection and forecast evaluation, particularly given the short and heterogeneous historical dataset.
 
 These trajectories are preliminary model-based projections, not formal prediction intervals or validated low, baseline, and high demand scenarios. Their relative predictive accuracy will be evaluated in Chapter 08 before selecting a preferred forecasting approach.
+
+### CPU Demand Projections
+
+Four candidate CPU demand trajectories are generated for 2027 - 2030 using the previously fitted linear and log-linear trend models.
+
+The full-history models use observations from 2014 - 2026, while the sensitivity specifications exclude the 2026 observation.
+
+CPU demand is expressed in millions of core-hours, consistent with the resource-specific historical analysis in Chapter 06.
+
+These projections examine how future CPU requirements differ under constant absolute growth and compounded proportional growth assumptions.
+
+```{r cpu-demand-projections}
+# Use the existing 2027–2030 forecast horizon
+cpu_future_years <- data.frame(
+  year = 2027:2030,
+  time = (2027:2030) - 2014
+)
+
+# Generate candidate CPU demand projections
+cpu_projections <- cpu_future_years |>
+  dplyr::transmute(
+    year,
+    linear_full = as.numeric(
+      predict(cpu_linear, newdata = cpu_future_years)
+    ),
+    loglinear_full = exp(as.numeric(
+      predict(cpu_loglinear, newdata = cpu_future_years)
+    )),
+    linear_pre2026 = as.numeric(
+      predict(cpu_linear_pre2026, newdata = cpu_future_years)
+    ),
+    loglinear_pre2026 = exp(as.numeric(
+      predict(cpu_loglinear_pre2026, newdata = cpu_future_years)
+    ))
+  )
+
+knitr::kable(
+  cpu_projections,
+  digits = 2,
+  format.args = list(big.mark = ","),
+  col.names = c(
+    "Year",
+    "Linear (Full)",
+    "Log-linear (Full)",
+    "Linear (Excl. 2026)",
+    "Log-linear (Excl. 2026)"
+  ),
+  caption = paste(
+    "Candidate CPU demand projections,",
+    "2027–2030 (million core-hours)"
+  )
+)
+```
+
+The linear specifications extrapolate constant annual absolute increases in CPU demand, whereas the log-linear specifications extrapolate compounded proportional growth.
+
+The log-linear projections are back-transformed from predicted log demand using exponentiation. They represent central trajectories on the original scale rather than bias-adjusted conditional mean forecasts.
+
+Differences between the projected trajectories reflect model specification and sensitivity to the 2026 observation. They are not formal prediction intervals or validated low, baseline, and high demand scenarios.
+
+The predictive performance of these models will be assessed in Chapter 08 before selecting a preferred CPU forecasting approach.
+
+### CPU Projection Findings
+
+The candidate CPU demand models produce substantially different projections for 2027 - 2030, reflecting their alternative growth assumptions.
+
+Under the linear specifications, projected CPU demand in 2030 ranges from approximately 1,263.85 to 1,369.90 million core-hours. The log-linear specifications produce higher projections, ranging from approximately 2,479.16 to 2,502.07 million core-hours.
+
+These differences arise primarily from the models' functional forms. Linear models assume constant annual absolute increases in CPU demand, while log-linear models extrapolate compounded proportional growth.
+
+Excluding the 2026 observation reduces the 2030 linear projection by approximately 7.7%, whereas the corresponding log-linear projection increases by approximately 0.9%.
+
+The results indicate that projected CPU demand is more sensitive to the choice of growth specification than to the inclusion of 2026 within the models examined.
+
+However, these trajectories remain preliminary and are conditional on historical reporting methods, conversion assumptions, and model specifications. They should not be interpreted as validated forecasts or formal uncertainty bounds.
+
+The preferred CPU forecasting approach will be determined through model evaluation and predictive accuracy assessment in Chapter 08.
