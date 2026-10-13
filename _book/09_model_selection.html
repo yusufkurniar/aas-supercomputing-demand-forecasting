@@ -247,6 +247,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#sensitivity-to-the-2026-observation-1" id="toc-sensitivity-to-the-2026-observation-1" class="nav-link" data-scroll-target="#sensitivity-to-the-2026-observation-1"><span class="header-section-number">10.5.2</span> Sensitivity to the 2026 Observation</a></li>
   <li><a href="#gpu-model-selection-decision" id="toc-gpu-model-selection-decision" class="nav-link" data-scroll-target="#gpu-model-selection-decision"><span class="header-section-number">10.5.3</span> GPU Model Selection Decision</a></li>
   </ul></li>
+  <li><a href="#field-of-research-scenario-assumptions" id="toc-field-of-research-scenario-assumptions" class="nav-link" data-scroll-target="#field-of-research-scenario-assumptions"><span class="header-section-number">10.6</span> Field of Research Scenario Assumptions</a>
+  <ul class="collapse">
+  <li><a href="#purpose-and-analytical-approach" id="toc-purpose-and-analytical-approach" class="nav-link" data-scroll-target="#purpose-and-analytical-approach"><span class="header-section-number">10.6.1</span> Purpose and Analytical Approach</a></li>
+  <li><a href="#historical-evidence-for-scenario-assumptions" id="toc-historical-evidence-for-scenario-assumptions" class="nav-link" data-scroll-target="#historical-evidence-for-scenario-assumptions"><span class="header-section-number">10.6.2</span> Historical Evidence for Scenario Assumptions</a></li>
+  <li><a href="#selection-of-for-scenario-assumptions" id="toc-selection-of-for-scenario-assumptions" class="nav-link" data-scroll-target="#selection-of-for-scenario-assumptions"><span class="header-section-number">10.6.3</span> Selection of FoR Scenario Assumptions</a></li>
+  <li><a href="#interpretation-and-limitations" id="toc-interpretation-and-limitations" class="nav-link" data-scroll-target="#interpretation-and-limitations"><span class="header-section-number">10.6.4</span> Interpretation and Limitations</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -562,6 +569,57 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>These trajectories are not assigned probabilities or interpreted as statistically validated lower, central, and upper demand bounds.</p>
 <p>Consequently, the GPU analysis provides an exploratory assessment of possible future resource requirements rather than a definitive forecast of national research GPU demand.</p>
 <p>Chapter 10 will present these alternatives transparently, distinguishing historical measurement uncertainty from assumptions about future demand growth.</p>
+</section>
+</section>
+<section id="field-of-research-scenario-assumptions" class="level2" data-number="10.6">
+<h2 data-number="10.6" class="anchored" data-anchor-id="field-of-research-scenario-assumptions"><span class="header-section-number">10.6</span> Field of Research Scenario Assumptions</h2>
+<section id="purpose-and-analytical-approach" class="level3" data-number="10.6.1">
+<h3 data-number="10.6.1" class="anchored" data-anchor-id="purpose-and-analytical-approach"><span class="header-section-number">10.6.1</span> Purpose and Analytical Approach</h3>
+<p>Field of Research (FoR) is incorporated into the forecasting framework to examine how projected national HPC demand could be distributed across research disciplines under alternative allocation-composition assumptions.</p>
+<p>Unlike overall HPC, CPU, and GPU demand, the harmonised FoR dataset primarily represents historically allocated resources rather than directly observed requests for computational resources within individual research fields.</p>
+<p>Consequently, FoR-specific demand cannot be independently forecast and validated using the same approach applied to the aggregate resource series.</p>
+<p>Instead, a top-down scenario framework is adopted. Under this approach, projected overall HPC demand is distributed across harmonised FoR categories using explicit assumptions about future allocation shares.</p>
+<p>These estimates represent hypothetical distributions of projected demand based on historical allocation patterns, rather than independently validated forecasts of researcher demand within each field.</p>
+</section>
+<section id="historical-evidence-for-scenario-assumptions" class="level3" data-number="10.6.2">
+<h3 data-number="10.6.2" class="anchored" data-anchor-id="historical-evidence-for-scenario-assumptions"><span class="header-section-number">10.6.2</span> Historical Evidence for Scenario Assumptions</h3>
+<p>Chapter 08 evaluated harmonised FoR allocation shares across 2014–2026, including separate assessments of the earlier 2014–2020 and recent 2021–2026 periods.</p>
+<p>During 2021–2026, Engineering &amp; Technology accounted for the largest average allocation share (34.88%), followed by Physical Sciences (22.13%), Chemical Sciences (17.84%), and Earth &amp; Environmental Sciences (14.00%).</p>
+<p>The longer historical comparison identified substantial differences in recorded allocation composition between reporting periods.</p>
+<p>Engineering &amp; Technology increased from an average allocation share of 16.90% in 2014–2020 to 34.88% in 2021–2026, representing a difference of +17.98 percentage points.</p>
+<p>Conversely, Earth &amp; Environmental Sciences decreased from 31.62% to 14.00%, a difference of -17.61 percentage points.</p>
+<p>Physical Sciences increased by 5.21 percentage points, while Mathematics &amp; Computing decreased by 2.46 percentage points.</p>
+<p>These changes demonstrate that the recorded distribution of HPC allocations has varied over time. However, they cannot be interpreted exclusively as changes in underlying researcher demand because the historical series spans different FoR classification standards, reporting coverage, and allocation practices.</p>
+<p>The observed differences therefore provide evidence for exploring alternative allocation-composition assumptions, but not for extrapolating discipline-specific demand growth rates directly.</p>
+</section>
+<section id="selection-of-for-scenario-assumptions" class="level3" data-number="10.6.3">
+<h3 data-number="10.6.3" class="anchored" data-anchor-id="selection-of-for-scenario-assumptions"><span class="header-section-number">10.6.3</span> Selection of FoR Scenario Assumptions</h3>
+<p>Three allocation-composition approaches are proposed for scenario development in Chapter 10.</p>
+<p><strong>Recent-period composition</strong></p>
+<p>The first approach uses the harmonised allocation-share patterns observed during 2021–2026 as a reference for a contemporary allocation-composition scenario.</p>
+<p>This approach reflects the more recent reporting framework and provides a transparent historical basis for distributing projected overall HPC demand across research fields.</p>
+<p>However, the observed annual shares are not constant, and some categories are missing from particular years. The implementation must therefore define how category coverage, missing observations, and share normalisation are handled.</p>
+<p><strong>Latest-year composition</strong></p>
+<p>The second approach uses the 2026 allocation-share distribution as an alternative reference.</p>
+<p>This approach illustrates the implications of maintaining the latest observed composition throughout the projection horizon.</p>
+<p>However, a single year’s allocation shares may reflect temporary conditions or reporting-specific effects. The 2026 composition should therefore not automatically be considered more representative of future researcher demand than the recent-period average.</p>
+<p><strong>Historical-composition sensitivity</strong></p>
+<p>The third approach uses the earlier 2014–2020 allocation composition to examine how projected demand distributions change under a different historical allocation pattern.</p>
+<p>This approach is intended as a sensitivity comparison rather than a direct prediction that earlier allocation patterns will return.</p>
+<p>Differences in FoR classification frameworks, reporting scope, and category coverage must be considered before constructing comparable scenario shares.</p>
+</section>
+<section id="interpretation-and-limitations" class="level3" data-number="10.6.4">
+<h3 data-number="10.6.4" class="anchored" data-anchor-id="interpretation-and-limitations"><span class="header-section-number">10.6.4</span> Interpretation and Limitations</h3>
+<p>The proposed FoR scenarios are conditional on two distinct assumptions:</p>
+<ol type="1">
+<li>The selected overall HPC model provides an indicative trajectory of total national research HPC demand.</li>
+<li>Historical FoR allocation shares provide a reasonable reference for constructing hypothetical distributions of that projected demand.</li>
+</ol>
+<p>Neither assumption establishes that the resulting FoR-level estimates represent directly observed or independently validated future researcher demand.</p>
+<p>The allocation shares must also form a complete and internally consistent distribution for each scenario. Missing categories should not automatically be treated as zero allocations, and any normalisation or category exclusions must be documented.</p>
+<p>Furthermore, changes in allocation composition may reflect resource constraints, institutional priorities, facility coverage, or reporting conventions rather than changes in unconstrained computational requirements.</p>
+<p>For these reasons, FoR scenarios will be presented as allocation-share-based distributions of projected overall demand, not as independent field-specific demand forecasts.</p>
+<p>Chapter 10 will implement these assumptions and examine how alternative historical compositions affect the indicative distribution of HPC requirements through 2030.</p>
 
 
 <!-- -->
@@ -1312,7 +1370,86 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-277"><a href="#cb1-277" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-278"><a href="#cb1-278" aria-hidden="true" tabindex="-1"></a>Consequently, the GPU analysis provides an exploratory assessment of possible future resource requirements rather than a definitive forecast of national research GPU demand.</span>
 <span id="cb1-279"><a href="#cb1-279" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-280"><a href="#cb1-280" aria-hidden="true" tabindex="-1"></a>Chapter 10 will present these alternatives transparently, distinguishing historical measurement uncertainty from assumptions about future demand growth.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<span id="cb1-280"><a href="#cb1-280" aria-hidden="true" tabindex="-1"></a>Chapter 10 will present these alternatives transparently, distinguishing historical measurement uncertainty from assumptions about future demand growth.</span>
+<span id="cb1-281"><a href="#cb1-281" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-282"><a href="#cb1-282" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-283"><a href="#cb1-283" aria-hidden="true" tabindex="-1"></a><span class="fu">## Field of Research Scenario Assumptions</span></span>
+<span id="cb1-284"><a href="#cb1-284" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-285"><a href="#cb1-285" aria-hidden="true" tabindex="-1"></a><span class="fu">### Purpose and Analytical Approach</span></span>
+<span id="cb1-286"><a href="#cb1-286" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-287"><a href="#cb1-287" aria-hidden="true" tabindex="-1"></a>Field of Research (FoR) is incorporated into the forecasting framework to examine how projected national HPC demand could be distributed across research disciplines under alternative allocation-composition assumptions.</span>
+<span id="cb1-288"><a href="#cb1-288" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-289"><a href="#cb1-289" aria-hidden="true" tabindex="-1"></a>Unlike overall HPC, CPU, and GPU demand, the harmonised FoR dataset primarily represents historically allocated resources rather than directly observed requests for computational resources within individual research fields.</span>
+<span id="cb1-290"><a href="#cb1-290" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-291"><a href="#cb1-291" aria-hidden="true" tabindex="-1"></a>Consequently, FoR-specific demand cannot be independently forecast and validated using the same approach applied to the aggregate resource series.</span>
+<span id="cb1-292"><a href="#cb1-292" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-293"><a href="#cb1-293" aria-hidden="true" tabindex="-1"></a>Instead, a top-down scenario framework is adopted. Under this approach, projected overall HPC demand is distributed across harmonised FoR categories using explicit assumptions about future allocation shares.</span>
+<span id="cb1-294"><a href="#cb1-294" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-295"><a href="#cb1-295" aria-hidden="true" tabindex="-1"></a>These estimates represent hypothetical distributions of projected demand based on historical allocation patterns, rather than independently validated forecasts of researcher demand within each field.</span>
+<span id="cb1-296"><a href="#cb1-296" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-297"><a href="#cb1-297" aria-hidden="true" tabindex="-1"></a><span class="fu">### Historical Evidence for Scenario Assumptions</span></span>
+<span id="cb1-298"><a href="#cb1-298" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-299"><a href="#cb1-299" aria-hidden="true" tabindex="-1"></a>Chapter 08 evaluated harmonised FoR allocation shares across 2014–2026, including separate assessments of the earlier 2014–2020 and recent 2021–2026 periods.</span>
+<span id="cb1-300"><a href="#cb1-300" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-301"><a href="#cb1-301" aria-hidden="true" tabindex="-1"></a>During 2021–2026, Engineering &amp; Technology accounted for the largest average allocation share (34.88%), followed by Physical Sciences (22.13%), Chemical Sciences (17.84%), and Earth &amp; Environmental Sciences (14.00%).</span>
+<span id="cb1-302"><a href="#cb1-302" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-303"><a href="#cb1-303" aria-hidden="true" tabindex="-1"></a>The longer historical comparison identified substantial differences in recorded allocation composition between reporting periods.</span>
+<span id="cb1-304"><a href="#cb1-304" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-305"><a href="#cb1-305" aria-hidden="true" tabindex="-1"></a>Engineering &amp; Technology increased from an average allocation share of 16.90% in 2014–2020 to 34.88% in 2021–2026, representing a difference of +17.98 percentage points.</span>
+<span id="cb1-306"><a href="#cb1-306" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-307"><a href="#cb1-307" aria-hidden="true" tabindex="-1"></a>Conversely, Earth &amp; Environmental Sciences decreased from 31.62% to 14.00%, a difference of -17.61 percentage points.</span>
+<span id="cb1-308"><a href="#cb1-308" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-309"><a href="#cb1-309" aria-hidden="true" tabindex="-1"></a>Physical Sciences increased by 5.21 percentage points, while Mathematics &amp; Computing decreased by 2.46 percentage points.</span>
+<span id="cb1-310"><a href="#cb1-310" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-311"><a href="#cb1-311" aria-hidden="true" tabindex="-1"></a>These changes demonstrate that the recorded distribution of HPC allocations has varied over time. However, they cannot be interpreted exclusively as changes in underlying researcher demand because the historical series spans different FoR classification standards, reporting coverage, and allocation practices.</span>
+<span id="cb1-312"><a href="#cb1-312" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-313"><a href="#cb1-313" aria-hidden="true" tabindex="-1"></a>The observed differences therefore provide evidence for exploring alternative allocation-composition assumptions, but not for extrapolating discipline-specific demand growth rates directly.</span>
+<span id="cb1-314"><a href="#cb1-314" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-315"><a href="#cb1-315" aria-hidden="true" tabindex="-1"></a><span class="fu">### Selection of FoR Scenario Assumptions</span></span>
+<span id="cb1-316"><a href="#cb1-316" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-317"><a href="#cb1-317" aria-hidden="true" tabindex="-1"></a>Three allocation-composition approaches are proposed for scenario development in Chapter 10.</span>
+<span id="cb1-318"><a href="#cb1-318" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-319"><a href="#cb1-319" aria-hidden="true" tabindex="-1"></a>**Recent-period composition**</span>
+<span id="cb1-320"><a href="#cb1-320" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-321"><a href="#cb1-321" aria-hidden="true" tabindex="-1"></a>The first approach uses the harmonised allocation-share patterns observed during 2021–2026 as a reference for a contemporary allocation-composition scenario.</span>
+<span id="cb1-322"><a href="#cb1-322" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-323"><a href="#cb1-323" aria-hidden="true" tabindex="-1"></a>This approach reflects the more recent reporting framework and provides a transparent historical basis for distributing projected overall HPC demand across research fields.</span>
+<span id="cb1-324"><a href="#cb1-324" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-325"><a href="#cb1-325" aria-hidden="true" tabindex="-1"></a>However, the observed annual shares are not constant, and some categories are missing from particular years. The implementation must therefore define how category coverage, missing observations, and share normalisation are handled.</span>
+<span id="cb1-326"><a href="#cb1-326" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-327"><a href="#cb1-327" aria-hidden="true" tabindex="-1"></a>**Latest-year composition**</span>
+<span id="cb1-328"><a href="#cb1-328" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-329"><a href="#cb1-329" aria-hidden="true" tabindex="-1"></a>The second approach uses the 2026 allocation-share distribution as an alternative reference.</span>
+<span id="cb1-330"><a href="#cb1-330" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-331"><a href="#cb1-331" aria-hidden="true" tabindex="-1"></a>This approach illustrates the implications of maintaining the latest observed composition throughout the projection horizon.</span>
+<span id="cb1-332"><a href="#cb1-332" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-333"><a href="#cb1-333" aria-hidden="true" tabindex="-1"></a>However, a single year's allocation shares may reflect temporary conditions or reporting-specific effects. The 2026 composition should therefore not automatically be considered more representative of future researcher demand than the recent-period average.</span>
+<span id="cb1-334"><a href="#cb1-334" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-335"><a href="#cb1-335" aria-hidden="true" tabindex="-1"></a>**Historical-composition sensitivity**</span>
+<span id="cb1-336"><a href="#cb1-336" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-337"><a href="#cb1-337" aria-hidden="true" tabindex="-1"></a>The third approach uses the earlier 2014–2020 allocation composition to examine how projected demand distributions change under a different historical allocation pattern.</span>
+<span id="cb1-338"><a href="#cb1-338" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-339"><a href="#cb1-339" aria-hidden="true" tabindex="-1"></a>This approach is intended as a sensitivity comparison rather than a direct prediction that earlier allocation patterns will return.</span>
+<span id="cb1-340"><a href="#cb1-340" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-341"><a href="#cb1-341" aria-hidden="true" tabindex="-1"></a>Differences in FoR classification frameworks, reporting scope, and category coverage must be considered before constructing comparable scenario shares.</span>
+<span id="cb1-342"><a href="#cb1-342" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-343"><a href="#cb1-343" aria-hidden="true" tabindex="-1"></a><span class="fu">### Interpretation and Limitations</span></span>
+<span id="cb1-344"><a href="#cb1-344" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-345"><a href="#cb1-345" aria-hidden="true" tabindex="-1"></a>The proposed FoR scenarios are conditional on two distinct assumptions:</span>
+<span id="cb1-346"><a href="#cb1-346" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-347"><a href="#cb1-347" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>The selected overall HPC model provides an indicative trajectory of total national research HPC demand.</span>
+<span id="cb1-348"><a href="#cb1-348" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Historical FoR allocation shares provide a reasonable reference for constructing hypothetical distributions of that projected demand.</span>
+<span id="cb1-349"><a href="#cb1-349" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-350"><a href="#cb1-350" aria-hidden="true" tabindex="-1"></a>Neither assumption establishes that the resulting FoR-level estimates represent directly observed or independently validated future researcher demand.</span>
+<span id="cb1-351"><a href="#cb1-351" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-352"><a href="#cb1-352" aria-hidden="true" tabindex="-1"></a>The allocation shares must also form a complete and internally consistent distribution for each scenario. Missing categories should not automatically be treated as zero allocations, and any normalisation or category exclusions must be documented.</span>
+<span id="cb1-353"><a href="#cb1-353" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-354"><a href="#cb1-354" aria-hidden="true" tabindex="-1"></a>Furthermore, changes in allocation composition may reflect resource constraints, institutional priorities, facility coverage, or reporting conventions rather than changes in unconstrained computational requirements.</span>
+<span id="cb1-355"><a href="#cb1-355" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-356"><a href="#cb1-356" aria-hidden="true" tabindex="-1"></a>For these reasons, FoR scenarios will be presented as allocation-share-based distributions of projected overall demand, not as independent field-specific demand forecasts.</span>
+<span id="cb1-357"><a href="#cb1-357" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-358"><a href="#cb1-358" aria-hidden="true" tabindex="-1"></a>Chapter 10 will implement these assumptions and examine how alternative historical compositions affect the indicative distribution of HPC requirements through 2030.</span>
+<span id="cb1-359"><a href="#cb1-359" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 
