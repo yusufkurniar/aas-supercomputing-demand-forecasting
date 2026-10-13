@@ -196,3 +196,87 @@ The selected CPU model should be interpreted as a projection of the harmonised h
 Chapter 10 will use these specifications to examine alternative CPU demand trajectories through 2030 without treating differences between models as formal prediction intervals.
 
 
+## GPU Demand Model Selection
+
+### Comparison of Candidate Models
+
+GPU demand was evaluated separately from overall HPC and CPU demand because of its shorter historical coverage, differences in data provenance, and greater uncertainty surrounding the measurement of computational requirements.
+
+The GPU forecasting models developed in Chapter 07 use five annual demand estimates covering 2022–2026. These estimates combine reported Setonix-based demand information with values derived using allocation shares and working conversion assumptions.
+
+Four candidate models were assessed in Chapter 08: naïve forecasting, drift, linear trend, and log-linear trend.
+
+An expanding-window, one-step-ahead rolling-origin evaluation was conducted using the available recent-period observations. Unlike the overall HPC and CPU evaluations, the GPU comparison contains only two test years, 2025 and 2026.
+
+| Model | RMSE (million GPU-hours) | MAE (million GPU-hours) | RMSE Rank |
+|:--|--:|--:|--:|
+| Naïve | 0.441 | 0.353 | 1 |
+| Drift | 0.537 | 0.490 | 2 |
+| Log-linear trend | 0.719 | 0.715 | 3 |
+| Linear trend | 0.729 | 0.725 | 4 |
+
+The naïve model achieved the lowest RMSE and MAE among the evaluated candidates. It therefore provided the strongest historical one-step-ahead predictive performance within this limited evaluation.
+
+However, the comparison is based on only two forecast errors per model. Consequently, the resulting accuracy rankings may be strongly influenced by individual observations and should not be interpreted as robust evidence of long-term predictive superiority.
+
+The naïve model assumes that future GPU demand remains at the most recently observed level. Although this assumption performed comparatively well during the evaluation period, it does not establish that GPU demand will remain constant through 2030.
+
+Similarly, the higher forecast errors recorded by the linear and log-linear models do not establish that future GPU demand growth is absent. They indicate that these trend specifications were less accurate over the two available historical test years.
+
+The results therefore support the naïve model as a short-term statistical benchmark, rather than a definitive long-term forecasting model.
+
+### Sensitivity to the 2026 Observation
+
+Chapter 07 examined the sensitivity of GPU trend estimates to the inclusion of the 2026 observation.
+
+For the linear trend specification, the estimated annual increase changed from approximately 0.012 million GPU-hours when fitted to 2022–2025 to approximately 0.172 million GPU-hours when 2026 was included.
+
+The log-linear trend coefficient also increased, from approximately 0.020 to 0.081.
+
+These changes demonstrate that the estimated GPU growth trajectory is highly sensitive to the latest observation. However, the large relative percentage changes partly reflect the small trend coefficients estimated from the shorter 2022–2025 sample.
+
+The resulting 2030 projections also differ substantially between specifications.
+
+The linear trend models produce projected GPU demand ranging from approximately 2.252 to 3.371 million GPU-hours, while the log-linear models produce projections ranging from approximately 2.406 to 3.681 million GPU-hours.
+
+These values represent alternative model-based trajectories, not formal prediction intervals or statistically validated lower and upper demand bounds.
+
+The short modelling period and mixture of reported and estimated demand values limit confidence in extrapolating any single trend through 2030.
+
+Furthermore, the historical GPU conversion scenarios developed in Chapter 05 represent uncertainty associated with conversion assumptions. They should not be interpreted as additional observed GPU demand data or as independent evidence of future growth.
+
+Consequently, the GPU model selection process must distinguish between short-term predictive performance, sensitivity to individual observations, and the broader uncertainty surrounding future GPU requirements.
+
+
+### GPU Model Selection Decision
+
+The naïve forecasting model is retained as the preferred statistical benchmark for GPU demand because it achieved the lowest RMSE (0.441 million GPU-hours) and MAE (0.353 million GPU-hours) in the rolling-origin evaluation conducted in Chapter 08.
+
+However, no single GPU forecasting model is selected as a sufficiently validated central projection through 2030.
+
+This decision reflects three considerations.
+
+First, the evaluation contains only two one-step-ahead test observations, covering 2025 and 2026. Although the naïve model performed best within this comparison, the limited number of forecast errors does not provide robust evidence that it will remain the most accurate model over a four-year forecasting horizon.
+
+Second, the GPU modelling series contains only five annual estimates from 2022–2026. These estimates combine reported Setonix-based demand information with values derived using allocation shares and working conversion assumptions. Differences in data provenance limit the comparability of observations and the reliability of estimated growth trends.
+
+Third, the linear and log-linear specifications are highly sensitive to the inclusion of 2026. Chapter 07 demonstrated substantial changes in their estimated trend coefficients and resulting 2030 projections when the latest observation was included or excluded.
+
+The naïve model is therefore retained as a reference trajectory representing unchanged demand relative to the latest observation. It should not be interpreted as evidence that future GPU requirements will remain constant.
+
+The linear and log-linear trend models are retained as exploratory growth trajectories. These specifications illustrate how projected demand changes under alternative assumptions about absolute and proportional growth, but their historical performance and sensitivity do not justify selecting either as a definitive long-term forecast.
+
+The following approach is adopted for subsequent scenario analysis:
+
+- **Statistical reference benchmark:** Naïve model, representing unchanged GPU demand from the latest observation.
+- **Exploratory absolute-growth trajectory:** Linear trend fitted to the available 2022–2026 estimates.
+- **Exploratory proportional-growth trajectory:** Log-linear trend fitted to the available 2022–2026 estimates.
+- **Historical sensitivity comparisons:** Alternative trend specifications excluding 2026, used to assess dependence on the latest observation.
+- **Conversion uncertainty:** Historical GPU conversion scenarios retained separately from future growth assumptions.
+
+These trajectories are not assigned probabilities or interpreted as statistically validated lower, central, and upper demand bounds.
+
+Consequently, the GPU analysis provides an exploratory assessment of possible future resource requirements rather than a definitive forecast of national research GPU demand.
+
+Chapter 10 will present these alternatives transparently, distinguishing historical measurement uncertainty from assumptions about future demand growth.
+
