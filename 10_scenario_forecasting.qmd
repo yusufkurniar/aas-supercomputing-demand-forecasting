@@ -1236,3 +1236,718 @@ Unlike the overall HPC and CPU analyses, formal 80% and 95% prediction intervals
 For national research computing planning, these results indicate that GPU demand should be considered through multiple conditional scenarios rather than a single point estimate. Improved GPU-specific demand reporting, consistent measurement units, and additional annual observations would strengthen future forecasting and infrastructure planning.
 
 The GPU scenarios should therefore be interpreted as **exploratory planning inputs**, not independently validated forecasts of national GPU requirements.
+
+
+## Field of Research Allocation-Share Scenarios
+
+### Purpose and Methodology
+
+The Field of Research (FoR) scenarios examine how projected overall HPC demand for 2027–2030 could be distributed across research fields under alternative historical allocation-share assumptions.
+
+These scenarios use the harmonised FoR allocation shares developed in Chapter 06 and the central overall HPC linear projection developed earlier in this chapter.
+
+The analysis adopts a top-down approach:
+
+\[
+\text{Illustrative FoR demand}_{f,t}
+=
+\text{Projected overall HPC demand}_{t}
+\times
+\text{Assumed allocation share}_{f}
+\]
+
+where \(f\) denotes the research-field group and \(t\) denotes the forecast year.
+
+The resulting values are expressed in kSU. They represent hypothetical distributions of projected overall demand, **not independently estimated or observed FoR-level researcher demand**.
+
+Two historical reference periods are considered:
+
+- **Recent-period composition (2021–2026):** Uses the harmonised FoR 2020 classification groups to reflect more recent allocation patterns.
+- **Longer-term composition (2014–2026):** Uses the harmonised analytical FoR groups to examine historical allocation patterns across the wider period.
+
+The two classification structures are not assumed to be directly interchangeable. Harmonisation supports broad analytical comparisons but does not establish complete equivalence between official FoR classification versions.
+
+Annual allocation shares are examined before constructing scenario assumptions. Category coverage, reporting scope, and changes in classification are retained as methodological limitations.
+
+In particular, the 2017 FoR observation requires caution because its reporting scope differs from other years.
+
+The scenarios hold assumed research-field shares constant over 2027–2030. This is a transparent planning assumption rather than evidence that future disciplinary demand composition will remain unchanged.
+
+### Validate Historical Allocation Shares
+
+
+```{r for-scenario-data-validation}
+# Load harmonised FoR allocation-share datasets from Chapter 06
+
+for_recent <- readRDS(
+  "assets/data/data converted/for_2020_harmonised_shares.rds"
+)
+
+for_longterm <- readRDS(
+  "assets/data/data converted/for_2014_2026_harmonised_shares.rds"
+)
+
+# Confirm expected columns
+stopifnot(
+  all(c("year", "for_2020_visual", "allocation_share") %in%
+        names(for_recent)),
+  all(c("year", "for_visual_group", "allocation_share") %in%
+        names(for_longterm))
+)
+
+# Validate historical coverage
+# Compare year values without requiring identical numeric types
+
+stopifnot(
+  isTRUE(all.equal(
+    sort(unique(as.numeric(for_recent$year))),
+    as.numeric(2021:2026)
+  )),
+  isTRUE(all.equal(
+    sort(unique(as.numeric(for_longterm$year))),
+    as.numeric(2014:2026)
+  )),
+  all(is.finite(for_recent$allocation_share)),
+  all(is.finite(for_longterm$allocation_share)),
+  all(for_recent$allocation_share >= 0),
+  all(for_longterm$allocation_share >= 0)
+)
+
+
+# Check annual allocation-share totals
+for_share_checks <- dplyr::bind_rows(
+  for_recent |>
+    dplyr::group_by(year) |>
+    dplyr::summarise(
+      total_share = sum(allocation_share),
+      .groups = "drop"
+    ) |>
+    dplyr::mutate(period = "Recent: 2021–2026"),
+
+  for_longterm |>
+    dplyr::group_by(year) |>
+    dplyr::summarise(
+      total_share = sum(allocation_share),
+      .groups = "drop"
+    ) |>
+    dplyr::mutate(period = "Long-term: 2014–2026")
+)
+
+stopifnot(
+  all(abs(for_share_checks$total_share - 1) < 1e-6)
+)
+
+knitr::kable(
+  for_share_checks |>
+    dplyr::select(period, year, total_share) |>
+    dplyr::mutate(year = as.character(year)),
+  digits = 4,
+  col.names = c(
+    "Historical period",
+    "Year",
+    "Total allocation share"
+  ),
+  caption = "Validation of annual harmonised FoR allocation shares"
+)
+```
+
+
+### Historical FoR Share Assumptions
+
+For each historical reference period, an unweighted mean of the annual allocation shares is calculated for each harmonised research-field group.
+
+These averages describe the historical distribution of recorded allocations. They are not estimates of independently observed research demand.
+
+The recent-period and longer-term shares are calculated separately because their harmonised category structures and underlying reporting histories differ.
+
+```{r for-reference-shares}
+# Recent-period mean shares: 2021–2026
+recent_for_shares <- for_recent |>
+  dplyr::group_by(for_2020_visual) |>
+  dplyr::summarise(
+    mean_share = mean(allocation_share),
+    years_reported = dplyr::n_distinct(year),
+    .groups = "drop"
+  ) |>
+  dplyr::arrange(dplyr::desc(mean_share))
+
+# Longer-term mean shares: 2014–2026
+longterm_for_shares <- for_longterm |>
+  dplyr::group_by(for_visual_group) |>
+  dplyr::summarise(
+    mean_share = mean(allocation_share),
+    years_reported = dplyr::n_distinct(year),
+    .groups = "drop"
+  ) |>
+  dplyr::arrange(dplyr::desc(mean_share))
+
+# Check the total of the unweighted mean shares
+share_summary <- data.frame(
+  reference_period = c(
+    "Recent: 2021–2026",
+    "Long-term: 2014–2026"
+  ),
+  total_mean_share = c(
+    sum(recent_for_shares$mean_share),
+    sum(longterm_for_shares$mean_share)
+  ),
+  number_of_groups = c(
+    nrow(recent_for_shares),
+    nrow(longterm_for_shares)
+  )
+)
+
+knitr::kable(
+  share_summary,
+  digits = 4,
+  col.names = c(
+    "Reference period",
+    "Sum of mean shares",
+    "Number of FoR groups"
+  ),
+  caption = "Summary of historical FoR allocation-share assumptions"
+)
+
+# Display recent-period group assumptions
+recent_for_shares |>
+  dplyr::mutate(
+    mean_share_percent = 100 * mean_share
+  ) |>
+  dplyr::select(
+    for_2020_visual,
+    years_reported,
+    mean_share_percent
+  ) |>
+  knitr::kable(
+    digits = 2,
+    col.names = c(
+      "Recent FoR group",
+      "Years represented",
+      "Mean annual allocation share (%)"
+    ),
+    caption = "Recent-period FoR allocation-share assumptions, 2021–2026"
+  )
+```
+
+### Earlier-Period FoR Share Assumptions, 2014–2020
+
+The earlier-period scenario uses the 2014–2020 subset of the harmonised historical FoR allocation-share dataset. This provides a reference for comparing allocation composition before and after 2021.
+
+The earlier and recent periods are non-overlapping, although differences in classification, facility coverage, and reporting scope limit direct comparability.
+
+```{r for-earlier-reference-shares}
+# Earlier historical period: 2014–2020
+
+for_earlier <- for_longterm |>
+  dplyr::filter(year >= 2014, year <= 2020)
+
+# Calculate observed-year mean allocation shares
+earlier_for_shares <- for_earlier |>
+  dplyr::group_by(for_visual_group) |>
+  dplyr::summarise(
+    mean_share = mean(allocation_share),
+    years_reported = dplyr::n_distinct(year),
+    .groups = "drop"
+  ) |>
+  dplyr::arrange(dplyr::desc(mean_share))
+
+# Normalise to create conditional scenario weights
+earlier_for_weights <- earlier_for_shares |>
+  dplyr::mutate(
+    scenario_share = mean_share / sum(mean_share)
+  )
+
+# Validate
+stopifnot(
+  identical(sort(unique(as.integer(for_earlier$year))), 2014:2020),
+  abs(sum(earlier_for_weights$scenario_share) - 1) < 1e-10
+)
+
+# Display earlier-period assumptions
+earlier_for_weights |>
+  dplyr::mutate(
+    observed_mean_pct = 100 * mean_share,
+    scenario_share_pct = 100 * scenario_share
+  ) |>
+  dplyr::select(
+    for_visual_group,
+    years_reported,
+    observed_mean_pct,
+    scenario_share_pct
+  ) |>
+  knitr::kable(
+    digits = 2,
+    col.names = c(
+      "FoR group",
+      "Years represented",
+      "Observed-year mean (%)",
+      "Normalised scenario share (%)"
+    ),
+    caption = "Earlier-period FoR scenario weights, 2014–2020"
+  )
+```
+
+
+```{r for-category-coverage}
+# Identify which years contain each FoR group
+
+for_category_coverage <- for_recent |>
+  dplyr::group_by(for_2020_visual) |>
+  dplyr::summarise(
+    years_present = paste(sort(unique(year)), collapse = ", "),
+    years_reported = dplyr::n_distinct(year),
+    .groups = "drop"
+  ) |>
+  dplyr::arrange(years_reported, for_2020_visual)
+
+knitr::kable(
+  for_category_coverage,
+  col.names = c(
+    "FoR group",
+    "Years present",
+    "Number of years"
+  ),
+  caption = "Coverage of recent FoR groups, 2021–2026"
+)
+```
+`
+
+```{r for-share-summary-check}
+knitr::kable(
+  share_summary,
+  digits = 6,
+  col.names = c(
+    "Reference period",
+    "Sum of mean shares",
+    "Number of FoR groups"
+  ),
+  caption = "Completeness of historical FoR share assumptions"
+)
+```
+
+
+```{r for-normalised-reference-shares}
+# Construct conditional scenario weights by normalising
+# observed-year mean allocation shares.
+#
+# IMPORTANT:
+# Missing category-years are not treated as observed zeros.
+# Normalisation is a scenario assumption, not data recovery.
+
+recent_for_weights <- recent_for_shares |>
+  dplyr::mutate(
+    scenario_share = mean_share / sum(mean_share)
+  )
+
+longterm_for_weights <- longterm_for_shares |>
+  dplyr::mutate(
+    scenario_share = mean_share / sum(mean_share)
+  )
+
+stopifnot(
+  abs(sum(recent_for_weights$scenario_share) - 1) < 1e-10,
+  abs(sum(longterm_for_weights$scenario_share) - 1) < 1e-10
+)
+
+# Show recent-period scenario assumptions
+recent_for_weights |>
+  dplyr::mutate(
+    observed_mean_pct = 100 * mean_share,
+    scenario_share_pct = 100 * scenario_share
+  ) |>
+  dplyr::select(
+    for_2020_visual,
+    years_reported,
+    observed_mean_pct,
+    scenario_share_pct
+  ) |>
+  knitr::kable(
+    digits = 2,
+    col.names = c(
+      "FoR group",
+      "Years represented",
+      "Observed-year mean (%)",
+      "Normalised scenario share (%)"
+    ),
+    caption = paste(
+      "Recent FoR scenario weights, 2021–2026:",
+      "normalised observed-year means"
+    )
+  )
+```
+
+
+### Recent-Period FoR Allocation Scenario, 2027–2030
+
+The recent-period scenario applies the normalised 2021–2026 FoR allocation-share assumptions to the central overall HPC demand projection for 2027–2030.
+
+The calculation assumes that the historical allocation composition remains constant over the forecast horizon. It is intended to illustrate a possible distribution of projected national HPC demand rather than provide independently validated demand forecasts for individual research fields.
+
+```{r for-recent-scenario-projections}
+# Apply recent-period FoR weights to projected overall HPC demand
+# Units: kSU
+
+for_recent_projections <- tidyr::crossing(
+  year = hpc_scenarios$year,
+  for_2020_visual = recent_for_weights$for_2020_visual
+) |>
+  dplyr::left_join(
+    hpc_scenarios |>
+      dplyr::select(
+        year,
+        overall_hpc_ksu = central_linear
+      ),
+    by = "year"
+  ) |>
+  dplyr::left_join(
+    recent_for_weights |>
+      dplyr::select(
+        for_2020_visual,
+        scenario_share
+      ),
+    by = "for_2020_visual"
+  ) |>
+  dplyr::mutate(
+    illustrative_for_ksu =
+      overall_hpc_ksu * scenario_share
+  )
+
+# Confirm no missing values and correct annual totals
+stopifnot(
+  all(is.finite(for_recent_projections$illustrative_for_ksu)),
+  all(for_recent_projections$illustrative_for_ksu >= 0)
+)
+
+for_recent_total_check <- for_recent_projections |>
+  dplyr::group_by(year) |>
+  dplyr::summarise(
+    allocated_ksu = sum(illustrative_for_ksu),
+    projected_overall_ksu = dplyr::first(overall_hpc_ksu),
+    difference_ksu = allocated_ksu - projected_overall_ksu,
+    .groups = "drop"
+  )
+
+stopifnot(
+  all(abs(for_recent_total_check$difference_ksu) < 1e-6)
+)
+
+# Display the 2030 illustrative allocation by FoR group
+for_recent_projections |>
+  dplyr::filter(year == 2030) |>
+  dplyr::arrange(dplyr::desc(illustrative_for_ksu)) |>
+  dplyr::mutate(
+    scenario_share_pct = 100 * scenario_share
+  ) |>
+  dplyr::select(
+    for_2020_visual,
+    scenario_share_pct,
+    illustrative_for_ksu
+  ) |>
+  knitr::kable(
+    digits = 2,
+    format.args = list(big.mark = ","),
+    col.names = c(
+      "FoR group",
+      "Scenario share (%)",
+      "Illustrative 2030 allocation (kSU)"
+    ),
+    caption = paste(
+      "Illustrative 2030 FoR distribution of projected",
+      "overall HPC demand: recent-period share assumptions"
+    )
+  )
+```
+
+
+### Longer-Term FoR Allocation Scenario, 2027–2030
+
+The longer-term scenario applies normalised historical FoR allocation-share assumptions from 2014–2026 to the central overall HPC demand projection.
+
+This provides an alternative distribution based on a broader historical reference period. The resulting projections are illustrative and should not be interpreted as independently validated research-field demand forecasts.
+
+Differences between the recent-period and longer-term scenarios may reflect changes in research allocation patterns, FoR classification structures, facility coverage, and reporting practices. They should not automatically be interpreted as changes in underlying researcher demand.
+
+```{r for-longterm-scenario-projections}
+# Apply longer-term FoR weights to projected overall HPC demand
+# Units: kSU
+
+for_longterm_projections <- tidyr::crossing(
+  year = hpc_scenarios$year,
+  for_visual_group = longterm_for_weights$for_visual_group
+) |>
+  dplyr::left_join(
+    hpc_scenarios |>
+      dplyr::select(
+        year,
+        overall_hpc_ksu = central_linear
+      ),
+    by = "year"
+  ) |>
+  dplyr::left_join(
+    longterm_for_weights |>
+      dplyr::select(
+        for_visual_group,
+        scenario_share
+      ),
+    by = "for_visual_group"
+  ) |>
+  dplyr::mutate(
+    illustrative_for_ksu =
+      overall_hpc_ksu * scenario_share
+  )
+
+# Validate projections
+stopifnot(
+  all(is.finite(for_longterm_projections$illustrative_for_ksu)),
+  all(for_longterm_projections$illustrative_for_ksu >= 0)
+)
+
+# Confirm allocations sum to projected overall HPC demand
+for_longterm_total_check <- for_longterm_projections |>
+  dplyr::group_by(year) |>
+  dplyr::summarise(
+    allocated_ksu = sum(illustrative_for_ksu),
+    projected_overall_ksu = dplyr::first(overall_hpc_ksu),
+    difference_ksu = allocated_ksu - projected_overall_ksu,
+    .groups = "drop"
+  )
+
+stopifnot(
+  all(abs(for_longterm_total_check$difference_ksu) < 1e-6)
+)
+
+# Display the 2030 illustrative distribution
+for_longterm_projections |>
+  dplyr::filter(year == 2030) |>
+  dplyr::arrange(dplyr::desc(illustrative_for_ksu)) |>
+  dplyr::mutate(
+    scenario_share_pct = 100 * scenario_share
+  ) |>
+  dplyr::select(
+    for_visual_group,
+    scenario_share_pct,
+    illustrative_for_ksu
+  ) |>
+  knitr::kable(
+    digits = 2,
+    format.args = list(big.mark = ","),
+    col.names = c(
+      "FoR group",
+      "Scenario share (%)",
+      "Illustrative 2030 allocation (kSU)"
+    ),
+    caption = paste(
+      "Illustrative 2030 FoR distribution of projected",
+      "overall HPC demand: longer-term share assumptions"
+    )
+  )
+```
+
+
+### Earlier-Period FoR Allocation Scenario, 2027–2030
+
+This scenario applies the normalised 2014–2020 allocation-share assumptions to the central overall HPC demand projection. It provides an earlier historical reference against which the recent-period and longer-term scenarios can be compared.
+
+```{r for-earlier-scenario-projections}
+# Apply 2014–2020 FoR weights to the 2027–2030
+# central overall HPC demand forecast.
+# Units: kSU
+
+for_earlier_projections <- tidyr::crossing(
+  year = hpc_scenarios$year,
+  for_visual_group = earlier_for_weights$for_visual_group
+) |>
+  dplyr::left_join(
+    hpc_scenarios |>
+      dplyr::select(
+        year,
+        overall_hpc_ksu = central_linear
+      ),
+    by = "year"
+  ) |>
+  dplyr::left_join(
+    earlier_for_weights |>
+      dplyr::select(
+        for_visual_group,
+        scenario_share
+      ),
+    by = "for_visual_group"
+  ) |>
+  dplyr::mutate(
+    illustrative_for_ksu = overall_hpc_ksu * scenario_share
+  )
+
+# Validate that all projected values are finite and non-negative
+stopifnot(
+  all(is.finite(for_earlier_projections$illustrative_for_ksu)),
+  all(for_earlier_projections$illustrative_for_ksu >= 0)
+)
+
+# Check that the FoR totals equal the overall HPC forecast
+for_earlier_total_check <- for_earlier_projections |>
+  dplyr::group_by(year) |>
+  dplyr::summarise(
+    allocated_ksu = sum(illustrative_for_ksu),
+    projected_overall_ksu = dplyr::first(overall_hpc_ksu),
+    .groups = "drop"
+  )
+
+stopifnot(
+  all(abs(
+    for_earlier_total_check$allocated_ksu -
+    for_earlier_total_check$projected_overall_ksu
+  ) < 1e-6)
+)
+
+# Display 2030 illustrative distribution
+for_earlier_projections |>
+  dplyr::filter(year == 2030) |>
+  dplyr::arrange(dplyr::desc(illustrative_for_ksu)) |>
+  dplyr::mutate(
+    scenario_share_pct = 100 * scenario_share
+  ) |>
+  dplyr::select(
+    for_visual_group,
+    scenario_share_pct,
+    illustrative_for_ksu
+  ) |>
+  knitr::kable(
+    digits = 2,
+    format.args = list(big.mark = ","),
+    col.names = c(
+      "FoR group",
+      "Scenario share (%)",
+      "Illustrative 2030 allocation (kSU)"
+    ),
+    caption = paste(
+      "Illustrative 2030 FoR distribution:",
+      "earlier-period 2014–2020 assumptions"
+    )
+  )
+```
+
+```{r for-three-period-comparison-plot}
+#| fig-width: 11
+#| fig-height: 7
+#| fig-cap: "Comparison of normalised FoR allocation-share assumptions across three historical reference periods."
+
+for_comparison <- dplyr::bind_rows(
+  earlier_for_weights |>
+    dplyr::transmute(
+      for_group = as.character(for_visual_group),
+      period = "Earlier (2014–2020)",
+      share_pct = 100 * scenario_share
+    ),
+  recent_for_weights |>
+    dplyr::transmute(
+      for_group = as.character(for_2020_visual),
+      period = "Recent (2021–2026)",
+      share_pct = 100 * scenario_share
+    ),
+  longterm_for_weights |>
+    dplyr::transmute(
+      for_group = as.character(for_visual_group),
+      period = "Longer-term (2014–2026)",
+      share_pct = 100 * scenario_share
+    )
+) |>
+  dplyr::mutate(
+    period = factor(
+      period,
+      levels = c(
+        "Earlier (2014–2020)",
+        "Recent (2021–2026)",
+        "Longer-term (2014–2026)"
+      )
+    )
+  )
+
+# Order research fields by their maximum scenario share
+group_order <- for_comparison |>
+  dplyr::group_by(for_group) |>
+  dplyr::summarise(
+    max_share = max(share_pct),
+    .groups = "drop"
+  ) |>
+  dplyr::arrange(max_share) |>
+  dplyr::pull(for_group)
+
+for_comparison <- for_comparison |>
+  dplyr::mutate(
+    for_group = factor(for_group, levels = group_order)
+  )
+
+ggplot2::ggplot(
+  for_comparison,
+  ggplot2::aes(
+    x = share_pct,
+    y = for_group,
+    fill = period
+  )
+) +
+  ggplot2::geom_col(
+    position = ggplot2::position_dodge(
+      width = 0.8,
+      preserve = "single"
+    ),
+    width = 0.7
+  ) +
+  ggplot2::scale_fill_manual(
+    values = c(
+      "Earlier (2014–2020)" = "#64748B",
+      "Recent (2021–2026)" = "#155E75",
+      "Longer-term (2014–2026)" = "#D97706"
+    )
+  ) +
+  ggplot2::scale_x_continuous(
+    labels = function(x) paste0(x, "%"),
+    expand = ggplot2::expansion(mult = c(0, 0.05))
+  ) +
+  ggplot2::labs(
+    title = "FoR Allocation-Share Scenarios for 2030",
+    subtitle = "Three historical reference-period assumptions",
+    x = "Assumed share of projected overall HPC demand",
+    y = NULL,
+    fill = "Reference period",
+    caption = paste(
+      "Shares are normalised observed-year means;",
+      "classification, coverage and missing-category limitations apply.",
+      "Unclassified categories are not assumed equivalent."
+    )
+  ) +
+  ggplot2::theme_minimal(base_size = 12) +
+  ggplot2::theme(
+    plot.title = ggplot2::element_text(face = "bold"),
+    legend.position = "bottom",
+    plot.caption = ggplot2::element_text(
+      size = 8,
+      colour = "grey40"
+    )
+  )
+```
+
+### Comparison and Interpretation of FoR Scenarios
+
+The three FoR allocation-share scenarios illustrate how the distribution of projected overall HPC demand varies under different historical reference-period assumptions.
+
+All scenarios apply their respective normalised historical allocation-share weights to the same central overall HPC demand projection. Consequently, differences between the scenarios reflect the assumed disciplinary composition rather than differences in the total national demand forecast.
+
+Under the earlier-period assumptions (2014–2020), Earth & Environmental Sciences receives the largest illustrative share at 30.38%, followed by Chemical Sciences (18.28%), Physical Sciences (16.26%), and Engineering & Technology (16.24%).
+
+Under the recent-period assumptions (2021–2026), Engineering & Technology becomes the largest group at 33.28%, followed by Physical Sciences (21.11%), Chemical Sciences (17.02%), and Earth & Environmental Sciences (13.36%).
+
+The shift in normalised scenario weights is substantial for the two largest changing groups. Engineering & Technology increases by approximately 17.04 percentage points between the earlier and recent reference periods, while Earth & Environmental Sciences decreases by approximately 17.02 percentage points.
+
+The longer-term scenario (2014–2026) provides a third reference. Engineering & Technology accounts for 24.19%, Earth & Environmental Sciences for 22.55%, Physical Sciences for 18.55%, and Chemical Sciences for 17.74%.
+
+These differences illustrate the sensitivity of FoR-level planning allocations to the selected historical reference period.
+
+However, they should not automatically be interpreted as changes in underlying researcher demand. The historical data span different FoR classification structures, and differences in facility coverage, reporting scope, category completeness, and allocation practices may contribute to the observed variation.
+
+In addition, several categories are not reported consistently across all years. The scenario weights were constructed by normalising observed-year mean allocation shares to sum to 100%, without treating unreported category-years as confirmed zero allocations.
+
+The resulting FoR projections therefore represent conditional distributions of projected overall HPC demand, not independently validated demand forecasts for individual research fields.
+
+The earlier-period, recent-period, and longer-term scenarios provide complementary planning perspectives. Their differences indicate that infrastructure planning should consider uncertainty in disciplinary composition rather than relying exclusively on a single historical allocation pattern.
+
+The analysis does not establish which historical composition will best represent future demand. Further work would require consistently classified FoR-level demand requests, comparable facility reporting, and improved coverage of currently incomplete categories.
