@@ -610,6 +610,26 @@
     ]
   },
   {
+    "objectID": "09_model_selection.html",
+    "href": "09_model_selection.html",
+    "title": "10  Model Selection",
+    "section": "",
+    "text": "10.1 Purpose and Approach\nThis chapter selects the forecasting models and analytical assumptions that will inform projections of Australian national research high-performance computing (HPC) demand to 2030.\nThe selection process builds on the candidate models developed in Chapter 07 and the historical forecast evaluation conducted in Chapter 08. Overall HPC demand, CPU demand, and GPU demand are considered separately because they have different measurement units, historical coverage, and forecasting uncertainties.\nModel selection is guided by predictive performance, statistical adequacy, interpretability, and the reliability of the underlying data. Particular attention is given to the substantial increase in recorded overall HPC demand in 2026 and whether this observation should influence the central forecast or be examined through sensitivity scenarios.\nField of Research (FoR) allocation shares are assessed separately. These shares describe the historical distribution of allocated resources rather than directly observed research-field demand. They are therefore used to inform scenario assumptions, not to select independently validated field-specific demand models.",
+    "crumbs": [
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Model Selection</span>"
+    ]
+  },
+  {
+    "objectID": "09_model_selection.html#model-selection-criteria",
+    "href": "09_model_selection.html#model-selection-criteria",
+    "title": "10  Model Selection",
+    "section": "10.2 Model Selection Criteria",
+    "text": "10.2 Model Selection Criteria\nThe following criteria are used to assess the candidate forecasting models.\n\nOut-of-sample forecast accuracy: Rolling-origin cross-validation results from Chapter 08 provide the principal quantitative evidence. Root Mean Squared Error (RMSE) and Mean Absolute Error (MAE) are evaluated within each resource series, rather than compared directly across different measurement units.\nConsistency across evaluation metrics: Models are assessed using both RMSE and MAE. RMSE places greater weight on large forecast errors, while MAE describes the average absolute forecast error. Differences between their rankings are considered when interpreting model performance.\nStatistical adequacy: Residual behaviour and evidence of systematic forecast errors are considered where supported by the available data. Diagnostic results are interpreted cautiously because the annual series contain relatively few observations.\nInterpretability and plausibility: Selected models should provide transparent assumptions about future demand growth and produce forecasts that can be explained in the context of national research infrastructure planning.\nHistorical data quality and coverage: Model complexity is assessed relative to the length, consistency, and provenance of each resource series. Short or partly estimated historical series do not necessarily support complex forecasting models.\nSensitivity to recent observations: The influence of the 2026 demand increase is considered when interpreting fitted trends and selecting models. The increase is not automatically assumed to represent a permanent acceleration in demand.\nSuitability for projections to 2030: The selected models must support interpretable forecasts over the 2027–2030 horizon. Forecast uncertainty and alternative growth assumptions will be examined in Chapter 10.\n\nNo single criterion determines model selection automatically. Out-of-sample accuracy provides the primary quantitative comparison, while the remaining criteria support a transparent assessment of model suitability for policy-oriented forecasting.",
+    "crumbs": [
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Model Selection</span>"
+    ]
+  },
+  {
     "objectID": "10_scenario_forecasting.html",
     "href": "10_scenario_forecasting.html",
     "title": "11  Scenario Forecasting and Capacity-Gap Analysis",

@@ -222,8 +222,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#purpose-and-approach" id="toc-purpose-and-approach" class="nav-link active" data-scroll-target="#purpose-and-approach"><span class="header-section-number">10.1</span> Purpose and Approach</a></li>
+  <li><a href="#model-selection-criteria" id="toc-model-selection-criteria" class="nav-link" data-scroll-target="#model-selection-criteria"><span class="header-section-number">10.2</span> Model Selection Criteria</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -247,10 +254,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
+<section id="purpose-and-approach" class="level2" data-number="10.1">
+<h2 data-number="10.1" class="anchored" data-anchor-id="purpose-and-approach"><span class="header-section-number">10.1</span> Purpose and Approach</h2>
+<p>This chapter selects the forecasting models and analytical assumptions that will inform projections of Australian national research high-performance computing (HPC) demand to 2030.</p>
+<p>The selection process builds on the candidate models developed in Chapter 07 and the historical forecast evaluation conducted in Chapter 08. Overall HPC demand, CPU demand, and GPU demand are considered separately because they have different measurement units, historical coverage, and forecasting uncertainties.</p>
+<p>Model selection is guided by predictive performance, statistical adequacy, interpretability, and the reliability of the underlying data. Particular attention is given to the substantial increase in recorded overall HPC demand in 2026 and whether this observation should influence the central forecast or be examined through sensitivity scenarios.</p>
+<p>Field of Research (FoR) allocation shares are assessed separately. These shares describe the historical distribution of allocated resources rather than directly observed research-field demand. They are therefore used to inform scenario assumptions, not to select independently validated field-specific demand models.</p>
+</section>
+<section id="model-selection-criteria" class="level2" data-number="10.2">
+<h2 data-number="10.2" class="anchored" data-anchor-id="model-selection-criteria"><span class="header-section-number">10.2</span> Model Selection Criteria</h2>
+<p>The following criteria are used to assess the candidate forecasting models.</p>
+<ol type="1">
+<li><p><strong>Out-of-sample forecast accuracy:</strong> Rolling-origin cross-validation results from Chapter 08 provide the principal quantitative evidence. Root Mean Squared Error (RMSE) and Mean Absolute Error (MAE) are evaluated within each resource series, rather than compared directly across different measurement units.</p></li>
+<li><p><strong>Consistency across evaluation metrics:</strong> Models are assessed using both RMSE and MAE. RMSE places greater weight on large forecast errors, while MAE describes the average absolute forecast error. Differences between their rankings are considered when interpreting model performance.</p></li>
+<li><p><strong>Statistical adequacy:</strong> Residual behaviour and evidence of systematic forecast errors are considered where supported by the available data. Diagnostic results are interpreted cautiously because the annual series contain relatively few observations.</p></li>
+<li><p><strong>Interpretability and plausibility:</strong> Selected models should provide transparent assumptions about future demand growth and produce forecasts that can be explained in the context of national research infrastructure planning.</p></li>
+<li><p><strong>Historical data quality and coverage:</strong> Model complexity is assessed relative to the length, consistency, and provenance of each resource series. Short or partly estimated historical series do not necessarily support complex forecasting models.</p></li>
+<li><p><strong>Sensitivity to recent observations:</strong> The influence of the 2026 demand increase is considered when interpreting fitted trends and selecting models. The increase is not automatically assumed to represent a permanent acceleration in demand.</p></li>
+<li><p><strong>Suitability for projections to 2030:</strong> The selected models must support interpretable forecasts over the 2027–2030 horizon. Forecast uncertainty and alternative growth assumptions will be examined in Chapter 10.</p></li>
+</ol>
+<p>No single criterion determines model selection automatically. Out-of-sample accuracy provides the primary quantitative comparison, while the remaining criteria support a transparent assessment of model suitability for policy-oriented forecasting.</p>
 
 
 <!-- -->
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -716,7 +744,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Model Selection</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Model Selection</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">## Purpose and Approach</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>This chapter selects the forecasting models and analytical assumptions that will inform projections of Australian national research high-performance computing (HPC) demand to 2030.</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>The selection process builds on the candidate models developed in Chapter 07 and the historical forecast evaluation conducted in Chapter 08. Overall HPC demand, CPU demand, and GPU demand are considered separately because they have different measurement units, historical coverage, and forecasting uncertainties.</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>Model selection is guided by predictive performance, statistical adequacy, interpretability, and the reliability of the underlying data. Particular attention is given to the substantial increase in recorded overall HPC demand in 2026 and whether this observation should influence the central forecast or be examined through sensitivity scenarios.</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>Field of Research (FoR) allocation shares are assessed separately. These shares describe the historical distribution of allocated resources rather than directly observed research-field demand. They are therefore used to inform scenario assumptions, not to select independently validated field-specific demand models.</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">## Model Selection Criteria</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>The following criteria are used to assess the candidate forecasting models.</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Out-of-sample forecast accuracy:** Rolling-origin cross-validation results from Chapter 08 provide the principal quantitative evidence. Root Mean Squared Error (RMSE) and Mean Absolute Error (MAE) are evaluated within each resource series, rather than compared directly across different measurement units.</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Consistency across evaluation metrics:** Models are assessed using both RMSE and MAE. RMSE places greater weight on large forecast errors, while MAE describes the average absolute forecast error. Differences between their rankings are considered when interpreting model performance.</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Statistical adequacy:** Residual behaviour and evidence of systematic forecast errors are considered where supported by the available data. Diagnostic results are interpreted cautiously because the annual series contain relatively few observations.</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Interpretability and plausibility:** Selected models should provide transparent assumptions about future demand growth and produce forecasts that can be explained in the context of national research infrastructure planning.</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>**Historical data quality and coverage:** Model complexity is assessed relative to the length, consistency, and provenance of each resource series. Short or partly estimated historical series do not necessarily support complex forecasting models.</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="ss">6. </span>**Sensitivity to recent observations:** The influence of the 2026 demand increase is considered when interpreting fitted trends and selecting models. The increase is not automatically assumed to represent a permanent acceleration in demand.</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="ss">7. </span>**Suitability for projections to 2030:** The selected models must support interpretable forecasts over the 2027–2030 horizon. Forecast uncertainty and alternative growth assumptions will be examined in Chapter 10.</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>No single criterion determines model selection automatically. Out-of-sample accuracy provides the primary quantitative comparison, while the remaining criteria support a transparent assessment of model suitability for policy-oriented forecasting.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 
