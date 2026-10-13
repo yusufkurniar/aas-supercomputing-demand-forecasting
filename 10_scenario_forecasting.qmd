@@ -53,3 +53,243 @@ All numerical results will retain their original resource units. Overall HPC kSU
 
 The analysis prioritises transparency, reproducibility, and clear communication of uncertainty over unnecessary model complexity.
 
+
+## Overall HPC Demand Scenarios
+
+### Forecast Construction
+
+Overall HPC demand projections are generated for 2027–2030 using the linear and log-linear models developed in Chapter 07 and evaluated in Chapter 08.
+
+The full-history linear trend is adopted as the central statistical projection, consistent with the model-selection decision in Chapter 09.
+
+A linear trend excluding 2026 is retained to examine sensitivity to the latest historical observation. Full-history and 2026-excluded log-linear specifications are also presented to illustrate alternative compounded-growth assumptions.
+
+All projections are expressed in kSU and represent model-based estimates of the constructed historical demand measure, rather than forecasts of allocated computing capacity.
+
+### Annual Demand Projections
+
+```{r load-overall-hpc-models}
+#| include: false
+
+# Load the fitted models saved by Chapter 07
+model_path <- "assets/models/overall_hpc_models.rds"
+
+if (!file.exists(model_path)) {
+  stop(
+    "Model file not found: ", model_path,
+    ". Render Chapter 07 first to create it."
+  )
+}
+
+hpc_models <- readRDS(model_path)
+
+overall_linear <- hpc_models$overall_linear
+overall_linear_pre2026 <- hpc_models$overall_linear_pre2026
+overall_loglinear <- hpc_models$overall_loglinear
+overall_loglinear_pre2026 <- hpc_models$overall_loglinear_pre2026
+
+stopifnot(
+  inherits(overall_linear, "lm"),
+  inherits(overall_linear_pre2026, "lm"),
+  inherits(overall_loglinear, "lm"),
+  inherits(overall_loglinear_pre2026, "lm")
+)
+```
+
+```{r overall-hpc-scenario-table}
+# Reuse the fitted models from Chapter 07.
+# This chunk requires those model objects to have been created
+# earlier in the current Quarto rendering session.
+
+required_models <- c(
+  "overall_linear",
+  "overall_linear_pre2026",
+  "overall_loglinear",
+  "overall_loglinear_pre2026"
+)
+
+missing_models <- required_models[
+  !vapply(required_models, exists, logical(1), inherits = TRUE)
+]
+
+if (length(missing_models) > 0) {
+  stop(
+    "Missing Chapter 07 model objects: ",
+    paste(missing_models, collapse = ", "),
+    ". Fit these models from the original historical data ",
+    "before generating Chapter 10 projections."
+  )
+}
+
+hpc_future <- data.frame(
+  year = 2027:2030,
+  time = (2027:2030) - 2014
+)
+
+hpc_scenarios <- hpc_future |>
+  dplyr::transmute(
+    year,
+    central_linear = as.numeric(
+      predict(overall_linear, newdata = hpc_future)
+    ),
+    linear_excl_2026 = as.numeric(
+      predict(overall_linear_pre2026, newdata = hpc_future)
+    ),
+    loglinear_full = exp(as.numeric(
+      predict(overall_loglinear, newdata = hpc_future)
+    )),
+    loglinear_excl_2026 = exp(as.numeric(
+      predict(overall_loglinear_pre2026, newdata = hpc_future)
+    ))
+  )
+
+stopifnot(
+  nrow(hpc_scenarios) == 4,
+  all(is.finite(as.matrix(hpc_scenarios[, -1]))),
+  all(as.matrix(hpc_scenarios[, -1]) > 0)
+)
+
+
+hpc_scenarios |>
+  dplyr::mutate(
+    year = as.character(year)
+  ) |>
+  knitr::kable(
+    digits = 0,
+    format.args = list(big.mark = ","),
+    col.names = c(
+      "Year",
+      "Central linear",
+      "Linear (excl. 2026)",
+      "Log-linear (full)",
+      "Log-linear (excl. 2026)"
+    ),
+    caption = "Overall HPC demand scenarios, 2027–2030 (kSU)"
+  )
+
+```
+
+```{r}
+
+#| label: fig-overall-hpc-scenarios
+#| fig-cap: "Projected overall HPC demand under alternative model specifications, 2027–2030."
+#| fig-width: 10
+#| fig-height: 6
+
+# Convert scenario data into long format
+hpc_plot_data <- hpc_scenarios |>
+  tidyr::pivot_longer(
+    cols = -year,
+    names_to = "scenario",
+    values_to = "demand_ksu"
+  ) |>
+  dplyr::mutate(
+    scenario = factor(
+      scenario,
+      levels = c(
+        "central_linear",
+        "linear_excl_2026",
+        "loglinear_full",
+        "loglinear_excl_2026"
+      ),
+      labels = c(
+        "Central linear",
+        "Linear (excl. 2026)",
+        "Log-linear (full)",
+        "Log-linear (excl. 2026)"
+      )
+    )
+  )
+
+ggplot2::ggplot(
+  hpc_plot_data,
+  ggplot2::aes(
+    x = year,
+    y = demand_ksu / 1e6,
+    colour = scenario,
+    linetype = scenario,
+    group = scenario
+  )
+) +
+  ggplot2::geom_line(linewidth = 1.1) +
+  ggplot2::geom_point(size = 2.3) +
+  ggplot2::scale_x_continuous(
+    breaks = 2027:2030
+  ) +
+  ggplot2::scale_y_continuous(
+    labels = scales::label_number(accuracy = 0.1)
+  ) +
+  ggplot2::scale_colour_manual(
+    values = c(
+      "Central linear" = "#155E75",
+      "Linear (excl. 2026)" = "#64748B",
+      "Log-linear (full)" = "#D97706",
+      "Log-linear (excl. 2026)" = "#B91C1C"
+    )
+  ) +
+  ggplot2::labs(
+    title = "Overall HPC Demand Scenarios to 2030",
+    subtitle = "Central linear forecast and alternative growth assumptions",
+    x = "Year",
+    y = "Projected demand (million kSU)",
+    colour = "Scenario",
+    linetype = "Scenario"
+  ) +
+  ggplot2::theme_minimal(base_size = 12) +
+  ggplot2::theme(
+    legend.position = "bottom",
+    plot.title = ggplot2::element_text(face = "bold")
+  )
+
+```
+
+
+### Scenario Results and Interpretation
+
+The overall HPC demand scenarios indicate continued growth in national research computing requirements through 2030, although the projected magnitude depends substantially on the selected model specification.
+
+**Central linear projection**
+
+The selected full-history linear model projects overall HPC demand increasing from approximately 2.017 million kSU in 2027 to 2.503 million kSU in 2030.
+
+This corresponds to an estimated annual absolute increase of approximately 161,992 kSU, consistent with the fitted historical trend.
+
+The central projection is preferred because the linear model achieved the lowest rolling-origin RMSE and MAE among the evaluated overall HPC models in Chapter 08.
+
+However, this result reflects historical one-step-ahead predictive performance and does not guarantee equivalent accuracy over the full projection horizon.
+
+**Sensitivity to the 2026 observation**
+
+Excluding the 2026 observation reduces the projected 2030 demand from 2,502,822 kSU to 2,285,327 kSU.
+
+The difference is approximately 217,495 kSU, equivalent to 8.7% of the central projection.
+
+This demonstrates that the latest observation materially influences the estimated linear growth trajectory.
+
+The sensitivity comparison does not establish whether the 2026 increase represents a sustained change in researcher demand, a temporary development, or differences in historical reporting.
+
+**Alternative compounded-growth trajectories**
+
+The full-history log-linear model projects approximately 6.483 million kSU in 2030, while the model excluding 2026 projects approximately 6.963 million kSU.
+
+These values are substantially higher than the central linear projection because the log-linear specifications extrapolate compounded proportional growth rather than a constant annual absolute increase.
+
+However, Chapter 08 found that the log-linear model had substantially higher rolling-origin forecast errors than the linear model.
+
+The log-linear projections are therefore retained as exploratory alternative growth trajectories rather than equally supported central forecasts or statistically validated upper demand bounds.
+
+Notably, excluding 2026 increases the log-linear projection, despite reducing the corresponding linear projection. This illustrates how sensitivity to historical observations depends on the model specification.
+
+**Implications for infrastructure planning**
+
+The central statistical projection suggests that national research HPC requirements could reach approximately 2.50 million kSU by 2030 if the fitted historical linear trend continues.
+
+The sensitivity analysis indicates that the projected magnitude depends partly on the interpretation of the latest historical observation.
+
+The alternative log-linear trajectories demonstrate how substantially greater requirements could emerge under continued compounded growth, although the available historical evaluation provides weaker support for these specifications.
+
+These results highlight the importance of maintaining flexibility in infrastructure planning and distinguishing projected researcher requirements from actual allocated computing capacity.
+
+The scenarios should be interpreted as conditional, model-based estimates rather than definitive predictions of future national HPC demand.
+
+

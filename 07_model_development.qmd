@@ -216,6 +216,29 @@ knitr::kable(
 )
 ```
 
+
+```{r save-overall-hpc-models}
+#| include: false
+
+# Save fitted overall HPC models for reuse in Chapter 10
+dir.create(
+  "assets/models",
+  recursive = TRUE,
+  showWarnings = FALSE
+)
+
+saveRDS(
+  list(
+    overall_linear = overall_linear,
+    overall_linear_pre2026 = overall_linear_pre2026,
+    overall_loglinear = overall_loglinear,
+    overall_loglinear_pre2026 = overall_loglinear_pre2026
+  ),
+  "assets/models/overall_hpc_models.rds"
+)
+```
+
+
 The comparison evaluates changes in the estimated annual trend coefficients. For the linear model, the coefficient represents the
 annual absolute change in demand measured in kSU. For the log-linear model, the coefficient represents the annual change in log demand, which can be converted into an implied compounded growth rate.
 
