@@ -27,7 +27,10 @@ The forecasting analysis considers three related but distinct measures of Austra
 2. CPU demand, expressed in CPU core-hours.
 3. GPU demand, expressed in GPU-hours.
 
-These measures represent harmonised estimates of computing resources requested by researchers, rather than allocated resources or available computing capacity. CPU and GPU demand are modelled separately because their resource units and conversion assumptions are not directly interchangeable.
+
+The forecasting targets represent harmonised historical estimates of researcher computing demand, expressed in the units available for each resource category. Depending on the reporting year and source, these series combine directly reported requests, derived estimates, and proxy-based measures. They should therefore not be interpreted as uniformly observed or unconstrained researcher demand.
+
+Overall HPC demand is modelled in kSU, while CPU and GPU demand are modelled separately in CPU core-hours and GPU-hours, respectively. Differences in resource accounting, reporting coverage, and conversion assumptions limit direct comparability across these measures.
 
 The overall kSU series provides a reference for aggregate demand, while the CPU and GPU series support resource-specific forecasts
 relevant to future infrastructure planning.
