@@ -572,6 +572,29 @@ knitr::kable(
 )
 ```
 
+
+```{r save-gpu-models}
+#| include: false
+
+# Save fitted GPU models for Chapter 10
+dir.create(
+  "assets/models",
+  recursive = TRUE,
+  showWarnings = FALSE
+)
+
+saveRDS(
+  list(
+    gpu_linear = gpu_linear,
+    gpu_linear_pre2026 = gpu_linear_pre2026,
+    gpu_loglinear = gpu_loglinear,
+    gpu_loglinear_pre2026 = gpu_loglinear_pre2026
+  ),
+  "assets/models/gpu_models.rds"
+)
+```
+
+
 The linear trend coefficient represents the estimated annual absolute change in GPU demand, measured in millions of GPU-hours.
 
 The log-linear coefficient represents annual change in log GPU demand and can be converted into an implied compounded growth rate.
