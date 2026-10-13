@@ -106,3 +106,40 @@ Provide **evidence-informed scenarios** to support decisions about Australia's f
 
 :::
 
+
+## Data Sources and Historical Coverage
+
+::: {style="margin-top: 35px;"}
+
+**Primary Data Sources**
+
+- [**NCI**]{style="color: #006DAE;"} : National Computational Infrastructure.
+- [**Pawsey**]{style="color: #006DAE;"} : Pawsey Supercomputing Research Centre.
+- [**NCMAS**]{style="color: #006DAE;"} : National Computational Merit Allocation Scheme.
+
+<div style="height: 25px;"></div>
+
+**Historical Coverage: 2014 - 2026**
+
+- **Overall HPC:** 2014 - 2026, measured in thousands of service units (kSU).
+- **CPU:** 2014 - 2026, measured in million CPU core-hours.
+- **GPU:** 2022 - 2026, measured in million GPU-hours.
+- **Fields of Research (FoR):** Historical allocation shares by research discipline.
+
+<div style="height: 25px;"></div>
+
+::: {style="padding: 12px 18px; border-left: 5px solid #006DAE; background-color: #F2F7FB;"}
+
+**Data limitation:** Historical records combine reported values, derived estimates, and proxies. Coverage and measurement methods differ across years and facilities.
+
+:::
+
+<div style="height: 15px;"></div>
+
+::: {style="font-size: 0.60em; color: #666;"}
+
+Sources: NCI and Pawsey annual reports; NCMAS allocation outcomes. See project bibliography.
+
+:::
+
+:::
