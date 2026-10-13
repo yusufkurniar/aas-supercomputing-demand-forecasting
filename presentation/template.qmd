@@ -426,93 +426,184 @@ Sources: NCI and Pawsey annual reports; NCMAS allocation outcomes. See project b
 <strong>Key takeaway:</strong> Historical demand contains more estimated values than allocation. Forecasts are therefore planning scenarios, not exact measures of total researcher need.
 </div>
 
-## Historical HPC Demand and Allocation (2014 - 2026)
+
+## Historical Computing Demand by Resource Type
+
 
 ```{r}
 #| echo: false
 #| warning: false
 #| message: false
-#| fig-width: 12
-#| fig-height: 5.2
+#| fig-width: 14
+#| fig-height: 4.3
 #| out-width: 100%
 
 library(dplyr)
-library(ggplot2)
 library(tidyr)
+library(ggplot2)
 library(scales)
 
-# Use the same converted dataset as Chapter 06
+# Load the same historical dataset used in Chapter 06
 annual_converted <- readRDS(
   "../assets/data/data converted/annual_demand_allocation_converted.rds"
 )
 
-# Prepare the historical demand and allocation series
-annual_plot_data <- annual_converted |>
-  select(
-    year,
-    Demand = demand_ksu,
-    Allocation = allocation_ksu
+# Prepare demand and allocation for all three resource types
+historical_plot <- annual_converted |>
+  transmute(
+    year = as.integer(year),
+
+    # Overall HPC: million kSU
+    `Overall HPC|Demand` = demand_ksu / 1e6,
+    `Overall HPC|Allocation` = allocation_ksu / 1e6,
+
+    # CPU: million CPU core-hours
+    `CPU|Demand` = demand_cpu_core_hours / 1e6,
+    `CPU|Allocation` = allocation_cpu_core_hours / 1e6,
+
+    # GPU: million GPU-hours (2022 onwards)
+    `GPU|Demand` = if_else(
+      year >= 2022,
+      demand_gpu_hours / 1e6,
+      NA_real_
+    ),
+    `GPU|Allocation` = if_else(
+      year >= 2022,
+      allocation_gpu_hours / 1e6,
+      NA_real_
+    )
   ) |>
   pivot_longer(
-    cols = c(Demand, Allocation),
-    names_to = "measure",
-    values_to = "value_ksu"
+    cols = -year,
+    names_to = c("resource", "measure"),
+    names_sep = "\\|",
+    values_to = "value"
+  ) |>
+  filter(!is.na(value)) |>
+  mutate(
+    resource = factor(
+      resource,
+      levels = c("Overall HPC", "CPU", "GPU"),
+      labels = c(
+        "Overall HPC (million kSU)",
+        "CPU (million core-hours)",
+        "GPU (million GPU-hours)"
+      )
+    ),
+    measure = factor(
+      measure,
+      levels = c("Demand", "Allocation")
+    )
   )
 
-# Historical trend chart
+# Three-panel historical chart
 ggplot(
-  annual_plot_data,
+  historical_plot,
   aes(
     x = year,
-    y = value_ksu,
-    colour = measure
+    y = value,
+    colour = measure,
+    group = measure
   )
 ) +
-  geom_line(linewidth = 1.4) +
-  geom_point(size = 2.8) +
+  geom_line(linewidth = 1.25) +
+  geom_point(size = 2.5) +
+  facet_wrap(
+    ~resource,
+    nrow = 1,
+    scales = "free"
+  ) +
   scale_colour_manual(
     values = c(
       "Demand" = "#006DAE",
       "Allocation" = "#E69F00"
-    )
+    ),
+    breaks = c("Demand", "Allocation")
   ) +
   scale_x_continuous(
-    breaks = 2014:2026
+    breaks = function(x) {
+      if (min(x) >= 2022) {
+        seq(2022, 2026, by = 1)
+      } else {
+        c(2014, 2017, 2020, 2023, 2026)
+      }
+    }
   ) +
   scale_y_continuous(
-    labels = label_number(
-      scale = 1e-6,
-      suffix = "m"
-    ),
+    labels = label_number(accuracy = 0.1),
     limits = c(0, NA),
     expand = expansion(mult = c(0, 0.08))
   ) +
   labs(
     x = "Year",
-    y = "Compute (million kSU)",
+    y = NULL,
     colour = NULL
   ) +
-  theme_minimal(base_size = 17) +
+  theme_minimal(base_size = 15) +
   theme(
-    plot.margin = margin(10, 15, 5, 10),
+    strip.text = element_text(
+      size = 15,
+      face = "bold",
+      colour = "#17324D"
+    ),
+    strip.background = element_rect(
+      fill = "#EAF2F9",
+      colour = NA
+    ),
     axis.text.x = element_text(
       angle = 45,
-      hjust = 1
+      hjust = 1,
+      size = 11
     ),
+    axis.text.y = element_text(size = 12),
+    axis.title = element_text(size = 13),
     legend.position = "bottom",
-    legend.text = element_text(size = 17),
-    panel.grid.minor = element_blank()
+    legend.text = element_text(size = 14),
+    panel.grid.minor = element_blank(),
+    panel.spacing = grid::unit(1.2, "lines"),
+    plot.margin = margin(10, 10, 5, 10)
   )
 ```
 
-::: {style="margin-top: 10px; padding: 12px 18px; border-left: 5px solid #006DAE; background-color: #F2F7FB;"}
 
-**2026 highlight:** Requested HPC resources reached **2.24 million kSU**, while allocation was **0.87 million kSU**. The reported fulfilment ratio declined to **38.9%**, compared with **56.0% in 2025**.
+::: {style="display: flex; gap: 15px; margin-top: 15px;"}
+
+::: {style="flex: 1; padding: 14px; background: #F2F7FB; border-top: 4px solid #006DAE;"}
+
+**Overall HPC**
+
+**+43.3%** requested in 2026.
+
+Allocation remained near **0.87 million kSU**.
+
+:::
+
+::: {style="flex: 1; padding: 14px; background: #F2F7FB; border-top: 4px solid #006DAE;"}
+
+**CPU**
+
+Historical coverage spans **2014 - 2026**.
+
+A longer series supports trend-based model evaluation.
+
+:::
+
+::: {style="flex: 1; padding: 14px; background: #F2F7FB; border-top: 4px solid #006DAE;"}
+
+**GPU**
+
+Only **five annual observations** (2022 - 2026).
+
+Long-term projections are particularly uncertain.
+
+:::
 
 :::
 
 ::: {style="font-size: 0.55em; color: #666; margin-top: 12px;"}
 
-Note: Historical demand includes reported, derived, and proxy values. Changes may partly reflect reporting and conversion differences. Source: Chapter 06, Initial Analysis; original NCI/Pawsey data.
+Note: Historical values include reported, derived, and proxy estimates. Panel scales and units differ. GPU observations before 2022 are excluded.
 
 :::
+
+
