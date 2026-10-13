@@ -1260,10 +1260,16 @@ where \(f\) denotes the research-field group and \(t\) denotes the forecast year
 
 The resulting values are expressed in kSU. They represent hypothetical distributions of projected overall demand, **not independently estimated or observed FoR-level researcher demand**.
 
-Two historical reference periods are considered:
 
-- **Recent-period composition (2021–2026):** Uses the harmonised FoR 2020 classification groups to reflect more recent allocation patterns.
-- **Longer-term composition (2014–2026):** Uses the harmonised analytical FoR groups to examine historical allocation patterns across the wider period.
+Three historical reference periods are considered to examine the sensitivity of the projected disciplinary composition to the selected historical allocation-share assumptions:
+
+1. **Earlier period (2014–2020):** Represents the allocation-share composition observed before 2021.
+2. **Recent period (2021–2026):** Represents the allocation-share composition observed in the latest six years.
+3. **Long-term period (2014–2026):** Provides a broader historical reference across the available series.
+
+For each reference period, observed-year mean allocation shares are calculated for the reported FoR categories and then normalised to sum to 100%. This normalisation is necessary because categories have different numbers of reported years; however, it does not recover missing category-year observations.
+
+The resulting weights are applied to the same central national HPC demand projection for 2027–2030. The three scenarios therefore illustrate how the distribution of projected national demand changes under alternative historical allocation compositions. They are not independently estimated forecasts of demand by research field.
 
 The two classification structures are not assumed to be directly interchangeable. Harmonisation supports broad analytical comparisons but does not establish complete equivalence between official FoR classification versions.
 
