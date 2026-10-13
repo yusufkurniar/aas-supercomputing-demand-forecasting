@@ -692,131 +692,41 @@
   {
     "objectID": "10_scenario_forecasting.html",
     "href": "10_scenario_forecasting.html",
-    "title": "11  Scenario Forecasting and Capacity-Gap Analysis",
+    "title": "11  Demand Scenarios: 2027–2030",
     "section": "",
-    "text": "11.1 Purpose\nThe purpose of this step is to use the selected modelling approach to forecast Australian research HPC demand to 2030 under different scenarios.\nThe scenarios are designed to represent different possible developments in Australian research activity and compute intensity rather than producing a single estimate of future demand.\nThe resulting demand forecasts are then compared with available or projected national HPC capacity to identify potential capacity gaps.",
+    "text": "11.1 Purpose and Scope\nThis chapter develops indicative scenarios for Australian national research high-performance computing (HPC) demand through 2030, drawing on the forecasting models evaluated in Chapter 08 and selected in Chapter 09.\nThe analysis considers four dimensions:\nThe projection period covers 2027–2030, with 2026 representing the latest available historical observation.\nThe objective is to provide transparent, reproducible estimates of potential future computational requirements that can inform infrastructure planning and policy discussions.\nThe scenarios are conditional on the available historical data, model specifications, and stated assumptions. They should not be interpreted as definitive predictions of unconstrained national HPC demand.",
     "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Scenario Forecasting and Capacity-Gap Analysis</span>"
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Demand Scenarios: 2027–2030</span>"
     ]
   },
   {
-    "objectID": "10_scenario_forecasting.html#forecast-horizon",
-    "href": "10_scenario_forecasting.html#forecast-horizon",
-    "title": "11  Scenario Forecasting and Capacity-Gap Analysis",
-    "section": "11.2 Forecast Horizon",
-    "text": "11.2 Forecast Horizon\nThe selected modelling approach is used to produce forecasts to 2030.\nForecast uncertainty is reported where appropriate to reflect the uncertainty associated with both the historical data and future assumptions.",
+    "objectID": "10_scenario_forecasting.html#purpose-and-scope",
+    "href": "10_scenario_forecasting.html#purpose-and-scope",
+    "title": "11  Demand Scenarios: 2027–2030",
+    "section": "",
+    "text": "Overall HPC demand, expressed in kSU.\nCPU demand, expressed in million CPU core-hours.\nGPU demand, expressed in million GPU-hours.\nField of Research (FoR) allocation-share-based distributions of projected overall HPC demand.",
     "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Scenario Forecasting and Capacity-Gap Analysis</span>"
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Demand Scenarios: 2027–2030</span>"
     ]
   },
   {
     "objectID": "10_scenario_forecasting.html#scenario-framework",
     "href": "10_scenario_forecasting.html#scenario-framework",
-    "title": "11  Scenario Forecasting and Capacity-Gap Analysis",
-    "section": "11.3 Scenario Framework",
-    "text": "11.3 Scenario Framework\nThree main scenarios are considered:\n\nStatus quo\nRestored national R&D intensity\nAI acceleration\n\nEach scenario uses the same overall modelling framework but applies different assumptions about the future development of relevant demand drivers.",
+    "title": "11  Demand Scenarios: 2027–2030",
+    "section": "11.2 Scenario Framework",
+    "text": "11.2 Scenario Framework\nThe scenario framework distinguishes central statistical projections, historical sensitivity comparisons, and exploratory growth trajectories.\n\n\n\n\n\n\n\n\nDemand measure\nReference approach\nAlternative assumptions\n\n\n\n\nOverall HPC\nFull-history linear trend\nLinear trend excluding 2026; log-linear growth\n\n\nCPU\nFull-history linear trend\nLinear trend excluding 2026; log-linear growth\n\n\nGPU\nNaïve statistical benchmark\nLinear and log-linear exploratory trajectories; sensitivity to 2026\n\n\nFoR\nRecent-period allocation composition\nLatest-year and earlier-period allocation compositions\n\n\n\nFor overall HPC and CPU demand, the full-history linear trend models provide the central statistical projections because they demonstrated the strongest or most competitive historical forecasting performance.\nThe 2026-excluded linear specifications are retained to examine the sensitivity of projected demand to the latest observation.\nLog-linear models are retained to illustrate the implications of compounded proportional growth. These projections are alternative modelling assumptions rather than statistically validated upper bounds.\nFor GPU demand, the naïve model serves as the statistical reference benchmark. Linear and log-linear projections are presented as exploratory trajectories because the available historical series is short and the rolling-origin evaluation contains only two test years.\nFoR scenarios use historical allocation compositions to distribute projected overall HPC demand across harmonised research categories. These distributions are conditional allocation-share scenarios, not independently validated FoR-specific demand forecasts.",
     "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Scenario Forecasting and Capacity-Gap Analysis</span>"
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Demand Scenarios: 2027–2030</span>"
     ]
   },
   {
-    "objectID": "10_scenario_forecasting.html#status-quo-scenario",
-    "href": "10_scenario_forecasting.html#status-quo-scenario",
-    "title": "11  Scenario Forecasting and Capacity-Gap Analysis",
-    "section": "11.4 Status Quo Scenario",
-    "text": "11.4 Status Quo Scenario\nThe status quo scenario represents a continuation of current research and HPC demand conditions.\nFuture values of the structural drivers are based on recent trends or other reasonable baseline assumptions.\nThis scenario provides a baseline against which the alternative scenarios can be compared.",
+    "objectID": "10_scenario_forecasting.html#interpretation-of-scenario-uncertainty",
+    "href": "10_scenario_forecasting.html#interpretation-of-scenario-uncertainty",
+    "title": "11  Demand Scenarios: 2027–2030",
+    "section": "11.3 Interpretation of Scenario Uncertainty",
+    "text": "11.3 Interpretation of Scenario Uncertainty\nThree sources of uncertainty are considered throughout the chapter:\n\nMeasurement uncertainty: Differences in historical reporting, resource accounting, and conversion assumptions.\nModel uncertainty: Differences in forecasting specifications and their underlying growth assumptions.\nScenario uncertainty: Differences in assumed future growth and allocation composition.\n\nThe scenarios are not assigned probabilities, and the differences between model projections should not be interpreted as formal prediction intervals.\nAll numerical results will retain their original resource units. Overall HPC kSU, CPU core-hours, and GPU-hours will be analysed separately rather than combined without a justified conversion framework.\nThe analysis prioritises transparency, reproducibility, and clear communication of uncertainty over unnecessary model complexity.",
     "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Scenario Forecasting and Capacity-Gap Analysis</span>"
-    ]
-  },
-  {
-    "objectID": "10_scenario_forecasting.html#restored-national-rd-intensity-scenario",
-    "href": "10_scenario_forecasting.html#restored-national-rd-intensity-scenario",
-    "title": "11  Scenario Forecasting and Capacity-Gap Analysis",
-    "section": "11.5 Restored National R&D Intensity Scenario",
-    "text": "11.5 Restored National R&D Intensity Scenario\nThis scenario considers higher research activity associated with an increase in Australia’s research and development intensity.\nChanges in relevant drivers, such as research funding and research activity, are translated into future HPC demand using the selected modelling approach.\nThe assumptions used for this scenario are documented explicitly.",
-    "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Scenario Forecasting and Capacity-Gap Analysis</span>"
-    ]
-  },
-  {
-    "objectID": "10_scenario_forecasting.html#ai-acceleration-scenario",
-    "href": "10_scenario_forecasting.html#ai-acceleration-scenario",
-    "title": "11  Scenario Forecasting and Capacity-Gap Analysis",
-    "section": "11.6 AI Acceleration Scenario",
-    "text": "11.6 AI Acceleration Scenario\nThe AI acceleration scenario considers stronger growth in compute-intensive research associated with increasing use of artificial intelligence, machine learning and accelerated computing.\nParticular attention is given to GPU demand because these workloads may have different resource requirements from traditional CPU-based research computing.\nThe scenario assumptions are based on available evidence and are documented separately from the historical observations.",
-    "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Scenario Forecasting and Capacity-Gap Analysis</span>"
-    ]
-  },
-  {
-    "objectID": "10_scenario_forecasting.html#cpu-and-gpu-forecasts",
-    "href": "10_scenario_forecasting.html#cpu-and-gpu-forecasts",
-    "title": "11  Scenario Forecasting and Capacity-Gap Analysis",
-    "section": "11.7 CPU and GPU Forecasts",
-    "text": "11.7 CPU and GPU Forecasts\nWhere supported by the available data, CPU and GPU demand are forecast separately.\nThis avoids assuming that CPU core-hours and GPU hours are directly interchangeable and allows differences in their future growth to be examined.",
-    "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Scenario Forecasting and Capacity-Gap Analysis</span>"
-    ]
-  },
-  {
-    "objectID": "10_scenario_forecasting.html#capacity-comparison",
-    "href": "10_scenario_forecasting.html#capacity-comparison",
-    "title": "11  Scenario Forecasting and Capacity-Gap Analysis",
-    "section": "11.8 Capacity Comparison",
-    "text": "11.8 Capacity Comparison\nForecast demand is compared with available or projected national HPC capacity where suitable capacity information is available.\nDemand and capacity are only compared where their units and definitions are sufficiently consistent.\nThe general capacity-gap calculation is:\n\\[\n\\text{Capacity Gap}_t =\n\\text{Forecast Demand}_t -\n\\text{Available Capacity}_t\n\\]\nA positive value indicates forecast demand above the capacity represented in the comparison.",
-    "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Scenario Forecasting and Capacity-Gap Analysis</span>"
-    ]
-  },
-  {
-    "objectID": "10_scenario_forecasting.html#facility-equivalent-capacity",
-    "href": "10_scenario_forecasting.html#facility-equivalent-capacity",
-    "title": "11  Scenario Forecasting and Capacity-Gap Analysis",
-    "section": "11.9 Facility-Equivalent Capacity",
-    "text": "11.9 Facility-Equivalent Capacity\nWhere sufficient information is available, the estimated capacity gap may also be expressed in facility-equivalent terms.\nThis provides a more interpretable indication of the scale of additional computing infrastructure that may be required.\nAny facility-equivalent calculation depends on assumptions about system capacity, resource type and utilisation. These assumptions are therefore reported explicitly.",
-    "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Scenario Forecasting and Capacity-Gap Analysis</span>"
-    ]
-  },
-  {
-    "objectID": "10_scenario_forecasting.html#scenario-comparison",
-    "href": "10_scenario_forecasting.html#scenario-comparison",
-    "title": "11  Scenario Forecasting and Capacity-Gap Analysis",
-    "section": "11.10 Scenario Comparison",
-    "text": "11.10 Scenario Comparison\nThe three scenarios are compared to examine how different assumptions affect projected HPC demand to 2030.\nThe comparison focuses on:\n\ntotal forecast demand\nCPU demand\nGPU demand\ngrowth relative to the historical period\nestimated capacity gaps\ndifferences between scenarios",
-    "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Scenario Forecasting and Capacity-Gap Analysis</span>"
-    ]
-  },
-  {
-    "objectID": "10_scenario_forecasting.html#uncertainty-and-sensitivity",
-    "href": "10_scenario_forecasting.html#uncertainty-and-sensitivity",
-    "title": "11  Scenario Forecasting and Capacity-Gap Analysis",
-    "section": "11.11 Uncertainty and Sensitivity",
-    "text": "11.11 Uncertainty and Sensitivity\nScenario forecasts are not treated as precise predictions of future HPC demand.\nResults depend on the selected model, historical data, conversion assumptions and future values assumed for the structural drivers.\nSensitivity analysis is used where appropriate to examine how changes in key assumptions affect the forecast results.",
-    "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Scenario Forecasting and Capacity-Gap Analysis</span>"
-    ]
-  },
-  {
-    "objectID": "10_scenario_forecasting.html#policy-interpretation",
-    "href": "10_scenario_forecasting.html#policy-interpretation",
-    "title": "11  Scenario Forecasting and Capacity-Gap Analysis",
-    "section": "11.12 Policy Interpretation",
-    "text": "11.12 Policy Interpretation\nThe scenario results are interpreted in the context of Australia’s future national research computing requirements.\nThe analysis focuses on the potential scale and composition of future demand and the implications of different research and technology trajectories for national HPC infrastructure.",
-    "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Scenario Forecasting and Capacity-Gap Analysis</span>"
-    ]
-  },
-  {
-    "objectID": "10_scenario_forecasting.html#output",
-    "href": "10_scenario_forecasting.html#output",
-    "title": "11  Scenario Forecasting and Capacity-Gap Analysis",
-    "section": "11.13 Output",
-    "text": "11.13 Output\nThe output of this step is a set of scenario forecasts to 2030 together with estimates of potential capacity gaps.\nThese results provide the main quantitative evidence used in the final technical report, policy summary and project presentation.",
-    "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Scenario Forecasting and Capacity-Gap Analysis</span>"
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Demand Scenarios: 2027–2030</span>"
     ]
   },
   {

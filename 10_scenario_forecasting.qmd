@@ -1,112 +1,55 @@
-# Scenario Forecasting and Capacity-Gap Analysis
 
-## Purpose
+# Demand Scenarios: 2027–2030
 
-The purpose of this step is to use the selected modelling approach to forecast Australian research HPC demand to 2030 under different scenarios.
+## Purpose and Scope
 
-The scenarios are designed to represent different possible developments in Australian research activity and compute intensity rather than producing a single estimate of future demand.
+This chapter develops indicative scenarios for Australian national research high-performance computing (HPC) demand through 2030, drawing on the forecasting models evaluated in Chapter 08 and selected in Chapter 09.
 
-The resulting demand forecasts are then compared with available or projected national HPC capacity to identify potential capacity gaps.
+The analysis considers four dimensions:
 
-## Forecast Horizon
+1. Overall HPC demand, expressed in kSU.
+2. CPU demand, expressed in million CPU core-hours.
+3. GPU demand, expressed in million GPU-hours.
+4. Field of Research (FoR) allocation-share-based distributions of projected overall HPC demand.
 
-The selected modelling approach is used to produce forecasts to 2030.
+The projection period covers 2027–2030, with 2026 representing the latest available historical observation.
 
-Forecast uncertainty is reported where appropriate to reflect the uncertainty associated with both the historical data and future assumptions.
+The objective is to provide transparent, reproducible estimates of potential future computational requirements that can inform infrastructure planning and policy discussions.
+
+The scenarios are conditional on the available historical data, model specifications, and stated assumptions. They should not be interpreted as definitive predictions of unconstrained national HPC demand.
 
 ## Scenario Framework
 
-Three main scenarios are considered:
+The scenario framework distinguishes central statistical projections, historical sensitivity comparisons, and exploratory growth trajectories.
 
-1. Status quo
-2. Restored national R&D intensity
-3. AI acceleration
+| Demand measure | Reference approach | Alternative assumptions |
+|:--|:--|:--|
+| Overall HPC | Full-history linear trend | Linear trend excluding 2026; log-linear growth |
+| CPU | Full-history linear trend | Linear trend excluding 2026; log-linear growth |
+| GPU | Naïve statistical benchmark | Linear and log-linear exploratory trajectories; sensitivity to 2026 |
+| FoR | Recent-period allocation composition | Latest-year and earlier-period allocation compositions |
 
-Each scenario uses the same overall modelling framework but applies different assumptions about the future development of relevant demand drivers.
+For overall HPC and CPU demand, the full-history linear trend models provide the central statistical projections because they demonstrated the strongest or most competitive historical forecasting performance.
 
-## Status Quo Scenario
+The 2026-excluded linear specifications are retained to examine the sensitivity of projected demand to the latest observation.
 
-The status quo scenario represents a continuation of current research and HPC demand conditions.
+Log-linear models are retained to illustrate the implications of compounded proportional growth. These projections are alternative modelling assumptions rather than statistically validated upper bounds.
 
-Future values of the structural drivers are based on recent trends or other reasonable baseline assumptions.
+For GPU demand, the naïve model serves as the statistical reference benchmark. Linear and log-linear projections are presented as exploratory trajectories because the available historical series is short and the rolling-origin evaluation contains only two test years.
 
-This scenario provides a baseline against which the alternative scenarios can be compared.
+FoR scenarios use historical allocation compositions to distribute projected overall HPC demand across harmonised research categories. These distributions are conditional allocation-share scenarios, not independently validated FoR-specific demand forecasts.
 
-## Restored National R&D Intensity Scenario
+## Interpretation of Scenario Uncertainty
 
-This scenario considers higher research activity associated with an increase in Australia's research and development intensity.
+Three sources of uncertainty are considered throughout the chapter:
 
-Changes in relevant drivers, such as research funding and research activity, are translated into future HPC demand using the selected modelling approach.
+- **Measurement uncertainty:** Differences in historical reporting, resource accounting, and conversion assumptions.
+- **Model uncertainty:** Differences in forecasting specifications and their underlying growth assumptions.
+- **Scenario uncertainty:** Differences in assumed future growth and allocation composition.
 
-The assumptions used for this scenario are documented explicitly.
+The scenarios are not assigned probabilities, and the differences between model projections should not be interpreted as formal prediction intervals.
 
-## AI Acceleration Scenario
+All numerical results will retain their original resource units. Overall HPC kSU, CPU core-hours, and GPU-hours will be analysed separately rather than combined without a justified conversion framework.
 
-The AI acceleration scenario considers stronger growth in compute-intensive research associated with increasing use of artificial intelligence, machine learning and accelerated computing.
+The analysis prioritises transparency, reproducibility, and clear communication of uncertainty over unnecessary model complexity.
 
-Particular attention is given to GPU demand because these workloads may have different resource requirements from traditional CPU-based research computing.
-
-The scenario assumptions are based on available evidence and are documented separately from the historical observations.
-
-## CPU and GPU Forecasts
-
-Where supported by the available data, CPU and GPU demand are forecast separately.
-
-This avoids assuming that CPU core-hours and GPU hours are directly interchangeable and allows differences in their future growth to be examined.
-
-## Capacity Comparison
-
-Forecast demand is compared with available or projected national HPC capacity where suitable capacity information is available.
-
-Demand and capacity are only compared where their units and definitions are sufficiently consistent.
-
-The general capacity-gap calculation is:
-
-$$
-\text{Capacity Gap}_t =
-\text{Forecast Demand}_t -
-\text{Available Capacity}_t
-$$
-
-A positive value indicates forecast demand above the capacity represented in the comparison.
-
-## Facility-Equivalent Capacity
-
-Where sufficient information is available, the estimated capacity gap may also be expressed in facility-equivalent terms.
-
-This provides a more interpretable indication of the scale of additional computing infrastructure that may be required.
-
-Any facility-equivalent calculation depends on assumptions about system capacity, resource type and utilisation. These assumptions are therefore reported explicitly.
-
-## Scenario Comparison
-
-The three scenarios are compared to examine how different assumptions affect projected HPC demand to 2030.
-
-The comparison focuses on:
-
-- total forecast demand
-- CPU demand
-- GPU demand
-- growth relative to the historical period
-- estimated capacity gaps
-- differences between scenarios
-
-## Uncertainty and Sensitivity
-
-Scenario forecasts are not treated as precise predictions of future HPC demand.
-
-Results depend on the selected model, historical data, conversion assumptions and future values assumed for the structural drivers.
-
-Sensitivity analysis is used where appropriate to examine how changes in key assumptions affect the forecast results.
-
-## Policy Interpretation
-
-The scenario results are interpreted in the context of Australia's future national research computing requirements.
-
-The analysis focuses on the potential scale and composition of future demand and the implications of different research and technology trajectories for national HPC infrastructure.
-
-## Output
-
-The output of this step is a set of scenario forecasts to 2030 together with estimates of potential capacity gaps.
-
-These results provide the main quantitative evidence used in the final technical report, policy summary and project presentation.
