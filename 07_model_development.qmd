@@ -371,6 +371,28 @@ knitr::kable(
 )
 ```
 
+```{r save-cpu-models}
+#| include: false
+
+# Save fitted CPU models for Chapter 10
+dir.create(
+  "assets/models",
+  recursive = TRUE,
+  showWarnings = FALSE
+)
+
+saveRDS(
+  list(
+    cpu_linear = cpu_linear,
+    cpu_linear_pre2026 = cpu_linear_pre2026,
+    cpu_loglinear = cpu_loglinear,
+    cpu_loglinear_pre2026 = cpu_loglinear_pre2026
+  ),
+  "assets/models/cpu_models.rds"
+)
+```
+
+
 The linear trend coefficient represents the estimated annual absolute change in CPU demand, measured in millions of core-hours.
 
 The log-linear coefficient represents annual change in log demand and can be converted into an implied compounded growth rate.

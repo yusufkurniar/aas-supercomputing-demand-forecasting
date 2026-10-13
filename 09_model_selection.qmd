@@ -457,4 +457,3 @@ For GPU demand, the naïve model was retained as a statistical benchmark, while 
 FoR allocation-share assumptions were selected as a framework for distributing projected overall HPC demand across research fields, subject to classification and reporting limitations.
 
 These decisions provide the foundation for the demand scenarios developed in Chapter 10, where alternative growth assumptions, historical sensitivity, and resource-specific uncertainties will be examined through 2030.
-
