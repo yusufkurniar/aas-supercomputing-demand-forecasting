@@ -30,3 +30,90 @@ The following criteria are used to assess the candidate forecasting models.
 7. **Suitability for projections to 2030:** The selected models must support interpretable forecasts over the 2027–2030 horizon. Forecast uncertainty and alternative growth assumptions will be examined in Chapter 10.
 
 No single criterion determines model selection automatically. Out-of-sample accuracy provides the primary quantitative comparison, while the remaining criteria support a transparent assessment of model suitability for policy-oriented forecasting.
+
+
+## Overall HPC Demand Model Selection
+
+### Comparison of Candidate Models
+
+Four candidate models were evaluated for overall HPC demand: linear trend, log-linear trend, drift, and naïve forecasting. Their predictive performance was assessed in Chapter 08 using expanding-window, one-step-ahead rolling-origin cross-validation.
+
+The initial training period covered 2014 - 2020, followed by six evaluation years from 2021 to 2026. Each model was re-estimated using the observations available before the corresponding forecast year, avoiding the use of future observations in model fitting.
+
+| Model | RMSE (kSU) | MAE (kSU) | RMSE Rank |
+|:--|--:|--:|--:|
+| Linear trend | 290,898 | 198,295 | 1 |
+| Drift | 314,588 | 221,778 | 2 |
+| Naïve | 378,864 | 283,000 | 3 |
+| Log-linear trend | 511,614 | 466,991 | 4 |
+
+The linear trend model achieved the lowest RMSE and MAE, indicating the strongest historical one-step-ahead predictive performance among the evaluated candidates. Its RMSE was approximately 7.5% lower than the drift model and 23.2% lower than the naïve benchmark.
+
+The agreement between RMSE and MAE rankings provides additional support for the linear trend model. In contrast, the log-linear trend model produced substantially larger forecast errors, suggesting that its proportional-growth assumption was less effective over the historical evaluation period.
+
+These findings support the linear trend model as the leading candidate for the central overall HPC demand forecast. However, one-step-ahead performance does not guarantee equivalent accuracy over the longer 2027 - 2030 forecasting horizon. The final selection must also consider the sensitivity of fitted trends to recent observations and the interpretation of historical demand measurements.
+
+
+### Sensitivity to the 2026 Observation
+
+The 2026 observation warrants particular attention when selecting a model for overall HPC demand. Recorded demand increased from 1,564,643 kSU in 2025 to 2,242,817 kSU in 2026, representing an increase of approximately 43.3%.
+
+Over the same period, recorded allocations decreased slightly from 876,200 kSU to 872,288 kSU. Consequently, the ratio of allocated resources to recorded demand declined from approximately 56.0% to 38.9%. This divergence highlights the importance of distinguishing requested HPC resources from the resources ultimately allocated.
+
+The increase in recorded demand may reflect changes in computational requirements, the composition of applications, or other factors affecting the reporting of requested resources. However, the available analysis does not establish the relative contribution of these explanations. The increase should therefore not be attributed to a specific technological or institutional development without supporting evidence.
+
+#### Implications for Trend Estimation
+
+The candidate models developed in Chapter 07 include trend specifications estimated using the available historical observations, alongside sensitivity analysis examining the influence of the latest observation.
+
+Including 2026 allows the fitted models to incorporate the most recent reported demand. However, a substantial increase near the end of a short annual series can influence estimated trend coefficients and subsequent forecasts.
+
+Excluding 2026 provides a sensitivity comparison showing how projected demand changes when the latest observation does not influence model estimation. This comparison is not intended to imply that the 2026 observation is incorrect or should be discarded.
+
+The two estimation periods therefore serve different analytical purposes:
+
+- **Including 2026:** Represents a model fitted to the complete available historical series.
+- **Excluding 2026:** Provides a sensitivity benchmark for assessing the influence of the latest demand increase.
+
+The preferred model should not be determined solely by whether its forecast is higher or lower. Instead, the comparison should consider historical predictive performance, the plausibility of extrapolated growth, and the uncertainty associated with the most recent observation.
+
+#### Interpretation for Model Selection
+
+The rolling-origin evaluation in Chapter 08 identified the linear trend as the strongest candidate for overall HPC demand based on both RMSE and MAE.
+
+Nevertheless, this evaluation primarily assesses one-step-ahead forecast performance. It does not independently establish the reliability of forecasts over the full 2027–2030 horizon, particularly following a substantial increase in the final observed year.
+
+Accordingly, the linear trend remains the leading candidate for the central overall HPC demand forecast, while the sensitivity of projections to the inclusion of 2026 must be considered before finalising the forecasting assumptions.
+
+The resulting differences in projected demand will inform the uncertainty and alternative-growth scenarios developed in Chapter 10.
+
+
+### Overall HPC Model Selection Decision
+
+Based on the rolling-origin evaluation and sensitivity analysis, the linear trend model fitted to the complete 2014–2026 historical series is selected as the central statistical forecasting specification for overall HPC demand.
+
+This selection is supported by three considerations.
+
+First, the linear trend achieved the lowest out-of-sample RMSE (290,898 kSU) and MAE (198,295 kSU) among the four candidate models evaluated in Chapter 08. It therefore provides the strongest historical one-step-ahead predictive performance within the tested model set.
+
+Second, the linear specification assumes a constant absolute annual increase rather than sustained compounded percentage growth. This produces a more conservative and interpretable extrapolation than the log-linear model, which generated substantially larger forecast errors and much higher long-horizon projections.
+
+Third, the model remains sensitive to the inclusion of the latest observation, but this sensitivity can be quantified and communicated transparently.
+
+The full-history linear model estimates an annual increase of approximately 161,992 kSU and projects overall HPC demand of approximately 2.50 million kSU in 2030.
+
+When the model is fitted using observations from 2014–2025, the estimated annual increase decreases to approximately 144,357 kSU, producing a 2030 projection of approximately 2.29 million kSU.
+
+The difference between these projections demonstrates the influence of the 2026 observation on the estimated trend. It does not represent a formal prediction interval or establish a statistically validated lower bound for future demand.
+
+The following specifications are therefore retained for subsequent analysis:
+
+- **Central statistical projection:** Linear trend fitted to the complete 2014–2026 historical series.
+- **Historical sensitivity comparison:** Linear trend fitted to 2014–2025, excluding the latest observation.
+- **Alternative growth assumption:** Log-linear trend, retained as an exploratory illustration of compounded growth rather than a preferred forecasting model.
+
+The central projection should be interpreted as a model-based extrapolation of recorded and harmonised HPC demand, not a definitive estimate of unconstrained future researcher requirements.
+
+The selected model and sensitivity comparisons will inform the development of explicit demand scenarios in Chapter 10. These scenarios will distinguish modelling assumptions from statistical forecast uncertainty and acknowledge limitations in historical data comparability.
+
+
