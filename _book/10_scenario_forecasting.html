@@ -261,6 +261,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#earlier-period-for-allocation-scenario-20272030" id="toc-earlier-period-for-allocation-scenario-20272030" class="nav-link" data-scroll-target="#earlier-period-for-allocation-scenario-20272030"><span class="header-section-number">11.7.7</span> Earlier-Period FoR Allocation Scenario, 2027–2030</a></li>
   <li><a href="#comparison-and-interpretation-of-for-scenarios" id="toc-comparison-and-interpretation-of-for-scenarios" class="nav-link" data-scroll-target="#comparison-and-interpretation-of-for-scenarios"><span class="header-section-number">11.7.8</span> Comparison and Interpretation of FoR Scenarios</a></li>
   </ul></li>
+  <li><a href="#overall-scenario-synthesis-and-planning-implications" id="toc-overall-scenario-synthesis-and-planning-implications" class="nav-link" data-scroll-target="#overall-scenario-synthesis-and-planning-implications"><span class="header-section-number">11.8</span> Overall Scenario Synthesis and Planning Implications</a>
+  <ul class="collapse">
+  <li><a href="#central-forecast-and-alternative-growth-assumptions" id="toc-central-forecast-and-alternative-growth-assumptions" class="nav-link" data-scroll-target="#central-forecast-and-alternative-growth-assumptions"><span class="header-section-number">11.8.1</span> Central Forecast and Alternative Growth Assumptions</a></li>
+  <li><a href="#forecast-uncertainty-and-model-adequacy" id="toc-forecast-uncertainty-and-model-adequacy" class="nav-link" data-scroll-target="#forecast-uncertainty-and-model-adequacy"><span class="header-section-number">11.8.2</span> Forecast Uncertainty and Model Adequacy</a></li>
+  <li><a href="#gpu-demand-and-emerging-infrastructure-requirements" id="toc-gpu-demand-and-emerging-infrastructure-requirements" class="nav-link" data-scroll-target="#gpu-demand-and-emerging-infrastructure-requirements"><span class="header-section-number">11.8.3</span> GPU Demand and Emerging Infrastructure Requirements</a></li>
+  <li><a href="#disciplinary-composition-and-for-scenarios" id="toc-disciplinary-composition-and-for-scenarios" class="nav-link" data-scroll-target="#disciplinary-composition-and-for-scenarios"><span class="header-section-number">11.8.4</span> Disciplinary Composition and FoR Scenarios</a></li>
+  <li><a href="#implications-for-national-hpc-planning" id="toc-implications-for-national-hpc-planning" class="nav-link" data-scroll-target="#implications-for-national-hpc-planning"><span class="header-section-number">11.8.5</span> Implications for National HPC Planning</a></li>
+  <li><a href="#chapter-conclusion" id="toc-chapter-conclusion" class="nav-link" data-scroll-target="#chapter-conclusion"><span class="header-section-number">11.8.6</span> Chapter Conclusion</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -3071,6 +3080,55 @@ Figure&nbsp;11.4: Exploratory GPU demand scenarios, 2027–2030. The naïve benc
 <p>The resulting FoR projections therefore represent conditional distributions of projected overall HPC demand, not independently validated demand forecasts for individual research fields.</p>
 <p>The earlier-period, recent-period, and longer-term scenarios provide complementary planning perspectives. Their differences indicate that infrastructure planning should consider uncertainty in disciplinary composition rather than relying exclusively on a single historical allocation pattern.</p>
 <p>The analysis does not establish which historical composition will best represent future demand. Further work would require consistently classified FoR-level demand requests, comparable facility reporting, and improved coverage of currently incomplete categories.</p>
+</section>
+</section>
+<section id="overall-scenario-synthesis-and-planning-implications" class="level2" data-number="11.8">
+<h2 data-number="11.8" class="anchored" data-anchor-id="overall-scenario-synthesis-and-planning-implications"><span class="header-section-number">11.8</span> Overall Scenario Synthesis and Planning Implications</h2>
+<p>The scenario analysis combines projections of overall national HPC demand, CPU demand, exploratory GPU demand, and illustrative Field of Research (FoR) distributions through 2030. Together, these provide complementary perspectives on potential future demand for Australian national research computing infrastructure.</p>
+<section id="central-forecast-and-alternative-growth-assumptions" class="level3" data-number="11.8.1">
+<h3 data-number="11.8.1" class="anchored" data-anchor-id="central-forecast-and-alternative-growth-assumptions"><span class="header-section-number">11.8.1</span> Central Forecast and Alternative Growth Assumptions</h3>
+<p>The selected linear model projects overall HPC demand to reach approximately <strong>2.50 million kSU by 2030</strong>, compared with approximately <strong>2.29 million kSU</strong> when the 2026 observation is excluded.</p>
+<p>The log-linear alternatives produce substantially higher 2030 projections, ranging from approximately <strong>6.48 to 6.96 million kSU</strong>. However, their weaker historical cross-validation performance means they should be treated as alternative growth scenarios rather than equally supported central forecasts.</p>
+<p>For CPU demand, the central linear projection reaches approximately <strong>1,369.90 million CPU core-hours in 2030</strong>. The 2026-excluded linear model projects approximately <strong>1,263.85 million CPU core-hours</strong>, while the log-linear alternatives project approximately <strong>2,479–2,502 million CPU core-hours</strong>.</p>
+<p>The difference between linear and log-linear projections demonstrates the importance of the assumed growth structure when forecasting several years beyond a relatively short historical series.</p>
+</section>
+<section id="forecast-uncertainty-and-model-adequacy" class="level3" data-number="11.8.2">
+<h3 data-number="11.8.2" class="anchored" data-anchor-id="forecast-uncertainty-and-model-adequacy"><span class="header-section-number">11.8.2</span> Forecast Uncertainty and Model Adequacy</h3>
+<p>Model-based 80% and 95% prediction intervals were calculated for the selected overall HPC and CPU linear models.</p>
+<p>For 2030, the overall HPC central forecast of approximately <strong>2.50 million kSU</strong> has a model-based 95% prediction interval of approximately <strong>1.98–3.03 million kSU</strong>.</p>
+<p>The corresponding CPU central forecast of approximately <strong>1,369.90 million CPU core-hours</strong> has a model-based 95% prediction interval of approximately <strong>974.24–1,765.55 million CPU core-hours</strong>.</p>
+<p>These intervals describe uncertainty conditional on the fitted linear regression models and their error assumptions. They do not fully account for measurement uncertainty, changes in reporting scope, model selection, future infrastructure developments, or structural changes in researcher demand.</p>
+<p>Residual plots, normal Q-Q plots, and exploratory Ljung–Box tests provide additional model diagnostics. However, the small annual samples limit the strength of statistical conclusions. The absence of statistically significant residual autocorrelation should not be interpreted as proof that all model assumptions hold.</p>
+</section>
+<section id="gpu-demand-and-emerging-infrastructure-requirements" class="level3" data-number="11.8.3">
+<h3 data-number="11.8.3" class="anchored" data-anchor-id="gpu-demand-and-emerging-infrastructure-requirements"><span class="header-section-number">11.8.3</span> GPU Demand and Emerging Infrastructure Requirements</h3>
+<p>GPU demand is presented through exploratory scenarios rather than a definitive long-term forecast.</p>
+<p>The naïve benchmark remains constant at approximately <strong>3.003 million GPU-hours</strong> through 2030. Alternative linear and log-linear specifications produce 2030 projections ranging from approximately <strong>2.25 to 3.68 million GPU-hours</strong>.</p>
+<p>These trajectories are sensitive to the inclusion of 2026 and rely on only five annual GPU estimates for 2022–2026. The underlying series also combines reported and inferred demand measures.</p>
+<p>Consequently, the GPU scenarios should be interpreted as alternative planning assumptions, not reliable statistical bounds on future GPU requirements.</p>
+</section>
+<section id="disciplinary-composition-and-for-scenarios" class="level3" data-number="11.8.4">
+<h3 data-number="11.8.4" class="anchored" data-anchor-id="disciplinary-composition-and-for-scenarios"><span class="header-section-number">11.8.4</span> Disciplinary Composition and FoR Scenarios</h3>
+<p>Three historical FoR allocation-share reference periods were considered: longer-term (2014–2026), earlier (2014–2020), and recent (2021–2026).</p>
+<p>Each reference-period composition was applied to the same central overall HPC demand projection. This isolates the effect of alternative historical allocation-share assumptions on the illustrative distribution of projected demand across research fields.</p>
+<p>The earlier-period scenario assigns the largest share to Earth &amp; Environmental Sciences, while the recent-period scenario assigns the largest share to Engineering &amp; Technology. The longer-term scenario provides an additional historical reference.</p>
+<p>These differences demonstrate sensitivity to the selected reference period. They cannot be attributed exclusively to changes in researcher demand because FoR classification, facility coverage, reporting scope, and incomplete category observations may also affect the results.</p>
+<p>The FoR projections are therefore illustrative top-down distributions, not independently estimated forecasts of demand by research field.</p>
+</section>
+<section id="implications-for-national-hpc-planning" class="level3" data-number="11.8.5">
+<h3 data-number="11.8.5" class="anchored" data-anchor-id="implications-for-national-hpc-planning"><span class="header-section-number">11.8.5</span> Implications for National HPC Planning</h3>
+<p>The analysis suggests that national HPC planning should consider a range of plausible demand trajectories rather than rely on a single extrapolation.</p>
+<p>The central linear projections provide transparent reference estimates supported by the available historical cross-validation results. Alternative growth specifications and 2026-excluded sensitivity models illustrate how substantially projections can change under different assumptions.</p>
+<p>CPU and GPU requirements should be assessed separately because they represent different computational resources and are not directly interchangeable.</p>
+<p>Similarly, FoR allocation-share scenarios can support discussions about potential disciplinary composition, but they should not be used as definitive evidence of future demand by research field.</p>
+<p>A key limitation is that recorded requests, allocations, and estimated resource requirements do not always measure the same concept. In particular, allocated resources may be constrained by available capacity and should not automatically be interpreted as the full level of researcher demand.</p>
+<p>For infrastructure investment decisions, these projections are most appropriately used alongside facility-level capacity assessments, evidence of unmet researcher demand, expected changes in computing technologies, and direct engagement with research communities.</p>
+</section>
+<section id="chapter-conclusion" class="level3" data-number="11.8.6">
+<h3 data-number="11.8.6" class="anchored" data-anchor-id="chapter-conclusion"><span class="header-section-number">11.8.6</span> Chapter Conclusion</h3>
+<p>The forecasting exercise provides a reproducible, evidence-based set of scenarios for Australian national research HPC demand through 2030.</p>
+<p>The central results are useful as planning reference points, while the sensitivity analyses, prediction intervals, GPU scenarios, and FoR distributions make important sources of uncertainty explicit.</p>
+<p>The analysis does not establish a single certain future demand level. Instead, it provides a transparent framework for evaluating alternative assumptions and identifying where improved data collection would most strengthen future national HPC planning.</p>
 
 
 <!-- -->
@@ -5493,6 +5551,77 @@ Figure&nbsp;11.4: Exploratory GPU demand scenarios, 2027–2030. The naïve benc
 <span id="cb26-1959"><a href="#cb26-1959" aria-hidden="true" tabindex="-1"></a>The earlier-period, recent-period, and longer-term scenarios provide complementary planning perspectives. Their differences indicate that infrastructure planning should consider uncertainty in disciplinary composition rather than relying exclusively on a single historical allocation pattern.</span>
 <span id="cb26-1960"><a href="#cb26-1960" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb26-1961"><a href="#cb26-1961" aria-hidden="true" tabindex="-1"></a>The analysis does not establish which historical composition will best represent future demand. Further work would require consistently classified FoR-level demand requests, comparable facility reporting, and improved coverage of currently incomplete categories.</span>
+<span id="cb26-1962"><a href="#cb26-1962" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-1963"><a href="#cb26-1963" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-1964"><a href="#cb26-1964" aria-hidden="true" tabindex="-1"></a><span class="fu">## Overall Scenario Synthesis and Planning Implications</span></span>
+<span id="cb26-1965"><a href="#cb26-1965" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-1966"><a href="#cb26-1966" aria-hidden="true" tabindex="-1"></a>The scenario analysis combines projections of overall national HPC demand, CPU demand, exploratory GPU demand, and illustrative Field of Research (FoR) distributions through 2030. Together, these provide complementary perspectives on potential future demand for Australian national research computing infrastructure.</span>
+<span id="cb26-1967"><a href="#cb26-1967" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-1968"><a href="#cb26-1968" aria-hidden="true" tabindex="-1"></a><span class="fu">### Central Forecast and Alternative Growth Assumptions</span></span>
+<span id="cb26-1969"><a href="#cb26-1969" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-1970"><a href="#cb26-1970" aria-hidden="true" tabindex="-1"></a>The selected linear model projects overall HPC demand to reach approximately **2.50 million kSU by 2030**, compared with approximately **2.29 million kSU** when the 2026 observation is excluded.</span>
+<span id="cb26-1971"><a href="#cb26-1971" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-1972"><a href="#cb26-1972" aria-hidden="true" tabindex="-1"></a>The log-linear alternatives produce substantially higher 2030 projections, ranging from approximately **6.48 to 6.96 million kSU**. However, their weaker historical cross-validation performance means they should be treated as alternative growth scenarios rather than equally supported central forecasts.</span>
+<span id="cb26-1973"><a href="#cb26-1973" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-1974"><a href="#cb26-1974" aria-hidden="true" tabindex="-1"></a>For CPU demand, the central linear projection reaches approximately **1,369.90 million CPU core-hours in 2030**. The 2026-excluded linear model projects approximately **1,263.85 million CPU core-hours**, while the log-linear alternatives project approximately **2,479–2,502 million CPU core-hours**.</span>
+<span id="cb26-1975"><a href="#cb26-1975" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-1976"><a href="#cb26-1976" aria-hidden="true" tabindex="-1"></a>The difference between linear and log-linear projections demonstrates the importance of the assumed growth structure when forecasting several years beyond a relatively short historical series.</span>
+<span id="cb26-1977"><a href="#cb26-1977" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-1978"><a href="#cb26-1978" aria-hidden="true" tabindex="-1"></a><span class="fu">### Forecast Uncertainty and Model Adequacy</span></span>
+<span id="cb26-1979"><a href="#cb26-1979" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-1980"><a href="#cb26-1980" aria-hidden="true" tabindex="-1"></a>Model-based 80% and 95% prediction intervals were calculated for the selected overall HPC and CPU linear models.</span>
+<span id="cb26-1981"><a href="#cb26-1981" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-1982"><a href="#cb26-1982" aria-hidden="true" tabindex="-1"></a>For 2030, the overall HPC central forecast of approximately **2.50 million kSU** has a model-based 95% prediction interval of approximately **1.98–3.03 million kSU**.</span>
+<span id="cb26-1983"><a href="#cb26-1983" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-1984"><a href="#cb26-1984" aria-hidden="true" tabindex="-1"></a>The corresponding CPU central forecast of approximately **1,369.90 million CPU core-hours** has a model-based 95% prediction interval of approximately **974.24–1,765.55 million CPU core-hours**.</span>
+<span id="cb26-1985"><a href="#cb26-1985" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-1986"><a href="#cb26-1986" aria-hidden="true" tabindex="-1"></a>These intervals describe uncertainty conditional on the fitted linear regression models and their error assumptions. They do not fully account for measurement uncertainty, changes in reporting scope, model selection, future infrastructure developments, or structural changes in researcher demand.</span>
+<span id="cb26-1987"><a href="#cb26-1987" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-1988"><a href="#cb26-1988" aria-hidden="true" tabindex="-1"></a>Residual plots, normal Q-Q plots, and exploratory Ljung–Box tests provide additional model diagnostics. However, the small annual samples limit the strength of statistical conclusions. The absence of statistically significant residual autocorrelation should not be interpreted as proof that all model assumptions hold.</span>
+<span id="cb26-1989"><a href="#cb26-1989" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-1990"><a href="#cb26-1990" aria-hidden="true" tabindex="-1"></a><span class="fu">### GPU Demand and Emerging Infrastructure Requirements</span></span>
+<span id="cb26-1991"><a href="#cb26-1991" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-1992"><a href="#cb26-1992" aria-hidden="true" tabindex="-1"></a>GPU demand is presented through exploratory scenarios rather than a definitive long-term forecast.</span>
+<span id="cb26-1993"><a href="#cb26-1993" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-1994"><a href="#cb26-1994" aria-hidden="true" tabindex="-1"></a>The naïve benchmark remains constant at approximately **3.003 million GPU-hours** through 2030. Alternative linear and log-linear specifications produce 2030 projections ranging from approximately **2.25 to 3.68 million GPU-hours**.</span>
+<span id="cb26-1995"><a href="#cb26-1995" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-1996"><a href="#cb26-1996" aria-hidden="true" tabindex="-1"></a>These trajectories are sensitive to the inclusion of 2026 and rely on only five annual GPU estimates for 2022–2026. The underlying series also combines reported and inferred demand measures.</span>
+<span id="cb26-1997"><a href="#cb26-1997" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-1998"><a href="#cb26-1998" aria-hidden="true" tabindex="-1"></a>Consequently, the GPU scenarios should be interpreted as alternative planning assumptions, not reliable statistical bounds on future GPU requirements.</span>
+<span id="cb26-1999"><a href="#cb26-1999" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-2000"><a href="#cb26-2000" aria-hidden="true" tabindex="-1"></a><span class="fu">### Disciplinary Composition and FoR Scenarios</span></span>
+<span id="cb26-2001"><a href="#cb26-2001" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-2002"><a href="#cb26-2002" aria-hidden="true" tabindex="-1"></a>Three historical FoR allocation-share reference periods were considered: longer-term (2014–2026), earlier (2014–2020), and recent (2021–2026).</span>
+<span id="cb26-2003"><a href="#cb26-2003" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-2004"><a href="#cb26-2004" aria-hidden="true" tabindex="-1"></a>Each reference-period composition was applied to the same central overall HPC demand projection. This isolates the effect of alternative historical allocation-share assumptions on the illustrative distribution of projected demand across research fields.</span>
+<span id="cb26-2005"><a href="#cb26-2005" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-2006"><a href="#cb26-2006" aria-hidden="true" tabindex="-1"></a>The earlier-period scenario assigns the largest share to Earth &amp; Environmental Sciences, while the recent-period scenario assigns the largest share to Engineering &amp; Technology. The longer-term scenario provides an additional historical reference.</span>
+<span id="cb26-2007"><a href="#cb26-2007" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-2008"><a href="#cb26-2008" aria-hidden="true" tabindex="-1"></a>These differences demonstrate sensitivity to the selected reference period. They cannot be attributed exclusively to changes in researcher demand because FoR classification, facility coverage, reporting scope, and incomplete category observations may also affect the results.</span>
+<span id="cb26-2009"><a href="#cb26-2009" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-2010"><a href="#cb26-2010" aria-hidden="true" tabindex="-1"></a>The FoR projections are therefore illustrative top-down distributions, not independently estimated forecasts of demand by research field.</span>
+<span id="cb26-2011"><a href="#cb26-2011" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-2012"><a href="#cb26-2012" aria-hidden="true" tabindex="-1"></a><span class="fu">### Implications for National HPC Planning</span></span>
+<span id="cb26-2013"><a href="#cb26-2013" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-2014"><a href="#cb26-2014" aria-hidden="true" tabindex="-1"></a>The analysis suggests that national HPC planning should consider a range of plausible demand trajectories rather than rely on a single extrapolation.</span>
+<span id="cb26-2015"><a href="#cb26-2015" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-2016"><a href="#cb26-2016" aria-hidden="true" tabindex="-1"></a>The central linear projections provide transparent reference estimates supported by the available historical cross-validation results. Alternative growth specifications and 2026-excluded sensitivity models illustrate how substantially projections can change under different assumptions.</span>
+<span id="cb26-2017"><a href="#cb26-2017" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-2018"><a href="#cb26-2018" aria-hidden="true" tabindex="-1"></a>CPU and GPU requirements should be assessed separately because they represent different computational resources and are not directly interchangeable.</span>
+<span id="cb26-2019"><a href="#cb26-2019" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-2020"><a href="#cb26-2020" aria-hidden="true" tabindex="-1"></a>Similarly, FoR allocation-share scenarios can support discussions about potential disciplinary composition, but they should not be used as definitive evidence of future demand by research field.</span>
+<span id="cb26-2021"><a href="#cb26-2021" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-2022"><a href="#cb26-2022" aria-hidden="true" tabindex="-1"></a>A key limitation is that recorded requests, allocations, and estimated resource requirements do not always measure the same concept. In particular, allocated resources may be constrained by available capacity and should not automatically be interpreted as the full level of researcher demand.</span>
+<span id="cb26-2023"><a href="#cb26-2023" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-2024"><a href="#cb26-2024" aria-hidden="true" tabindex="-1"></a>For infrastructure investment decisions, these projections are most appropriately used alongside facility-level capacity assessments, evidence of unmet researcher demand, expected changes in computing technologies, and direct engagement with research communities.</span>
+<span id="cb26-2025"><a href="#cb26-2025" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-2026"><a href="#cb26-2026" aria-hidden="true" tabindex="-1"></a><span class="fu">### Chapter Conclusion</span></span>
+<span id="cb26-2027"><a href="#cb26-2027" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-2028"><a href="#cb26-2028" aria-hidden="true" tabindex="-1"></a>The forecasting exercise provides a reproducible, evidence-based set of scenarios for Australian national research HPC demand through 2030.</span>
+<span id="cb26-2029"><a href="#cb26-2029" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-2030"><a href="#cb26-2030" aria-hidden="true" tabindex="-1"></a>The central results are useful as planning reference points, while the sensitivity analyses, prediction intervals, GPU scenarios, and FoR distributions make important sources of uncertainty explicit.</span>
+<span id="cb26-2031"><a href="#cb26-2031" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-2032"><a href="#cb26-2032" aria-hidden="true" tabindex="-1"></a>The analysis does not establish a single certain future demand level. Instead, it provides a transparent framework for evaluating alternative assumptions and identifying where improved data collection would most strengthen future national HPC planning.</span>
 </code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
