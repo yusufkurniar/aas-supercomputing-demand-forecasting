@@ -434,7 +434,7 @@ Alternative log-linear trajectories will illustrate the implications of compound
 
 For GPU demand, the naïve benchmark and exploratory trend specifications will be presented separately, reflecting the limited evidence available for selecting a definitive long-term forecasting model.
 
-For FoR, alternative historical allocation compositions will be applied to projected overall HPC demand to examine conditional distributions across research fields.
+For FoR, three historical allocation-share reference periods will be considered: earlier (2014 - 2020), recent (2021 - 2026), and long-term (2014 - 2026). The resulting normalised allocation-share weights will be applied to the central overall HPC demand projection to examine how the illustrative distribution across research fields varies with the selected reference period. These distributions are conditional planning scenarios rather than independently estimated FoR demand forecasts.
 
 Scenario development will distinguish three sources of uncertainty:
 
