@@ -51,3 +51,28 @@ The **computing power researchers need or request** to carry out their research.
 
 :::
 
+## Research Objective and Scope
+
+::: {style="margin-top: 35px;"}
+
+**Research question**
+
+How might demand for Australia's national research supercomputing infrastructure **change through 2030**?
+
+<div style="height: 25px;"></div>
+
+**Project objectives**
+
+1. [**Collect and integrate**]{style="color: #006DAE;"} historical data from NCI and Pawsey.
+2. [**Standardise and harmonise**]{style="color: #006DAE;"} resource units, reporting periods, and research classifications.
+3. [**Develop and evaluate**]{style="color: #006DAE;"} transparent forecasting models.
+4. [**Forecast demand**]{style="color: #006DAE;"} for overall HPC, CPU, and GPU resources through 2030.
+5. [**Explore scenarios**]{style="color: #006DAE;"} for different Fields of Research (FoR).
+
+<div style="height: 25px;"></div>
+
+**Planning purpose**
+
+Provide **evidence-informed scenarios** to support decisions about Australia's future national research computing infrastructure.
+
+:::
