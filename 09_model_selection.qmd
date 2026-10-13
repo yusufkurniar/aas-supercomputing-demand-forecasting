@@ -359,3 +359,102 @@ For these reasons, FoR scenarios will be presented as allocation-share-based dis
 Chapter 10 will implement these assumptions and examine how alternative historical compositions affect the indicative distribution of HPC requirements through 2030.
 
 
+## Selected Models and Limitations
+
+### Summary of Model Selection Decisions
+
+The forecasting models and analytical assumptions selected in this chapter are summarised below.
+
+| Demand measure | Selected approach | Supporting evidence | Role in Chapter 10 |
+|:--|:--|:--|:--|
+| Overall HPC | Full-history linear trend | Lowest RMSE and MAE across six evaluation years | Central statistical projection |
+| CPU | Full-history linear trend | Lowest RMSE; competitive MAE across six evaluation years | Central statistical projection |
+| GPU | Naïve benchmark with exploratory trend models | Lowest naïve RMSE and MAE, but only two evaluation years | Reference benchmark and exploratory growth trajectories |
+| FoR | Historical allocation-share assumptions | Descriptive stability and period-comparison analysis | Conditional distributions of projected overall HPC demand |
+
+The selected approaches reflect differences in data availability, predictive evidence, and the interpretation of each demand measure.
+
+For overall HPC, the linear trend provides the strongest historical one-step-ahead forecasting performance among the evaluated models. Its full-history specification is selected as the central statistical projection, while the 2026-excluded specification is retained for sensitivity analysis.
+
+For CPU demand, the linear trend is also selected as the central statistical projection. Although the log-linear model achieved a slightly lower MAE, the linear model achieved the lowest RMSE and avoids assuming that historical proportional growth will necessarily continue through 2030.
+
+For GPU demand, the naïve model is retained as the preferred statistical benchmark. However, the short modelling period, limited evaluation sample, and sensitivity of trend estimates to 2026 prevent the selection of a sufficiently validated central long-term forecast. Linear and log-linear trajectories are retained for exploratory scenario analysis.
+
+For FoR, no independent demand forecasting model is selected. Instead, historical allocation-share patterns are used to construct conditional distributions of projected overall HPC demand across research fields.
+
+### Forecasting Uncertainty and Data Limitations
+
+Several limitations apply across the selected forecasting approaches.
+
+**Historical measurement and comparability**
+
+The harmonised historical series combine directly reported observations, derived estimates, and proxy-based values. Differences in resource accounting, reporting coverage, and conversion assumptions may affect comparability across years.
+
+Consequently, the resulting forecasts should be interpreted as projections of the constructed historical demand measures rather than definitive estimates of unconstrained national researcher requirements.
+
+**Limited annual observations**
+
+The overall HPC and CPU forecasting series contain 13 annual observations covering 2014–2026.
+
+Although rolling-origin cross-validation provides useful out-of-sample evidence, the six available evaluation years limit the precision with which differences in predictive performance can be established.
+
+The GPU series contains only five recent annual estimates and two evaluation years, resulting in substantially greater model-selection uncertainty.
+
+**Sensitivity to recent demand changes**
+
+The substantial increase in recorded overall HPC demand in 2026 affects estimated historical trends and projected future demand.
+
+The influence of this observation is examined using alternative specifications that exclude 2026. These comparisons assess sensitivity but do not establish whether the observed increase represents a temporary change, a sustained acceleration, or differences in reporting and measurement.
+
+**Long-horizon extrapolation**
+
+The rolling-origin evaluations primarily assess one-step-ahead predictive performance.
+
+Forecasts extending to 2030 require additional assumptions about the persistence of historical trends. Strong performance over a one-year horizon does not guarantee equivalent performance over four years.
+
+**Resource-specific interpretation**
+
+Overall HPC demand is expressed in kSU, CPU demand in core-hours, and GPU demand in GPU-hours.
+
+These measures describe different aspects of computing requirements and should not be directly added or compared without an explicitly justified conversion framework.
+
+**FoR allocation-share interpretation**
+
+FoR allocation shares represent the recorded distribution of allocated resources rather than directly observed field-specific demand.
+
+The resulting scenarios depend on assumptions about how historical allocation composition may relate to the future distribution of computational requirements. They are not independently validated FoR demand forecasts.
+
+### Implications for Scenario Development
+
+The model-selection findings establish the analytical basis for Chapter 10.
+
+The full-history linear trend models will provide central statistical projections for overall HPC and CPU demand, with 2026-excluded specifications used to examine sensitivity to the latest observation.
+
+Alternative log-linear trajectories will illustrate the implications of compounded proportional growth. These alternatives will not automatically be interpreted as statistically established upper demand bounds.
+
+For GPU demand, the naïve benchmark and exploratory trend specifications will be presented separately, reflecting the limited evidence available for selecting a definitive long-term forecasting model.
+
+For FoR, alternative historical allocation compositions will be applied to projected overall HPC demand to examine conditional distributions across research fields.
+
+Scenario development will distinguish three sources of uncertainty:
+
+1. **Historical measurement uncertainty:** Differences in data provenance, reporting scope, and conversion assumptions.
+2. **Model uncertainty:** Differences between forecasting specifications and their underlying growth assumptions.
+3. **Scenario uncertainty:** Alternative assumptions about future demand growth and the distribution of computational requirements.
+
+These sources of uncertainty will not be treated as interchangeable.
+
+The scenarios will therefore provide transparent, assumption-dependent projections for national HPC infrastructure planning rather than probabilistic estimates of all possible future outcomes.
+
+## Chapter Summary
+
+This chapter selected forecasting approaches for overall HPC, CPU, and GPU demand using the predictive evaluation results from Chapter 08 and the modelling evidence developed in Chapter 07.
+
+Linear trend models were selected as the central statistical specifications for overall HPC and CPU demand because they provide competitive historical forecast accuracy and interpretable absolute-growth assumptions.
+
+For GPU demand, the naïve model was retained as a statistical benchmark, while alternative trend models were retained for exploratory analysis because of limited historical evidence.
+
+FoR allocation-share assumptions were selected as a framework for distributing projected overall HPC demand across research fields, subject to classification and reporting limitations.
+
+These decisions provide the foundation for the demand scenarios developed in Chapter 10, where alternative growth assumptions, historical sensitivity, and resource-specific uncertainties will be examined through 2030.
+
