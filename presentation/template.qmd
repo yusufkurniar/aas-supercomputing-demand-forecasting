@@ -7,6 +7,7 @@ toc: false
 format:
   presentation-revealjs:
     logo: false
+    fontsize: 22px
 ---
 
 ```{r}
@@ -18,74 +19,35 @@ library(dplyr)
 options(width = 70)
 ```
 
-# Goals
+## Understanding Supercomputing and Researcher Demand
 
-## Goals
+::: {style="margin-top: 35px;"}
 
+**What is Supercomputing (HPC)?**
 
-The main goals for this slide:
+Using **very powerful computers** to solve complex problems that ordinary computers cannot easily handle.
 
-- This is just to show you how this \emph{template} works
-- The blue in this template is based on the official Monash University color palette
+**Examples:** Weather forecasting, drug discovery, climate modelling, and engineering simulations.
 
-### beamer options
+<div style="height: 25px;"></div>
 
-- Use the `titlegraphic` option to include a different background image for the title slide
-- Use the `titlecolor` option to change the color for the text on the title slide.
+**What is Researcher Demand?**
 
-# Tables and graphs
+The **computing power researchers need or request** to carry out their research.
 
-## Slide 2
+<div style="height: 25px;"></div>
 
-A nice table
+**Three Important Terms**
 
-```{r}
-mtcars |>
-  select(mpg:wt) |>
-  head() |>
-  kable(booktabs = TRUE)
-```
+- [**Requested**]{style="color: #006DAE;"}: How much computing power researchers **ask for**.
+- [**Allocated**]{style="color: #006DAE;"}: How much computing power facilities **provide**.
+- [**Unmet demand**]{style="color: #006DAE;"}: The portion of requests **not fulfilled**, when the measures are comparable.
 
-## Slide 3
+::: {style="margin-top: 25px; padding: 12px 18px; border-left: 5px solid #006DAE; background-color: #F2F7FB;"}
 
-And a graph
+**Important:** Some historical demand values are estimated rather than directly observed. My forecasts therefore provide **planning scenarios, not exact predictions** of researchers' full computing needs.
 
-```{r}
-#| fig-height: 3.8
-mtcars |>
-  ggplot(aes(x=wt, y = mpg)) +
-  geom_point()
-```
+:::
 
-## Slide 4
+:::
 
-The sample standard deviation is given by
-$$
-  s = \sqrt{\frac{1}{n-1} \sum_{i=1}^n (x_i - \bar{x})^2}
-$$
-
-## Testing monospace font
-
-```{r}
-#| echo: true
-mtcars |> as_tibble() |> head()
-```
-
-
-## Testing math fonts
-
-* Calligraphic
-
-  * $\mathcal{ABCDE}$
-
-* Script
-
-  * $\mathscr{ABCDE}$
-
-* Fraktur
-
-  * $\mathfrak{ABCDE}$
-
-* Mathbb
-
-  * $\mathbb{ABCDE}$
