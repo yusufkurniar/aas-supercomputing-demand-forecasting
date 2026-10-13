@@ -153,6 +153,15 @@ historical_conversion_check |>
   print(n = Inf, width = Inf)
 ```
 
+
+### Historical Service-Unit Conversion Assumptions
+
+For selected historical observations from 2015 to 2019, reported compute hours are converted to kSU using a working assumption of one service unit per CPU core-hour. This assumption is applied where sufficiently detailed system-specific accounting factors are unavailable.
+
+The assumed factor should not be interpreted as a verified accounting rule across all facilities or reporting periods. Historical observations may include different computing systems, resource types, and reporting scopes, while later system-level conversions use factors that vary by facility.
+
+Consequently, the converted historical kSU values provide a harmonised analytical approximation rather than an exact reconstruction of original service-unit accounting. Uncertainty associated with these assumptions is not fully represented in the statistical prediction intervals reported in Chapter 10.
+
 ```{r}
 # Historical conversion assumptions
 # Baseline: 1 service unit per CPU core-hour

@@ -1016,3 +1016,14 @@ The more recent 2021 - 2026 shares provide a relevant reference for a baseline a
 
 Accordingly, Chapter 09 will distinguish models selected through quantitative forecast-error evaluation from FoR assumptions supported by descriptive historical evidence. Any subsequent application of FoR shares to projected overall HPC demand will be presented as a scenario-based allocation of projected demand, rather than an independently validated forecast of demand within each research field.
 
+## Overall Evaluation Conclusions and Forecast-Horizon Limitations
+
+The rolling-origin evaluation provides a consistent basis for comparing candidate forecasting models using historical one-step-ahead prediction errors. For overall HPC and CPU demand, six forecast errors are available for 2021–2026. For GPU demand, only two forecast errors are available for 2025–2026.
+
+The results support the selection of a linear trend as the central forecasting approach for overall HPC and CPU demand. However, the evaluation does not directly establish the accuracy of forecasts two, three, or four years ahead. The relative performance of alternative models may change over longer horizons.
+
+The GPU evaluation is particularly limited by its short historical series. Although the naïve benchmark performs best in the available one-step-ahead comparison, this does not establish that GPU demand will remain constant through 2030.
+
+The FoR analysis evaluates historical allocation-share composition and variability rather than independently testing future demand forecasts by research field.
+
+Consequently, the 2027–2030 projections should be interpreted as planning scenarios informed by historical predictive performance, not as forecasts with independently validated four-year-ahead accuracy. The alternative growth specifications, 2026-exclusion sensitivity analyses, and conditional prediction intervals in Chapter 10 provide additional perspectives on uncertainty but do not replace direct multi-horizon validation.
