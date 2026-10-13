@@ -117,3 +117,82 @@ The central projection should be interpreted as a model-based extrapolation of r
 The selected model and sensitivity comparisons will inform the development of explicit demand scenarios in Chapter 10. These scenarios will distinguish modelling assumptions from statistical forecast uncertainty and acknowledge limitations in historical data comparability.
 
 
+## CPU Demand Model Selection
+
+### Comparison of Candidate Models
+
+CPU demand was evaluated separately from overall HPC demand to account for differences in resource measurement, historical coverage, and computational requirements.
+
+Four candidate forecasting models were compared: linear trend, log-linear trend, drift, and naïve forecasting.
+
+As described in Chapter 08, model performance was assessed using expanding-window, one-step-ahead rolling-origin cross-validation, with an initial training period of 2014–2020 and six evaluation years from 2021 to 2026.
+
+CPU demand is expressed in millions of core-hours.
+
+| Model | RMSE (million core-hours) | MAE (million core-hours) | RMSE Rank |
+|:--|--:|--:|--:|
+| Linear trend | 157.72 | 138.65 | 1 |
+| Log-linear trend | 160.18 | 133.74 | 2 |
+| Drift | 242.61 | 193.69 | 3 |
+| Naïve | 260.05 | 228.45 | 4 |
+
+The linear trend model achieved the lowest RMSE of 157.72 million core-hours, approximately 1.5% lower than the log-linear trend model.
+
+However, the log-linear model achieved the lowest MAE of 133.74 million core-hours, compared with 138.65 million core-hours for the linear model.
+
+Unlike the overall HPC evaluation, the two accuracy measures therefore produce different rankings for the leading CPU models.
+
+This distinction is important because RMSE places greater weight on larger forecast errors, whereas MAE measures the average magnitude of errors without additional quadratic weighting.
+
+The relatively small difference in RMSE suggests that the linear and log-linear models have comparable historical one-step-ahead forecasting performance. Consequently, selecting the preferred CPU model requires consideration of the implied growth assumptions and their consequences for longer-term projections.
+
+### Assessment of Growth Assumptions
+
+The linear trend model assumes a constant absolute annual increase in CPU demand, while the log-linear trend model assumes approximately constant proportional growth.
+
+Chapter 07 demonstrated that these assumptions generate substantially different projections for 2030.
+
+The linear specifications project CPU demand between approximately 1,263.85 and 1,369.90 million core-hours in 2030, depending on whether the 2026 observation is included.
+
+By comparison, the log-linear specifications project approximately 2,479.16 to 2,502.07 million core-hours.
+
+The considerably higher log-linear projections arise from the compounding of proportional growth over the forecast horizon.
+
+Although the log-linear model performs slightly better on MAE, the historical evaluation does not provide sufficiently strong evidence that compounded growth will persist through 2030.
+
+The linear trend is therefore more suitable as the leading candidate for a transparent central statistical projection, while the log-linear specification remains useful for examining alternative growth assumptions.
+
+These projections are model-based trajectories rather than statistical prediction intervals or independently validated demand scenarios.
+
+
+### CPU Model Selection Decision
+
+The linear trend model fitted to the complete 2014–2026 historical series is selected as the central statistical forecasting specification for CPU demand.
+
+This decision reflects the combined assessment of historical forecast accuracy, model interpretability, and the implications of extrapolating alternative growth assumptions through 2030.
+
+The linear model achieved the lowest rolling-origin RMSE of 157.72 million core-hours, compared with 160.18 million core-hours for the log-linear model. However, the log-linear model achieved a slightly lower MAE of 133.74 million core-hours, compared with 138.65 million core-hours for the linear model.
+
+These differences are relatively small and do not establish a statistically significant advantage for either model. Both specifications therefore remain plausible candidates based on their historical one-step-ahead forecasting performance.
+
+The principal distinction lies in their growth assumptions. The linear model extrapolates an approximately constant absolute increase in CPU demand, whereas the log-linear model extrapolates compounded proportional growth.
+
+Chapter 07 showed that these assumptions produce substantially different 2030 projections. The linear specifications generate approximately 1.26–1.37 billion core-hours, while the log-linear specifications generate approximately 2.48–2.50 billion core-hours.
+
+Given the short annual series, differences in historical measurement and conversion assumptions, and uncertainty regarding the persistence of recent demand growth, the evidence is insufficient to establish compounded growth as the most appropriate central forecasting assumption.
+
+The linear model is therefore preferred for the central statistical projection because it provides competitive historical forecast accuracy while retaining a simpler and more transparent growth assumption.
+
+The following specifications are retained:
+
+- **Central statistical projection:** Linear trend fitted to the complete 2014–2026 historical series.
+- **Historical sensitivity comparison:** Linear trend fitted to 2014–2025, excluding the latest observation.
+- **Alternative growth assumption:** Log-linear trend, retained to examine the implications of sustained proportional growth.
+
+The 2026-excluded linear specification provides a sensitivity comparison rather than an independently validated lower bound. Similarly, the log-linear specification represents an alternative growth trajectory, not a statistically established upper bound.
+
+The selected CPU model should be interpreted as a projection of the harmonised historical CPU demand measure, subject to the provenance, conversion, and reporting limitations documented in earlier chapters.
+
+Chapter 10 will use these specifications to examine alternative CPU demand trajectories through 2030 without treating differences between models as formal prediction intervals.
+
+
