@@ -973,3 +973,46 @@ Furthermore, period averages are calculated across available annual observations
 
 Overall, the results demonstrate the importance of evaluating the two reporting periods separately. The 2014–2020 data provide historical context, while the more recent 2021–2026 allocation composition provides a more relevant reference for assessing potential FoR share assumptions for the 2030 scenarios.
 
+
+### FoR Evaluation Findings and Limitations
+
+The Field of Research (FoR) evaluation provides evidence on the historical composition and variability of HPC resource allocations across research fields. Unlike the overall HPC, CPU, and GPU evaluations, which assess forecasting performance against historical resource measures, the FoR evaluation is descriptive. Its purpose is to assess the stability and comparability of allocation shares rather than to establish predictive accuracy for research-field demand.
+
+**Historical allocation-share patterns**
+
+The 2021 - 2026 evaluation shows that Engineering & Technology accounted for the largest average allocation share (34.88%), followed by Physical Sciences (22.13%), Chemical Sciences (17.84%), and Earth & Environmental Sciences (14.00%). These categories were observed in all six years, although their shares varied over time.
+
+The longer 2014 - 2026 evaluation indicates that allocation composition was not constant across the historical period. Engineering & Technology and Earth & Environmental Sciences each exhibited a range of 29.65 percentage points, while Physical Sciences exhibited a range of 26.63 percentage points. Chemical Sciences was comparatively stable, with a range of 4.69 percentage points.
+
+The separate 2014 - 2020 evaluation provides additional context. Earth & Environmental Sciences accounted for the largest average allocation share (31.62%), followed by Chemical Sciences (19.02%), Physical Sciences (16.92%), and Engineering & Technology (16.90%). Several categories exhibited substantial variation during this earlier period.
+
+**Differences between reporting periods**
+
+Comparing the two periods using harmonised analytical categories reveals substantial differences in average allocation composition. Engineering & Technology increased from 16.90% in 2014 - 2020 to 34.88% in 2021 - 2026, a difference of +17.98 percentage points. Conversely, Earth & Environmental Sciences decreased from 31.62% to 14.00%, a difference of -17.61 percentage points. Physical Sciences recorded a higher average share (+5.21 percentage points), while Mathematics & Computing recorded a lower average (-2.46 percentage points).
+
+These differences indicate changes in the recorded distribution of HPC allocations across research fields. They do not, however, establish equivalent changes in underlying researcher demand.
+
+**Data and interpretation limitations**
+
+Several limitations affect the interpretation of these findings:
+
+1. **Allocation versus demand:** The FoR dataset represents allocated HPC resources, not directly observed research-field requests or unconstrained computational needs. Allocation shares may therefore reflect resource availability, allocation decisions, and reporting practices as well as researcher activity.
+
+2. **Classification comparability:** The historical analysis spans FoR 2008 and FoR 2020 reporting frameworks. Although the categories were harmonised for analytical purposes in Chapter 06, they are not necessarily equivalent to official classifications across all years.
+
+3. **Incomplete category coverage:** Not all research-field groups are observed in every year. Missing observations were not automatically interpreted as zero allocations. Consequently, averages and ranges for categories with limited coverage are less informative than those for consistently reported categories.
+
+4. **Reporting scope:** Historical differences in facility coverage, resource accounting, and reporting conventions may influence the recorded allocation shares. Apparent changes in research-field composition cannot be attributed exclusively to changes in research priorities.
+
+5. **Period-average interpretation:** The comparison uses unweighted averages of available annual allocation shares. These describe the typical recorded composition within each period but do not represent shares of the total HPC resources allocated across all years combined.
+
+6. **Limited predictive validation:** The available FoR allocation-share series does not provide a consistent, directly observed research-field demand target suitable for evaluating field-specific demand forecasts using the same rolling-origin procedure applied to the overall HPC, CPU, and GPU series.
+
+**Implications for model selection and scenarios**
+
+The FoR evaluation supports the use of historical allocation composition as a reference for developing research-field scenarios, but not as a direct forecast of field-specific researcher demand.
+
+The more recent 2021 - 2026 shares provide a relevant reference for a baseline allocation-composition assumption, subject to their observed variability and reporting limitations. The earlier period and the full historical series provide additional context for examining alternative compositions and assessing sensitivity to changes in research-field allocation patterns.
+
+Accordingly, Chapter 09 will distinguish models selected through quantitative forecast-error evaluation from FoR assumptions supported by descriptive historical evidence. Any subsequent application of FoR shares to projected overall HPC demand will be presented as a scenario-based allocation of projected demand, rather than an independently validated forecast of demand within each research field.
+
