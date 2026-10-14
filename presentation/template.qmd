@@ -855,6 +855,465 @@ ggplot() +
 Sources: [@NCMAS2026; @NCMAS2026Info]. Historical series and GPU scenarios: project data harmonisation.
 
 :::
+## HPC Allocation by Field of Research
+
+<style>
+.slide8-main { width: 100%; margin-top: 0; }
+.slide8-periods { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 2px; }
+.slide8-panel { min-width: 0; }
+.slide8-panel-title { background: #EAF3F9; color: #17324D; font-weight: 700; font-size: 13px; padding: 3px 8px; text-align: center; }
+.slide8-main .cell, .slide8-main .cell-output, .slide8-main .cell-output-display,
+.slide8-periods .cell, .slide8-periods .cell-output, .slide8-periods .cell-output-display { width: 100% !important; max-width: 100% !important; margin: 0 !important; }
+.slide8-main img, .slide8-periods img { display: block; width: 100% !important; max-width: 100% !important; height: auto; margin: 0 auto; }
+.slide8-insight { background: #F2F7FB; border-left: 4px solid #006DAE; padding: 5px 10px; font-size: 12px; line-height: 1.15; margin-top: 3px; }
+.slide8-note { font-size: 10px; color: #555; line-height: 1.15; margin-top: 3px; }
+</style>
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| include: false
+
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(scales)
+library(stringr)
+
+# Load historical FoR data
+for_converted <- readRDS(
+  "../assets/data/data converted/field_of_research_converted.rds"
+)
+
+stopifnot(
+  nrow(for_converted) == 133,
+  identical(
+    sort(unique(as.integer(for_converted$year))),
+    2014:2026
+  )
+)
+
+# Consistent colours
+for_palette <- c(
+  "Physical Sciences" = "#006DAE",
+  "Chemical Sciences" = "#38A6D8",
+  "Earth & Environmental Sciences" = "#279A8B",
+  "Engineering & Technology" = "#E69F00",
+  "Biological & Agricultural Sciences" = "#74B86A",
+  "Medical & Health Sciences" = "#B77DBD",
+  "Mathematics & Computing" = "#E27B66",
+  "Social Sciences, Humanities & Built Environment" = "#8B91A9",
+  "Unclassified & Operational" = "#B7BEC7"
+)
+
+field_order <- names(for_palette)
+
+# ----------------------------------------
+# Overall: harmonised groups, 2014–2026
+# ----------------------------------------
+
+for_overall <- for_converted |>
+  mutate(
+    reported_clean = research_field_reported |>
+      str_remove("^\\s*\\d{2}\\s+") |>
+      str_to_lower() |>
+      str_replace_all("&", " and ") |>
+      str_squish(),
+
+    field = case_when(
+      str_detect(
+        reported_clean,
+        "physical sciences|radioastronomy|radio astronomy"
+      ) ~ "Physical Sciences",
+
+      str_detect(
+        reported_clean,
+        "chemical sciences"
+      ) ~ "Chemical Sciences",
+
+      str_detect(
+        reported_clean,
+        "earth|environmental|geoscien"
+      ) ~ "Earth & Environmental Sciences",
+
+      str_detect(
+        reported_clean,
+        "engineering|technology"
+      ) ~ "Engineering & Technology",
+
+      str_detect(
+        reported_clean,
+        "biological|agricultural|veterinary|food sciences"
+      ) ~ "Biological & Agricultural Sciences",
+
+      str_detect(
+        reported_clean,
+        "medical|health|biomedical|clinical"
+      ) ~ "Medical & Health Sciences",
+
+      str_detect(
+        reported_clean,
+        "mathematical|computing|information"
+      ) ~ "Mathematics & Computing",
+
+      str_detect(
+        reported_clean,
+        paste0(
+          "psychology|economics|history|archaeology|",
+          "human society|language|communication|culture|",
+          "philosophy|religious|built environment|design"
+        )
+      ) ~ "Social Sciences, Humanities & Built Environment",
+
+      str_detect(
+        reported_clean,
+        "other|unreported|unclassified|pawsey operations"
+      ) ~ "Unclassified & Operational",
+
+      TRUE ~ NA_character_
+    )
+  )
+
+stopifnot(
+  !anyNA(for_overall$field),
+  n_distinct(for_overall$field) == 9
+)
+
+for_overall_plot <- for_overall |>
+  group_by(year, field) |>
+  summarise(
+    allocation_share = sum(allocation_share_for),
+    .groups = "drop"
+  )
+
+# ----------------------------------------
+# Early period: FoR 2008, 2014–2020
+# ----------------------------------------
+
+for_early <- for_converted |>
+  filter(between(year, 2014, 2020)) |>
+  mutate(
+    field = case_when(
+      for_2008_division_code == "01" ~
+        "Mathematics & Computing",
+
+      for_2008_division_code == "02" ~
+        "Physical Sciences",
+
+      for_2008_division_code == "03" ~
+        "Chemical Sciences",
+
+      for_2008_division_code %in% c(
+        "04", "05", "04 + 05"
+      ) ~ "Earth & Environmental Sciences",
+
+      for_2008_division_code %in% c(
+        "06", "07"
+      ) ~ "Biological & Agricultural Sciences",
+
+      for_2008_division_code == "08" ~
+        "Mathematics & Computing",
+
+      for_2008_division_code %in% c(
+        "09", "10", "09 + 10"
+      ) ~ "Engineering & Technology",
+
+      for_2008_division_code == "11" ~
+        "Medical & Health Sciences",
+
+      for_2008_division_code %in% c(
+        "12", "21"
+      ) ~ "Social Sciences, Humanities & Built Environment",
+
+      is.na(for_2008_division_code) ~
+        "Unclassified & Operational",
+
+      TRUE ~ NA_character_
+    )
+  )
+
+stopifnot(!anyNA(for_early$field))
+
+for_early_plot <- for_early |>
+  group_by(year, field) |>
+  summarise(
+    allocation_share = sum(allocation_share_for),
+    .groups = "drop"
+  )
+
+# ----------------------------------------
+# Later period: FoR 2020, 2021–2026
+# ----------------------------------------
+
+for_late <- for_converted |>
+  filter(between(year, 2021, 2026)) |>
+  mutate(
+    field = case_when(
+      for_standard_2020 %in% c(
+        "Engineering",
+        "Engineering + Technology",
+        "Technology — no direct FoR 2020 alignment"
+      ) ~ "Engineering & Technology",
+
+      for_standard_2020 == "Physical sciences" ~
+        "Physical Sciences",
+
+      for_standard_2020 == "Chemical sciences" ~
+        "Chemical Sciences",
+
+      for_standard_2020 %in% c(
+        "Earth sciences",
+        "Environmental sciences",
+        "Earth sciences + Environmental sciences"
+      ) ~ "Earth & Environmental Sciences",
+
+      for_standard_2020 %in% c(
+        "Biological sciences",
+        "Agricultural, veterinary and food sciences"
+      ) ~ "Biological & Agricultural Sciences",
+
+      for_standard_2020 %in% c(
+        "Biomedical and clinical sciences",
+        "Health sciences",
+        "Biomedical and clinical sciences + Health sciences"
+      ) ~ "Medical & Health Sciences",
+
+      for_standard_2020 %in% c(
+        "Mathematical sciences",
+        "Information and computing sciences"
+      ) ~ "Mathematics & Computing",
+
+      for_standard_2020 %in% c(
+        "Psychology",
+        "Economics",
+        "History, heritage and archaeology",
+        "Language, communication and culture",
+        "Philosophy and religious studies",
+        "Human society",
+        "Built environment and design"
+      ) ~ "Social Sciences, Humanities & Built Environment",
+
+      for_standard_2020 == "Other / Unclassified" ~
+        "Unclassified & Operational",
+
+      TRUE ~ NA_character_
+    )
+  )
+
+stopifnot(!anyNA(for_late$field))
+
+for_late_plot <- for_late |>
+  group_by(year, field) |>
+  summarise(
+    allocation_share = sum(allocation_share_for),
+    .groups = "drop"
+  )
+
+
+# Validate annual shares before plotting
+for (dataset in list(for_overall_plot, for_early_plot, for_late_plot)) {
+  totals <- dataset |>
+    group_by(year) |>
+    summarise(total = sum(allocation_share), .groups = "drop")
+  stopifnot(all(abs(totals$total - 1) < 1e-6))
+}
+
+# Consistent field order and include absent categories as 0 for period averages
+prepare_for <- function(data) {
+  data |>
+    mutate(field = factor(field, levels = field_order)) |>
+    complete(year, field, fill = list(allocation_share = 0))
+}
+for_overall_plot <- prepare_for(for_overall_plot)
+for_early_plot <- prepare_for(for_early_plot)
+for_late_plot <- prepare_for(for_late_plot)
+
+for_early_average <- for_early_plot |>
+  group_by(field) |>
+  summarise(mean_share = mean(allocation_share), .groups = "drop")
+for_late_average <- for_late_plot |>
+  group_by(field) |>
+  summarise(mean_share = mean(allocation_share), .groups = "drop")
+
+top_early_period <- for_early_average |>
+  slice_max(mean_share, n = 1, with_ties = FALSE)
+top_late_period <- for_late_average |>
+  slice_max(mean_share, n = 1, with_ties = FALSE)
+
+# Match label positions to reverse stacking of geom_col
+for_top_overall <- for_overall_plot |>
+  arrange(year, field) |>
+  group_by(year) |>
+  mutate(ymid = cumsum(allocation_share) - allocation_share / 2) |>
+  slice_max(allocation_share, n = 1, with_ties = FALSE) |>
+  ungroup() |>
+  mutate(label = percent(allocation_share, accuracy = 1))
+
+short_field_labels <- c(
+  "Physical Sciences" = "Physical Sciences",
+  "Chemical Sciences" = "Chemical Sciences",
+  "Earth & Environmental Sciences" = "Earth & Environmental",
+  "Engineering & Technology" = "Engineering & Technology",
+  "Biological & Agricultural Sciences" = "Biological & Agricultural",
+  "Medical & Health Sciences" = "Medical & Health",
+  "Mathematics & Computing" = "Mathematics & Computing",
+  "Social Sciences, Humanities & Built Environment" = "Social Sciences & Humanities",
+  "Unclassified & Operational" = "Unclassified & Operational"
+)
+
+plot_for_overall <- function(data) {
+  ggplot(data, aes(x = factor(year), y = allocation_share, fill = field)) +
+    geom_col(width = 0.83, position = position_stack(reverse = TRUE)) +
+    geom_text(
+      data = for_top_overall,
+      aes(x = factor(year), y = ymid, label = label),
+      inherit.aes = FALSE,
+      colour = "white", fontface = "bold", size = 3
+    ) +
+    scale_fill_manual(values = for_palette, limits = field_order, drop = FALSE) +
+    scale_y_continuous(labels = label_percent(), breaks = seq(0, 1, 0.25),
+                       expand = expansion(mult = c(0, 0))) +
+    coord_cartesian(ylim = c(0, 1)) +
+    labs(x = NULL, y = NULL, fill = NULL) +
+    guides(fill = guide_legend(ncol = 3, byrow = TRUE)) +
+    theme_minimal(base_size = 11) +
+    theme(
+      axis.text.x = element_text(size = 10),
+      axis.text.y = element_text(size = 9),
+      panel.grid.major.x = element_blank(),
+      panel.grid.minor = element_blank(),
+      legend.position = "bottom",
+      legend.text = element_text(size = 9),
+      legend.key.size = grid::unit(0.3, "cm"),
+      legend.spacing.y = grid::unit(0.05, "cm"),
+      plot.margin = margin(3, 6, 2, 6)
+    )
+}
+
+plot_for_average <- function(data) {
+  chart_data <- data |>
+    arrange(mean_share) |>
+    mutate(
+      field_label = unname(short_field_labels[as.character(field)]),
+      field_label = factor(field_label, levels = field_label)
+    )
+
+  ggplot(chart_data, aes(x = mean_share, y = field_label, fill = field)) +
+    geom_col(width = 0.68) +
+    geom_text(
+      aes(label = percent(mean_share, accuracy = 1)),
+      hjust = -0.15, size = 2.8, colour = "#17324D", fontface = "bold"
+    ) +
+    scale_fill_manual(values = for_palette, guide = "none") +
+    scale_x_continuous(
+      labels = label_percent(),
+      breaks = seq(0, 0.5, 0.1),
+      expand = expansion(mult = c(0, 0.18))
+    ) +
+    coord_cartesian(clip = "off") +
+    labs(x = NULL, y = NULL) +
+    theme_minimal(base_size = 10) +
+    theme(
+      axis.text.x = element_text(size = 9),
+      axis.text.y = element_text(size = 8),
+      panel.grid.major.y = element_blank(),
+      panel.grid.minor = element_blank(),
+      plot.margin = margin(3, 12, 2, 3)
+    )
+}
+```
+
+::: {.slide8-main}
+
+::: {.slide8-panel-title}
+2014–2026 | Annual allocation composition
+:::
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| fig-width: 13
+#| fig-height: 2.4
+#| out-width: "100%"
+#| fig-align: center
+
+plot_for_overall(for_overall_plot)
+```
+
+:::
+
+::: {.slide8-periods}
+
+::: {.slide8-panel}
+
+::: {.slide8-panel-title}
+2014–2020 | Average annual share (FoR 2008-based)
+:::
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| fig-width: 6.4
+#| fig-height: 2.25
+#| out-width: "100%"
+#| fig-align: center
+
+plot_for_average(for_early_average)
+```
+
+:::
+
+::: {.slide8-panel}
+
+::: {.slide8-panel-title}
+2021–2026 | Average annual share (FoR 2020-based)
+:::
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| fig-width: 6.4
+#| fig-height: 2.25
+#| out-width: "100%"
+#| fig-align: center
+
+plot_for_average(for_late_average)
+```
+
+:::
+
+:::
+
+::: {.slide8-insight}
+
+```{r}
+#| echo: false
+#| results: asis
+
+cat(
+  "<strong>Key insight:</strong> Allocation leadership shifted from <strong>",
+  as.character(top_early_period$field),
+  "</strong> (", percent(top_early_period$mean_share, accuracy = 1),
+  " average, 2014–2020) to <strong>",
+  as.character(top_late_period$field),
+  "</strong> (", percent(top_late_period$mean_share, accuracy = 1),
+  " average, 2021–2026)."
+)
+```
+
+:::
+
+::: {.slide8-note}
+**Notes:** Allocation shares, not observed demand. The upper chart shows annual composition; lower charts rank average annual shares using FoR 2008- and FoR 2020-based mappings. The 2017 Pawsey reporting scope differs. Groupings are not official one-to-one ANZSRC conversions.
+:::
+
+::: {style="font-size: 0.40em; color: #666; margin-top: 5px;"}
+Sources: NCI and Pawsey historical allocation reports [@NCI201314; @NCIAllocations202021; @NCMAS2023; @NCMAS2026]. FoR percentages and period averages: project data harmonisation and analysis.
+:::
 
 ## References {.scrollable}
 
