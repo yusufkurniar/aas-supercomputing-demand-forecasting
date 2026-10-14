@@ -32,7 +32,26 @@
       margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
       vertical-align: middle;
     }
-  </style>
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
   <link rel="stylesheet" href="template_files/libs/revealjs/dist/theme/quarto-9769c4fb417ce55ad3c6426b5eaa8d1b.css">
   <link href="template_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="template_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
@@ -168,31 +187,40 @@ Yusuf Kurnia Romadhon
 <p><strong>Important:</strong> Historical demand is not always directly observed. Some values are estimated using allocations or proxies, so the forecasts represent <strong>planning scenarios rather than exact predictions</strong>.</p>
 </div>
 </div>
-<div style="font-size: 0.45em; color: #666; margin-top: 8px;">
-<p>Sources: IBM, <em>What Is High-Performance Computing?</em>; NCI, <em>NCMAS 2026 Outcomes</em>. Demand definitions and limitations: this project’s data harmonisation methodology.</p>
+<div style="font-size: 0.48em; color: #666; margin-top: 8px;">
+<p>Source: <span class="citation" data-cites="ibm_hpc NCMAS2026">(<a href="#/historical-computing-demand-by-resource-type" role="doc-biblioref" onclick="">IBM, n.d.</a>; <a href="#/historical-computing-demand-by-resource-type" role="doc-biblioref" onclick="">National Computational Merit Allocation Scheme 2026</a>)</span></p>
 </div>
 </section>
 <section id="research-objective-and-scope" class="slide level2">
 <h2>Research Objective and Scope</h2>
-<div style="margin-top: 35px;">
-<p><strong>Research question</strong></p>
-<p>How might demand for Australia’s national research supercomputing infrastructure <strong>change through 2030</strong>?</p>
-<div style="height: 25px;">
+<div style="margin-top: 30px;">
+<div style="background-color: #EAF3F9; border-left: 5px solid #006DAE; padding: 4px 12px; margin: 0 0 10px 0; color: #005B91; font-weight: bold; font-size: 0.85em; line-height: 1.1;">
+<p>Research question</p>
+</div>
+<p>How is demand for Australia’s national research supercomputing infrastructure <strong>projected to evolve through 2030?</strong></p>
+<div style="height: 10px;">
 
 </div>
-<p><strong>Project objectives</strong></p>
+<div style="background-color: #EAF3F9; border-left: 5px solid #006DAE; padding: 4px 12px; margin: 12px 0 10px 0; color: #005B91; font-weight: bold; font-size: 0.85em; line-height: 1.1;">
+<p>Project objectives</p>
+</div>
 <ol type="1">
-<li><span style="color: #006DAE;"><strong>Collect and integrate</strong></span> historical data from NCI and Pawsey.</li>
+<li><span style="color: #006DAE;"><strong>Compile and integrate</strong></span> historical computing data from NCI, Pawsey, and supporting research datasets.</li>
 <li><span style="color: #006DAE;"><strong>Standardise and harmonise</strong></span> resource units, reporting periods, and research classifications.</li>
-<li><span style="color: #006DAE;"><strong>Develop and evaluate</strong></span> transparent forecasting models.</li>
+<li><span style="color: #006DAE;"><strong>Develop and evaluate</strong></span> forecasting models using time-series cross-validation.</li>
 <li><span style="color: #006DAE;"><strong>Forecast demand</strong></span> for overall HPC, CPU, and GPU resources through 2030.</li>
-<li><span style="color: #006DAE;"><strong>Explore scenarios</strong></span> for different Fields of Research (FoR).</li>
+<li><span style="color: #006DAE;"><strong>Assess alternative scenarios</strong></span> for computing demand and Fields of Research (FoR).</li>
 </ol>
-<div style="height: 25px;">
+<div style="height: 10px;">
 
 </div>
-<p><strong>Planning purpose</strong></p>
-<p>Provide <strong>evidence-informed scenarios</strong> to support decisions about Australia’s future national research computing infrastructure.</p>
+<div style="background-color: #EAF3F9; border-left: 5px solid #006DAE; padding: 4px 12px; margin: 12px 0 10px 0; color: #005B91; font-weight: bold; font-size: 0.85em; line-height: 1.1;">
+<p>Planning purpose</p>
+</div>
+<p>Provide <strong>evidence-informed demand projections</strong> to support long-term planning for Australia’s national research computing infrastructure.</p>
+</div>
+<div style="font-size: 0.48em; color: #666; margin-top: 8px;">
+<p>Source: <span class="citation" data-cites="HPCInternshipBrief">(<a href="#/historical-computing-demand-by-resource-type" role="doc-biblioref" onclick="">Australian Academy of Science 2026</a>)</span>. Project scope and methodology were refined based on data availability, coverage, and comparability.</p>
 </div>
 </section>
 <section id="how-is-supercomputing-demand-measured" class="slide level2">
@@ -628,7 +656,7 @@ Incomplete CPU/GPU separation.
 <p><strong>Key takeaway:</strong> Historical demand contains more estimated values than allocation. Forecasts are therefore planning scenarios, not exact measures of total researcher need.</p>
 </div>
 </section>
-<section id="historical-computing-demand-by-resource-type" class="slide level2">
+<section id="historical-computing-demand-by-resource-type" class="slide level2 smaller scrollable">
 <h2>Historical Computing Demand by Resource Type</h2>
 
 <img data-src="template_files/figure-revealjs/unnamed-chunk-1-1.png" style="width:100.0%" class="r-stretch"><div style="display: flex; gap: 15px; margin-top: 15px;">
@@ -652,6 +680,17 @@ Incomplete CPU/GPU separation.
 <p>Note: Historical values include reported, derived, and proxy estimates. Panel scales and units differ. GPU observations before 2022 are excluded.</p>
 </div>
 
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-HPCInternshipBrief" class="csl-entry" role="listitem">
+Australian Academy of Science. 2026. <em>Internship Project Brief: Forecasting Demand for National Research Supercomputing</em>.
+</div>
+<div id="ref-ibm_hpc" class="csl-entry" role="listitem">
+IBM. n.d. <span>“What Is High-Performance Computing (HPC)?”</span> Accessed October 14, 2026. <a href="https://www.ibm.com/think/topics/hpc">https://www.ibm.com/think/topics/hpc</a>.
+</div>
+<div id="ref-NCMAS2026" class="csl-entry" role="listitem">
+National Computational Merit Allocation Scheme. 2026. <span>“NCMAS 2026 Outcomes.”</span> <a href="https://my.nci.org.au/mancini/ncmas/2026/outcomes">https://my.nci.org.au/mancini/ncmas/2026/outcomes</a>.
+</div>
+</div>
 </section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">

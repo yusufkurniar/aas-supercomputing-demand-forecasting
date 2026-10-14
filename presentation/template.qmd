@@ -8,6 +8,7 @@ format:
   presentation-revealjs:
     logo: false
     fontsize: 22px
+bibliography: ../references.bib
 ---
 
 ```{r}
@@ -51,38 +52,49 @@ Understanding Researcher Demand
 
 :::
 
-::: {style="font-size: 0.45em; color: #666; margin-top: 8px;"}
+::: {style="font-size: 0.48em; color: #666; margin-top: 8px;"}
 
-Sources: IBM, *What Is High-Performance Computing?*; NCI, *NCMAS 2026 Outcomes*. Demand definitions and limitations: this project's data harmonisation methodology.
+Source: [@ibm_hpc; @NCMAS2026]
 
 :::
 
 ## Research Objective and Scope
 
-::: {style="margin-top: 35px;"}
+::: {style="margin-top: 30px;"}
 
-**Research question**
+<div style="background-color: #EAF3F9; border-left: 5px solid #006DAE; padding: 4px 12px; margin: 0 0 10px 0; color: #005B91; font-weight: bold; font-size: 0.85em; line-height: 1.1;">
+Research question
+</div>
 
-How might demand for Australia's national research supercomputing infrastructure **change through 2030**?
+How is demand for Australia's national research supercomputing infrastructure **projected to evolve through 2030?**
 
-<div style="height: 25px;"></div>
+<div style="height: 10px;"></div>
 
-**Project objectives**
+<div style="background-color: #EAF3F9; border-left: 5px solid #006DAE; padding: 4px 12px; margin: 12px 0 10px 0; color: #005B91; font-weight: bold; font-size: 0.85em; line-height: 1.1;">
+Project objectives
+</div>
 
-1. [**Collect and integrate**]{style="color: #006DAE;"} historical data from NCI and Pawsey.
+1. [**Compile and integrate**]{style="color: #006DAE;"} historical computing data from NCI, Pawsey, and supporting research datasets.
 2. [**Standardise and harmonise**]{style="color: #006DAE;"} resource units, reporting periods, and research classifications.
-3. [**Develop and evaluate**]{style="color: #006DAE;"} transparent forecasting models.
+3. [**Develop and evaluate**]{style="color: #006DAE;"} forecasting models using time-series cross-validation.
 4. [**Forecast demand**]{style="color: #006DAE;"} for overall HPC, CPU, and GPU resources through 2030.
-5. [**Explore scenarios**]{style="color: #006DAE;"} for different Fields of Research (FoR).
+5. [**Assess alternative scenarios**]{style="color: #006DAE;"} for computing demand and Fields of Research (FoR).
 
-<div style="height: 25px;"></div>
+<div style="height: 10px;"></div>
 
-**Planning purpose**
+<div style="background-color: #EAF3F9; border-left: 5px solid #006DAE; padding: 4px 12px; margin: 12px 0 10px 0; color: #005B91; font-weight: bold; font-size: 0.85em; line-height: 1.1;">
+Planning purpose
+</div>
 
-Provide **evidence-informed scenarios** to support decisions about Australia's future national research computing infrastructure.
+Provide **evidence-informed demand projections** to support long-term planning for Australia's national research computing infrastructure.
 
 :::
 
+::: {style="font-size: 0.48em; color: #666; margin-top: 8px;"}
+
+Source: [@HPCInternshipBrief]. Project scope and methodology were refined based on data availability, coverage, and comparability.
+
+:::
 
 ## How Is Supercomputing Demand Measured?
 
