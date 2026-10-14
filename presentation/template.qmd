@@ -477,51 +477,109 @@ Sources: [@NCI201314; @NCIAllocations202021; @NCMAS2023; @NCMAS2026]. Provenance
 
 :::
 
+
 ## Historical Computing Demand by Resource Type
 
+<style>
+.slide7-chart {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.slide7-chart .cell,
+.slide7-chart .cell-output,
+.slide7-chart .cell-output-display {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.slide7-chart img {
+  display: block;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto;
+  margin: 0 auto;
+}
+
+.slide7-insights {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 8px;
+}
+
+.slide7-insight {
+  background: #F2F7FB;
+  border-top: 4px solid #006DAE;
+  padding: 11px 14px;
+  font-size: 15px;
+  line-height: 1.3;
+}
+
+.slide7-insight strong {
+  color: #17324D;
+}
+
+.slide7-insight p {
+  margin: 6px 0;
+}
+
+.slide7-note {
+  margin-top: 12px;
+  font-size: 12px;
+  line-height: 1.35;
+  color: #555;
+}
+</style>
+
+::: {.slide7-chart}
 
 ```{r}
 #| echo: false
 #| warning: false
 #| message: false
-#| fig-width: 14
-#| fig-height: 4.3
-#| out-width: 100%
+#| fig-width: 13
+#| fig-height: 3.3
+#| out-width: "100%"
+#| fig-align: center
 
 library(dplyr)
 library(tidyr)
 library(ggplot2)
 library(scales)
 
-# Load the same historical dataset used in Chapter 06
+# Load harmonised historical dataset
 annual_converted <- readRDS(
   "../assets/data/data converted/annual_demand_allocation_converted.rds"
 )
 
-# Prepare demand and allocation for all three resource types
+# Load original GPU historical scenarios
+historical_gpu_scenarios <- readRDS(
+  "../assets/data/data converted/historical_gpu_scenarios.rds"
+)
+
+# Verify scenario coverage
+stopifnot(
+  nrow(historical_gpu_scenarios) == 8,
+  identical(
+    sort(as.integer(historical_gpu_scenarios$year)),
+    2014:2021
+  )
+)
+
+# Prepare historical series
 historical_plot <- annual_converted |>
   transmute(
     year = as.integer(year),
 
-    # Overall HPC: million kSU
     `Overall HPC|Demand` = demand_ksu / 1e6,
     `Overall HPC|Allocation` = allocation_ksu / 1e6,
 
-    # CPU: million CPU core-hours
     `CPU|Demand` = demand_cpu_core_hours / 1e6,
     `CPU|Allocation` = allocation_cpu_core_hours / 1e6,
 
-    # GPU: million GPU-hours (2022 onwards)
-    `GPU|Demand` = if_else(
-      year >= 2022,
-      demand_gpu_hours / 1e6,
-      NA_real_
-    ),
-    `GPU|Allocation` = if_else(
-      year >= 2022,
-      allocation_gpu_hours / 1e6,
-      NA_real_
-    )
+    `GPU|Demand` = demand_gpu_hours / 1e6,
+    `GPU|Allocation` = allocation_gpu_hours / 1e6
   ) |>
   pivot_longer(
     cols = -year,
@@ -546,53 +604,189 @@ historical_plot <- annual_converted |>
     )
   )
 
-# Three-panel historical chart
-ggplot(
-  historical_plot,
-  aes(
-    x = year,
-    y = value,
-    colour = measure,
-    group = measure
+# Prepare GPU low/high scenario bands, 2014–2021
+gpu_uncertainty_data <- historical_gpu_scenarios |>
+  select(
+    year,
+    demand_gpu_hours_low,
+    demand_gpu_hours_high,
+    allocation_gpu_hours_low,
+    allocation_gpu_hours_high
+  ) |>
+  filter(
+    year >= 2014,
+    year <= 2021
+  ) |>
+  pivot_longer(
+    cols = -year,
+    names_to = c("measure", ".value"),
+    names_pattern =
+      "(demand|allocation)_(gpu_hours_low|gpu_hours_high)"
+  ) |>
+  mutate(
+    measure = recode(
+      measure,
+      demand = "Demand",
+      allocation = "Allocation"
+    ),
+    measure = factor(
+      measure,
+      levels = c("Demand", "Allocation")
+    ),
+    resource = factor(
+      "GPU (million GPU-hours)",
+      levels = levels(historical_plot$resource)
+    ),
+    gpu_hours_low = gpu_hours_low / 1e6,
+    gpu_hours_high = gpu_hours_high / 1e6
   )
-) +
-  geom_line(linewidth = 1.25) +
-  geom_point(size = 2.5) +
+
+# Create plot
+ggplot() +
+
+  # GPU scenario uncertainty bands (2014–2021)
+  geom_ribbon(
+    data = gpu_uncertainty_data,
+    aes(
+      x = year,
+      ymin = gpu_hours_low,
+      ymax = gpu_hours_high,
+      fill = measure,
+      group = measure
+    ),
+    alpha = 0.18,
+    colour = NA
+  ) +
+
+  # Solid lines:
+  # All HPC and CPU years, plus GPU 2022–2026
+  geom_line(
+    data = historical_plot |>
+      filter(
+        resource != "GPU (million GPU-hours)" |
+          year >= 2022
+      ),
+    aes(
+      x = year,
+      y = value,
+      colour = measure,
+      group = interaction(resource, measure)
+    ),
+    linewidth = 1.15
+  ) +
+
+  # Dashed GPU historical scenarios (2014–2021)
+  geom_line(
+    data = historical_plot |>
+      filter(
+        resource == "GPU (million GPU-hours)",
+        year <= 2021
+      ),
+    aes(
+      x = year,
+      y = value,
+      colour = measure,
+      group = measure
+    ),
+    linewidth = 1.15,
+    linetype = "dashed"
+  ) +
+
+  # Grey dotted connectors:
+  # 2021 scenario to 2022 reported/estimated data
+  geom_line(
+    data = historical_plot |>
+      filter(
+        resource == "GPU (million GPU-hours)",
+        year %in% c(2021, 2022)
+      ),
+    aes(
+      x = year,
+      y = value,
+      group = measure
+    ),
+    colour = "#999999",
+    linewidth = 0.9,
+    linetype = "dotted"
+  ) +
+
+  # Demand and allocation points
+  geom_point(
+    data = historical_plot,
+    aes(
+      x = year,
+      y = value,
+      colour = measure
+    ),
+    size = 1.8
+  ) +
+
+  # GPU data transition divider
+  geom_vline(
+    data = data.frame(
+      resource = factor(
+        "GPU (million GPU-hours)",
+        levels = levels(historical_plot$resource)
+      ),
+      boundary = 2021.5
+    ),
+    aes(xintercept = boundary),
+    linetype = "dotted",
+    colour = "#888888",
+    linewidth = 0.5
+  ) +
+
+  # Three resource panels
   facet_wrap(
     ~resource,
     nrow = 1,
-    scales = "free"
+    scales = "free_y"
   ) +
+
+  # Colours
   scale_colour_manual(
     values = c(
       "Demand" = "#006DAE",
       "Allocation" = "#E69F00"
-    ),
-    breaks = c("Demand", "Allocation")
+    )
   ) +
+
+  scale_fill_manual(
+    values = c(
+      "Demand" = "#006DAE",
+      "Allocation" = "#E69F00"
+    )
+  ) +
+
+  # Axes
   scale_x_continuous(
-    breaks = function(x) {
-      if (min(x) >= 2022) {
-        seq(2022, 2026, by = 1)
-      } else {
-        c(2014, 2017, 2020, 2023, 2026)
-      }
-    }
+    breaks = c(2014, 2017, 2020, 2023, 2026)
   ) +
+
   scale_y_continuous(
     labels = label_number(accuracy = 0.1),
     limits = c(0, NA),
     expand = expansion(mult = c(0, 0.08))
   ) +
+
+  # Labels
   labs(
     x = "Year",
     y = NULL,
-    colour = NULL
+    colour = NULL,
+    fill = NULL
   ) +
-  theme_minimal(base_size = 15) +
+
+  guides(
+    fill = "none"
+  ) +
+
+  # Theme
+  theme_minimal(base_size = 14) +
+
   theme(
     strip.text = element_text(
-      size = 15,
+      size = 14,
       face = "bold",
       colour = "#17324D"
     ),
@@ -603,57 +797,66 @@ ggplot(
     axis.text.x = element_text(
       angle = 45,
       hjust = 1,
-      size = 11
+      size = 10
     ),
-    axis.text.y = element_text(size = 12),
-    axis.title = element_text(size = 13),
+    axis.text.y = element_text(size = 11),
+    axis.title = element_text(size = 12),
     legend.position = "bottom",
-    legend.text = element_text(size = 14),
+    legend.text = element_text(size = 12),
+    legend.key.width = grid::unit(1.3, "cm"),
     panel.grid.minor = element_blank(),
-    panel.spacing = grid::unit(1.2, "lines"),
-    plot.margin = margin(10, 10, 5, 10)
+    panel.spacing = grid::unit(1, "lines"),
+    plot.margin = margin(5, 8, 2, 8)
   )
 ```
 
+:::
 
-::: {style="display: flex; gap: 15px; margin-top: 15px;"}
+<div class="slide7-insights">
 
-::: {style="flex: 1; padding: 14px; background: #F2F7FB; border-top: 4px solid #006DAE;"}
+<div class="slide7-insight">
 
-**Overall HPC**
+<strong>Overall HPC</strong>
 
-**+43.3%** requested in 2026.
+<p>Reconstructed demand rose <strong>43.3%</strong> in 2026; official NCMAS growth was approximately <strong>24%</strong>.</p>
 
-Allocation remained near **0.87 million kSU**.
+<p>Allocation remained near <strong>0.87 million kSU</strong>, widening the demand–allocation gap.</p>
+
+</div>
+
+<div class="slide7-insight">
+
+<strong>CPU</strong>
+
+<p>Demand increased sharply after 2020, reaching approximately <strong>1.25 billion core-hours</strong> in 2026.</p>
+
+<p>Allocation remained near <strong>530 million core-hours</strong>, indicating a widening resource gap.</p>
+
+</div>
+
+<div class="slide7-insight">
+
+<strong>GPU</strong>
+
+<p>Demand reached approximately <strong>3.0 million GPU-hours</strong> in 2026, more than twice allocation.</p>
+
+<p><strong>2014 - 2021:</strong> Historical scenarios. <strong>2022 - 2026:</strong> Mixed reported and estimated data.</p>
+
+</div>
+
+</div>
+
+<div class="slide7-note">
+<strong>Notes:</strong> GPU dashed lines and shaded bands for 2014 - 2021 represent assumption-based historical scenarios, not statistical confidence intervals. Historical values include reported and estimated data. The 2025 HPC demand estimate affects the reconstructed 2026 growth rate. The 2026 overall HPC allocation excludes 12,000 kSU awarded to Setonix Q. Panel units and scales differ.
+</div>
+
+::: {style="font-size: 0.40em; color: #666; margin-top: 5px;"}
+
+Sources: [@NCMAS2026; @NCMAS2026Info]. Historical series and GPU scenarios: project data harmonisation.
 
 :::
 
-::: {style="flex: 1; padding: 14px; background: #F2F7FB; border-top: 4px solid #006DAE;"}
+## References {.scrollable}
 
-**CPU**
-
-Historical coverage spans **2014 - 2026**.
-
-A longer series supports trend-based model evaluation.
-
+::: {#refs}
 :::
-
-::: {style="flex: 1; padding: 14px; background: #F2F7FB; border-top: 4px solid #006DAE;"}
-
-**GPU**
-
-Only **five annual observations** (2022 - 2026).
-
-Long-term projections are particularly uncertain.
-
-:::
-
-:::
-
-::: {style="font-size: 0.55em; color: #666; margin-top: 12px;"}
-
-Note: Historical values include reported, derived, and proxy estimates. Panel scales and units differ. GPU observations before 2022 are excluded.
-
-:::
-
-
