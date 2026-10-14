@@ -21,33 +21,39 @@ options(width = 70)
 
 ## Understanding Supercomputing and Researcher Demand
 
-::: {style="margin-top: 35px;"}
+::: {style="margin-top: 30px;"}
 
-**What is Supercomputing (HPC)?**
+<div style="background-color: #EAF3F9; border-left: 5px solid #006DAE; padding: 4px 12px; margin: 0 0 10px 0; color: #005B91; font-weight: bold; font-size: 0.85em; line-height: 1.1;">
+What is Supercomputing (HPC)?
+</div>
 
-Using **very powerful computers** to solve complex problems that ordinary computers cannot easily handle.
+High-performance computing (HPC) uses **many processors working together** to solve complex problems, run simulations, and analyse large datasets at a scale that ordinary computers cannot easily achieve.
 
-**Examples:** Weather forecasting, drug discovery, climate modelling, and engineering simulations.
+**What makes it different?** Supercomputers combine thousands of CPU cores, often supported by GPUs, to perform calculations **in parallel**.
 
-<div style="height: 25px;"></div>
+**Research applications:** Climate modelling, weather forecasting, drug discovery, and engineering simulations.
 
-**What is Researcher Demand?**
+<div style="height: 10px;"></div>
 
-The **computing power researchers need or request** to carry out their research.
+<div style="background-color: #EAF3F9; border-left: 5px solid #006DAE; padding: 4px 12px; margin: 12px 0 10px 0; color: #005B91; font-weight: bold; font-size: 0.85em; line-height: 1.1;">
+Understanding Researcher Demand
+</div>
 
-<div style="height: 25px;"></div>
-
-**Three Important Terms**
-
-- [**Requested**]{style="color: #006DAE;"}: How much computing power researchers **ask for**.
-- [**Allocated**]{style="color: #006DAE;"}: How much computing power facilities **provide**.
+- [**Demand (Requested)**]{style="color: #006DAE;"}: Computing resources researchers **request** for their research.
+- [**Allocated**]{style="color: #006DAE;"}: Computing resources facilities **provide** to researchers.
 - [**Unmet demand**]{style="color: #006DAE;"}: The portion of requests **not fulfilled**, when the measures are comparable.
 
-::: {style="margin-top: 25px; padding: 12px 18px; border-left: 5px solid #006DAE; background-color: #F2F7FB;"}
+::: {style="margin-top: 10px; padding: 8px 14px; border-left: 5px solid #006DAE; background-color: #F2F7FB; font-size: 0.85em;"}
 
-**Important:** Some historical demand values are estimated rather than directly observed. My forecasts therefore provide **planning scenarios, not exact predictions** of researchers' full computing needs.
+**Important:** Historical demand is not always directly observed. Some values are estimated using allocations or proxies, so the forecasts represent **planning scenarios rather than exact predictions**.
 
 :::
+
+:::
+
+::: {style="font-size: 0.45em; color: #666; margin-top: 8px;"}
+
+Sources: IBM, *What Is High-Performance Computing?*; NCI, *NCMAS 2026 Outcomes*. Demand definitions and limitations: this project's data harmonisation methodology.
 
 :::
 
