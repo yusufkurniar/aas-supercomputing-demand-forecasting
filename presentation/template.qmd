@@ -156,7 +156,7 @@ Historical Analytical Coverage
 - **Overall HPC:** 2014 - 2026, in thousands of service units (**kSU**).
 - **CPU:** 2014 - 2026, in million CPU core-hours.
 - **GPU:** 2022 - 2026, in million GPU-hours.
-- **Fields of Research (FoR):** 2014–2026, historical research-field **allocation shares**, not directly observed FoR demand.
+- **Fields of Research (FoR):** 2014 - 2026, historical research-field **allocation shares**, not directly observed FoR demand.
 
 <div style="height: 10px;"></div>
 
@@ -178,7 +178,7 @@ Sources: [@NCI201314; @NCIAllocations202021; @Pawsey201617; @NCMAS2026]. Coverag
 
 <style>
 .prov-wrap {
-  margin-top: 22px;
+  margin-top: 8px;
   display: grid;
   grid-template-columns: minmax(0, 76fr) minmax(0, 24fr);
   gap: 18px;
@@ -192,15 +192,15 @@ Sources: [@NCI201314; @NCIAllocations202021; @Pawsey201617; @NCMAS2026]. Coverag
 }
 
 .prov-heading {
-  font-size: 20px;
+  font-size: 19px;
   font-weight: 700;
-  margin-bottom: 14px;
+  margin-bottom: 7px;
 }
 
 .prov-table {
   width: 100%;
   border-collapse: separate;
-  border-spacing: 4px;
+  border-spacing: 3px;
   table-layout: fixed;
 }
 
@@ -209,16 +209,16 @@ Sources: [@NCI201314; @NCIAllocations202021; @Pawsey201617; @NCMAS2026]. Coverag
   border: none;
   text-align: center;
   vertical-align: middle;
-  padding: 8px 2px;
+  padding: 5px 2px;
   font-size: 12px;
-  line-height: 1.25;
+  line-height: 1.2;
 }
 
 .prov-table th {
   background: #E7F0F8;
   color: #17324D;
   font-weight: 700;
-  padding: 13px 2px;
+  padding: 9px 2px;
 }
 
 .prov-table .row-label {
@@ -228,11 +228,11 @@ Sources: [@NCI201314; @NCIAllocations202021; @Pawsey201617; @NCMAS2026]. Coverag
   color: #17324D;
   font-weight: 700;
   font-size: 17px;
-  padding: 10px;
+  padding: 9px;
 }
 
 .prov-table td:not(.row-label) {
-  height: 108px;
+  height: 77px;
   font-weight: 600;
   border-radius: 5px;
 }
@@ -259,31 +259,31 @@ Sources: [@NCI201314; @NCIAllocations202021; @Pawsey201617; @NCMAS2026]. Coverag
 
 .prov-panel {
   background: #F1F7FB;
-  padding: 15px 16px;
+  padding: 10px 13px;
   border-radius: 8px;
-  font-size: 15px;
-  line-height: 1.35;
+  font-size: 14px;
+  line-height: 1.25;
 }
 
 .prov-panel strong {
   color: #006DAE;
-  font-size: 18px;
+  font-size: 17px;
 }
 
 .prov-panel ul {
-  margin: 10px 0 0;
+  margin: 7px 0 0;
   padding-left: 19px;
 }
 
 .prov-panel li {
-  margin-bottom: 9px;
+  margin-bottom: 6px;
 }
 
 .prov-legend {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 10px;
-  margin-top: 18px;
+  margin-top: 10px;
 }
 
 .prov-legend-item {
@@ -301,8 +301,8 @@ Sources: [@NCI201314; @NCIAllocations202021; @Pawsey201617; @NCMAS2026]. Coverag
 
 .prov-legend-desc {
   font-size: 12px;
-  line-height: 1.35;
-  margin-top: 6px;
+  line-height: 1.25;
+  margin-top: 4px;
   color: #425466;
 }
 
@@ -315,18 +315,26 @@ Sources: [@NCI201314; @NCIAllocations202021; @Pawsey201617; @NCMAS2026]. Coverag
 }
 
 .prov-footnote {
-  margin-top: 15px;
-  font-size: 12px;
+  margin-top: 8px;
+  font-size: 11px;
+  line-height: 1.25;
   color: #555;
 }
 
 .prov-takeaway {
-  margin-top: 18px;
-  padding: 13px 18px;
+  margin-top: 10px;
+  padding: 9px 14px;
   background: #F2F7FB;
   border-left: 5px solid #006DAE;
-  font-size: 18px;
-  line-height: 1.35;
+  font-size: 16px;
+  line-height: 1.25;
+}
+
+.prov-sources {
+  font-size: 10px;
+  line-height: 1.2;
+  color: #666;
+  margin-top: 5px;
 }
 </style>
 
@@ -334,7 +342,7 @@ Sources: [@NCI201314; @NCIAllocations202021; @Pawsey201617; @NCMAS2026]. Coverag
 
 <div class="prov-left">
 
-<div class="prov-heading">Historical demand and allocation: 2014–2026</div>
+<div class="prov-heading">Overall HPC demand and allocation: 2014 - 2026</div>
 
 <table class="prov-table">
 <thead>
@@ -388,34 +396,42 @@ Sources: [@NCI201314; @NCIAllocations202021; @Pawsey201617; @NCMAS2026]. Coverag
 <div class="prov-legend-title">
 <span class="prov-dot" style="background:#A9E8C4"></span> Direct
 </div>
-<div class="prov-legend-desc">Observed value directly reported by the source.</div>
+<div class="prov-legend-desc">
+Observed value directly reported by the source.
+</div>
 </div>
 
 <div class="prov-legend-item">
 <div class="prov-legend-title">
 <span class="prov-dot" style="background:#FFE48A"></span> Derived
 </div>
-<div class="prov-legend-desc">Calculated from reported values.</div>
+<div class="prov-legend-desc">
+Calculated from reported values.
+</div>
 </div>
 
 <div class="prov-legend-item">
 <div class="prov-legend-title">
 <span class="prov-dot" style="background:#FFB68A"></span> Proxy
 </div>
-<div class="prov-legend-desc">Approximated using alternative measures.</div>
+<div class="prov-legend-desc">
+Approximated using alternative measures.
+</div>
 </div>
 
 <div class="prov-legend-item">
 <div class="prov-legend-title">
 <span class="prov-dot" style="background:#F3A1A9"></span> Derived proxy
 </div>
-<div class="prov-legend-desc">Estimated from proxy relationships or assumptions.</div>
+<div class="prov-legend-desc">
+Estimated from proxy relationships or assumptions.
+</div>
 </div>
 
 </div>
 
 <div class="prov-footnote">
-*2026 allocation is directly reported but covers a restricted comparable subset.
+*2026 allocation excludes 12,000 kSU awarded to Setonix Q to match the published demand scope. Facility coverage also varies across historical years.
 </div>
 
 </div>
@@ -429,12 +445,12 @@ Sources: [@NCI201314; @NCIAllocations202021; @Pawsey201617; @NCMAS2026]. Coverag
 <ul>
 <li>Allocation is mostly directly reported.</li>
 <li>Demand combines direct observations, derived values, and proxies.</li>
-<li>Not every year measures the same underlying quantity.</li>
+<li>Historical records are not fully comparable across years.</li>
 </ul>
 
 </div>
 
-<div class="prov-panel" style="margin-top: 14px; background: #FFF5EB;">
+<div class="prov-panel" style="margin-top: 10px; background: #FFF5EB;">
 
 <strong>Main limitations</strong>
 
@@ -452,9 +468,14 @@ Sources: [@NCI201314; @NCIAllocations202021; @Pawsey201617; @NCMAS2026]. Coverag
 </div>
 
 <div class="prov-takeaway">
-<strong>Key takeaway:</strong> Historical demand contains more estimated values than allocation. Forecasts are therefore planning scenarios, not exact measures of total researcher need.
+<strong>Key takeaway:</strong> Historical demand contains more estimated values than allocation. Forecasts should therefore be interpreted as planning scenarios, subject to historical measurement uncertainty.
 </div>
 
+::: {style="font-size: 0.40em; color: #666; margin-top: 5px;"}
+
+Sources: [@NCI201314; @NCIAllocations202021; @NCMAS2023; @NCMAS2026]. Provenance classifications: project data harmonisation.
+
+:::
 
 ## Historical Computing Demand by Resource Type
 
