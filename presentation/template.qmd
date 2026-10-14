@@ -1481,7 +1481,7 @@ Including 2026 increases the estimated annual linear growth by approximately **1
 :::
 
 
-## Model Evaluation: Forecast Accuracy & Diagnostics
+## Model Evaluation: Forecast Accuracy
 
 <style>
 .slide10 {
@@ -1709,6 +1709,162 @@ ggplot(
 :::
 
 :::
+
+## Model Selection & Diagnostic Assessment
+
+<style>
+.slide11 {
+  width: 100%;
+  margin-top: 6px;
+  font-size: 16px;
+  line-height: 1.3;
+}
+
+.slide11-intro {
+  margin-bottom: 15px;
+  font-size: 16px;
+  line-height: 1.3;
+}
+
+.slide11-heading {
+  color: #17324D;
+  font-size: 19px;
+  font-weight: 700;
+  margin: 12px 0 9px;
+}
+
+.slide11-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 13px 20px;
+  margin-bottom: 19px;
+}
+
+.slide11-model {
+  border-top: 3px solid #006DAE;
+  background: #F2F7FB;
+  padding: 12px 15px;
+  font-size: 15px;
+  line-height: 1.3;
+}
+
+.slide11-model strong {
+  color: #17324D;
+  font-size: 17px;
+}
+
+.slide11-model p {
+  margin: 7px 0 0;
+}
+
+.slide11-diagnostics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  margin-top: 8px;
+}
+
+.slide11-diagnostic {
+  border-top: 2px solid #006DAE;
+  padding: 10px 5px 5px;
+  font-size: 15px;
+  line-height: 1.3;
+}
+
+.slide11-diagnostic strong {
+  color: #17324D;
+}
+
+.slide11-diagnostic p {
+  margin: 7px 0;
+}
+
+.slide11-caution {
+  margin-top: 16px;
+  font-size: 15px;
+  line-height: 1.3;
+}
+
+.slide11-note {
+  margin-top: 13px;
+  font-size: 11px;
+  line-height: 1.3;
+  color: #555;
+}
+</style>
+
+::: {.slide11}
+
+::: {.slide11-intro}
+**Selection approach:** Models were assessed using cross-validation accuracy, sensitivity to 2026, growth assumptions and data reliability.
+:::
+
+::: {.slide11-heading}
+Selected forecasting approaches
+:::
+
+::: {.slide11-grid}
+
+::: {.slide11-model}
+**Overall HPC: Linear trend**
+
+Lowest RMSE and MAE across six evaluation years, with interpretable annual growth.
+:::
+
+::: {.slide11-model}
+**CPU: Linear trend**
+
+Lowest RMSE and competitive MAE. Avoids assuming sustained compound growth through 2030.
+:::
+
+::: {.slide11-model}
+**GPU: Naïve benchmark**
+
+Lowest RMSE and MAE, but based on only two evaluation years. Longer-term trend projections remain exploratory.
+:::
+
+::: {.slide11-model}
+**Field of Research: Allocation-share scenarios**
+
+Historical allocation shares inform research-field scenarios because directly observed FoR demand is unavailable.
+:::
+
+:::
+
+::: {.slide11-heading}
+Residual diagnostics for selected linear models
+:::
+
+::: {.slide11-diagnostics}
+
+::: {.slide11-diagnostic}
+**Overall HPC**
+
+Ljung-Box test (lag 2): **p = 0.8775**
+
+No significant autocorrelation detected. The 2026 residual and Q-Q tail departures warrant caution.
+:::
+
+::: {.slide11-diagnostic}
+**CPU**
+
+Ljung-Box test (lag 2): **p = 0.3608**
+
+No significant autocorrelation detected. Some large residuals and Q-Q departures remain.
+:::
+
+:::
+
+::: {.slide11-caution}
+Neither test detected significant residual autocorrelation, but the short historical series limits confidence in the diagnostic conclusions.
+:::
+
+::: {.slide11-note}
+**Notes:** Residual diagnostics were conducted for the selected HPC and CPU linear models. Non-significant Ljung-Box results do not establish residual independence. GPU projections remain exploratory. Sources: Project model selection and scenario forecasting analyses, Chapters 9 and 10.
+:::
+
+:::
+
 
 ## References {.scrollable}
 

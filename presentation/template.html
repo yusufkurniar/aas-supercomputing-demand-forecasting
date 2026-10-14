@@ -1037,8 +1037,8 @@ Demand reached approximately <strong>3.0 million GPU-hours</strong> in 2026, mor
 </div>
 </div>
 </section>
-<section id="model-evaluation-forecast-accuracy-diagnostics" class="slide level2">
-<h2>Model Evaluation: Forecast Accuracy &amp; Diagnostics</h2>
+<section id="model-evaluation-forecast-accuracy" class="slide level2">
+<h2>Model Evaluation: Forecast Accuracy</h2>
 <style>
 .slide10 {
   width: 100%;
@@ -1158,6 +1158,136 @@ Only two evaluation years, 2025 and 2026, limit confidence in the ranking.
 </div>
 <div class="slide10-note">
 <p><strong>Notes:</strong> RMSE is shown in thousand kSU for overall HPC and million hours for CPU and GPU. Panel scales differ. Overall HPC and CPU use six one-step-ahead errors; GPU uses two. Cross-validation accuracy does not establish long-term forecast reliability. Source: Project model evaluation, Chapter 8.</p>
+</div>
+</div>
+</section>
+<section id="model-selection-diagnostic-assessment" class="slide level2">
+<h2>Model Selection &amp; Diagnostic Assessment</h2>
+<style>
+.slide11 {
+  width: 100%;
+  margin-top: 6px;
+  font-size: 16px;
+  line-height: 1.3;
+}
+
+.slide11-intro {
+  margin-bottom: 15px;
+  font-size: 16px;
+  line-height: 1.3;
+}
+
+.slide11-heading {
+  color: #17324D;
+  font-size: 19px;
+  font-weight: 700;
+  margin: 12px 0 9px;
+}
+
+.slide11-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 13px 20px;
+  margin-bottom: 19px;
+}
+
+.slide11-model {
+  border-top: 3px solid #006DAE;
+  background: #F2F7FB;
+  padding: 12px 15px;
+  font-size: 15px;
+  line-height: 1.3;
+}
+
+.slide11-model strong {
+  color: #17324D;
+  font-size: 17px;
+}
+
+.slide11-model p {
+  margin: 7px 0 0;
+}
+
+.slide11-diagnostics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  margin-top: 8px;
+}
+
+.slide11-diagnostic {
+  border-top: 2px solid #006DAE;
+  padding: 10px 5px 5px;
+  font-size: 15px;
+  line-height: 1.3;
+}
+
+.slide11-diagnostic strong {
+  color: #17324D;
+}
+
+.slide11-diagnostic p {
+  margin: 7px 0;
+}
+
+.slide11-caution {
+  margin-top: 16px;
+  font-size: 15px;
+  line-height: 1.3;
+}
+
+.slide11-note {
+  margin-top: 13px;
+  font-size: 11px;
+  line-height: 1.3;
+  color: #555;
+}
+</style>
+<div class="slide11">
+<div class="slide11-intro">
+<p><strong>Selection approach:</strong> Models were assessed using cross-validation accuracy, sensitivity to 2026, growth assumptions and data reliability.</p>
+</div>
+<div class="slide11-heading">
+<p>Selected forecasting approaches</p>
+</div>
+<div class="slide11-grid">
+<div class="slide11-model">
+<p><strong>Overall HPC: Linear trend</strong></p>
+<p>Lowest RMSE and MAE across six evaluation years, with interpretable annual growth.</p>
+</div>
+<div class="slide11-model">
+<p><strong>CPU: Linear trend</strong></p>
+<p>Lowest RMSE and competitive MAE. Avoids assuming sustained compound growth through 2030.</p>
+</div>
+<div class="slide11-model">
+<p><strong>GPU: Naïve benchmark</strong></p>
+<p>Lowest RMSE and MAE, but based on only two evaluation years. Longer-term trend projections remain exploratory.</p>
+</div>
+<div class="slide11-model">
+<p><strong>Field of Research: Allocation-share scenarios</strong></p>
+<p>Historical allocation shares inform research-field scenarios because directly observed FoR demand is unavailable.</p>
+</div>
+</div>
+<div class="slide11-heading">
+<p>Residual diagnostics for selected linear models</p>
+</div>
+<div class="slide11-diagnostics">
+<div class="slide11-diagnostic">
+<p><strong>Overall HPC</strong></p>
+<p>Ljung-Box test (lag 2): <strong>p = 0.8775</strong></p>
+<p>No significant autocorrelation detected. The 2026 residual and Q-Q tail departures warrant caution.</p>
+</div>
+<div class="slide11-diagnostic">
+<p><strong>CPU</strong></p>
+<p>Ljung-Box test (lag 2): <strong>p = 0.3608</strong></p>
+<p>No significant autocorrelation detected. Some large residuals and Q-Q departures remain.</p>
+</div>
+</div>
+<div class="slide11-caution">
+<p>Neither test detected significant residual autocorrelation, but the short historical series limits confidence in the diagnostic conclusions.</p>
+</div>
+<div class="slide11-note">
+<p><strong>Notes:</strong> Residual diagnostics were conducted for the selected HPC and CPU linear models. Non-significant Ljung-Box results do not establish residual independence. GPU projections remain exploratory. Sources: Project model selection and scenario forecasting analyses, Chapters 9 and 10.</p>
 </div>
 </div>
 </section>
