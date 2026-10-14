@@ -1315,7 +1315,6 @@ cat(
 Sources: NCI and Pawsey historical allocation reports [@NCI201314; @NCIAllocations202021; @NCMAS2023; @NCMAS2026]. FoR percentages and period averages: project data harmonisation and analysis.
 :::
 
-
 ## Model Development: Growth Assumptions & Sensitivity
 
 <style>
@@ -1477,6 +1476,236 @@ Including 2026 increases the estimated annual linear growth by approximately **1
 
 ::: {.slide9-note}
 **Notes:** GPU modelling uses data from 2022 to 2026 and excludes the assumption-based historical scenarios from 2014 to 2021. Sensitivity measures changes in fitted coefficients, not forecast accuracy. Model evaluation follows in Chapter 8.
+:::
+
+:::
+
+
+## Model Evaluation: Forecast Accuracy & Diagnostics
+
+<style>
+.slide10 {
+  width: 100%;
+  margin-top: 6px;
+  font-size: 16px;
+  line-height: 1.28;
+}
+
+.slide10-intro {
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+
+.slide10-chart {
+  width: 100%;
+  margin-top: 4px;
+}
+
+.slide10-chart .cell,
+.slide10-chart .cell-output,
+.slide10-chart .cell-output-display {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.slide10-chart img {
+  display: block;
+  width: 100% !important;
+  height: auto;
+  margin: 0 auto;
+}
+
+.slide10-findings {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 10px;
+}
+
+.slide10-finding {
+  background: #F2F7FB;
+  border-top: 3px solid #006DAE;
+  padding: 11px 13px;
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+.slide10-finding strong {
+  color: #17324D;
+}
+
+.slide10-finding p {
+  margin: 6px 0;
+}
+
+.slide10-conclusion {
+  border-top: 2px solid #006DAE;
+  padding-top: 10px;
+  margin-top: 15px;
+  font-size: 16px;
+  line-height: 1.3;
+}
+
+.slide10-note {
+  margin-top: 12px;
+  font-size: 11px;
+  color: #555;
+  line-height: 1.3;
+}
+</style>
+
+::: {.slide10}
+
+::: {.slide10-intro}
+**Evaluation approach:** Four models were compared using expanding-window, one-step-ahead cross-validation: **naïve, drift, linear and log-linear**. Accuracy was measured using RMSE and MAE on the original demand scale.
+:::
+
+::: {.slide10-chart}
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| fig-width: 13
+#| fig-height: 4.2
+#| out-width: "100%"
+#| fig-align: center
+
+library(dplyr)
+library(ggplot2)
+library(scales)
+
+accuracy_data <- data.frame(
+  resource = rep(
+    c("Overall HPC", "CPU", "GPU"),
+    each = 4
+  ),
+  model = rep(
+    c("Naïve", "Drift", "Linear", "Log-linear"),
+    times = 3
+  ),
+  RMSE = c(
+    378864, 314588, 290898, 511614,
+    260.05, 242.61, 157.72, 160.18,
+    0.441, 0.537, 0.729, 0.719
+  )
+) |>
+  mutate(
+    resource = factor(
+      resource,
+      levels = c("Overall HPC", "CPU", "GPU"),
+      labels = c(
+        "Overall HPC (thousand kSU)",
+        "CPU (million core-hours)",
+        "GPU (million GPU-hours)"
+      )
+    ),
+    model = factor(
+      model,
+      levels = c("Naïve", "Drift", "Linear", "Log-linear")
+    ),
+    plot_rmse = if_else(
+      resource == "Overall HPC (thousand kSU)",
+      RMSE / 1000,
+      RMSE
+    )
+  ) |>
+  group_by(resource) |>
+  mutate(
+    best = plot_rmse == min(plot_rmse),
+    label = if_else(
+      resource == "Overall HPC (thousand kSU)",
+      format(round(plot_rmse, 1), nsmall = 1),
+      format(round(plot_rmse, 2), nsmall = 2)
+    )
+  ) |>
+  ungroup()
+
+ggplot(
+  accuracy_data,
+  aes(x = model, y = plot_rmse, fill = best)
+) +
+  geom_col(width = 0.65) +
+  geom_text(
+    aes(label = label),
+    vjust = -0.45,
+    size = 4,
+    fontface = "bold",
+    colour = "#17324D"
+  ) +
+  facet_wrap(
+    ~ resource,
+    nrow = 1,
+    scales = "free_y"
+  ) +
+  scale_fill_manual(
+    values = c(
+      "TRUE" = "#006DAE",
+      "FALSE" = "#A9CDE3"
+    )
+  ) +
+  scale_y_continuous(
+    limits = c(0, NA),
+    expand = expansion(mult = c(0, 0.17))
+  ) +
+  labs(
+    x = NULL,
+    y = "Cross-validation RMSE"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    strip.text = element_text(
+      size = 13,
+      face = "bold",
+      colour = "#17324D"
+    ),
+    strip.background = element_rect(
+      fill = "#EAF3F9",
+      colour = NA
+    ),
+    axis.text.x = element_text(
+      size = 10,
+      angle = 30,
+      hjust = 1
+    ),
+    axis.text.y = element_text(size = 10),
+    axis.title.y = element_text(size = 12),
+    legend.position = "none",
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.spacing = grid::unit(1.2, "lines"),
+    plot.margin = margin(5, 12, 5, 5)
+  )
+```
+:::
+
+<div class="slide10-findings">
+
+<div class="slide10-finding">
+<strong>Overall HPC</strong>
+<p><strong>Linear</strong> achieved the lowest RMSE of <strong>290,898 kSU</strong> and MAE of <strong>198,295 kSU</strong>.</p>
+<p>Evaluated over six years, 2021 to 2026.</p>
+</div>
+
+<div class="slide10-finding">
+<strong>CPU</strong>
+<p><strong>Linear</strong> had the lowest RMSE at <strong>157.72 million core-hours</strong>.</p>
+<p><strong>Log-linear</strong> had the lowest MAE at <strong>133.74 million core-hours</strong>.</p>
+</div>
+
+<div class="slide10-finding">
+<strong>GPU</strong>
+<p><strong>Naïve</strong> had the lowest RMSE at <strong>0.441 million GPU-hours</strong>.</p>
+<p>Only two evaluation years, 2025 and 2026, limit confidence in the ranking.</p>
+</div>
+
+</div>
+
+::: {.slide10-conclusion}
+**Key finding:** Linear trends performed best on RMSE for overall HPC and CPU, while the naïve benchmark performed best for GPU. Model selection must also consider data limitations, sensitivity to 2026 and suitability for forecasting through 2030.
+:::
+
+::: {.slide10-note}
+**Notes:** RMSE is shown in thousand kSU for overall HPC and million hours for CPU and GPU. Panel scales differ. Overall HPC and CPU use six one-step-ahead errors; GPU uses two. Cross-validation accuracy does not establish long-term forecast reliability. Source: Project model evaluation, Chapter 8.
 :::
 
 :::

@@ -1037,6 +1037,130 @@ Demand reached approximately <strong>3.0 million GPU-hours</strong> in 2026, mor
 </div>
 </div>
 </section>
+<section id="model-evaluation-forecast-accuracy-diagnostics" class="slide level2">
+<h2>Model Evaluation: Forecast Accuracy &amp; Diagnostics</h2>
+<style>
+.slide10 {
+  width: 100%;
+  margin-top: 6px;
+  font-size: 16px;
+  line-height: 1.28;
+}
+
+.slide10-intro {
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+
+.slide10-chart {
+  width: 100%;
+  margin-top: 4px;
+}
+
+.slide10-chart .cell,
+.slide10-chart .cell-output,
+.slide10-chart .cell-output-display {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.slide10-chart img {
+  display: block;
+  width: 100% !important;
+  height: auto;
+  margin: 0 auto;
+}
+
+.slide10-findings {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 10px;
+}
+
+.slide10-finding {
+  background: #F2F7FB;
+  border-top: 3px solid #006DAE;
+  padding: 11px 13px;
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+.slide10-finding strong {
+  color: #17324D;
+}
+
+.slide10-finding p {
+  margin: 6px 0;
+}
+
+.slide10-conclusion {
+  border-top: 2px solid #006DAE;
+  padding-top: 10px;
+  margin-top: 15px;
+  font-size: 16px;
+  line-height: 1.3;
+}
+
+.slide10-note {
+  margin-top: 12px;
+  font-size: 11px;
+  color: #555;
+  line-height: 1.3;
+}
+</style>
+<div class="slide10">
+<div class="slide10-intro">
+<p><strong>Evaluation approach:</strong> Four models were compared using expanding-window, one-step-ahead cross-validation: <strong>naïve, drift, linear and log-linear</strong>. Accuracy was measured using RMSE and MAE on the original demand scale.</p>
+</div>
+<div class="slide10-chart">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="template_files/figure-revealjs/unnamed-chunk-7-1.png" class="quarto-figure quarto-figure-center" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div class="slide10-findings">
+<div class="slide10-finding">
+<strong>Overall HPC</strong>
+<p>
+<strong>Linear</strong> achieved the lowest RMSE of <strong>290,898 kSU</strong> and MAE of <strong>198,295 kSU</strong>.
+</p>
+<p>
+Evaluated over six years, 2021 to 2026.
+</p>
+</div>
+<div class="slide10-finding">
+<strong>CPU</strong>
+<p>
+<strong>Linear</strong> had the lowest RMSE at <strong>157.72 million core-hours</strong>.
+</p>
+<p>
+<strong>Log-linear</strong> had the lowest MAE at <strong>133.74 million core-hours</strong>.
+</p>
+</div>
+<div class="slide10-finding">
+<strong>GPU</strong>
+<p>
+<strong>Naïve</strong> had the lowest RMSE at <strong>0.441 million GPU-hours</strong>.
+</p>
+<p>
+Only two evaluation years, 2025 and 2026, limit confidence in the ranking.
+</p>
+</div>
+</div>
+<div class="slide10-conclusion">
+<p><strong>Key finding:</strong> Linear trends performed best on RMSE for overall HPC and CPU, while the naïve benchmark performed best for GPU. Model selection must also consider data limitations, sensitivity to 2026 and suitability for forecasting through 2030.</p>
+</div>
+<div class="slide10-note">
+<p><strong>Notes:</strong> RMSE is shown in thousand kSU for overall HPC and million hours for CPU and GPU. Panel scales differ. Overall HPC and CPU use six one-step-ahead errors; GPU uses two. Cross-validation accuracy does not establish long-term forecast reliability. Source: Project model evaluation, Chapter 8.</p>
+</div>
+</div>
+</section>
 <section id="references" class="slide level2 scrollable smaller">
 <h2>References</h2>
 <div id="refs" class="references csl-bib-body hanging-indent" role="list">
