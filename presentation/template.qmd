@@ -96,72 +96,83 @@ Source: [@HPCInternshipBrief]. Project scope and methodology were refined based 
 
 :::
 
+
 ## How Is Supercomputing Demand Measured?
 
-::: {style="margin-top: 35px;"}
+::: {style="margin-top: 30px;"}
 
-**Three Key Measurements**
+<div style="background-color: #EAF3F9; border-left: 5px solid #006DAE; padding: 4px 12px; margin: 0 0 10px 0; color: #005B91; font-weight: bold; font-size: 0.85em; line-height: 1.1;">
+Three Key Measurements
+</div>
 
-- [**CPU core-hours**]{style="color: #006DAE;"}: Number of CPU cores used × hours of use.
-- [**GPU-hours**]{style="color: #006DAE;"}: Number of GPUs used × hours of use.
-- [**Service units (SU)**]{style="color: #006DAE;"}: Accounting units used by HPC facilities to measure computing resource usage.
+- [**CPU core-hours**]{style="color: #006DAE;"}: CPU cores × computing hours.
+- [**GPU-hours**]{style="color: #006DAE;"}: GPUs × computing hours.
+- [**Service units (SU)**]{style="color: #006DAE;"}: System-specific accounting units; overall HPC is reported in **kSU (thousands of SU)**.
 
-<div style="height: 30px;"></div>
+<div style="height: 12px;"></div>
 
-**Simple Examples**
+<div style="background-color: #EAF3F9; border-left: 5px solid #006DAE; padding: 4px 12px; margin: 12px 0 10px 0; color: #005B91; font-weight: bold; font-size: 0.85em; line-height: 1.1;">
+Historical Comparability
+</div>
 
-- **CPU:** 100 CPU cores × 10 hours = **1,000 CPU core-hours**.
-- **GPU:** 4 GPUs × 10 hours = **40 GPU-hours**.
-- **Overall HPC:** Expressed in **kSU (thousands of service units)** in this project.
+- **Accounting rules vary** across computing systems, facilities, and reporting years.
+- **Official conversion factors** are prioritised; documented assumptions are used where necessary.
+- **Measurement uncertainty remains** and affects the interpretation of forecasts.
 
-<div style="height: 30px;"></div>
+<div style="height: 10px;"></div>
 
-::: {style="padding: 12px 18px; border-left: 5px solid #006DAE; background-color: #F2F7FB;"}
+::: {style="padding: 8px 14px; border-left: 5px solid #006DAE; background-color: #F2F7FB; font-size: 0.85em;"}
 
-**Important:** CPU core-hours, GPU-hours, and service units are **not directly interchangeable**. Service-unit conversion rules can differ across HPC systems.
+**Key takeaway:** Historical resource measures are not automatically comparable. This project harmonises them using documented conversion assumptions.
 
 :::
 
 :::
 
+::: {style="font-size: 0.48em; color: #666; margin-top: 8px;"}
+
+Sources: [@NCMAS2026Info; @NCMAS2026; @NCMAS2020Info]. Conversion assumptions and limitations: project data harmonisation methodology.
+
+:::
 
 ## Data Sources and Historical Coverage
 
-::: {style="margin-top: 35px;"}
+::: {style="margin-top: 30px;"}
 
-**Primary Data Sources**
+<div style="background-color: #EAF3F9; border-left: 5px solid #006DAE; padding: 4px 12px; margin: 0 0 10px 0; color: #005B91; font-weight: bold; font-size: 0.85em; line-height: 1.1;">
+Primary Data Sources
+</div>
 
-- [**NCI**]{style="color: #006DAE;"} : National Computational Infrastructure.
-- [**Pawsey**]{style="color: #006DAE;"} : Pawsey Supercomputing Research Centre.
-- [**NCMAS**]{style="color: #006DAE;"} : National Computational Merit Allocation Scheme.
+- [**NCI**]{style="color: #006DAE;"}: National Computational Infrastructure. Historical reports and computing allocations.
+- [**Pawsey**]{style="color: #006DAE;"}: Pawsey Supercomputing Research Centre. Historical reports and computing allocations.
+- [**NCMAS**]{style="color: #006DAE;"}: National Computational Merit Allocation Scheme. Annual allocation outcomes.
 
-<div style="height: 25px;"></div>
+<div style="height: 10px;"></div>
 
-**Historical Coverage: 2014 - 2026**
+<div style="background-color: #EAF3F9; border-left: 5px solid #006DAE; padding: 4px 12px; margin: 12px 0 10px 0; color: #005B91; font-weight: bold; font-size: 0.85em; line-height: 1.1;">
+Historical Analytical Coverage
+</div>
 
-- **Overall HPC:** 2014 - 2026, measured in thousands of service units (kSU).
-- **CPU:** 2014 - 2026, measured in million CPU core-hours.
-- **GPU:** 2022 - 2026, measured in million GPU-hours.
-- **Fields of Research (FoR):** Historical allocation shares by research discipline.
+- **Overall HPC:** 2014 - 2026, in thousands of service units (**kSU**).
+- **CPU:** 2014 - 2026, in million CPU core-hours.
+- **GPU:** 2022 - 2026, in million GPU-hours.
+- **Fields of Research (FoR):** 2014–2026, historical research-field **allocation shares**, not directly observed FoR demand.
 
-<div style="height: 25px;"></div>
+<div style="height: 10px;"></div>
 
-::: {style="padding: 12px 18px; border-left: 5px solid #006DAE; background-color: #F2F7FB;"}
+::: {style="padding: 8px 14px; border-left: 5px solid #006DAE; background-color: #F2F7FB; font-size: 0.85em;"}
 
-**Data limitation:** Historical records combine reported values, derived estimates, and proxies. Coverage and measurement methods differ across years and facilities.
-
-:::
-
-<div style="height: 15px;"></div>
-
-::: {style="font-size: 0.60em; color: #666;"}
-
-Sources: NCI and Pawsey annual reports; NCMAS allocation outcomes. See project bibliography.
+**Data limitation:** Historical series combine reported observations, derived estimates, and proxies. Data availability and comparability vary across facilities and years.
 
 :::
 
 :::
 
+::: {style="font-size: 0.48em; color: #666; margin-top: 8px;"}
+
+Sources: [@NCI201314; @NCIAllocations202021; @Pawsey201617; @NCMAS2026]. Coverage and harmonisation: this project's data preparation methodology.
+
+:::
 
 ## How Reliable Is the Historical Data?
 
