@@ -724,9 +724,10 @@ Incomplete CPU/GPU separation.
 .slide7-insight {
   background: #F2F7FB;
   border-top: 4px solid #006DAE;
-  padding: 11px 14px;
-  font-size: 15px;
+  padding: 10px 13px;
+  font-size: 14px;
   line-height: 1.3;
+  min-width: 0;
 }
 
 .slide7-insight strong {
@@ -737,11 +738,23 @@ Incomplete CPU/GPU separation.
   margin: 6px 0;
 }
 
+.slide7-insight .period {
+  color: #006DAE;
+  font-weight: 700;
+}
+
 .slide7-note {
-  margin-top: 12px;
-  font-size: 12px;
-  line-height: 1.35;
+  margin-top: 10px;
+  font-size: 11px;
+  line-height: 1.3;
   color: #555;
+}
+
+.slide7-sources {
+  font-size: 11px;
+  line-height: 1.25;
+  color: #666;
+  margin-top: 5px;
 }
 </style>
 <div class="slide7-chart">
@@ -759,36 +772,36 @@ Incomplete CPU/GPU separation.
 <div class="slide7-insight">
 <p><strong>Overall HPC</strong></p>
 <p>
-Reconstructed demand rose <strong>43.3%</strong> in 2026; official NCMAS growth was approximately <strong>24%</strong>.
+<span class="period">2023–2026:</span> Official NCMAS requests increased <strong>68%</strong>, while available resources grew only <strong>6%</strong>.
 </p>
 <p>
-Allocation remained near <strong>0.87 million kSU</strong>, widening the demand–allocation gap.
+<span class="period">2026:</span> Oversubscription reached <strong>2.69×</strong>. Reconstructed growth of <strong>43.3%</strong> is sensitive to the estimated 2025 baseline.
 </p>
 </div>
 <div class="slide7-insight">
 <p><strong>CPU</strong></p>
 <p>
-Demand increased sharply after 2020, reaching approximately <strong>1.25 billion core-hours</strong> in 2026.
+<span class="period">2019–2020:</span> Raijin transitioned to Gadi, coinciding with a sharp decline in reconstructed CPU demand.
 </p>
 <p>
-Allocation remained near <strong>530 million core-hours</strong>, indicating a widening resource gap.
+<span class="period">2022–2023:</span> Magnus transitioned to Setonix. Infrastructure and accounting changes may affect historical comparability.
 </p>
 </div>
 <div class="slide7-insight">
 <p><strong>GPU</strong></p>
 <p>
-Demand reached approximately <strong>3.0 million GPU-hours</strong> in 2026, more than twice allocation.
+<span class="period">2022–2023:</span> Setonix deployment introduced new CPU/GPU infrastructure and allocation arrangements.
 </p>
 <p>
-<strong>2014 - 2021:</strong> Historical scenarios. <strong>2022 - 2026:</strong> Mixed reported and estimated data.
+<span class="period">2023–2026:</span> Official Setonix GPU requests increased <strong>123%</strong> in kSU. GPU-hour trends remain less reliable.
 </p>
 </div>
 </div>
 <div class="slide7-note">
-<p><strong>Notes:</strong> GPU dashed lines and shaded bands for 2014 - 2021 represent assumption-based historical scenarios, not statistical confidence intervals. Historical values include reported and estimated data. The 2025 HPC demand estimate affects the reconstructed 2026 growth rate. The 2026 overall HPC allocation excludes 12,000 kSU awarded to Setonix Q. Panel units and scales differ.</p>
+<p><strong>Interpretation:</strong> System transitions may affect historical comparability but are not confirmed causes of changes in researcher demand. GPU values for 2014–2021 are assumption-based historical scenarios, not statistical confidence intervals. Historical series include reported and estimated values. The 2025 HPC estimate affects reconstructed 2026 growth. The 2026 HPC allocation excludes 12,000 kSU for Setonix Q. Panel units and scales differ.</p>
 </div>
-<div style="font-size: 0.40em; color: #666; margin-top: 5px;">
-<p>Sources: <span class="citation" data-cites="NCMAS2026 NCMAS2026Info">(<a href="#/references" role="doc-biblioref" onclick="">National Computational Merit Allocation Scheme 2026</a>; <a href="#/references" role="doc-biblioref" onclick="">National Computational Infrastructure 2025</a>)</span>. Historical series and GPU scenarios: project data harmonisation.</p>
+<div class="slide7-sources">
+<p>Sources: <span class="citation" data-cites="NCMAS2026 NCMAS2026Info NCIGadiTransition PawseySetonixTransition Pawsey2023Services">(<a href="#/references" role="doc-biblioref" onclick="">National Computational Merit Allocation Scheme 2026</a>; <a href="#/references" role="doc-biblioref" onclick="">National Computational Infrastructure 2025</a>, <a href="#/references" role="doc-biblioref" onclick="">n.d.</a>; <a href="#/references" role="doc-biblioref" onclick="">Pawsey Supercomputing Research Centre, n.d.-b</a>, <a href="#/references" role="doc-biblioref" onclick="">n.d.-a</a>)</span>. Historical series and GPU scenarios: project data harmonisation.</p>
 </div>
 </section>
 <section id="hpc-allocation-by-field-of-research" class="slide level2">
@@ -1257,7 +1270,7 @@ Only two evaluation years, 2025 and 2026, limit confidence in the ranking.
 </div>
 <div class="slide11-model">
 <p><strong>CPU: Linear trend</strong></p>
-<p>Lowest RMSE and competitive MAE. Avoids assuming sustained compound growth through 2030.</p>
+<p>Lowest RMSE and competitive MAE.</p>
 </div>
 <div class="slide11-model">
 <p><strong>GPU: Naïve benchmark</strong></p>
@@ -1379,14 +1392,14 @@ Only two evaluation years, 2025 and 2026, limit confidence in the ranking.
 </style>
 <div class="slide12">
 <div class="slide12-intro">
-<p><strong>Forecast approach:</strong> Linear models provide the selected central projections for 2030. Log-linear models show how the results change under compounded growth assumptions.</p>
+<p><strong>Forecast approach:</strong> Linear models including 2026 provide the selected central projections for 2030. Excluding 2026 tests sensitivity to the latest observation, while log-linear models illustrate alternative compounded-growth assumptions.</p>
 </div>
 <div class="slide12-chart">
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="template_files/figure-revealjs/unnamed-chunk-9-1.png" class="quarto-figure quarto-figure-center" style="width:100.0%"></p>
+<p><img data-src="template_files/figure-revealjs/slide12-forecast-chart-1.png" class="quarto-figure quarto-figure-center" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
@@ -1398,7 +1411,7 @@ Only two evaluation years, 2025 and 2026, limit confidence in the ranking.
 <div class="slide12-value">
 <p>2.50 million kSU</p>
 </div>
-<p>Selected 2030 projection.</p>
+<p>Selected 2030 projection, including 2026.</p>
 <div class="slide12-growth">
 <p>Growth from 2026: +11.6%</p>
 </div>
@@ -1409,7 +1422,7 @@ Only two evaluation years, 2025 and 2026, limit confidence in the ranking.
 <div class="slide12-value">
 <p>1,369.90 million core-hours</p>
 </div>
-<p>Selected 2030 projection.</p>
+<p>Selected 2030 projection, including 2026.</p>
 <div class="slide12-growth">
 <p>Growth from 2026: +10.9%</p>
 </div>
@@ -1417,10 +1430,10 @@ Only two evaluation years, 2025 and 2026, limit confidence in the ranking.
 </div>
 </div>
 <div class="slide12-finding">
-<p><strong>Forecast implication:</strong> Linear models provide the preferred central projections. Log-linear models produce substantially higher estimates, showing how strongly the 2030 outlook depends on the assumed growth pattern.</p>
+<p><strong>Forecast implication:</strong> Excluding 2026 reduces the linear projections for both overall HPC and CPU, while log-linear models produce substantially higher estimates. The 2030 outlook therefore depends on both the historical observations included and the assumed growth pattern.</p>
 </div>
 <div class="slide12-note">
-<p><strong>Notes:</strong> Growth is calculated relative to the historical 2026 demand estimates. Prediction intervals are conditional on the selected linear models and do not capture all sources of uncertainty. Log-linear projections are alternative scenarios, not upper prediction bounds. Panel scales differ. Source: Project scenario forecasting analysis, Chapter 10.</p>
+<p><strong>Notes:</strong> Growth is calculated relative to the historical 2026 demand estimates. The selected central projections use linear models including 2026. Prediction intervals are conditional on these selected models and do not capture all sources of uncertainty. Log-linear projections are alternative scenarios, not upper prediction bounds. Panel scales differ. Source: Project scenario forecasting analysis, Chapter 10.</p>
 </div>
 </div>
 </section>
@@ -1644,7 +1657,7 @@ Log-linear including 2026
 </div>
 </div>
 <div class="slide13-explanation">
-<p>The naïve model had the lowest short-term forecast error, but evaluation covered only <strong>two years</strong>. The differences between scenarios make a single central GPU forecast difficult to justify.</p>
+<p>The naïve model achieved the lowest short-term forecast error, but evaluation covered only <strong>two years</strong>. Including or excluding 2026 substantially changes the trend projections, making a single reliable GPU forecast difficult to justify.</p>
 </div>
 </div>
 <div class="slide13-panel">
@@ -1725,7 +1738,7 @@ Chemical Sciences
 </div>
 </div>
 <div class="slide13-explanation">
-<p>Including 2026, the exploratory trend models project <strong>12% to 23% growth in GPU demand by 2030</strong>, relative to 2026. However, only <strong>two evaluation years</strong> were available, limiting forecast reliability.</p>
+<p>Using 2021 - 2026 allocation shares, <strong>Engineering &amp; Technology</strong> has the largest projected share of 2030 HPC demand at <strong>832,000 kSU</strong>, followed by <strong>Physical Sciences</strong> at <strong>527,750 kSU</strong>. These are allocation-share-based scenarios, not independently forecast research-field demand.</p>
 </div>
 </div>
 </div>
@@ -1882,6 +1895,9 @@ National Computational Infrastructure. 2021. <em>Compute Allocations 2020–2021
 <div id="ref-NCMAS2026Info" class="csl-entry" role="listitem">
 National Computational Infrastructure. 2025. <em>NCMAS 2026 Information for Applicants</em>. <a href="https://my.nci.org.au/mancini-assets/media/mas/ncmas/2026/NCMAS2026-Information_for_Applicants-20251023T122535AEDT.pdf">https://my.nci.org.au/mancini-assets/media/mas/ncmas/2026/NCMAS2026-Information_for_Applicants-20251023T122535AEDT.pdf</a>.
 </div>
+<div id="ref-NCIGadiTransition" class="csl-entry" role="listitem">
+National Computational Infrastructure. n.d. <em>HPC Systems</em>. Accessed October 18, 2026. <a href="https://nci.org.au/infrastructure/hpc-systems">https://nci.org.au/infrastructure/hpc-systems</a>.
+</div>
 <div id="ref-NCMAS2023" class="csl-entry" role="listitem">
 National Computational Merit Allocation Scheme. 2023. <span>“NCMAS 2023 Outcomes.”</span> <a href="https://my.nci.org.au/mancini/ncmas/2023/outcomes">https://my.nci.org.au/mancini/ncmas/2023/outcomes</a>.
 </div>
@@ -1890,6 +1906,12 @@ National Computational Merit Allocation Scheme. 2026. <span>“NCMAS 2026 Outcom
 </div>
 <div id="ref-Pawsey201617" class="csl-entry" role="listitem">
 Pawsey Supercomputing Research Centre. 2017. <em>Annual Report 2016/17</em>. <a href="https://pawsey.org.au/wp-content/uploads/2018/10/Pawsey-Annual-Report-2016-2017.pdf">https://pawsey.org.au/wp-content/uploads/2018/10/Pawsey-Annual-Report-2016-2017.pdf</a>.
+</div>
+<div id="ref-Pawsey2023Services" class="csl-entry" role="listitem">
+Pawsey Supercomputing Research Centre. n.d.-a. <em>Changes in Supercomputing Services for 2023</em>. Accessed October 18, 2026. <a href="https://pawsey.atlassian.net/wiki/spaces/US/pages/51927586/Changes+in+Supercomputing+Services+for+2023">https://pawsey.atlassian.net/wiki/spaces/US/pages/51927586/Changes+in+Supercomputing+Services+for+2023</a>.
+</div>
+<div id="ref-PawseySetonixTransition" class="csl-entry" role="listitem">
+Pawsey Supercomputing Research Centre. n.d.-b. <em>Setonix Fires up for Researchers</em>. Accessed October 18, 2026. <a href="https://pawsey.org.au/setonix-fires-up-for-researchers/">https://pawsey.org.au/setonix-fires-up-for-researchers/</a>.
 </div>
 </div>
 

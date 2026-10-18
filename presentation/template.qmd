@@ -477,7 +477,6 @@ Sources: [@NCI201314; @NCIAllocations202021; @NCMAS2023; @NCMAS2026]. Provenance
 
 :::
 
-
 ## Historical Computing Demand by Resource Type
 
 <style>
@@ -511,9 +510,10 @@ Sources: [@NCI201314; @NCIAllocations202021; @NCMAS2023; @NCMAS2026]. Provenance
 .slide7-insight {
   background: #F2F7FB;
   border-top: 4px solid #006DAE;
-  padding: 11px 14px;
-  font-size: 15px;
+  padding: 10px 13px;
+  font-size: 14px;
   line-height: 1.3;
+  min-width: 0;
 }
 
 .slide7-insight strong {
@@ -524,11 +524,23 @@ Sources: [@NCI201314; @NCIAllocations202021; @NCMAS2023; @NCMAS2026]. Provenance
   margin: 6px 0;
 }
 
+.slide7-insight .period {
+  color: #006DAE;
+  font-weight: 700;
+}
+
 .slide7-note {
-  margin-top: 12px;
-  font-size: 12px;
-  line-height: 1.35;
+  margin-top: 10px;
+  font-size: 11px;
+  line-height: 1.3;
   color: #555;
+}
+
+.slide7-sources {
+  font-size: 11px;
+  line-height: 1.25;
+  color: #666;
+  margin-top: 5px;
 }
 </style>
 
@@ -641,10 +653,10 @@ gpu_uncertainty_data <- historical_gpu_scenarios |>
     gpu_hours_high = gpu_hours_high / 1e6
   )
 
-# Create plot
+# Create historical demand and allocation chart
 ggplot() +
 
-  # GPU scenario uncertainty bands (2014–2021)
+  # GPU scenario bands, 2014–2021
   geom_ribbon(
     data = gpu_uncertainty_data,
     aes(
@@ -675,7 +687,7 @@ ggplot() +
     linewidth = 1.15
   ) +
 
-  # Dashed GPU historical scenarios (2014–2021)
+  # Dashed GPU scenarios, 2014–2021
   geom_line(
     data = historical_plot |>
       filter(
@@ -692,8 +704,7 @@ ggplot() +
     linetype = "dashed"
   ) +
 
-  # Grey dotted connectors:
-  # 2021 scenario to 2022 reported/estimated data
+  # Connect scenario period to 2022
   geom_line(
     data = historical_plot |>
       filter(
@@ -710,7 +721,7 @@ ggplot() +
     linetype = "dotted"
   ) +
 
-  # Demand and allocation points
+  # Demand and allocation observations
   geom_point(
     data = historical_plot,
     aes(
@@ -721,7 +732,7 @@ ggplot() +
     size = 1.8
   ) +
 
-  # GPU data transition divider
+  # GPU scenario / usable-data boundary
   geom_vline(
     data = data.frame(
       resource = factor(
@@ -736,14 +747,13 @@ ggplot() +
     linewidth = 0.5
   ) +
 
-  # Three resource panels
+  # Resource panels
   facet_wrap(
     ~resource,
     nrow = 1,
     scales = "free_y"
   ) +
 
-  # Colours
   scale_colour_manual(
     values = c(
       "Demand" = "#006DAE",
@@ -758,7 +768,6 @@ ggplot() +
     )
   ) +
 
-  # Axes
   scale_x_continuous(
     breaks = c(2014, 2017, 2020, 2023, 2026)
   ) +
@@ -769,7 +778,6 @@ ggplot() +
     expand = expansion(mult = c(0, 0.08))
   ) +
 
-  # Labels
   labs(
     x = "Year",
     y = NULL,
@@ -777,11 +785,8 @@ ggplot() +
     fill = NULL
   ) +
 
-  guides(
-    fill = "none"
-  ) +
+  guides(fill = "none") +
 
-  # Theme
   theme_minimal(base_size = 14) +
 
   theme(
@@ -818,9 +823,19 @@ ggplot() +
 
 <strong>Overall HPC</strong>
 
-<p>Reconstructed demand rose <strong>43.3%</strong> in 2026; official NCMAS growth was approximately <strong>24%</strong>.</p>
+<p>
+<span class="period">2023–2026:</span>
+Official NCMAS requests increased
+<strong>68%</strong>, while available
+resources grew only <strong>6%</strong>.
+</p>
 
-<p>Allocation remained near <strong>0.87 million kSU</strong>, widening the demand–allocation gap.</p>
+<p>
+<span class="period">2026:</span>
+Oversubscription reached <strong>2.69×</strong>.
+Reconstructed growth of <strong>43.3%</strong>
+is sensitive to the estimated 2025 baseline.
+</p>
 
 </div>
 
@@ -828,9 +843,19 @@ ggplot() +
 
 <strong>CPU</strong>
 
-<p>Demand increased sharply after 2020, reaching approximately <strong>1.25 billion core-hours</strong> in 2026.</p>
+<p>
+<span class="period">2019–2020:</span>
+Raijin transitioned to Gadi, coinciding
+with a sharp decline in reconstructed
+CPU demand.
+</p>
 
-<p>Allocation remained near <strong>530 million core-hours</strong>, indicating a widening resource gap.</p>
+<p>
+<span class="period">2022–2023:</span>
+Magnus transitioned to Setonix.
+Infrastructure and accounting changes
+may affect historical comparability.
+</p>
 
 </div>
 
@@ -838,23 +863,44 @@ ggplot() +
 
 <strong>GPU</strong>
 
-<p>Demand reached approximately <strong>3.0 million GPU-hours</strong> in 2026, more than twice allocation.</p>
+<p>
+<span class="period">2022–2023:</span>
+Setonix deployment introduced new
+CPU/GPU infrastructure and
+allocation arrangements.
+</p>
 
-<p><strong>2014 - 2021:</strong> Historical scenarios. <strong>2022 - 2026:</strong> Mixed reported and estimated data.</p>
+<p>
+<span class="period">2023–2026:</span>
+Official Setonix GPU requests increased
+<strong>123%</strong> in kSU.
+GPU-hour trends remain less reliable.
+</p>
 
 </div>
 
 </div>
 
 <div class="slide7-note">
-<strong>Notes:</strong> GPU dashed lines and shaded bands for 2014 - 2021 represent assumption-based historical scenarios, not statistical confidence intervals. Historical values include reported and estimated data. The 2025 HPC demand estimate affects the reconstructed 2026 growth rate. The 2026 overall HPC allocation excludes 12,000 kSU awarded to Setonix Q. Panel units and scales differ.
+<strong>Interpretation:</strong>
+System transitions may affect historical
+comparability but are not confirmed causes
+of changes in researcher demand.
+GPU values for 2014–2021 are assumption-based
+historical scenarios, not statistical confidence
+intervals. Historical series include reported
+and estimated values. The 2025 HPC estimate
+affects reconstructed 2026 growth.
+The 2026 HPC allocation excludes 12,000 kSU
+for Setonix Q. Panel units and scales differ.
 </div>
 
-::: {style="font-size: 0.40em; color: #666; margin-top: 5px;"}
+::: {.slide7-sources}
 
-Sources: [@NCMAS2026; @NCMAS2026Info]. Historical series and GPU scenarios: project data harmonisation.
+Sources: [@NCMAS2026; @NCMAS2026Info; @NCIGadiTransition; @PawseySetonixTransition; @Pawsey2023Services]. Historical series and GPU scenarios: project data harmonisation.
 
 :::
+
 ## HPC Allocation by Field of Research
 
 <style>
@@ -1814,7 +1860,7 @@ Lowest RMSE and MAE across six evaluation years, with interpretable annual growt
 ::: {.slide11-model}
 **CPU: Linear trend**
 
-Lowest RMSE and competitive MAE. Avoids assuming sustained compound growth through 2030.
+Lowest RMSE and competitive MAE.
 :::
 
 ::: {.slide11-model}
@@ -1953,86 +1999,75 @@ Neither test detected significant residual autocorrelation, but the short histor
 </style>
 
 ```{r}
+#| label: slide12-data
 #| echo: false
 #| include: false
 
 library(dplyr)
+library(ggplot2)
+library(scales)
 
-# Load historical demand
+# Historical demand data
 annual_converted <- readRDS(
   "../assets/data/data converted/annual_demand_allocation_converted.rds"
 )
 
-# Extract 2026 historical estimates
 baseline_2026 <- annual_converted |>
   filter(year == 2026)
 
 stopifnot(nrow(baseline_2026) == 1)
 
-# Selected linear projections for 2030
+# Selected linear forecasts including 2026
 hpc_forecast_2030 <- 2502822
 cpu_forecast_2030 <- 1369.90e6
 
-# Percentage change relative to 2026
+# Growth relative to historical 2026 demand
 hpc_growth <- 100 * (
-  hpc_forecast_2030 / baseline_2026$demand_ksu - 1
+  hpc_forecast_2030 /
+    baseline_2026$demand_ksu - 1
 )
 
 cpu_growth <- 100 * (
-  cpu_forecast_2030 / baseline_2026$demand_cpu_core_hours - 1
+  cpu_forecast_2030 /
+    baseline_2026$demand_cpu_core_hours - 1
 )
 
-# Format as signed percentages
 format_growth <- function(x) {
   sprintf("%+.1f%%", x)
 }
 
 hpc_growth_label <- format_growth(hpc_growth)
 cpu_growth_label <- format_growth(cpu_growth)
-```
 
-::: {.slide12}
-
-::: {.slide12-intro}
-**Forecast approach:** Linear models provide the selected central projections for 2030. Log-linear models show how the results change under compounded growth assumptions.
-:::
-
-::: {.slide12-chart}
-
-```{r}
-#| echo: false
-#| warning: false
-#| message: false
-#| fig-width: 12.5
-#| fig-height: 3.5
-#| out-width: "100%"
-#| fig-align: center
-
-library(ggplot2)
-library(dplyr)
-library(scales)
-
-# Forecast results from Chapter 10
-# HPC is in million kSU.
-# CPU is in million core-hours.
+# 2030 scenario forecasts
+# HPC: million kSU
+# CPU: million core-hours
 
 forecast_2030 <- tibble(
-  resource = c(
-    "Overall HPC (million kSU)",
-    "Overall HPC (million kSU)",
-    "CPU (million core-hours)",
-    "CPU (million core-hours)"
+  resource = rep(
+    c(
+      "Overall HPC (million kSU)",
+      "CPU (million core-hours)"
+    ),
+    each = 4
   ),
-  model = c(
-    "Selected linear",
-    "Log-linear alternative",
-    "Selected linear",
-    "Log-linear alternative"
+  model = rep(
+    c(
+      "Linear excluding 2026",
+      "Linear including 2026",
+      "Log-linear excluding 2026",
+      "Log-linear including 2026"
+    ),
+    times = 2
   ),
   value = c(
+    2.285327,
     2.502822,
-    6.483,
+    6.962979,
+    6.482707,
+    1263.85,
     1369.90,
+    2502.07,
     2479.16
   )
 ) |>
@@ -2047,48 +2082,80 @@ forecast_2030 <- tibble(
     model = factor(
       model,
       levels = c(
-        "Selected linear",
-        "Log-linear alternative"
+        "Linear excluding 2026",
+        "Linear including 2026",
+        "Log-linear excluding 2026",
+        "Log-linear including 2026"
       )
     )
   )
+```
+
+::: {.slide12}
+
+::: {.slide12-intro}
+**Forecast approach:** Linear models including 2026 provide the selected central projections for 2030. Excluding 2026 tests sensitivity to the latest observation, while log-linear models illustrate alternative compounded-growth assumptions.
+:::
+
+::: {.slide12-chart}
+
+```{r}
+#| label: slide12-forecast-chart
+#| echo: false
+#| warning: false
+#| message: false
+#| fig-width: 12.5
+#| fig-height: 3.8
+#| out-width: "100%"
+#| fig-align: center
 
 ggplot(
   forecast_2030,
-  aes(x = model, y = value, fill = model)
+  aes(
+    x = model,
+    y = value,
+    fill = model
+  )
 ) +
-  geom_col(width = 0.56) +
+  geom_col(width = 0.62) +
   geom_text(
-    aes(label = number(value, accuracy = 0.01)),
-    vjust = -0.45,
-    size = 4.6,
+    aes(
+      label = number(value, accuracy = 0.01)
+    ),
+    hjust = -0.15,
+    size = 4.2,
     fontface = "bold",
     colour = "#17324D"
   ) +
+  coord_flip(clip = "off") +
   facet_wrap(
     ~resource,
     nrow = 1,
-    scales = "free_y"
+    scales = "free_x"
   ) +
   scale_fill_manual(
     values = c(
-      "Selected linear" = "#006DAE",
-      "Log-linear alternative" = "#A9CDE2"
+      "Linear excluding 2026" = "#8CBBD5",
+      "Linear including 2026" = "#006DAE",
+      "Log-linear excluding 2026" = "#C7D8E4",
+      "Log-linear including 2026" = "#A9CDE2"
     )
   ) +
   scale_y_continuous(
     labels = label_number(accuracy = 0.1),
-    expand = expansion(mult = c(0, 0.15))
+    expand = expansion(
+      mult = c(0, 0.20)
+    )
   ) +
   labs(
     x = NULL,
     y = NULL,
     fill = NULL
   ) +
-  theme_minimal(base_size = 13) +
+  theme_minimal(base_size = 12) +
   theme(
     strip.text = element_text(
-      size = 15,
+      size = 14,
       face = "bold",
       colour = "#17324D"
     ),
@@ -2096,17 +2163,16 @@ ggplot(
       fill = "#EAF3F9",
       colour = NA
     ),
-    axis.text.x = element_text(
-      size = 11,
+    axis.text.y = element_text(
+      size = 10,
       colour = "#17324D"
     ),
-    axis.text.y = element_text(size = 10),
-    axis.title = element_blank(),
-    panel.grid.major.x = element_blank(),
+    axis.text.x = element_text(size = 10),
+    panel.grid.major.y = element_blank(),
     panel.grid.minor = element_blank(),
     panel.spacing = grid::unit(1.2, "lines"),
     legend.position = "none",
-    plot.margin = margin(4, 6, 4, 6)
+    plot.margin = margin(5, 10, 5, 5)
   )
 ```
 
@@ -2115,45 +2181,53 @@ ggplot(
 ::: {.slide12-results}
 
 ::: {.slide12-result}
+
 **Overall HPC**
 
 <div class="slide12-value">
 2.50 million kSU
 </div>
 
-Selected 2030 projection.
+Selected 2030 projection, including 2026.
 
 <div class="slide12-growth">
 Growth from 2026: `r hpc_growth_label`
 </div>
 
 95% prediction interval: **1.98 to 3.03 million kSU**.
+
 :::
 
 ::: {.slide12-result}
+
 **CPU**
 
 <div class="slide12-value">
 1,369.90 million core-hours
 </div>
 
-Selected 2030 projection.
+Selected 2030 projection, including 2026.
 
 <div class="slide12-growth">
 Growth from 2026: `r cpu_growth_label`
 </div>
 
 95% prediction interval: **974.24 to 1,765.55 million core-hours**.
+
 :::
 
 :::
 
 ::: {.slide12-finding}
-**Forecast implication:** Linear models provide the preferred central projections. Log-linear models produce substantially higher estimates, showing how strongly the 2030 outlook depends on the assumed growth pattern.
+
+**Forecast implication:** Excluding 2026 reduces the linear projections for both overall HPC and CPU, while log-linear models produce substantially higher estimates. The 2030 outlook therefore depends on both the historical observations included and the assumed growth pattern.
+
 :::
 
 ::: {.slide12-note}
-**Notes:** Growth is calculated relative to the historical 2026 demand estimates. Prediction intervals are conditional on the selected linear models and do not capture all sources of uncertainty. Log-linear projections are alternative scenarios, not upper prediction bounds. Panel scales differ. Source: Project scenario forecasting analysis, Chapter 10.
+
+**Notes:** Growth is calculated relative to the historical 2026 demand estimates. The selected central projections use linear models including 2026. Prediction intervals are conditional on these selected models and do not capture all sources of uncertainty. Log-linear projections are alternative scenarios, not upper prediction bounds. Panel scales differ. Source: Project scenario forecasting analysis, Chapter 10.
+
 :::
 
 :::
@@ -2350,7 +2424,7 @@ Million GPU-hours, by forecasting assumption
 </div>
 
 ::: {.slide13-explanation}
-The naïve model had the lowest short-term forecast error, but evaluation covered only **two years**. The differences between scenarios make a single central GPU forecast difficult to justify.
+The naïve model achieved the lowest short-term forecast error, but evaluation covered only **two years**. Including or excluding 2026 substantially changes the trend projections, making a single reliable GPU forecast difficult to justify.
 :::
 
 :::
@@ -2401,7 +2475,7 @@ Field of Research demand scenarios
 </div>
 
 ::: {.slide13-explanation}
-Including 2026, the exploratory trend models project **12% to 23% growth in GPU demand by 2030**, relative to 2026. However, only **two evaluation years** were available, limiting forecast reliability.
+Using 2021 - 2026 allocation shares, **Engineering & Technology** has the largest projected share of 2030 HPC demand at **832,000 kSU**, followed by **Physical Sciences** at **527,750 kSU**. These are allocation-share-based scenarios, not independently forecast research-field demand.
 :::
 
 :::
