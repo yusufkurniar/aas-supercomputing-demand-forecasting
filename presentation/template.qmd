@@ -96,45 +96,6 @@ Source: [@HPCInternshipBrief]. Project scope and methodology were refined based 
 
 :::
 
-
-## How Is Supercomputing Demand Measured?
-
-::: {style="margin-top: 30px;"}
-
-<div style="background-color: #EAF3F9; border-left: 5px solid #006DAE; padding: 4px 12px; margin: 0 0 10px 0; color: #005B91; font-weight: bold; font-size: 0.85em; line-height: 1.1;">
-Three Key Measurements
-</div>
-
-- [**CPU core-hours**]{style="color: #006DAE;"}: CPU cores × computing hours.
-- [**GPU-hours**]{style="color: #006DAE;"}: GPUs × computing hours.
-- [**Service units (SU)**]{style="color: #006DAE;"}: System-specific accounting units; overall HPC is reported in **kSU (thousands of SU)**.
-
-<div style="height: 12px;"></div>
-
-<div style="background-color: #EAF3F9; border-left: 5px solid #006DAE; padding: 4px 12px; margin: 12px 0 10px 0; color: #005B91; font-weight: bold; font-size: 0.85em; line-height: 1.1;">
-Historical Comparability
-</div>
-
-- **Accounting rules vary** across computing systems, facilities, and reporting years.
-- **Official conversion factors** are prioritised; documented assumptions are used where necessary.
-- **Measurement uncertainty remains** and affects the interpretation of forecasts.
-
-<div style="height: 10px;"></div>
-
-::: {style="padding: 8px 14px; border-left: 5px solid #006DAE; background-color: #F2F7FB; font-size: 0.85em;"}
-
-**Key takeaway:** Historical resource measures are not automatically comparable. This project harmonises them using documented conversion assumptions.
-
-:::
-
-:::
-
-::: {style="font-size: 0.48em; color: #666; margin-top: 8px;"}
-
-Sources: [@NCMAS2026Info; @NCMAS2026; @NCMAS2020Info]. Conversion assumptions and limitations: project data harmonisation methodology.
-
-:::
-
 ## Data Sources and Historical Coverage
 
 ::: {style="margin-top: 30px;"}
@@ -150,7 +111,7 @@ Primary Data Sources
 <div style="height: 10px;"></div>
 
 <div style="background-color: #EAF3F9; border-left: 5px solid #006DAE; padding: 4px 12px; margin: 12px 0 10px 0; color: #005B91; font-weight: bold; font-size: 0.85em; line-height: 1.1;">
-Historical Analytical Coverage
+Historical Data Coverage
 </div>
 
 - **Overall HPC:** 2014 - 2026, in thousands of service units (**kSU**).
@@ -173,6 +134,234 @@ Historical Analytical Coverage
 Sources: [@NCI201314; @NCIAllocations202021; @Pawsey201617; @NCMAS2026]. Coverage and harmonisation: this project's data preparation methodology.
 
 :::
+
+## How Was Historical HPC Demand Standardised?
+
+<style>
+.slide4-wrap {
+  margin-top: 12px;
+  font-size: 0.78em;
+}
+
+.slide4-heading {
+  background: #EAF3F9;
+  border-left: 5px solid #006DAE;
+  padding: 7px 12px;
+  color: #005B91;
+  font-weight: 700;
+  font-size: 0.98em;
+  margin: 0 0 8px 0;
+}
+
+.slide4-units {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.slide4-unit {
+  background: #F2F7FB;
+  padding: 9px 12px;
+  border-top: 3px solid #006DAE;
+  line-height: 1.2;
+}
+
+.slide4-unit strong {
+  color: #006DAE;
+}
+
+.slide4-unit p {
+  margin: 4px 0 0 0;
+  font-size: 0.88em;
+}
+
+.slide4-method {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 14px;
+  align-items: start;
+}
+
+.slide4-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.84em;
+  margin: 0;
+}
+
+.slide4-table th {
+  background: #EAF3F9;
+  color: #17324D;
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 2px solid #BCD3E2;
+}
+
+.slide4-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #E2E8ED;
+  vertical-align: middle;
+}
+
+.slide4-table tr:nth-child(even) td {
+  background: #F7FAFC;
+}
+
+.slide4-example {
+  background: #F2F7FB;
+  border-left: 4px solid #006DAE;
+  padding: 11px 13px;
+  line-height: 1.3;
+}
+
+.slide4-example-title {
+  color: #005B91;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.slide4-example-row {
+  margin-bottom: 9px;
+}
+
+.slide4-example-row strong {
+  color: #17324D;
+}
+
+.slide4-caution {
+  margin-top: 12px;
+  padding: 9px 13px;
+  background: #F2F7FB;
+  border-left: 5px solid #006DAE;
+  line-height: 1.25;
+}
+
+.slide4-sources {
+  font-size: 0.58em;
+  color: #666;
+  margin-top: 9px;
+  line-height: 1.2;
+}
+</style>
+
+<div class="slide4-wrap">
+
+<div class="slide4-heading">
+Step 1 | Identify reporting units and computing systems
+</div>
+
+<div class="slide4-units">
+
+<div class="slide4-unit">
+<strong>CPU core-hours</strong>
+<p>Number of CPU cores × computing hours</p>
+</div>
+
+<div class="slide4-unit">
+<strong>GPU-hours</strong>
+<p>Number of GPUs × computing hours</p>
+</div>
+
+<div class="slide4-unit">
+<strong>Service units (kSU)</strong>
+<p>Thousands of system-specific accounting units</p>
+</div>
+
+</div>
+
+<div class="slide4-heading">
+Step 2 | Apply documented system-specific conversion rules
+</div>
+
+<div class="slide4-method">
+
+<div>
+
+<table class="slide4-table">
+<thead>
+<tr>
+<th>System</th>
+<th>Conversion from kSU</th>
+<th>Output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Raijin CPU*</td>
+<td>kSU × 1,000 ÷ 1</td>
+<td>CPU core-hours</td>
+</tr>
+<tr>
+<td>Gadi CPU</td>
+<td>kSU × 1,000 ÷ 2</td>
+<td>CPU core-hours</td>
+</tr>
+<tr>
+<td>Setonix CPU</td>
+<td>kSU × 1,000 ÷ 1</td>
+<td>CPU core-hours</td>
+</tr>
+<tr>
+<td>Setonix GPU</td>
+<td>kSU × 1,000 ÷ 128</td>
+<td>GPU-hours</td>
+</tr>
+</tbody>
+</table>
+
+<div style="font-size: 0.73em; color: #666; margin-top: 5px;">
+*Historical Raijin conversion uses a documented assumption.
+Rules vary by system, resource type and reporting year.
+</div>
+
+</div>
+
+<div class="slide4-example">
+
+<div class="slide4-example-title">
+Worked example | 2022/23 requests
+</div>
+
+<div class="slide4-example-row">
+<strong>Gadi CPU:</strong>
+770,866 kSU ÷ 2 × 1,000
+<br>
+≈ 385.4 million core-hours
+</div>
+
+<div class="slide4-example-row">
+<strong>Setonix CPU:</strong>
+390,033 kSU × 1,000
+<br>
+≈ 390.0 million core-hours
+</div>
+
+<div class="slide4-example-row" style="border-top: 1px solid #BCD3E2; padding-top: 8px;">
+<strong>Combined CPU demand:</strong>
+<br>
+<span style="font-size: 1.12em; color: #005B91; font-weight: 700;">
+≈ 775.5 million core-hours
+</span>
+</div>
+
+</div>
+
+</div>
+
+<div class="slide4-caution">
+<strong>Step 3 | Build comparable historical series.</strong>
+CPU and GPU resources are standardised separately.
+Official accounting rules are prioritised; assumptions and unresolved historical conversions are documented.
+</div>
+
+<div class="slide4-sources">
+Sources: NCMAS information for applicants
+[@NCMAS2014Info; @NCMAS2020Info; @NCMAS2023Info; @NCMAS2026Info].
+Conversion factors and worked example: project year-by-year conversion methodology.
+</div>
+
+</div>
 
 ## How Reliable Is the Historical Data?
 
@@ -824,7 +1013,7 @@ ggplot() +
 <strong>Overall HPC</strong>
 
 <p>
-<span class="period">2023–2026:</span>
+<span class="period">2023 - 2026:</span>
 Official NCMAS requests increased
 <strong>68%</strong>, while available
 resources grew only <strong>6%</strong>.
@@ -844,14 +1033,14 @@ is sensitive to the estimated 2025 baseline.
 <strong>CPU</strong>
 
 <p>
-<span class="period">2019–2020:</span>
+<span class="period">2019 - 2020:</span>
 Raijin transitioned to Gadi, coinciding
 with a sharp decline in reconstructed
 CPU demand.
 </p>
 
 <p>
-<span class="period">2022–2023:</span>
+<span class="period">2022 - 2023:</span>
 Magnus transitioned to Setonix.
 Infrastructure and accounting changes
 may affect historical comparability.
@@ -864,14 +1053,14 @@ may affect historical comparability.
 <strong>GPU</strong>
 
 <p>
-<span class="period">2022–2023:</span>
+<span class="period">2022 - 2023:</span>
 Setonix deployment introduced new
 CPU/GPU infrastructure and
 allocation arrangements.
 </p>
 
 <p>
-<span class="period">2023–2026:</span>
+<span class="period">2023 - 2026:</span>
 Official Setonix GPU requests increased
 <strong>123%</strong> in kSU.
 GPU-hour trends remain less reliable.
@@ -886,7 +1075,7 @@ GPU-hour trends remain less reliable.
 System transitions may affect historical
 comparability but are not confirmed causes
 of changes in researcher demand.
-GPU values for 2014–2021 are assumption-based
+GPU values for 2014 - 2021 are assumption-based
 historical scenarios, not statistical confidence
 intervals. Historical series include reported
 and estimated values. The 2025 HPC estimate
@@ -904,15 +1093,94 @@ Sources: [@NCMAS2026; @NCMAS2026Info; @NCIGadiTransition; @PawseySetonixTransiti
 ## HPC Allocation by Field of Research
 
 <style>
-.slide8-main { width: 100%; margin-top: 0; }
-.slide8-periods { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 2px; }
-.slide8-panel { min-width: 0; }
-.slide8-panel-title { background: #EAF3F9; color: #17324D; font-weight: 700; font-size: 13px; padding: 3px 8px; text-align: center; }
-.slide8-main .cell, .slide8-main .cell-output, .slide8-main .cell-output-display,
-.slide8-periods .cell, .slide8-periods .cell-output, .slide8-periods .cell-output-display { width: 100% !important; max-width: 100% !important; margin: 0 !important; }
-.slide8-main img, .slide8-periods img { display: block; width: 100% !important; max-width: 100% !important; height: auto; margin: 0 auto; }
-.slide8-insight { background: #F2F7FB; border-left: 4px solid #006DAE; padding: 5px 10px; font-size: 12px; line-height: 1.15; margin-top: 3px; }
-.slide8-note { font-size: 10px; color: #555; line-height: 1.15; margin-top: 3px; }
+.slide8-main {
+  width: 100%;
+  margin-top: 0;
+}
+
+.slide8-periods {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 2px;
+}
+
+.slide8-panel {
+  min-width: 0;
+}
+
+.slide8-panel-title {
+  background: #EAF3F9;
+  color: #17324D;
+  font-weight: 700;
+  font-size: 13px;
+  padding: 3px 8px;
+  text-align: center;
+}
+
+.slide8-main .cell,
+.slide8-main .cell-output,
+.slide8-main .cell-output-display,
+.slide8-periods .cell,
+.slide8-periods .cell-output,
+.slide8-periods .cell-output-display {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+}
+
+.slide8-main img,
+.slide8-periods img {
+  display: block;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto;
+  margin: 0 auto;
+}
+
+.slide8-insights {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 5px;
+}
+
+.slide8-insight {
+  background: #F2F7FB;
+  border-top: 3px solid #006DAE;
+  padding: 7px 9px;
+  font-size: 11px;
+  line-height: 1.22;
+  min-width: 0;
+}
+
+.slide8-insight strong {
+  color: #17324D;
+}
+
+.slide8-insight p {
+  margin: 4px 0 0 0;
+}
+
+.slide8-insight-title {
+  color: #006DAE;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.slide8-note {
+  font-size: 10px;
+  color: #555;
+  line-height: 1.18;
+  margin-top: 5px;
+}
+
+.slide8-sources {
+  font-size: 10px;
+  color: #666;
+  line-height: 1.18;
+  margin-top: 5px;
+}
 </style>
 
 ```{r}
@@ -1156,46 +1424,78 @@ for_late_plot <- for_late |>
     .groups = "drop"
   )
 
-
 # Validate annual shares before plotting
-for (dataset in list(for_overall_plot, for_early_plot, for_late_plot)) {
+for (dataset in list(
+  for_overall_plot,
+  for_early_plot,
+  for_late_plot
+)) {
   totals <- dataset |>
     group_by(year) |>
-    summarise(total = sum(allocation_share), .groups = "drop")
-  stopifnot(all(abs(totals$total - 1) < 1e-6))
+    summarise(
+      total = sum(allocation_share),
+      .groups = "drop"
+    )
+
+  stopifnot(
+    all(abs(totals$total - 1) < 1e-6)
+  )
 }
 
-# Consistent field order and include absent categories as 0 for period averages
+# Include absent categories as zero
 prepare_for <- function(data) {
   data |>
-    mutate(field = factor(field, levels = field_order)) |>
-    complete(year, field, fill = list(allocation_share = 0))
+    mutate(
+      field = factor(field, levels = field_order)
+    ) |>
+    complete(
+      year,
+      field,
+      fill = list(allocation_share = 0)
+    )
 }
+
 for_overall_plot <- prepare_for(for_overall_plot)
 for_early_plot <- prepare_for(for_early_plot)
 for_late_plot <- prepare_for(for_late_plot)
 
+# Average annual allocation shares
 for_early_average <- for_early_plot |>
   group_by(field) |>
-  summarise(mean_share = mean(allocation_share), .groups = "drop")
+  summarise(
+    mean_share = mean(allocation_share),
+    .groups = "drop"
+  )
+
 for_late_average <- for_late_plot |>
   group_by(field) |>
-  summarise(mean_share = mean(allocation_share), .groups = "drop")
+  summarise(
+    mean_share = mean(allocation_share),
+    .groups = "drop"
+  )
 
-top_early_period <- for_early_average |>
-  slice_max(mean_share, n = 1, with_ties = FALSE)
-top_late_period <- for_late_average |>
-  slice_max(mean_share, n = 1, with_ties = FALSE)
-
-# Match label positions to reverse stacking of geom_col
+# Annual leading field
 for_top_overall <- for_overall_plot |>
   arrange(year, field) |>
   group_by(year) |>
-  mutate(ymid = cumsum(allocation_share) - allocation_share / 2) |>
-  slice_max(allocation_share, n = 1, with_ties = FALSE) |>
+  mutate(
+    ymid = cumsum(allocation_share) -
+      allocation_share / 2
+  ) |>
+  slice_max(
+    allocation_share,
+    n = 1,
+    with_ties = FALSE
+  ) |>
   ungroup() |>
-  mutate(label = percent(allocation_share, accuracy = 1))
+  mutate(
+    label = percent(
+      allocation_share,
+      accuracy = 1
+    )
+  )
 
+# Short labels for average-share charts
 short_field_labels <- c(
   "Physical Sciences" = "Physical Sciences",
   "Chemical Sciences" = "Chemical Sciences",
@@ -1204,25 +1504,63 @@ short_field_labels <- c(
   "Biological & Agricultural Sciences" = "Biological & Agricultural",
   "Medical & Health Sciences" = "Medical & Health",
   "Mathematics & Computing" = "Mathematics & Computing",
-  "Social Sciences, Humanities & Built Environment" = "Social Sciences & Humanities",
-  "Unclassified & Operational" = "Unclassified & Operational"
+  "Social Sciences, Humanities & Built Environment" =
+    "Social Sciences & Humanities",
+  "Unclassified & Operational" =
+    "Unclassified & Operational"
 )
 
+# ----------------------------------------
+# Annual composition chart
+# ----------------------------------------
+
 plot_for_overall <- function(data) {
-  ggplot(data, aes(x = factor(year), y = allocation_share, fill = field)) +
-    geom_col(width = 0.83, position = position_stack(reverse = TRUE)) +
+  ggplot(
+    data,
+    aes(
+      x = factor(year),
+      y = allocation_share,
+      fill = field
+    )
+  ) +
+    geom_col(
+      width = 0.83,
+      position = position_stack(reverse = TRUE)
+    ) +
     geom_text(
       data = for_top_overall,
-      aes(x = factor(year), y = ymid, label = label),
+      aes(
+        x = factor(year),
+        y = ymid,
+        label = label
+      ),
       inherit.aes = FALSE,
-      colour = "white", fontface = "bold", size = 3
+      colour = "white",
+      fontface = "bold",
+      size = 3
     ) +
-    scale_fill_manual(values = for_palette, limits = field_order, drop = FALSE) +
-    scale_y_continuous(labels = label_percent(), breaks = seq(0, 1, 0.25),
-                       expand = expansion(mult = c(0, 0))) +
+    scale_fill_manual(
+      values = for_palette,
+      limits = field_order,
+      drop = FALSE
+    ) +
+    scale_y_continuous(
+      labels = label_percent(),
+      breaks = seq(0, 1, 0.25),
+      expand = expansion(mult = c(0, 0))
+    ) +
     coord_cartesian(ylim = c(0, 1)) +
-    labs(x = NULL, y = NULL, fill = NULL) +
-    guides(fill = guide_legend(ncol = 3, byrow = TRUE)) +
+    labs(
+      x = NULL,
+      y = NULL,
+      fill = NULL
+    ) +
+    guides(
+      fill = guide_legend(
+        ncol = 3,
+        byrow = TRUE
+      )
+    ) +
     theme_minimal(base_size = 11) +
     theme(
       axis.text.x = element_text(size = 10),
@@ -1237,28 +1575,58 @@ plot_for_overall <- function(data) {
     )
 }
 
+# ----------------------------------------
+# Period-average charts
+# ----------------------------------------
+
 plot_for_average <- function(data) {
   chart_data <- data |>
     arrange(mean_share) |>
     mutate(
-      field_label = unname(short_field_labels[as.character(field)]),
-      field_label = factor(field_label, levels = field_label)
+      field_label = unname(
+        short_field_labels[as.character(field)]
+      ),
+      field_label = factor(
+        field_label,
+        levels = field_label
+      )
     )
 
-  ggplot(chart_data, aes(x = mean_share, y = field_label, fill = field)) +
+  ggplot(
+    chart_data,
+    aes(
+      x = mean_share,
+      y = field_label,
+      fill = field
+    )
+  ) +
     geom_col(width = 0.68) +
     geom_text(
-      aes(label = percent(mean_share, accuracy = 1)),
-      hjust = -0.15, size = 2.8, colour = "#17324D", fontface = "bold"
+      aes(
+        label = percent(
+          mean_share,
+          accuracy = 1
+        )
+      ),
+      hjust = -0.15,
+      size = 2.8,
+      colour = "#17324D",
+      fontface = "bold"
     ) +
-    scale_fill_manual(values = for_palette, guide = "none") +
+    scale_fill_manual(
+      values = for_palette,
+      guide = "none"
+    ) +
     scale_x_continuous(
       labels = label_percent(),
       breaks = seq(0, 0.5, 0.1),
       expand = expansion(mult = c(0, 0.18))
     ) +
     coord_cartesian(clip = "off") +
-    labs(x = NULL, y = NULL) +
+    labs(
+      x = NULL,
+      y = NULL
+    ) +
     theme_minimal(base_size = 10) +
     theme(
       axis.text.x = element_text(size = 9),
@@ -1334,31 +1702,69 @@ plot_for_average(for_late_average)
 
 :::
 
-::: {.slide8-insight}
+<div class="slide8-insights">
 
-```{r}
-#| echo: false
-#| results: asis
+<div class="slide8-insight">
 
-cat(
-  "<strong>Key insight:</strong> Allocation leadership shifted from <strong>",
-  as.character(top_early_period$field),
-  "</strong> (", percent(top_early_period$mean_share, accuracy = 1),
-  " average, 2014–2020) to <strong>",
-  as.character(top_late_period$field),
-  "</strong> (", percent(top_late_period$mean_share, accuracy = 1),
-  " average, 2021–2026)."
-)
-```
+<div class="slide8-insight-title">
+2014–2020 | Earth & Environmental
+</div>
 
-:::
+<p>
+<strong>32% average share.</strong>
+Climate, weather and geoscience are
+established national HPC workloads.
+This provides context for the field's
+historical concentration, but does not
+identify the projects driving each year.
+</p>
+
+</div>
+
+<div class="slide8-insight">
+
+<div class="slide8-insight-title">
+2021–2026 | Engineering
+</div>
+
+<p>
+<strong>35% average share;</strong>
+a peak of <strong>41% in 2022</strong>.
+NCMAS documents large computational
+engineering projects, including turbine
+and fluid-flow simulations.
+Their contribution to annual shares
+requires project-level verification.
+</p>
+
+</div>
+
+<div class="slide8-insight">
+
+<div class="slide8-insight-title">
+Why the apparent shift needs caution
+</div>
+
+<p>
+The comparison crosses
+<strong>FoR 2008 and FoR 2020</strong>
+classifications. Category changes,
+harmonisation choices and the
+different 2017 Pawsey reporting scope
+limit direct interpretation as a change
+in research priorities.
+</p>
+
+</div>
+
+</div>
 
 ::: {.slide8-note}
-**Notes:** Allocation shares, not observed demand. The upper chart shows annual composition; lower charts rank average annual shares using FoR 2008- and FoR 2020-based mappings. The 2017 Pawsey reporting scope differs. Groupings are not official one-to-one ANZSRC conversions.
+**Note:** Shares represent allocations, not demand. FoR 2008/2020 classification changes and differences in reporting coverage limit direct comparisons across years.
 :::
 
-::: {style="font-size: 0.40em; color: #666; margin-top: 5px;"}
-Sources: NCI and Pawsey historical allocation reports [@NCI201314; @NCIAllocations202021; @NCMAS2023; @NCMAS2026]. FoR percentages and period averages: project data harmonisation and analysis.
+::: {.slide8-sources}
+Sources: NCI and Pawsey allocation reports [@NCI201314; @NCIAllocations202021; @NCMAS2023; @NCMAS2026]. Classification and research context: [@ABSANZSRC2020; @NCIEarthEnvironment; @NCIEngineering2023].
 :::
 
 ## Model Development: Growth Assumptions & Sensitivity

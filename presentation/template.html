@@ -239,39 +239,6 @@ Yusuf Kurnia Romadhon
 <p>Source: <span class="citation" data-cites="HPCInternshipBrief">(<a href="#/references" role="doc-biblioref" onclick="">Australian Academy of Science 2026</a>)</span>. Project scope and methodology were refined based on data availability, coverage, and comparability.</p>
 </div>
 </section>
-<section id="how-is-supercomputing-demand-measured" class="slide level2">
-<h2>How Is Supercomputing Demand Measured?</h2>
-<div style="margin-top: 30px;">
-<div style="background-color: #EAF3F9; border-left: 5px solid #006DAE; padding: 4px 12px; margin: 0 0 10px 0; color: #005B91; font-weight: bold; font-size: 0.85em; line-height: 1.1;">
-<p>Three Key Measurements</p>
-</div>
-<ul>
-<li><span style="color: #006DAE;"><strong>CPU core-hours</strong></span>: CPU cores × computing hours.</li>
-<li><span style="color: #006DAE;"><strong>GPU-hours</strong></span>: GPUs × computing hours.</li>
-<li><span style="color: #006DAE;"><strong>Service units (SU)</strong></span>: System-specific accounting units; overall HPC is reported in <strong>kSU (thousands of SU)</strong>.</li>
-</ul>
-<div style="height: 12px;">
-
-</div>
-<div style="background-color: #EAF3F9; border-left: 5px solid #006DAE; padding: 4px 12px; margin: 12px 0 10px 0; color: #005B91; font-weight: bold; font-size: 0.85em; line-height: 1.1;">
-<p>Historical Comparability</p>
-</div>
-<ul>
-<li><strong>Accounting rules vary</strong> across computing systems, facilities, and reporting years.</li>
-<li><strong>Official conversion factors</strong> are prioritised; documented assumptions are used where necessary.</li>
-<li><strong>Measurement uncertainty remains</strong> and affects the interpretation of forecasts.</li>
-</ul>
-<div style="height: 10px;">
-
-</div>
-<div style="padding: 8px 14px; border-left: 5px solid #006DAE; background-color: #F2F7FB; font-size: 0.85em;">
-<p><strong>Key takeaway:</strong> Historical resource measures are not automatically comparable. This project harmonises them using documented conversion assumptions.</p>
-</div>
-</div>
-<div style="font-size: 0.48em; color: #666; margin-top: 8px;">
-<p>Sources: <span class="citation" data-cites="NCMAS2026Info NCMAS2026 NCMAS2020Info">(<a href="#/references" role="doc-biblioref" onclick="">National Computational Infrastructure 2025</a>, <a href="#/references" role="doc-biblioref" onclick="">2020</a>; <a href="#/references" role="doc-biblioref" onclick="">National Computational Merit Allocation Scheme 2026</a>)</span>. Conversion assumptions and limitations: project data harmonisation methodology.</p>
-</div>
-</section>
 <section id="data-sources-and-historical-coverage" class="slide level2">
 <h2>Data Sources and Historical Coverage</h2>
 <div style="margin-top: 30px;">
@@ -287,7 +254,7 @@ Yusuf Kurnia Romadhon
 
 </div>
 <div style="background-color: #EAF3F9; border-left: 5px solid #006DAE; padding: 4px 12px; margin: 12px 0 10px 0; color: #005B91; font-weight: bold; font-size: 0.85em; line-height: 1.1;">
-<p>Historical Analytical Coverage</p>
+<p>Historical Data Coverage</p>
 </div>
 <ul>
 <li><strong>Overall HPC:</strong> 2014 - 2026, in thousands of service units (<strong>kSU</strong>).</li>
@@ -303,7 +270,233 @@ Yusuf Kurnia Romadhon
 </div>
 </div>
 <div style="font-size: 0.48em; color: #666; margin-top: 8px;">
-<p>Sources: <span class="citation" data-cites="NCI201314 NCIAllocations202021 Pawsey201617 NCMAS2026">(<a href="#/references" role="doc-biblioref" onclick="">National Computational Infrastructure 2014</a>, <a href="#/references" role="doc-biblioref" onclick="">2021</a>; <a href="#/references" role="doc-biblioref" onclick="">Pawsey Supercomputing Research Centre 2017</a>; <a href="#/references" role="doc-biblioref" onclick="">National Computational Merit Allocation Scheme 2026</a>)</span>. Coverage and harmonisation: this project’s data preparation methodology.</p>
+<p>Sources: <span class="citation" data-cites="NCI201314 NCIAllocations202021 Pawsey201617 NCMAS2026">(<a href="#/references" role="doc-biblioref" onclick="">National Computational Infrastructure 2014a</a>, <a href="#/references" role="doc-biblioref" onclick="">2021</a>; <a href="#/references" role="doc-biblioref" onclick="">Pawsey Supercomputing Research Centre 2017</a>; <a href="#/references" role="doc-biblioref" onclick="">National Computational Merit Allocation Scheme 2026</a>)</span>. Coverage and harmonisation: this project’s data preparation methodology.</p>
+</div>
+</section>
+<section id="how-was-historical-hpc-demand-standardised" class="slide level2">
+<h2>How Was Historical HPC Demand Standardised?</h2>
+<style>
+.slide4-wrap {
+  margin-top: 12px;
+  font-size: 0.78em;
+}
+
+.slide4-heading {
+  background: #EAF3F9;
+  border-left: 5px solid #006DAE;
+  padding: 7px 12px;
+  color: #005B91;
+  font-weight: 700;
+  font-size: 0.98em;
+  margin: 0 0 8px 0;
+}
+
+.slide4-units {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.slide4-unit {
+  background: #F2F7FB;
+  padding: 9px 12px;
+  border-top: 3px solid #006DAE;
+  line-height: 1.2;
+}
+
+.slide4-unit strong {
+  color: #006DAE;
+}
+
+.slide4-unit p {
+  margin: 4px 0 0 0;
+  font-size: 0.88em;
+}
+
+.slide4-method {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 14px;
+  align-items: start;
+}
+
+.slide4-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.84em;
+  margin: 0;
+}
+
+.slide4-table th {
+  background: #EAF3F9;
+  color: #17324D;
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 2px solid #BCD3E2;
+}
+
+.slide4-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #E2E8ED;
+  vertical-align: middle;
+}
+
+.slide4-table tr:nth-child(even) td {
+  background: #F7FAFC;
+}
+
+.slide4-example {
+  background: #F2F7FB;
+  border-left: 4px solid #006DAE;
+  padding: 11px 13px;
+  line-height: 1.3;
+}
+
+.slide4-example-title {
+  color: #005B91;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.slide4-example-row {
+  margin-bottom: 9px;
+}
+
+.slide4-example-row strong {
+  color: #17324D;
+}
+
+.slide4-caution {
+  margin-top: 12px;
+  padding: 9px 13px;
+  background: #F2F7FB;
+  border-left: 5px solid #006DAE;
+  line-height: 1.25;
+}
+
+.slide4-sources {
+  font-size: 0.58em;
+  color: #666;
+  margin-top: 9px;
+  line-height: 1.2;
+}
+</style>
+<div class="slide4-wrap">
+<div class="slide4-heading">
+<p>Step 1 | Identify reporting units and computing systems</p>
+</div>
+<div class="slide4-units">
+<div class="slide4-unit">
+<strong>CPU core-hours</strong>
+<p>
+Number of CPU cores × computing hours
+</p>
+</div>
+<div class="slide4-unit">
+<strong>GPU-hours</strong>
+<p>
+Number of GPUs × computing hours
+</p>
+</div>
+<div class="slide4-unit">
+<strong>Service units (kSU)</strong>
+<p>
+Thousands of system-specific accounting units
+</p>
+</div>
+</div>
+<div class="slide4-heading">
+<p>Step 2 | Apply documented system-specific conversion rules</p>
+</div>
+<div class="slide4-method">
+<div>
+<table class="slide4-table">
+<thead>
+<tr>
+<th>
+System
+</th>
+<th>
+Conversion from kSU
+</th>
+<th>
+Output
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Raijin CPU*
+</td>
+<td>
+kSU × 1,000 ÷ 1
+</td>
+<td>
+CPU core-hours
+</td>
+</tr>
+<tr>
+<td>
+Gadi CPU
+</td>
+<td>
+kSU × 1,000 ÷ 2
+</td>
+<td>
+CPU core-hours
+</td>
+</tr>
+<tr>
+<td>
+Setonix CPU
+</td>
+<td>
+kSU × 1,000 ÷ 1
+</td>
+<td>
+CPU core-hours
+</td>
+</tr>
+<tr>
+<td>
+Setonix GPU
+</td>
+<td>
+kSU × 1,000 ÷ 128
+</td>
+<td>
+GPU-hours
+</td>
+</tr>
+</tbody>
+</table>
+<div style="font-size: 0.73em; color: #666; margin-top: 5px;">
+<p>*Historical Raijin conversion uses a documented assumption. Rules vary by system, resource type and reporting year.</p>
+</div>
+</div>
+<div class="slide4-example">
+<div class="slide4-example-title">
+<p>Worked example | 2022/23 requests</p>
+</div>
+<div class="slide4-example-row">
+<p><strong>Gadi CPU:</strong> 770,866 kSU ÷ 2 × 1,000 <br> ≈ 385.4 million core-hours</p>
+</div>
+<div class="slide4-example-row">
+<p><strong>Setonix CPU:</strong> 390,033 kSU × 1,000 <br> ≈ 390.0 million core-hours</p>
+</div>
+<div class="slide4-example-row" style="border-top: 1px solid #BCD3E2; padding-top: 8px;">
+<p><strong>Combined CPU demand:</strong> <br> <span style="font-size: 1.12em; color: #005B91; font-weight: 700;"> ≈ 775.5 million core-hours </span></p>
+</div>
+</div>
+</div>
+<div class="slide4-caution">
+<p><strong>Step 3 | Build comparable historical series.</strong> CPU and GPU resources are standardised separately. Official accounting rules are prioritised; assumptions and unresolved historical conversions are documented.</p>
+</div>
+<div class="slide4-sources">
+<p>Sources: NCMAS information for applicants <span class="citation" data-cites="NCMAS2014Info NCMAS2020Info NCMAS2023Info NCMAS2026Info">(<a href="#/references" role="doc-biblioref" onclick="">National Computational Infrastructure 2014b</a>, <a href="#/references" role="doc-biblioref" onclick="">2020</a>, <a href="#/references" role="doc-biblioref" onclick="">2022</a>, <a href="#/references" role="doc-biblioref" onclick="">2025</a>)</span>. Conversion factors and worked example: project year-by-year conversion methodology.</p>
+</div>
 </div>
 </section>
 <section id="how-reliable-is-the-historical-data" class="slide level2">
@@ -688,7 +881,7 @@ Incomplete CPU/GPU separation.
 <p><strong>Key takeaway:</strong> Historical demand contains more estimated values than allocation. Forecasts should therefore be interpreted as planning scenarios, subject to historical measurement uncertainty.</p>
 </div>
 <div style="font-size: 0.40em; color: #666; margin-top: 5px;">
-<p>Sources: <span class="citation" data-cites="NCI201314 NCIAllocations202021 NCMAS2023 NCMAS2026">(<a href="#/references" role="doc-biblioref" onclick="">National Computational Infrastructure 2014</a>, <a href="#/references" role="doc-biblioref" onclick="">2021</a>; <a href="#/references" role="doc-biblioref" onclick="">National Computational Merit Allocation Scheme 2023</a>, <a href="#/references" role="doc-biblioref" onclick="">2026</a>)</span>. Provenance classifications: project data harmonisation.</p>
+<p>Sources: <span class="citation" data-cites="NCI201314 NCIAllocations202021 NCMAS2023 NCMAS2026">(<a href="#/references" role="doc-biblioref" onclick="">National Computational Infrastructure 2014a</a>, <a href="#/references" role="doc-biblioref" onclick="">2021</a>; <a href="#/references" role="doc-biblioref" onclick="">National Computational Merit Allocation Scheme 2023</a>, <a href="#/references" role="doc-biblioref" onclick="">2026</a>)</span>. Provenance classifications: project data harmonisation.</p>
 </div>
 </section>
 <section id="historical-computing-demand-by-resource-type" class="slide level2">
@@ -772,7 +965,7 @@ Incomplete CPU/GPU separation.
 <div class="slide7-insight">
 <p><strong>Overall HPC</strong></p>
 <p>
-<span class="period">2023–2026:</span> Official NCMAS requests increased <strong>68%</strong>, while available resources grew only <strong>6%</strong>.
+<span class="period">2023 - 2026:</span> Official NCMAS requests increased <strong>68%</strong>, while available resources grew only <strong>6%</strong>.
 </p>
 <p>
 <span class="period">2026:</span> Oversubscription reached <strong>2.69×</strong>. Reconstructed growth of <strong>43.3%</strong> is sensitive to the estimated 2025 baseline.
@@ -781,41 +974,120 @@ Incomplete CPU/GPU separation.
 <div class="slide7-insight">
 <p><strong>CPU</strong></p>
 <p>
-<span class="period">2019–2020:</span> Raijin transitioned to Gadi, coinciding with a sharp decline in reconstructed CPU demand.
+<span class="period">2019 - 2020:</span> Raijin transitioned to Gadi, coinciding with a sharp decline in reconstructed CPU demand.
 </p>
 <p>
-<span class="period">2022–2023:</span> Magnus transitioned to Setonix. Infrastructure and accounting changes may affect historical comparability.
+<span class="period">2022 - 2023:</span> Magnus transitioned to Setonix. Infrastructure and accounting changes may affect historical comparability.
 </p>
 </div>
 <div class="slide7-insight">
 <p><strong>GPU</strong></p>
 <p>
-<span class="period">2022–2023:</span> Setonix deployment introduced new CPU/GPU infrastructure and allocation arrangements.
+<span class="period">2022 - 2023:</span> Setonix deployment introduced new CPU/GPU infrastructure and allocation arrangements.
 </p>
 <p>
-<span class="period">2023–2026:</span> Official Setonix GPU requests increased <strong>123%</strong> in kSU. GPU-hour trends remain less reliable.
+<span class="period">2023 - 2026:</span> Official Setonix GPU requests increased <strong>123%</strong> in kSU. GPU-hour trends remain less reliable.
 </p>
 </div>
 </div>
 <div class="slide7-note">
-<p><strong>Interpretation:</strong> System transitions may affect historical comparability but are not confirmed causes of changes in researcher demand. GPU values for 2014–2021 are assumption-based historical scenarios, not statistical confidence intervals. Historical series include reported and estimated values. The 2025 HPC estimate affects reconstructed 2026 growth. The 2026 HPC allocation excludes 12,000 kSU for Setonix Q. Panel units and scales differ.</p>
+<p><strong>Interpretation:</strong> System transitions may affect historical comparability but are not confirmed causes of changes in researcher demand. GPU values for 2014 - 2021 are assumption-based historical scenarios, not statistical confidence intervals. Historical series include reported and estimated values. The 2025 HPC estimate affects reconstructed 2026 growth. The 2026 HPC allocation excludes 12,000 kSU for Setonix Q. Panel units and scales differ.</p>
 </div>
 <div class="slide7-sources">
-<p>Sources: <span class="citation" data-cites="NCMAS2026 NCMAS2026Info NCIGadiTransition PawseySetonixTransition Pawsey2023Services">(<a href="#/references" role="doc-biblioref" onclick="">National Computational Merit Allocation Scheme 2026</a>; <a href="#/references" role="doc-biblioref" onclick="">National Computational Infrastructure 2025</a>, <a href="#/references" role="doc-biblioref" onclick="">n.d.</a>; <a href="#/references" role="doc-biblioref" onclick="">Pawsey Supercomputing Research Centre, n.d.-b</a>, <a href="#/references" role="doc-biblioref" onclick="">n.d.-a</a>)</span>. Historical series and GPU scenarios: project data harmonisation.</p>
+<p>Sources: <span class="citation" data-cites="NCMAS2026 NCMAS2026Info NCIGadiTransition PawseySetonixTransition Pawsey2023Services">(<a href="#/references" role="doc-biblioref" onclick="">National Computational Merit Allocation Scheme 2026</a>; <a href="#/references" role="doc-biblioref" onclick="">National Computational Infrastructure 2025</a>, <a href="#/references" role="doc-biblioref" onclick="">n.d.-b</a>; <a href="#/references" role="doc-biblioref" onclick="">Pawsey Supercomputing Research Centre, n.d.-b</a>, <a href="#/references" role="doc-biblioref" onclick="">n.d.-a</a>)</span>. Historical series and GPU scenarios: project data harmonisation.</p>
 </div>
 </section>
 <section id="hpc-allocation-by-field-of-research" class="slide level2">
 <h2>HPC Allocation by Field of Research</h2>
 <style>
-.slide8-main { width: 100%; margin-top: 0; }
-.slide8-periods { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 2px; }
-.slide8-panel { min-width: 0; }
-.slide8-panel-title { background: #EAF3F9; color: #17324D; font-weight: 700; font-size: 13px; padding: 3px 8px; text-align: center; }
-.slide8-main .cell, .slide8-main .cell-output, .slide8-main .cell-output-display,
-.slide8-periods .cell, .slide8-periods .cell-output, .slide8-periods .cell-output-display { width: 100% !important; max-width: 100% !important; margin: 0 !important; }
-.slide8-main img, .slide8-periods img { display: block; width: 100% !important; max-width: 100% !important; height: auto; margin: 0 auto; }
-.slide8-insight { background: #F2F7FB; border-left: 4px solid #006DAE; padding: 5px 10px; font-size: 12px; line-height: 1.15; margin-top: 3px; }
-.slide8-note { font-size: 10px; color: #555; line-height: 1.15; margin-top: 3px; }
+.slide8-main {
+  width: 100%;
+  margin-top: 0;
+}
+
+.slide8-periods {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 2px;
+}
+
+.slide8-panel {
+  min-width: 0;
+}
+
+.slide8-panel-title {
+  background: #EAF3F9;
+  color: #17324D;
+  font-weight: 700;
+  font-size: 13px;
+  padding: 3px 8px;
+  text-align: center;
+}
+
+.slide8-main .cell,
+.slide8-main .cell-output,
+.slide8-main .cell-output-display,
+.slide8-periods .cell,
+.slide8-periods .cell-output,
+.slide8-periods .cell-output-display {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+}
+
+.slide8-main img,
+.slide8-periods img {
+  display: block;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto;
+  margin: 0 auto;
+}
+
+.slide8-insights {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 5px;
+}
+
+.slide8-insight {
+  background: #F2F7FB;
+  border-top: 3px solid #006DAE;
+  padding: 7px 9px;
+  font-size: 11px;
+  line-height: 1.22;
+  min-width: 0;
+}
+
+.slide8-insight strong {
+  color: #17324D;
+}
+
+.slide8-insight p {
+  margin: 4px 0 0 0;
+}
+
+.slide8-insight-title {
+  color: #006DAE;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.slide8-note {
+  font-size: 10px;
+  color: #555;
+  line-height: 1.18;
+  margin-top: 5px;
+}
+
+.slide8-sources {
+  font-size: 10px;
+  color: #666;
+  line-height: 1.18;
+  margin-top: 5px;
+}
 </style>
 <div class="slide8-main">
 <div class="slide8-panel-title">
@@ -861,14 +1133,37 @@ Incomplete CPU/GPU separation.
 </div>
 </div>
 </div>
+<div class="slide8-insights">
 <div class="slide8-insight">
-<p><strong>Key insight:</strong> Allocation leadership shifted from <strong> Earth &amp; Environmental Sciences </strong> ( 32% average, 2014–2020) to <strong> Engineering &amp; Technology </strong> ( 35% average, 2021–2026).</p>
+<div class="slide8-insight-title">
+<p>2014–2020 | Earth &amp; Environmental</p>
+</div>
+<p>
+<strong>32% average share.</strong> Climate, weather and geoscience are established national HPC workloads. This provides context for the field’s historical concentration, but does not identify the projects driving each year.
+</p>
+</div>
+<div class="slide8-insight">
+<div class="slide8-insight-title">
+<p>2021–2026 | Engineering</p>
+</div>
+<p>
+<strong>35% average share;</strong> a peak of <strong>41% in 2022</strong>. NCMAS documents large computational engineering projects, including turbine and fluid-flow simulations. Their contribution to annual shares requires project-level verification.
+</p>
+</div>
+<div class="slide8-insight">
+<div class="slide8-insight-title">
+<p>Why the apparent shift needs caution</p>
+</div>
+<p>
+The comparison crosses <strong>FoR 2008 and FoR 2020</strong> classifications. Category changes, harmonisation choices and the different 2017 Pawsey reporting scope limit direct interpretation as a change in research priorities.
+</p>
+</div>
 </div>
 <div class="slide8-note">
-<p><strong>Notes:</strong> Allocation shares, not observed demand. The upper chart shows annual composition; lower charts rank average annual shares using FoR 2008- and FoR 2020-based mappings. The 2017 Pawsey reporting scope differs. Groupings are not official one-to-one ANZSRC conversions.</p>
+<p><strong>Note:</strong> Shares represent allocations, not demand. FoR 2008/2020 classification changes and differences in reporting coverage limit direct comparisons across years.</p>
 </div>
-<div style="font-size: 0.40em; color: #666; margin-top: 5px;">
-<p>Sources: NCI and Pawsey historical allocation reports <span class="citation" data-cites="NCI201314 NCIAllocations202021 NCMAS2023 NCMAS2026">(<a href="#/references" role="doc-biblioref" onclick="">National Computational Infrastructure 2014</a>, <a href="#/references" role="doc-biblioref" onclick="">2021</a>; <a href="#/references" role="doc-biblioref" onclick="">National Computational Merit Allocation Scheme 2023</a>, <a href="#/references" role="doc-biblioref" onclick="">2026</a>)</span>. FoR percentages and period averages: project data harmonisation and analysis.</p>
+<div class="slide8-sources">
+<p>Sources: NCI and Pawsey allocation reports <span class="citation" data-cites="NCI201314 NCIAllocations202021 NCMAS2023 NCMAS2026">(<a href="#/references" role="doc-biblioref" onclick="">National Computational Infrastructure 2014a</a>, <a href="#/references" role="doc-biblioref" onclick="">2021</a>; <a href="#/references" role="doc-biblioref" onclick="">National Computational Merit Allocation Scheme 2023</a>, <a href="#/references" role="doc-biblioref" onclick="">2026</a>)</span>. Classification and research context: <span class="citation" data-cites="ABSANZSRC2020 NCIEarthEnvironment NCIEngineering2023">(<a href="#/references" role="doc-biblioref" onclick="">Australian Bureau of Statistics 2020</a>; <a href="#/references" role="doc-biblioref" onclick="">National Computational Infrastructure, n.d.-a</a>, <a href="#/references" role="doc-biblioref" onclick="">2023</a>)</span>.</p>
 </div>
 </section>
 <section id="model-development-growth-assumptions-sensitivity" class="slide level2">
@@ -1131,7 +1426,7 @@ Incomplete CPU/GPU separation.
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="template_files/figure-revealjs/unnamed-chunk-7-1.png" class="quarto-figure quarto-figure-center" style="width:100.0%"></p>
+<p><img data-src="template_files/figure-revealjs/unnamed-chunk-6-1.png" class="quarto-figure quarto-figure-center" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
@@ -1880,11 +2175,17 @@ Chemical Sciences
 <div id="ref-HPCInternshipBrief" class="csl-entry" role="listitem">
 Australian Academy of Science. 2026. <em>Internship Project Brief: Forecasting Demand for National Research Supercomputing</em>.
 </div>
+<div id="ref-ABSANZSRC2020" class="csl-entry" role="listitem">
+Australian Bureau of Statistics. 2020. <span>“Australian and New Zealand Standard Research Classification (ANZSRC), 2020.”</span> <a href="https://www.abs.gov.au/statistics/classifications/australian-and-new-zealand-standard-research-classification-anzsrc/2020">https://www.abs.gov.au/statistics/classifications/australian-and-new-zealand-standard-research-classification-anzsrc/2020</a>.
+</div>
 <div id="ref-ibm_hpc" class="csl-entry" role="listitem">
 IBM. n.d. <span>“What Is High-Performance Computing (HPC)?”</span> Accessed October 14, 2026. <a href="https://www.ibm.com/think/topics/hpc">https://www.ibm.com/think/topics/hpc</a>.
 </div>
 <div id="ref-NCI201314" class="csl-entry" role="listitem">
-National Computational Infrastructure. 2014. <em>Annual Report 2013/14</em>. <a href="https://nci.org.au/sites/default/files/annual-reports/2019-07/About%20Us_Annual%20Reports_2013-14.pdf">https://nci.org.au/sites/default/files/annual-reports/2019-07/About%20Us_Annual%20Reports_2013-14.pdf</a>.
+National Computational Infrastructure. 2014a. <em>Annual Report 2013/14</em>. <a href="https://nci.org.au/sites/default/files/annual-reports/2019-07/About%20Us_Annual%20Reports_2013-14.pdf">https://nci.org.au/sites/default/files/annual-reports/2019-07/About%20Us_Annual%20Reports_2013-14.pdf</a>.
+</div>
+<div id="ref-NCMAS2014Info" class="csl-entry" role="listitem">
+National Computational Infrastructure. 2014b. <span>“NCMAS Information for Applicants.”</span> <a href="https://nci.org.au/news-events/news/ncmas-information-applicants">https://nci.org.au/news-events/news/ncmas-information-applicants</a>.
 </div>
 <div id="ref-NCMAS2020Info" class="csl-entry" role="listitem">
 National Computational Infrastructure. 2020. <em>NCMAS 2020 Information for Applicants</em>. <a href="https://nci.org.au/sites/default/files/documents/2019-10/NCMAS-2020-InformationForApplicants.pdf">https://nci.org.au/sites/default/files/documents/2019-10/NCMAS-2020-InformationForApplicants.pdf</a>.
@@ -1892,11 +2193,20 @@ National Computational Infrastructure. 2020. <em>NCMAS 2020 Information for Appl
 <div id="ref-NCIAllocations202021" class="csl-entry" role="listitem">
 National Computational Infrastructure. 2021. <em>Compute Allocations 2020–2021</em>. <a href="https://nci.org.au/sites/default/files/annual-reports/2021-12/NCI%20Compute%20Allocations%202020-2021_0.pdf">https://nci.org.au/sites/default/files/annual-reports/2021-12/NCI%20Compute%20Allocations%202020-2021_0.pdf</a>.
 </div>
+<div id="ref-NCMAS2023Info" class="csl-entry" role="listitem">
+National Computational Infrastructure. 2022. <em>NCMAS 2023 Information for Applicants</em>. <a href="https://my.nci.org.au/mancini-assets/media/mas/ncmas/2023/NCMAS2023-NCMAS_2023_Info4Applicants_v5-20220830T164026AEST.pdf">https://my.nci.org.au/mancini-assets/media/mas/ncmas/2023/NCMAS2023-NCMAS_2023_Info4Applicants_v5-20220830T164026AEST.pdf</a>.
+</div>
+<div id="ref-NCIEngineering2023" class="csl-entry" role="listitem">
+National Computational Infrastructure. 2023. <span>“National Supercomputing Grants Support More Science Than Ever.”</span> <a href="https://nci.org.au/news-events/news/national-supercomputing-grants-support-more-science-ever">https://nci.org.au/news-events/news/national-supercomputing-grants-support-more-science-ever</a>.
+</div>
 <div id="ref-NCMAS2026Info" class="csl-entry" role="listitem">
 National Computational Infrastructure. 2025. <em>NCMAS 2026 Information for Applicants</em>. <a href="https://my.nci.org.au/mancini-assets/media/mas/ncmas/2026/NCMAS2026-Information_for_Applicants-20251023T122535AEDT.pdf">https://my.nci.org.au/mancini-assets/media/mas/ncmas/2026/NCMAS2026-Information_for_Applicants-20251023T122535AEDT.pdf</a>.
 </div>
+<div id="ref-NCIEarthEnvironment" class="csl-entry" role="listitem">
+National Computational Infrastructure. n.d.-a. <span>“Earth and Environmental Science.”</span> Accessed October 18, 2026. <a href="https://www.nci.org.au/research/case-studies/earth-and-environmental-science">https://www.nci.org.au/research/case-studies/earth-and-environmental-science</a>.
+</div>
 <div id="ref-NCIGadiTransition" class="csl-entry" role="listitem">
-National Computational Infrastructure. n.d. <em>HPC Systems</em>. Accessed October 18, 2026. <a href="https://nci.org.au/infrastructure/hpc-systems">https://nci.org.au/infrastructure/hpc-systems</a>.
+National Computational Infrastructure. n.d.-b. <em>HPC Systems</em>. Accessed October 18, 2026. <a href="https://nci.org.au/infrastructure/hpc-systems">https://nci.org.au/infrastructure/hpc-systems</a>.
 </div>
 <div id="ref-NCMAS2023" class="csl-entry" role="listitem">
 National Computational Merit Allocation Scheme. 2023. <span>“NCMAS 2023 Outcomes.”</span> <a href="https://my.nci.org.au/mancini/ncmas/2023/outcomes">https://my.nci.org.au/mancini/ncmas/2023/outcomes</a>.
