@@ -2055,19 +2055,28 @@ The reconstructed demand rises sharply in 2026. Linear trends were fitted **with
 <style>
 .slide10 {
   width: 100%;
-  margin-top: 6px;
-  font-size: 16px;
-  line-height: 1.28;
+  margin-top: 4px;
+  font-size: 15px;
+  line-height: 1.23;
 }
 
 .slide10-intro {
-  font-size: 16px;
-  margin-bottom: 12px;
+  font-size: 15px;
+  margin-bottom: 8px;
+}
+
+.slide10-method {
+  background: #F2F7FB;
+  border-left: 4px solid #006DAE;
+  padding: 7px 11px;
+  font-size: 13px;
+  line-height: 1.25;
+  margin-bottom: 9px;
 }
 
 .slide10-chart {
   width: 100%;
-  margin-top: 4px;
+  margin-top: 2px;
 }
 
 .slide10-chart .cell,
@@ -2087,16 +2096,16 @@ The reconstructed demand rises sharply in 2026. Linear trends were fitted **with
 .slide10-findings {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
-  margin-top: 10px;
+  gap: 12px;
+  margin-top: 6px;
 }
 
 .slide10-finding {
   background: #F2F7FB;
   border-top: 3px solid #006DAE;
-  padding: 11px 13px;
-  font-size: 14px;
-  line-height: 1.3;
+  padding: 9px 11px;
+  font-size: 13px;
+  line-height: 1.25;
 }
 
 .slide10-finding strong {
@@ -2104,29 +2113,35 @@ The reconstructed demand rises sharply in 2026. Linear trends were fitted **with
 }
 
 .slide10-finding p {
-  margin: 6px 0;
+  margin: 5px 0;
 }
 
 .slide10-conclusion {
   border-top: 2px solid #006DAE;
-  padding-top: 10px;
-  margin-top: 15px;
-  font-size: 16px;
-  line-height: 1.3;
+  padding-top: 8px;
+  margin-top: 10px;
+  font-size: 14px;
+  line-height: 1.27;
 }
 
 .slide10-note {
-  margin-top: 12px;
-  font-size: 11px;
+  margin-top: 8px;
+  font-size: 10px;
   color: #555;
-  line-height: 1.3;
+  line-height: 1.2;
 }
 </style>
 
 ::: {.slide10}
 
 ::: {.slide10-intro}
-**Evaluation approach:** Four models were compared using expanding-window, one-step-ahead cross-validation: **naïve, drift, linear and log-linear**. Accuracy was measured using RMSE and MAE on the original demand scale.
+**Evaluation approach:** The four models introduced previously were assessed using **expanding-window, one-step-ahead cross-validation** to compare their predictive performance on historical observations.
+:::
+
+::: {.slide10-method}
+**How it works:** Fit each model using the available earlier years, predict the next year, then expand the training window and repeat.
+
+**Accuracy measures:** **RMSE** gives greater weight to large forecast errors; **MAE** measures the average absolute error. Lower values indicate better performance.
 :::
 
 ::: {.slide10-chart}
@@ -2135,7 +2150,7 @@ The reconstructed demand rises sharply in 2026. Linear trends were fitted **with
 #| warning: false
 #| message: false
 #| fig-width: 13
-#| fig-height: 4.2
+#| fig-height: 3.65
 #| out-width: "100%"
 #| fig-align: center
 
@@ -2183,8 +2198,8 @@ accuracy_data <- data.frame(
     best = plot_rmse == min(plot_rmse),
     label = if_else(
       resource == "Overall HPC (thousand kSU)",
-      format(round(plot_rmse, 1), nsmall = 1),
-      format(round(plot_rmse, 2), nsmall = 2)
+      sprintf("%.1f", plot_rmse),
+      sprintf("%.2f", plot_rmse)
     )
   ) |>
   ungroup()
@@ -2252,7 +2267,7 @@ ggplot(
 <div class="slide10-finding">
 <strong>Overall HPC</strong>
 <p><strong>Linear</strong> achieved the lowest RMSE of <strong>290,898 kSU</strong> and MAE of <strong>198,295 kSU</strong>.</p>
-<p>Evaluated over six years, 2021 to 2026.</p>
+<p>Six evaluation years: 2021–2026.</p>
 </div>
 
 <div class="slide10-finding">
@@ -2264,17 +2279,17 @@ ggplot(
 <div class="slide10-finding">
 <strong>GPU</strong>
 <p><strong>Naïve</strong> had the lowest RMSE at <strong>0.441 million GPU-hours</strong>.</p>
-<p>Only two evaluation years, 2025 and 2026, limit confidence in the ranking.</p>
+<p>Only two evaluation years (2025–2026), so model rankings are highly uncertain.</p>
 </div>
 
 </div>
 
 ::: {.slide10-conclusion}
-**Key finding:** Linear trends performed best on RMSE for overall HPC and CPU, while the naïve benchmark performed best for GPU. Model selection must also consider data limitations, sensitivity to 2026 and suitability for forecasting through 2030.
+**Key finding:** Linear trends had the lowest one-step-ahead RMSE for **overall HPC and CPU**, while naïve performed best for **GPU**. These results guide model selection but do not establish accuracy for forecasts through 2030.
 :::
 
 ::: {.slide10-note}
-**Notes:** RMSE is shown in thousand kSU for overall HPC and million hours for CPU and GPU. Panel scales differ. Overall HPC and CPU use six one-step-ahead errors; GPU uses two. Cross-validation accuracy does not establish long-term forecast reliability. Source: Project model evaluation, Chapter 8.
+**Notes:** Chart shows RMSE, not MAE. Units are thousand kSU for HPC and million hours for CPU/GPU; panel scales differ. HPC/CPU use six one-step-ahead errors; GPU uses two. **Methods:** [@HyndmanAthanasopoulos2021, Chapter 5]. **Results:** Project model evaluation.
 :::
 
 :::
