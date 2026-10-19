@@ -1760,19 +1760,19 @@ No significant autocorrelation detected at the tested lags; Q–Q departures war
 </div>
 </div>
 </section>
-<section id="projected-computing-demand-in-2030" class="slide level2">
-<h2>Projected Computing Demand in 2030</h2>
+<section id="projected-computing-demand-20272030" class="slide level2">
+<h2>Projected Computing Demand, 2027–2030</h2>
 <style>
 .slide12 {
   width: 100%;
   margin-top: 4px;
-  font-size: 16px;
+  font-size: 15px;
   line-height: 1.25;
 }
 
 .slide12-intro {
   margin-bottom: 8px;
-  font-size: 16px;
+  font-size: 15px;
   line-height: 1.3;
 }
 
@@ -1792,23 +1792,22 @@ No significant autocorrelation detected at the tested lags; Q–Q departures war
 .slide12-chart img {
   display: block;
   width: 100% !important;
-  max-width: 100% !important;
   height: auto;
   margin: 0 auto;
 }
 
 .slide12-results {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 22px;
-  margin-top: 7px;
+  margin-top: 9px;
 }
 
 .slide12-result {
   border-top: 3px solid #006DAE;
   padding: 9px 5px 4px;
-  font-size: 15px;
-  line-height: 1.3;
+  font-size: 14px;
+  line-height: 1.25;
 }
 
 .slide12-result strong {
@@ -1820,14 +1819,9 @@ No significant autocorrelation detected at the tested lags; Q–Q departures war
 }
 
 .slide12-value {
-  font-size: 20px;
+  font-size: 21px;
   font-weight: 700;
   color: #17324D;
-}
-
-.slide12-growth {
-  color: #006DAE;
-  font-weight: 700;
   margin: 5px 0;
 }
 
@@ -1835,20 +1829,20 @@ No significant autocorrelation detected at the tested lags; Q–Q departures war
   border-top: 2px solid #006DAE;
   padding-top: 9px;
   margin-top: 11px;
-  font-size: 15px;
+  font-size: 14px;
   line-height: 1.3;
 }
 
 .slide12-note {
-  font-size: 11px;
+  font-size: 10px;
   color: #555;
-  line-height: 1.3;
+  line-height: 1.25;
   margin-top: 9px;
 }
 </style>
 <div class="slide12">
 <div class="slide12-intro">
-<p><strong>Forecast approach:</strong> Linear models including 2026 provide the selected central projections for 2030. Excluding 2026 tests sensitivity to the latest observation, while log-linear models illustrate alternative compounded-growth assumptions.</p>
+<p><strong>Forecast approach:</strong> Full-history linear models provide the selected annual projections for 2027–2030, based on their cross-validation performance. Shaded areas show model-based 95% prediction intervals, not alternative growth scenarios.</p>
 </div>
 <div class="slide12-chart">
 <div class="cell" data-layout-align="center">
@@ -1863,33 +1857,27 @@ No significant autocorrelation detected at the tested lags; Q–Q departures war
 </div>
 <div class="slide12-results">
 <div class="slide12-result">
-<p><strong>Overall HPC</strong></p>
+<p><strong>Overall HPC — 2030</strong></p>
 <div class="slide12-value">
 <p>2.50 million kSU</p>
 </div>
-<p>Selected 2030 projection, including 2026.</p>
-<div class="slide12-growth">
-<p>Growth from 2026: +11.6%</p>
-</div>
-<p>95% prediction interval: <strong>1.98 to 3.03 million kSU</strong>.</p>
+<p>95% prediction interval: <strong>1.98–3.03 million kSU</strong>.</p>
+<p>The central forecast increases by approximately <strong>0.162 million kSU annually</strong> over 2027–2030.</p>
 </div>
 <div class="slide12-result">
-<p><strong>CPU</strong></p>
+<p><strong>CPU — 2030</strong></p>
 <div class="slide12-value">
 <p>1,369.90 million core-hours</p>
 </div>
-<p>Selected 2030 projection, including 2026.</p>
-<div class="slide12-growth">
-<p>Growth from 2026: +10.9%</p>
-</div>
-<p>95% prediction interval: <strong>974.24 to 1,765.55 million core-hours</strong>.</p>
+<p>95% prediction interval: <strong>974.24–1,765.55 million core-hours</strong>.</p>
+<p>The central forecast increases by approximately <strong>81.01 million core-hours annually</strong> over 2027–2030.</p>
 </div>
 </div>
 <div class="slide12-finding">
-<p><strong>Forecast implication:</strong> Excluding 2026 reduces the linear projections for both overall HPC and CPU, while log-linear models produce substantially higher estimates. The 2030 outlook therefore depends on both the historical observations included and the assumed growth pattern.</p>
+<p><strong>Forecast implication:</strong> The selected linear models indicate continued growth in overall HPC and CPU demand through 2030. However, the prediction intervals widen over the forecast horizon, highlighting uncertainty in future requirements. Alternative log-linear scenarios produce substantially higher projections, demonstrating sensitivity to the assumed growth pattern.</p>
 </div>
 <div class="slide12-note">
-<p><strong>Notes:</strong> Growth is calculated relative to the historical 2026 demand estimates. The selected central projections use linear models including 2026. Prediction intervals are conditional on these selected models and do not capture all sources of uncertainty. Log-linear projections are alternative scenarios, not upper prediction bounds. Panel scales differ. Source: Project scenario forecasting analysis, Chapter 10.</p>
+<p><strong>Notes:</strong> Annual forecasts and 95% prediction intervals reproduce the project’s Chapter 10 scenario forecasting results. The selected models include historical observations through 2026. Prediction intervals are conditional on model assumptions and do not capture all measurement or model uncertainty. Log-linear scenarios are not upper prediction bounds. Panel scales differ. <strong>Source:</strong> Project scenario forecasting analysis, Chapter 10. <strong>Methods:</strong> <span class="citation" data-cites="HyndmanAthanasopoulos2021">(<a href="#/references" role="doc-biblioref" onclick="">Hyndman and Athanasopoulos 2021</a>)</span>.</p>
 </div>
 </div>
 </section>
