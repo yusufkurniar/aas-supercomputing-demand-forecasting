@@ -2977,194 +2977,315 @@ The central forecast increases by approximately **81.01 million core-hours annua
 <style>
 .slide13 {
   width: 100%;
-  margin-top: 5px;
+  margin-top: 0;
   font-size: 15px;
-  line-height: 1.3;
+  line-height: 1.25;
 }
 
 .slide13-intro {
-  margin-bottom: 16px;
+  margin-bottom: 8px;
+  font-size: 15px;
+  line-height: 1.25;
 }
 
 .slide13-panels {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 26px;
+  align-items: stretch;
 }
 
 .slide13-panel {
+  display: flex;
+  flex-direction: column;
   min-width: 0;
 }
 
 .slide13-title {
   background: #EAF3F9;
   color: #17324D;
-  padding: 9px 12px;
-  font-size: 18px;
+  padding: 8px;
+  font-size: 17px;
   font-weight: 700;
   text-align: center;
-  margin-bottom: 12px;
+  margin-bottom: 7px;
 }
 
 .slide13-subtitle {
+  font-size: 12px;
   color: #555;
-  font-size: 13px;
-  margin-bottom: 12px;
-}
-
-.slide13-bar-row {
-  display: grid;
-  grid-template-columns: 125px 1fr 55px;
-  gap: 9px;
-  align-items: center;
-  margin-bottom: 15px;
-}
-
-.slide13-bar-label {
-  font-size: 13px;
   line-height: 1.2;
+  margin-bottom: 5px;
 }
 
-.slide13-track {
-  background: #EEF2F5;
-  height: 21px;
+.slide13-visual {
+  min-height: 275px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 
-.slide13-bar {
-  height: 100%;
-  background: #A7CBE1;
+.slide13-chart {
+  width: 100%;
 }
 
-.slide13-bar-reference {
-  background: #006DAE;
+.slide13-chart .cell,
+.slide13-chart .cell-output,
+.slide13-chart .cell-output-display {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
 }
 
-.slide13-bar-value {
-  font-size: 14px;
-  font-weight: 700;
-  color: #17324D;
+.slide13-chart img {
+  display: block;
+  width: 100% !important;
+  height: auto;
+  margin: 0 auto;
 }
 
-.slide13-for-heading {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 67px 67px 90px;
-  gap: 5px;
-  align-items: end;
-  font-size: 11px;
+/* Research-field table */
+
+.slide13-table {
+  width: 100%;
+  margin-top: 4px;
+}
+
+.slide13-table table {
+  width: 100% !important;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 14px !important;
+  line-height: 1.3;
+  margin: 0 !important;
+}
+
+.slide13-table thead th {
+  font-size: 12px !important;
   font-weight: 700;
   color: #17324D;
   border-bottom: 2px solid #17324D;
-  padding-bottom: 8px;
+  padding: 9px 5px !important;
+  vertical-align: middle;
+  white-space: nowrap;
 }
 
-.slide13-for-row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 67px 67px 90px;
-  gap: 5px;
-  align-items: center;
-  padding: 12px 0;
+.slide13-table tbody td {
+  font-size: 14px !important;
+  padding: 15px 5px !important;
+  line-height: 1.3;
   border-bottom: 1px solid #E5EAF0;
+  vertical-align: middle;
 }
 
-.slide13-for-name {
-  font-size: 13px;
-  line-height: 1.2;
+.slide13-table th:first-child,
+.slide13-table td:first-child {
+  width: 45%;
+  text-align: left;
+  white-space: normal;
 }
 
-.slide13-for-number {
-  font-size: 13px;
+.slide13-table th:nth-child(2),
+.slide13-table td:nth-child(2) {
+  width: 17%;
   text-align: right;
 }
 
-.slide13-earlier {
+.slide13-table th:nth-child(3),
+.slide13-table td:nth-child(3) {
+  width: 17%;
+  text-align: right;
+}
+
+.slide13-table th:nth-child(4),
+.slide13-table td:nth-child(4) {
+  width: 21%;
+  text-align: right;
+}
+
+.slide13-table td:nth-child(2) {
   color: #279A8B;
 }
 
-.slide13-recent {
+.slide13-table td:nth-child(3) {
   color: #006DAE;
 }
 
-.slide13-forecast {
-  font-size: 14px;
-  font-weight: 700;
+.slide13-table td:nth-child(4) {
   color: #17324D;
-  text-align: right;
+  font-weight: 700;
 }
 
 .slide13-explanation {
   border-top: 2px solid #006DAE;
-  padding-top: 11px;
-  margin-top: 17px;
-  font-size: 14px;
-  line-height: 1.35;
+  padding-top: 8px;
+  margin-top: auto;
+  font-size: 13px;
+  line-height: 1.28;
 }
 
 .slide13-bottom {
   border-top: 1px solid #006DAE;
-  padding-top: 12px;
-  margin-top: 18px;
-  font-size: 15px;
-  line-height: 1.35;
+  padding-top: 7px;
+  margin-top: 10px;
+  font-size: 14px;
+  line-height: 1.25;
 }
 
 .slide13-note {
-  font-size: 11px;
-  line-height: 1.3;
+  font-size: 10px;
+  line-height: 1.2;
   color: #555;
-  margin-top: 12px;
+  margin-top: 6px;
 }
 </style>
+
+```{r}
+#| label: slide13-data
+#| echo: false
+#| include: false
+
+library(ggplot2)
+library(dplyr)
+library(scales)
+
+# GPU 2030 scenario results from Chapter 10.
+# Units: million GPU-hours.
+
+gpu_2030 <- data.frame(
+  scenario = c(
+    "Linear excluding 2026",
+    "Log-linear excluding 2026",
+    "Naïve benchmark",
+    "Linear including 2026",
+    "Log-linear including 2026"
+  ),
+  value = c(
+    2.25,
+    2.41,
+    3.00,
+    3.37,
+    3.68
+  )
+)
+
+gpu_2030$scenario <- factor(
+  gpu_2030$scenario,
+  levels = rev(gpu_2030$scenario)
+)
+
+gpu_2030$reference <- ifelse(
+  gpu_2030$scenario == "Naïve benchmark",
+  "Benchmark",
+  "Alternative"
+)
+
+stopifnot(
+  nrow(gpu_2030) == 5,
+  all(is.finite(gpu_2030$value)),
+  all(gpu_2030$value > 0)
+)
+```
 
 ::: {.slide13}
 
 ::: {.slide13-intro}
-**Scenario approach:** GPU projections compare alternative growth assumptions using 2022 to 2026 data. Research field scenarios distribute the selected 2030 HPC demand projection using historical allocation shares.
+**Scenario approach:** GPU projections compare alternative growth assumptions using five annual observations (2022–2026). Research-field scenarios apply historical allocation shares to the selected 2030 overall HPC demand projection.
 :::
 
-::: {.slide13-panels}
+:::: {.slide13-panels}
 
 ::: {.slide13-panel}
 
 ::: {.slide13-title}
-GPU demand in 2030
+GPU: Exploratory 2030 scenarios
 :::
 
 ::: {.slide13-subtitle}
-Million GPU-hours, by forecasting assumption
+Million GPU-hours under alternative forecasting assumptions
 :::
 
-<div class="slide13-bar-row">
-  <div class="slide13-bar-label">Linear excluding 2026</div>
-  <div class="slide13-track"><div class="slide13-bar" style="width:61.2%"></div></div>
-  <div class="slide13-bar-value">2.25</div>
-</div>
+::: {.slide13-visual}
 
-<div class="slide13-bar-row">
-  <div class="slide13-bar-label">Log-linear excluding 2026</div>
-  <div class="slide13-track"><div class="slide13-bar" style="width:65.4%"></div></div>
-  <div class="slide13-bar-value">2.41</div>
-</div>
+::: {.slide13-chart}
 
-<div class="slide13-bar-row">
-  <div class="slide13-bar-label">Naïve benchmark</div>
-  <div class="slide13-track"><div class="slide13-bar slide13-bar-reference" style="width:81.6%"></div></div>
-  <div class="slide13-bar-value">3.00</div>
-</div>
+```{r}
+#| label: slide13-gpu-chart
+#| echo: false
+#| warning: false
+#| message: false
+#| fig-width: 6.4
+#| fig-height: 2.8
+#| out-width: "100%"
+#| fig-align: center
 
-<div class="slide13-bar-row">
-  <div class="slide13-bar-label">Linear including 2026</div>
-  <div class="slide13-track"><div class="slide13-bar" style="width:91.6%"></div></div>
-  <div class="slide13-bar-value">3.37</div>
-</div>
+ggplot(
+  gpu_2030,
+  aes(
+    x = scenario,
+    y = value,
+    fill = reference
+  )
+) +
+  geom_col(
+    width = 0.62
+  ) +
+  geom_text(
+    aes(
+      label = sprintf("%.2f", value)
+    ),
+    hjust = -0.18,
+    size = 4.1,
+    fontface = "bold",
+    colour = "#17324D"
+  ) +
+  coord_flip(
+    clip = "off"
+  ) +
+  scale_fill_manual(
+    values = c(
+      "Benchmark" = "#006DAE",
+      "Alternative" = "#A7CBE1"
+    )
+  ) +
+  scale_y_continuous(
+    limits = c(0, 4.25),
+    breaks = c(0, 1, 2, 3, 4),
+    expand = expansion(
+      mult = c(0, 0)
+    )
+  ) +
+  labs(
+    x = NULL,
+    y = NULL
+  ) +
+  theme_minimal(
+    base_size = 11
+  ) +
+  theme(
+    axis.text.y = element_text(
+      size = 10,
+      colour = "#17324D"
+    ),
+    axis.text.x = element_text(
+      size = 10,
+      colour = "#555"
+    ),
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor = element_blank(),
+    legend.position = "none",
+    plot.margin = margin(
+      5, 18, 5, 5
+    )
+  )
+```
 
-<div class="slide13-bar-row">
-  <div class="slide13-bar-label">Log-linear including 2026</div>
-  <div class="slide13-track"><div class="slide13-bar" style="width:100%"></div></div>
-  <div class="slide13-bar-value">3.68</div>
-</div>
+:::
+
+:::
 
 ::: {.slide13-explanation}
-The naïve model achieved the lowest short-term forecast error, but evaluation covered only **two years**. Including or excluding 2026 substantially changes the trend projections, making a single reliable GPU forecast difficult to justify.
+The **naïve benchmark** achieved the lowest one-step-ahead forecast error, but evaluation covered only **two years**. Trend projections change substantially depending on whether 2026 is included. These scenarios do not establish a reliable single GPU forecast for 2030.
 :::
 
 :::
@@ -3172,66 +3293,45 @@ The naïve model achieved the lowest short-term forecast error, but evaluation c
 ::: {.slide13-panel}
 
 ::: {.slide13-title}
-Field of Research demand scenarios
+Research-field allocation-share scenarios
 :::
 
 ::: {.slide13-subtitle}
-2030 projection based on 2.50 million kSU total HPC demand
+Illustrative distribution of 2.50 million kSU in 2030
 :::
 
-<div class="slide13-for-heading">
-  <div>Research field</div>
-  <div style="text-align:right">2014 to 2020</div>
-  <div style="text-align:right">2021 to 2026</div>
-  <div style="text-align:right">2030 kSU</div>
-</div>
+::: {.slide13-visual}
 
-<div class="slide13-for-row">
-  <div class="slide13-for-name">Engineering & Technology</div>
-  <div class="slide13-for-number slide13-earlier">16.24%</div>
-  <div class="slide13-for-number slide13-recent">33.28%</div>
-  <div class="slide13-forecast">832,000</div>
-</div>
+::: {.slide13-table}
 
-<div class="slide13-for-row">
-  <div class="slide13-for-name">Earth & Environmental Sciences</div>
-  <div class="slide13-for-number slide13-earlier">30.38%</div>
-  <div class="slide13-for-number slide13-recent">13.36%</div>
-  <div class="slide13-forecast">334,000</div>
-</div>
+| Research field | 2014–20 | 2021–26 | 2030 kSU* |
+|:---|---:|---:|---:|
+| Engineering & Technology | 16.24% | 33.28% | 832,000 |
+| Earth & Environmental Sciences | 30.38% | 13.36% | 334,000 |
+| Physical Sciences | 16.26% | 21.11% | 527,750 |
+| Chemical Sciences | 18.28% | 17.02% | 425,500 |
 
-<div class="slide13-for-row">
-  <div class="slide13-for-name">Physical Sciences</div>
-  <div class="slide13-for-number slide13-earlier">16.26%</div>
-  <div class="slide13-for-number slide13-recent">21.11%</div>
-  <div class="slide13-forecast">527,750</div>
-</div>
+:::
 
-<div class="slide13-for-row">
-  <div class="slide13-for-name">Chemical Sciences</div>
-  <div class="slide13-for-number slide13-earlier">18.28%</div>
-  <div class="slide13-for-number slide13-recent">17.02%</div>
-  <div class="slide13-forecast">425,500</div>
-</div>
+:::
 
 ::: {.slide13-explanation}
-Using 2021 - 2026 allocation shares, **Engineering & Technology** has the largest projected share of 2030 HPC demand at **832,000 kSU**, followed by **Physical Sciences** at **527,750 kSU**. These are allocation-share-based scenarios, not independently forecast research-field demand.
+Applying the **2021–2026 allocation shares**, Engineering & Technology receives the largest illustrative 2030 amount (**832,000 kSU**), followed by Physical Sciences (**527,750 kSU**). These are conditional allocations of the national demand projection, **not independently forecast field-level demand**.
 :::
 
 :::
 
-:::
+::::
 
 ::: {.slide13-bottom}
-**Planning implication:** GPU requirements vary substantially across growth assumptions. Research field demand scenarios also change depending on which historical allocation period is used.
+**Planning implication:** GPU requirements vary substantially across growth assumptions, while research-field allocations depend on the historical reference period selected. More detailed GPU usage and field-level demand data are needed to strengthen projections for national HPC planning.
 :::
 
 ::: {.slide13-note}
-**Notes:** GPU projections are exploratory, not statistical prediction intervals. The naïve model holds estimated 2026 demand constant. FoR figures are conditional scenarios calculated using the rounded 2.50 million kSU HPC forecast and 2021 to 2026 allocation shares. They are not independently forecast demand. Only four research fields are displayed; other fields account for the remaining allocation share. A third FoR scenario uses 2014 to 2026 shares. Source: Project scenario forecasting analysis, Chapter 10.
+**Notes:** GPU projections are exploratory scenarios, not statistical prediction intervals. The naïve benchmark holds estimated 2026 GPU demand constant. *2030 FoR values apply normalised 2021–2026 allocation shares to the rounded 2.50 million kSU HPC projection. Only four research fields are displayed. Historical comparisons span the ANZSRC 2008/2020 classification change; allocation shares are not direct measures of researcher demand. **Source:** Project scenario forecasting analysis, Chapter 10.
 :::
 
 :::
-
 
 ## Key Findings and Priorities for Future Work
 
