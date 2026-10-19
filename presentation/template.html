@@ -209,34 +209,115 @@ Yusuf Kurnia Romadhon
 </section>
 <section id="research-objective-and-scope" class="slide level2">
 <h2>Research Objective and Scope</h2>
-<div style="margin-top: 30px;">
-<div style="background-color: #EAF3F9; border-left: 5px solid #006DAE; padding: 4px 12px; margin: 0 0 10px 0; color: #005B91; font-weight: bold; font-size: 0.85em; line-height: 1.1;">
-<p>Research question</p>
+<style>
+.slide3-wrap {
+  margin-top: 24px;
+}
+
+.slide3-heading {
+  background: #EAF3F9;
+  border-left: 5px solid #006DAE;
+  padding: 6px 12px;
+  margin: 0 0 12px 0;
+  color: #005B91;
+  font-weight: 700;
+  font-size: 0.85em;
+  line-height: 1.15;
+}
+
+.slide3-question {
+  font-size: 0.98em;
+  line-height: 1.35;
+  margin: 0 0 28px 0;
+}
+
+.slide3-objectives {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+.slide3-objective {
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  gap: 12px;
+  align-items: start;
+  font-size: 0.86em;
+  line-height: 1.3;
+}
+
+.slide3-number {
+  background: #006DAE;
+  color: white;
+  font-weight: 700;
+  text-align: center;
+  border-radius: 4px;
+  padding: 5px 0;
+}
+
+.slide3-objective strong {
+  color: #006DAE;
+}
+
+.slide3-purpose {
+  background: #F2F7FB;
+  border-left: 5px solid #006DAE;
+  padding: 12px 15px;
+  font-size: 0.85em;
+  line-height: 1.3;
+}
+
+.slide3-source {
+  font-size: 0.48em;
+  color: #666;
+  margin-top: 12px;
+}
+</style>
+<div class="slide3-wrap">
+<div class="slide3-heading">
+<p>Research Question</p>
 </div>
+<div class="slide3-question">
 <p>How is demand for Australia’s national research supercomputing infrastructure <strong>projected to evolve through 2030?</strong></p>
-<div style="height: 10px;">
-
 </div>
-<div style="background-color: #EAF3F9; border-left: 5px solid #006DAE; padding: 4px 12px; margin: 12px 0 10px 0; color: #005B91; font-weight: bold; font-size: 0.85em; line-height: 1.1;">
-<p>Project objectives</p>
+<div class="slide3-heading">
+<p>Project Objectives</p>
 </div>
-<ol type="1">
-<li><span style="color: #006DAE;"><strong>Compile and integrate</strong></span> historical computing data from NCI, Pawsey, and supporting research datasets.</li>
-<li><span style="color: #006DAE;"><strong>Standardise and harmonise</strong></span> resource units, reporting periods, and research classifications.</li>
-<li><span style="color: #006DAE;"><strong>Develop and evaluate</strong></span> forecasting models using time-series cross-validation.</li>
-<li><span style="color: #006DAE;"><strong>Forecast demand</strong></span> for overall HPC, CPU, and GPU resources through 2030.</li>
-<li><span style="color: #006DAE;"><strong>Assess alternative scenarios</strong></span> for computing demand and Fields of Research (FoR).</li>
-</ol>
-<div style="height: 10px;">
-
+<div class="slide3-objectives">
+<div class="slide3-objective">
+<div class="slide3-number">
+1
 </div>
-<div style="background-color: #EAF3F9; border-left: 5px solid #006DAE; padding: 4px 12px; margin: 12px 0 10px 0; color: #005B91; font-weight: bold; font-size: 0.85em; line-height: 1.1;">
-<p>Planning purpose</p>
+<div>
+<p><strong>Construct historical demand series</strong> using available national research supercomputing records.</p>
 </div>
-<p>Provide <strong>evidence-informed demand projections</strong> to support long-term planning for Australia’s national research computing infrastructure.</p>
 </div>
-<div style="font-size: 0.48em; color: #666; margin-top: 8px;">
-<p>Source: <span class="citation" data-cites="HPCInternshipBrief">(<a href="#/references" role="doc-biblioref" onclick="">Australian Academy of Science 2026</a>)</span>. Project scope and methodology were refined based on data availability, coverage, and comparability.</p>
+<div class="slide3-objective">
+<div class="slide3-number">
+2
+</div>
+<div>
+<p><strong>Develop and evaluate forecasting models</strong> for overall HPC, CPU and GPU demand through 2030.</p>
+</div>
+</div>
+<div class="slide3-objective">
+<div class="slide3-number">
+3
+</div>
+<div>
+<p><strong>Quantify forecast uncertainty and assess scenarios</strong> to support interpretation of future computing needs.</p>
+</div>
+</div>
+</div>
+<div class="slide3-heading">
+<p>Planning Purpose</p>
+</div>
+<div class="slide3-purpose">
+<p>Provide <strong>evidence-informed demand projections and uncertainty ranges</strong> to support long-term national research computing infrastructure planning, rather than fixed capacity or funding targets.</p>
+</div>
+<div class="slide3-source">
+<p>Source: <span class="citation" data-cites="HPCInternshipBrief">(<a href="#/references" role="doc-biblioref" onclick="">Australian Academy of Science 2026</a>)</span>. Project scope and methodology refined according to historical data availability and comparability.</p>
+</div>
 </div>
 </section>
 <section id="data-sources-and-historical-coverage" class="slide level2">
@@ -1171,29 +1252,30 @@ The comparison crosses <strong>FoR 2008 and FoR 2020</strong> classifications. C
 <style>
 .slide9 {
   width: 100%;
-  margin-top: 5px;
-  font-size: 16px;
-  line-height: 1.25;
+  margin-top: 4px;
+  font-size: 15px;
+  line-height: 1.22;
 }
 
 .slide9-intro {
-  font-size: 16px;
-  line-height: 1.3;
-  margin-bottom: 15px;
+  font-size: 15px;
+  line-height: 1.25;
+  margin-bottom: 10px;
 }
 
 .slide9-models {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  margin-bottom: 18px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 22px;
+  margin-bottom: 12px;
 }
 
 .slide9-model {
   border-top: 3px solid #006DAE;
-  padding: 10px 5px 3px;
-  font-size: 16px;
-  line-height: 1.3;
+  padding: 7px 5px 4px;
+  font-size: 14px;
+  line-height: 1.22;
+  min-width: 0;
 }
 
 .slide9-model strong {
@@ -1201,45 +1283,45 @@ The comparison crosses <strong>FoR 2008 and FoR 2020</strong> classifications. C
 }
 
 .slide9-model p {
-  margin: 6px 0;
+  margin: 4px 0;
 }
 
 .slide9-equation {
-  font-size: 19px;
+  font-size: 16px;
   color: #17324D;
-  margin: 9px 0;
+  margin: 4px 0;
 }
 
 .slide9-section {
   color: #17324D;
   font-weight: 700;
-  font-size: 19px;
-  margin: 10px 0 8px;
+  font-size: 18px;
+  margin: 8px 0 5px;
 }
 
 .slide9-reason {
-  font-size: 15px;
-  line-height: 1.3;
-  margin-bottom: 12px;
+  font-size: 14px;
+  line-height: 1.24;
+  margin-bottom: 7px;
 }
 
 .slide9 .slide9-results {
-  width: 100%;
+  width: 90%;
+  margin: 0 auto;
   border-collapse: collapse;
-  font-size: 16px;
-  line-height: 1.2;
-  margin: 0;
+  font-size: 14px;
+  line-height: 1.15;
 }
 
 .slide9 .slide9-results th {
   color: #17324D;
   border-bottom: 2px solid #17324D;
-  padding: 9px 12px;
+  padding: 5px 9px;
   text-align: left;
 }
 
 .slide9 .slide9-results td {
-  padding: 9px 12px;
+  padding: 5px 9px;
   border-bottom: 1px solid #DDE5EC;
 }
 
@@ -1249,16 +1331,16 @@ The comparison crosses <strong>FoR 2008 and FoR 2020</strong> classifications. C
 
 .slide9-finding {
   border-top: 2px solid #006DAE;
-  margin-top: 14px;
-  padding-top: 10px;
-  font-size: 16px;
-  line-height: 1.3;
+  margin-top: 9px;
+  padding-top: 7px;
+  font-size: 14px;
+  line-height: 1.25;
 }
 
 .slide9-for {
-  margin-top: 15px;
-  font-size: 15px;
-  line-height: 1.3;
+  margin-top: 8px;
+  font-size: 13px;
+  line-height: 1.25;
 }
 
 .slide9-for strong {
@@ -1266,37 +1348,51 @@ The comparison crosses <strong>FoR 2008 and FoR 2020</strong> classifications. C
 }
 
 .slide9-note {
-  font-size: 11px;
+  font-size: 10px;
   color: #555;
-  line-height: 1.3;
-  margin-top: 11px;
+  line-height: 1.2;
+  margin-top: 7px;
 }
 </style>
 <div class="slide9">
 <div class="slide9-intro">
-<p><strong>Model rationale:</strong> The annual demand series contain <strong>13 observations for HPC and CPU (2014 to 2026)</strong> and <strong>5 observations for GPU (2022 to 2026)</strong>. Linear and log-linear regression models were fitted to compare absolute and proportional growth assumptions using a limited number of observations.</p>
+<p><strong>Model rationale:</strong> Annual demand data contain <strong>13 observations for HPC and CPU (2014 - 2026)</strong> and <strong>5 for GPU (2022 - 2026)</strong>. Four simple models were compared to test different growth assumptions while limiting model complexity.</p>
 </div>
 <div class="slide9-models">
 <div class="slide9-model">
+<p><strong>Naïve benchmark: No growth</strong></p>
+<div class="slide9-equation">
+<p><span class="math inline">\hat{D}_{T+h}=D_T</span></p>
+</div>
+<p>Future demand remains at the <strong>latest observed level</strong>.</p>
+</div>
+<div class="slide9-model">
+<p><strong>Drift benchmark: Historical average growth</strong></p>
+<div class="slide9-equation">
+<p><span class="math inline">\hat{D}_{T+h}=D_T+h\frac{D_T-D_1}{T-1}</span></p>
+</div>
+<p>Extends the <strong>average annual change</strong> from the first to last observation.</p>
+</div>
+<div class="slide9-model">
 <p><strong>Linear trend: Absolute growth</strong></p>
 <div class="slide9-equation">
-<p><span class="math inline">D_t = \alpha + \beta t + \varepsilon_t</span></p>
+<p><span class="math inline">D_t=\alpha+\beta t+\varepsilon_t</span></p>
 </div>
-<p>Estimates the <strong>absolute annual change</strong> in demand. This provides a direct measure of additional computing resources required each year.</p>
+<p>Estimates a <strong>constant annual change</strong> using all observations.</p>
 </div>
 <div class="slide9-model">
 <p><strong>Log-linear trend: Proportional growth</strong></p>
 <div class="slide9-equation">
-<p><span class="math inline">\log(D_t) = \alpha + \beta t + \varepsilon_t</span></p>
+<p><span class="math inline">\log(D_t)=\alpha+\beta t+\varepsilon_t</span></p>
 </div>
-<p>Estimates <strong>proportional annual growth</strong>. This allows demand to increase at a compounded rate rather than by a fixed amount.</p>
+<p>Estimates a <strong>constant percentage growth rate</strong>.</p>
 </div>
 </div>
 <div class="slide9-section">
 <p>Sensitivity analysis: Influence of 2026</p>
 </div>
 <div class="slide9-reason">
-<p>The reconstructed demand increases sharply in 2026. To assess whether this observation substantially influences the estimated growth rate, linear models were fitted both <strong>including and excluding 2026</strong>.</p>
+<p>The reconstructed demand rises sharply in 2026. Linear trends were fitted <strong>with and without 2026</strong> to assess the effect on estimated annual growth.</p>
 </div>
 <table class="caption-top">
 <colgroup>
@@ -1335,13 +1431,16 @@ The comparison crosses <strong>FoR 2008 and FoR 2020</strong> classifications. C
 </tbody>
 </table>
 <div class="slide9-finding">
-<p>Including 2026 increases the estimated annual linear growth by approximately <strong>12% for HPC and CPU</strong>. GPU estimates are more sensitive because only five years of suitable data are available.</p>
+<p><strong>Key finding:</strong> Including 2026 increases the fitted linear growth rate by approximately <strong>12% for HPC and CPU</strong>. GPU growth estimates are particularly unstable because only five annual observations are available.</p>
 </div>
 <div class="slide9-for">
-<p><strong>Field of Research (FoR):</strong> Historical allocation shares were used to develop research field scenarios. Separate demand regression models were not fitted because directly observed FoR demand data are unavailable.</p>
+<p><strong>Field of Research:</strong> Historical allocation shares inform FoR scenarios; separate FoR demand regressions were not fitted because directly observed field-level demand series are unavailable.</p>
 </div>
 <div class="slide9-note">
-<p><strong>Notes:</strong> GPU modelling uses data from 2022 to 2026 and excludes the assumption-based historical scenarios from 2014 to 2021. Sensitivity measures changes in fitted coefficients, not forecast accuracy. Model evaluation follows in Chapter 8.</p>
+<p><strong>Notes:</strong> GPU models use 2022 - 2026 observations, excluding assumption-based 2014 - 2021 scenarios. Sensitivity measures changes in fitted slopes, not forecast accuracy.</p>
+</div>
+<div style="font-size: 10px; color: #666; margin-top: 5px; line-height: 1.15;">
+<p><strong>Methods:</strong> Naïve and drift benchmarks, linear and log-linear regression <span class="citation" data-cites="HyndmanAthanasopoulos2021">(<a href="#/references" role="doc-biblioref" onclick="">Hyndman and Athanasopoulos 2021, chap. 5</a> and 7)</span>. Sensitivity results: project calculations.</p>
 </div>
 </div>
 </section>
@@ -2177,6 +2276,9 @@ Australian Academy of Science. 2026. <em>Internship Project Brief: Forecasting D
 </div>
 <div id="ref-ABSANZSRC2020" class="csl-entry" role="listitem">
 Australian Bureau of Statistics. 2020. <span>“Australian and New Zealand Standard Research Classification (ANZSRC), 2020.”</span> <a href="https://www.abs.gov.au/statistics/classifications/australian-and-new-zealand-standard-research-classification-anzsrc/2020">https://www.abs.gov.au/statistics/classifications/australian-and-new-zealand-standard-research-classification-anzsrc/2020</a>.
+</div>
+<div id="ref-HyndmanAthanasopoulos2021" class="csl-entry" role="listitem">
+Hyndman, Rob J., and George Athanasopoulos. 2021. <em>Forecasting: Principles and Practice</em>. 3rd ed. OTexts. <a href="https://otexts.com/fpp3/">https://otexts.com/fpp3/</a>.
 </div>
 <div id="ref-ibm_hpc" class="csl-entry" role="listitem">
 IBM. n.d. <span>“What Is High-Performance Computing (HPC)?”</span> Accessed October 14, 2026. <a href="https://www.ibm.com/think/topics/hpc">https://www.ibm.com/think/topics/hpc</a>.
