@@ -2299,60 +2299,80 @@ ggplot(
 <style>
 .slide11 {
   width: 100%;
-  margin-top: 6px;
-  font-size: 16px;
-  line-height: 1.3;
+  margin-top: 4px;
+  font-size: 15px;
+  line-height: 1.23;
 }
 
 .slide11-intro {
-  margin-bottom: 15px;
-  font-size: 16px;
-  line-height: 1.3;
+  font-size: 15px;
+  line-height: 1.25;
+  margin-bottom: 9px;
 }
 
 .slide11-heading {
   color: #17324D;
-  font-size: 19px;
+  font-size: 18px;
   font-weight: 700;
-  margin: 12px 0 9px;
+  margin: 10px 0 7px;
 }
 
 .slide11-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 13px 20px;
-  margin-bottom: 19px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 11px;
 }
 
 .slide11-model {
   border-top: 3px solid #006DAE;
   background: #F2F7FB;
-  padding: 12px 15px;
-  font-size: 15px;
-  line-height: 1.3;
+  padding: 9px 11px;
+  font-size: 12px;
+  line-height: 1.25;
 }
 
 .slide11-model strong {
   color: #17324D;
-  font-size: 17px;
+  font-size: 14px;
 }
 
 .slide11-model p {
-  margin: 7px 0 0;
+  margin: 5px 0 0;
+}
+
+.slide11-chart {
+  width: 100%;
+  margin-top: 3px;
+}
+
+.slide11-chart .cell,
+.slide11-chart .cell-output,
+.slide11-chart .cell-output-display {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.slide11-chart img {
+  display: block;
+  width: 100% !important;
+  height: auto;
+  margin: 0 auto;
 }
 
 .slide11-diagnostics {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20px;
-  margin-top: 8px;
+  gap: 14px;
+  margin-top: 6px;
 }
 
 .slide11-diagnostic {
-  border-top: 2px solid #006DAE;
-  padding: 10px 5px 5px;
-  font-size: 15px;
-  line-height: 1.3;
+  background: #F2F7FB;
+  border-left: 4px solid #006DAE;
+  padding: 8px 11px;
+  font-size: 13px;
+  line-height: 1.25;
 }
 
 .slide11-diagnostic strong {
@@ -2360,19 +2380,21 @@ ggplot(
 }
 
 .slide11-diagnostic p {
-  margin: 7px 0;
+  margin: 4px 0;
 }
 
 .slide11-caution {
-  margin-top: 16px;
-  font-size: 15px;
-  line-height: 1.3;
+  border-top: 2px solid #006DAE;
+  margin-top: 11px;
+  padding-top: 8px;
+  font-size: 14px;
+  line-height: 1.25;
 }
 
 .slide11-note {
-  margin-top: 13px;
-  font-size: 11px;
-  line-height: 1.3;
+  margin-top: 5px;
+  font-size: 9px;
+  line-height: 1.15;
   color: #555;
 }
 </style>
@@ -2380,71 +2402,253 @@ ggplot(
 ::: {.slide11}
 
 ::: {.slide11-intro}
-**Selection approach:** Models were assessed using cross-validation accuracy, sensitivity to 2026, growth assumptions and data reliability.
+**Selection approach:** Models were selected based on cross-validation accuracy, sensitivity to 2026, growth assumptions and data reliability.
 :::
 
 ::: {.slide11-heading}
 Selected forecasting approaches
 :::
 
-::: {.slide11-grid}
+<div class="slide11-grid">
 
-::: {.slide11-model}
-**Overall HPC: Linear trend**
+<div class="slide11-model">
+<strong>Overall HPC: Linear</strong>
+<p>Lowest RMSE and MAE across six evaluation years.</p>
+</div>
 
-Lowest RMSE and MAE across six evaluation years, with interpretable annual growth.
-:::
+<div class="slide11-model">
+<strong>CPU: Linear</strong>
+<p>Lowest RMSE, with competitive MAE.</p>
+</div>
 
-::: {.slide11-model}
-**CPU: Linear trend**
+<div class="slide11-model">
+<strong>GPU: Naïve</strong>
+<p>Lowest RMSE and MAE, but only two evaluation years.</p>
+</div>
 
-Lowest RMSE and competitive MAE.
-:::
+<div class="slide11-model">
+<strong>FoR: Scenarios</strong>
+<p>Allocation shares used because field-level demand is unavailable.</p>
+</div>
 
-::: {.slide11-model}
-**GPU: Naïve benchmark**
-
-Lowest RMSE and MAE, but based on only two evaluation years. Longer-term trend projections remain exploratory.
-:::
-
-::: {.slide11-model}
-**Field of Research: Allocation-share scenarios**
-
-Historical allocation shares inform research-field scenarios because directly observed FoR demand is unavailable.
-:::
-
-:::
+</div>
 
 ::: {.slide11-heading}
 Residual diagnostics for selected linear models
 :::
 
-::: {.slide11-diagnostics}
+::: {.slide11-chart}
 
-::: {.slide11-diagnostic}
-**Overall HPC**
+```{r}
+#| label: slide11-residual-diagnostics
+#| echo: false
+#| warning: false
+#| message: false
+#| fig-width: 11
+#| fig-height: 3.0
+#| out-width: "100%"
+#| fig-align: center
 
-Ljung-Box test (lag 2): **p = 0.8775**
+library(dplyr)
+library(ggplot2)
 
-No significant autocorrelation detected. The 2026 residual and Q-Q tail departures warrant caution.
+# -------------------------------------------------------
+# 1. Locate the repository root reproducibly
+# -------------------------------------------------------
+
+# The here package uses project-root markers such as
+# an .Rproj file, .here file, or Git repository.
+
+if (!requireNamespace("here", quietly = TRUE)) {
+  stop(
+    "The 'here' package is required. ",
+    "Install it with install.packages('here')."
+  )
+}
+
+project_root <- here::here()
+
+hpc_path <- here::here(
+  "assets",
+  "models",
+  "overall_hpc_models.rds"
+)
+
+cpu_path <- here::here(
+  "assets",
+  "models",
+  "cpu_models.rds"
+)
+
+# Check that here() has identified the correct project.
+if (!file.exists(hpc_path) || !file.exists(cpu_path)) {
+  stop(
+    "Saved model files were not found.\n",
+    "Project root detected: ", project_root, "\n",
+    "Expected HPC file: ", hpc_path, "\n",
+    "Expected CPU file: ", cpu_path, "\n",
+    "Check the project root and assets/models folder."
+  )
+}
+
+# -------------------------------------------------------
+# 2. Load the original fitted forecasting models
+# -------------------------------------------------------
+
+hpc_models <- readRDS(hpc_path)
+cpu_models <- readRDS(cpu_path)
+
+overall_linear <- hpc_models$overall_linear
+cpu_linear <- cpu_models$cpu_linear
+
+if (!inherits(overall_linear, "lm") ||
+    !inherits(cpu_linear, "lm")) {
+  stop(
+    "The saved files must contain the fitted ",
+    "overall_linear and cpu_linear lm objects."
+  )
+}
+
+# -------------------------------------------------------
+# 3. Extract residuals
+# -------------------------------------------------------
+
+hpc_residuals <- as.numeric(
+  residuals(overall_linear)
+)
+
+cpu_residuals <- as.numeric(
+  residuals(cpu_linear)
+)
+
+stopifnot(
+  length(hpc_residuals) >= 3,
+  length(cpu_residuals) >= 3,
+  all(is.finite(hpc_residuals)),
+  all(is.finite(cpu_residuals))
+)
+
+# -------------------------------------------------------
+# 4. Recalculate Ljung-Box tests
+# -------------------------------------------------------
+
+# Match the diagnostic specification in the report:
+# lag = 2, fitdf = 0.
+
+hpc_lb <- Box.test(
+  hpc_residuals,
+  lag = 2,
+  type = "Ljung-Box",
+  fitdf = 0
+)
+
+cpu_lb <- Box.test(
+  cpu_residuals,
+  lag = 2,
+  type = "Ljung-Box",
+  fitdf = 0
+)
+
+# Check consistency with the previously reported values.
+if (
+  abs(hpc_lb$p.value - 0.8775) > 0.001 ||
+  abs(cpu_lb$p.value - 0.3608) > 0.001
+) {
+  stop(
+    "Ljung-Box p-values differ from the original report. ",
+    "Check the saved model versions and test settings."
+  )
+}
+
+# -------------------------------------------------------
+# 5. Prepare data for Q-Q plots
+# -------------------------------------------------------
+
+qq_data <- bind_rows(
+  data.frame(
+    Resource = "Overall HPC",
+    Residual = hpc_residuals
+  ),
+  data.frame(
+    Resource = "CPU",
+    Residual = cpu_residuals
+  )
+) |>
+  mutate(
+    Resource = factor(
+      Resource,
+      levels = c("Overall HPC", "CPU")
+    )
+  )
+
+# -------------------------------------------------------
+# 6. Draw the two Q-Q plots
+# -------------------------------------------------------
+
+ggplot(
+  qq_data,
+  aes(sample = Residual)
+) +
+  stat_qq(
+    colour = "#17324D",
+    size = 2.0
+  ) +
+  stat_qq_line(
+    colour = "#006DAE",
+    linewidth = 0.8
+  ) +
+  facet_wrap(
+    ~ Resource,
+    nrow = 1,
+    scales = "free_y"
+  ) +
+  labs(
+    x = "Theoretical normal quantiles",
+    y = "Sample residual quantiles"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    strip.text = element_text(
+      size = 13,
+      face = "bold",
+      colour = "#17324D"
+    ),
+    strip.background = element_rect(
+      fill = "#EAF3F9",
+      colour = NA
+    ),
+    axis.text = element_text(size = 10),
+    axis.title = element_text(size = 11),
+    panel.grid.minor = element_blank(),
+    panel.spacing = grid::unit(1.5, "lines"),
+    plot.margin = margin(5, 10, 5, 5)
+  )
+```
+
 :::
 
-::: {.slide11-diagnostic}
-**CPU**
+<div class="slide11-diagnostics">
 
-Ljung-Box test (lag 2): **p = 0.3608**
+<div class="slide11-diagnostic">
+<strong>Overall HPC</strong>
+<p>Ljung–Box test (lag 2): <strong>p = `r sprintf("%.4f", hpc_lb$p.value)`</strong></p>
+<p>No significant autocorrelation detected at the tested lags; Q–Q tail departures warrant caution.</p>
+</div>
 
-No significant autocorrelation detected. Some large residuals and Q-Q departures remain.
-:::
+<div class="slide11-diagnostic">
+<strong>CPU</strong>
+<p>Ljung–Box test (lag 2): <strong>p = `r sprintf("%.4f", cpu_lb$p.value)`</strong></p>
+<p>No significant autocorrelation detected at the tested lags; Q–Q departures warrant caution.</p>
+</div>
 
-:::
+</div>
 
 ::: {.slide11-caution}
-Neither test detected significant residual autocorrelation, but the short historical series limits confidence in the diagnostic conclusions.
+**Diagnostic conclusion:** The Ljung–Box tests found no significant autocorrelation at the tested lags. However, the short historical series and Q–Q departures limit confidence in the assumptions underlying the prediction intervals.
 :::
 
 ::: {.slide11-note}
-**Notes:** Residual diagnostics were conducted for the selected HPC and CPU linear models. Non-significant Ljung-Box results do not establish residual independence. GPU projections remain exploratory. Sources: Project model selection and scenario forecasting analyses, Chapters 9 and 10.
+**Notes:** Q–Q plots assess residual normality; Ljung–Box tests assess serial correlation. Both diagnostics use residuals from the selected full-history linear models. Non-significant tests do not establish residual independence. Prediction intervals remain conditional on model assumptions. **Methods:** [@HyndmanAthanasopoulos2021]. **Results:** Project model diagnostics.
 :::
 
 :::
