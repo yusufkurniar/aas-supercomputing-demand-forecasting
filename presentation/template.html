@@ -580,17 +580,18 @@ GPU-hours
 </div>
 </div>
 </section>
-<section id="how-reliable-is-the-historical-data" class="slide level2">
-<h2>How Reliable Is the Historical Data?</h2>
+<section id="historical-hpc-data-sources-and-reliability" class="slide level2">
+<h2>Historical HPC Data: Sources and Reliability</h2>
 <style>
 .prov-wrap {
-  margin-top: 8px;
+  width: 100%;
+  margin-top: 7px;
   display: grid;
   grid-template-columns: minmax(0, 76fr) minmax(0, 24fr);
-  gap: 18px;
+  gap: 17px;
   align-items: start;
-  width: 100%;
   font-size: 15px;
+  line-height: 1.25;
 }
 
 .prov-left {
@@ -600,14 +601,16 @@ GPU-hours
 .prov-heading {
   font-size: 19px;
   font-weight: 700;
-  margin-bottom: 7px;
+  color: #17324D;
+  margin-bottom: 8px;
 }
 
 .prov-table {
   width: 100%;
   border-collapse: separate;
-  border-spacing: 3px;
+  border-spacing: 2px;
   table-layout: fixed;
+  margin: 0;
 }
 
 .prov-table th,
@@ -638,9 +641,9 @@ GPU-hours
 }
 
 .prov-table td:not(.row-label) {
-  height: 77px;
+  height: 74px;
   font-weight: 600;
-  border-radius: 5px;
+  border-radius: 4px;
 }
 
 .prov-table .direct {
@@ -665,10 +668,10 @@ GPU-hours
 
 .prov-panel {
   background: #F1F7FB;
-  padding: 10px 13px;
+  padding: 11px 13px;
   border-radius: 8px;
   font-size: 14px;
-  line-height: 1.25;
+  line-height: 1.28;
 }
 
 .prov-panel strong {
@@ -677,7 +680,7 @@ GPU-hours
 }
 
 .prov-panel ul {
-  margin: 7px 0 0;
+  margin: 8px 0 0;
   padding-left: 19px;
 }
 
@@ -688,65 +691,72 @@ GPU-hours
 .prov-legend {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 10px;
-  margin-top: 10px;
+  gap: 11px;
+  margin-top: 13px;
+  width: 100%;
 }
 
 .prov-legend-item {
+  min-width: 0;
+  padding: 3px 9px 3px 0;
   border-right: 1px solid #DDE5EC;
-  padding-right: 8px;
+}
+
+.prov-legend-item:last-child {
+  border-right: none;
 }
 
 .prov-legend-title {
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
+  color: #17324D;
+  margin-bottom: 6px;
 }
 
 .prov-legend-desc {
   font-size: 12px;
-  line-height: 1.25;
-  margin-top: 4px;
+  line-height: 1.3;
   color: #425466;
 }
 
 .prov-dot {
   display: inline-block;
-  flex-shrink: 0;
-  width: 16px;
-  height: 16px;
-  border-radius: 4px;
+  flex: 0 0 15px;
+  width: 15px;
+  height: 15px;
+  border-radius: 3px;
 }
 
 .prov-footnote {
-  margin-top: 8px;
+  margin-top: 10px;
   font-size: 11px;
   line-height: 1.25;
   color: #555;
 }
 
 .prov-takeaway {
-  margin-top: 10px;
-  padding: 9px 14px;
+  margin-top: 12px;
+  padding: 10px 14px;
   background: #F2F7FB;
   border-left: 5px solid #006DAE;
   font-size: 16px;
-  line-height: 1.25;
+  line-height: 1.3;
 }
 
 .prov-sources {
   font-size: 10px;
   line-height: 1.2;
   color: #666;
-  margin-top: 5px;
+  margin-top: 6px;
 }
 </style>
 <div class="prov-wrap">
 <div class="prov-left">
 <div class="prov-heading">
-Overall HPC demand and allocation: 2014 - 2026
+<p>Overall HPC demand and allocation: 2014–2026</p>
 </div>
 <table class="prov-table">
 <thead>
@@ -816,25 +826,25 @@ Proxy
 Derived
 </td>
 <td class="derived-proxy">
-Derived<br>proxy
+Derived proxy
 </td>
 <td class="derived-proxy">
-Derived<br>proxy
+Derived proxy
 </td>
 <td class="derived-proxy">
-Derived<br>proxy
+Derived proxy
 </td>
 <td class="derived-proxy">
-Derived<br>proxy
+Derived proxy
 </td>
 <td class="direct">
 Direct
 </td>
 <td class="derived-proxy">
-Derived<br>proxy
+Derived proxy
 </td>
 <td class="derived-proxy">
-Derived<br>proxy
+Derived proxy
 </td>
 <td class="direct">
 Direct
@@ -889,80 +899,80 @@ Direct*
 <div class="prov-legend">
 <div class="prov-legend-item">
 <div class="prov-legend-title">
-<p><span class="prov-dot" style="background:#A9E8C4"></span> Direct</p>
+<p><span class="prov-dot" style="background-color:#A9E8C4;"></span> Direct</p>
 </div>
 <div class="prov-legend-desc">
-<p>Observed value directly reported by the source.</p>
+<p>Target measure reported by the source, including sums of reported components.</p>
 </div>
 </div>
 <div class="prov-legend-item">
 <div class="prov-legend-title">
-<p><span class="prov-dot" style="background:#FFE48A"></span> Derived</p>
+<p><span class="prov-dot" style="background-color:#FFE48A;"></span> Derived</p>
 </div>
 <div class="prov-legend-desc">
-<p>Calculated from reported values.</p>
+<p>Calculated from reported values using a documented relationship.</p>
 </div>
 </div>
 <div class="prov-legend-item">
 <div class="prov-legend-title">
-<p><span class="prov-dot" style="background:#FFB68A"></span> Proxy</p>
+<p><span class="prov-dot" style="background-color:#FFB68A;"></span> Proxy</p>
 </div>
 <div class="prov-legend-desc">
-<p>Approximated using alternative measures.</p>
+<p>Alternative observed measure used when the target measure is unavailable.</p>
 </div>
 </div>
 <div class="prov-legend-item">
 <div class="prov-legend-title">
-<p><span class="prov-dot" style="background:#F3A1A9"></span> Derived proxy</p>
+<p><span class="prov-dot" style="background-color:#F3A1A9;"></span> Derived proxy</p>
 </div>
 <div class="prov-legend-desc">
-<p>Estimated from proxy relationships or assumptions.</p>
+<p>Estimated using proxy inputs, approximate relationships or additional assumptions.</p>
 </div>
 </div>
 </div>
 <div class="prov-footnote">
-<p>*2026 allocation excludes 12,000 kSU awarded to Setonix Q to match the published demand scope. Facility coverage also varies across historical years.</p>
+<p>*2026 allocation excludes 12,000 kSU for Setonix Q to align with the published demand scope. Classifications describe how values were constructed, not statistical accuracy. Facility coverage and unit conversions introduce additional comparability limitations.</p>
 </div>
 </div>
 <div>
 <div class="prov-panel">
-<p><strong>What does this mean?</strong></p>
+<strong>What does this show?</strong>
 <ul>
 <li>
-Allocation is mostly directly reported.
+Allocation is predominantly based on reported awards.
 </li>
 <li>
-Demand combines direct observations, derived values, and proxies.
+Demand more frequently requires reconstruction from historical information.
 </li>
 <li>
-Historical records are not fully comparable across years.
+Even directly reported values may require harmonisation across facilities and years.
 </li>
 </ul>
 </div>
-<div class="prov-panel" style="margin-top: 10px; background: #FFF5EB;">
-<p><strong>Main limitations</strong></p>
+<div class="prov-panel" style="margin-top:11px; background:#FFF5EB;">
+<strong>Main limitations</strong>
 <ul>
 <li>
-Different units and accounting rules.
+Different service-unit definitions and accounting conventions.
 </li>
 <li>
-Changes in reporting scope.
+Changes in facility coverage and reporting scope.
 </li>
 <li>
-Historical conversion assumptions.
+Some demand estimates depend on approximate fulfilment relationships.
 </li>
 <li>
-Incomplete CPU/GPU separation.
+Incomplete historical CPU/GPU separation.
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="prov-takeaway">
-<p><strong>Key takeaway:</strong> Historical demand contains more estimated values than allocation. Forecasts should therefore be interpreted as planning scenarios, subject to historical measurement uncertainty.</p>
+<p><strong>Key takeaway:</strong> Historical demand relies more heavily on reconstructed values than allocation. Transparent assumptions, consistent definitions and improved national data integration are therefore essential for interpreting forecasts and strengthening future HPC planning.</p>
 </div>
-<div style="font-size: 0.40em; color: #666; margin-top: 5px;">
-<p>Sources: <span class="citation" data-cites="NCI201314 NCIAllocations202021 NCMAS2023 NCMAS2026">(<a href="#/references" role="doc-biblioref" onclick="">National Computational Infrastructure 2014a</a>, <a href="#/references" role="doc-biblioref" onclick="">2021</a>; <a href="#/references" role="doc-biblioref" onclick="">National Computational Merit Allocation Scheme 2023</a>, <a href="#/references" role="doc-biblioref" onclick="">2026</a>)</span>. Provenance classifications: project data harmonisation.</p>
+<div class="prov-sources">
+<p><strong>Sources:</strong> <span class="citation" data-cites="NCI201314 NCIAllocations202021 NCMAS2023 NCMAS2026">(<a href="#/references" role="doc-biblioref" onclick="">National Computational Infrastructure 2014a</a>, <a href="#/references" role="doc-biblioref" onclick="">2021</a>; <a href="#/references" role="doc-biblioref" onclick="">National Computational Merit Allocation Scheme 2023</a>, <a href="#/references" role="doc-biblioref" onclick="">2026</a>)</span>. Provenance classifications: project data harmonisation and reconciled historical demand/allocation workbook.</p>
 </div>
 </section>
 <section id="historical-computing-demand-by-resource-type" class="slide level2">
@@ -2137,68 +2147,79 @@ No significant autocorrelation detected at the tested lags; Q–Q departures war
 </div>
 </div>
 </section>
-<section id="key-findings-and-priorities-for-future-work" class="slide level2">
-<h2>Key Findings and Priorities for Future Work</h2>
+<section id="key-findings-and-next-steps-for-national-hpc-planning" class="slide level2">
+<h2>Key Findings and Next Steps for National HPC Planning</h2>
 <style>
 .slide14 {
   width: 100%;
-  margin-top: 5px;
-  font-size: 15px;
-  line-height: 1.3;
+  margin-top: 3px;
+  font-size: 14px;
+  line-height: 1.24;
 }
 
 .slide14-headline {
   background: #EAF3F9;
   border-left: 5px solid #006DAE;
-  padding: 14px 18px;
-  margin-bottom: 20px;
+  padding: 11px 15px;
+  margin-bottom: 13px;
   color: #17324D;
-  font-size: 20px;
+  font-size: 17px;
   font-weight: 700;
-  line-height: 1.3;
+  line-height: 1.27;
 }
 
-.slide14-columns {
+.slide14-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 26px;
+  column-gap: 23px;
   align-items: start;
 }
 
-.slide14-panel {
-  min-width: 0;
-}
-
-.slide14-panel-title {
+.slide14-colhead {
   background: #EAF3F9;
-  padding: 10px 12px;
   color: #17324D;
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 700;
   text-align: center;
-  margin-bottom: 12px;
+  padding: 9px 12px;
+  margin-bottom: 5px;
 }
 
-.slide14-item {
-  border-bottom: 1px solid #E2EAF0;
-  padding: 9px 4px 11px;
-  margin-bottom: 6px;
-  font-size: 15px;
-  line-height: 1.3;
+.slide14-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 23px;
+  border-bottom: 1px solid #DFE8EF;
+  padding: 9px 4px 10px;
+  align-items: start;
 }
 
-.slide14-item strong {
+.slide14-pair:last-child {
+  border-bottom: none;
+}
+
+.slide14-cell {
+  min-width: 0;
+  font-size: 13px;
+  line-height: 1.28;
+}
+
+.slide14-cell strong {
   display: block;
   color: #17324D;
-  font-size: 16px;
-  margin-bottom: 4px;
+  font-size: 14px;
+  margin-bottom: 3px;
+}
+
+.slide14-cell p {
+  margin: 0;
 }
 
 .slide14-bottom {
   border-top: 2px solid #006DAE;
-  margin-top: 17px;
-  padding-top: 11px;
-  font-size: 16px;
+  padding-top: 9px;
+  margin-top: 12px;
+  font-size: 14px;
   line-height: 1.3;
 }
 
@@ -2207,57 +2228,79 @@ No significant autocorrelation detected at the tested lags; Q–Q departures war
 }
 
 .slide14-note {
-  margin-top: 10px;
-  font-size: 11px;
+  margin-top: 8px;
+  font-size: 10px;
   color: #555;
-  line-height: 1.3;
+  line-height: 1.23;
 }
 </style>
 <div class="slide14">
 <div class="slide14-headline">
-<p>The fundamental challenge is not only forecasting future HPC demand, but establishing reliable and comparable national demand data.</p>
+<p>This project establishes a reproducible starting point for national HPC demand forecasting. Stronger planning decisions require integrated and comparable demand data from NCI and Pawsey.</p>
 </div>
-<div class="slide14-columns">
-<div class="slide14-panel">
-<div class="slide14-panel-title">
-<p>What the analysis tells us</p>
+<div class="slide14-grid">
+<div class="slide14-colhead">
+<p>What the analysis found</p>
 </div>
-<div class="slide14-item">
-<p><strong>Demand is projected to grow</strong></p>
-<p>Selected linear models indicate continued growth in overall HPC and CPU requirements through 2030.</p>
-</div>
-<div class="slide14-item">
-<p><strong>Forecasts depend on assumptions</strong></p>
-<p>Alternative growth models produce substantially different 2030 outcomes.</p>
-</div>
-<div class="slide14-item">
-<p><strong>Resource-level uncertainty remains</strong></p>
-<p>GPU projections are exploratory, while FoR scenarios depend on historical allocation shares.</p>
+<div class="slide14-colhead">
+<p>What the Academy can do next</p>
 </div>
 </div>
-<div class="slide14-panel">
-<div class="slide14-panel-title">
-<p>What needs to improve</p>
+<div class="slide14-pair">
+<div class="slide14-cell">
+<p><strong>Overall HPC: 2.50 million kSU by 2030</strong></p>
+<p>Selected linear projection; 95% prediction interval of <strong>1.98–3.03 million kSU</strong>.</p>
 </div>
-<div class="slide14-item">
-<p><strong>Data availability</strong></p>
-<p>Record researcher requests separately from allocations, fulfilment rates and capacity.</p>
+<div class="slide14-cell">
+<p><strong>Establish a national planning baseline</strong></p>
+<p>Use the projection and its uncertainty range as an initial scenario, not a fixed infrastructure target.</p>
 </div>
-<div class="slide14-item">
-<p><strong>Data consistency</strong></p>
-<p>Standardise definitions, resource units and conversion methods across NCI and Pawsey.</p>
 </div>
-<div class="slide14-item">
-<p><strong>Data continuity</strong></p>
-<p>Maintain annual CPU, GPU and research-field demand records with documented provenance.</p>
+<div class="slide14-pair">
+<div class="slide14-cell">
+<p><strong>CPU: 1.37 billion core-hours by 2030</strong></p>
+<p>Selected linear projection; 95% prediction interval of <strong>0.97–1.77 billion core-hours</strong>.</p>
 </div>
+<div class="slide14-cell">
+<p><strong>Plan CPU requirements separately</strong></p>
+<p>Use CPU core-hours alongside overall HPC service units, recognising differences in resource accounting.</p>
+</div>
+</div>
+<div class="slide14-pair">
+<div class="slide14-cell">
+<p><strong>GPU: Longer-term forecasts remain uncertain</strong></p>
+<p>Only five annual observations; naïve achieved the lowest RMSE in two one-step-ahead evaluations.</p>
+</div>
+<div class="slide14-cell">
+<p><strong>Retain GPU scenarios, not a single target</strong></p>
+<p>Use the naïve benchmark for comparison and refine projections when longer, more detailed GPU records become available.</p>
+</div>
+</div>
+<div class="slide14-pair">
+<div class="slide14-cell">
+<p><strong>FoR: Engineering leads recent allocations</strong></p>
+<p>Engineering &amp; Technology represents <strong>33.28%</strong> and Physical Sciences <strong>21.11%</strong> of 2021–2026 allocation shares.</p>
+</div>
+<div class="slide14-cell">
+<p><strong>Develop research-field demand evidence</strong></p>
+<p>Use allocation shares for illustrative scenarios until consistent, directly observed field-level requests are available.</p>
+</div>
+</div>
+<div class="slide14-pair">
+<div class="slide14-cell">
+<p><strong>Data integration is the critical limitation</strong></p>
+<p>NCI and Pawsey differ in reporting structures, resource units and historical coverage, requiring harmonisation and assumptions.</p>
+</div>
+<div class="slide14-cell">
+<p><strong>Build a consistent national demand dataset</strong></p>
+<p>Standardise units and definitions; distinguish requests, allocations and fulfilment; document conversion rules and data provenance.</p>
 </div>
 </div>
 <div class="slide14-bottom">
-<p><strong>Policy implication:</strong> Improving national HPC demand reporting is a prerequisite for more reliable forecasting and evidence-based infrastructure planning.</p>
+<p><strong>Recommended next step:</strong> The Academy can use this project’s data-integration workflow, forecasting models and scenario framework as a <strong>proof of concept</strong>, working with NCI and Pawsey to refine future national HPC demand estimates as more detailed data become available.</p>
 </div>
 <div class="slide14-note">
-<p>Source: Project data integration, standardisation, conversion and forecasting analysis, Chapters 03–10.</p>
+<p><strong>Notes:</strong> HPC and CPU projections use selected linear models including 2026; prediction intervals are conditional on model assumptions. GPU scenarios are exploratory. FoR percentages describe historical allocations, not directly observed demand. Overall HPC service units and CPU core-hours are different accounting measures. <strong>Source:</strong> Project data integration, standardisation and forecasting analyses, Chapters 03–10.</p>
 </div>
 </div>
 </section>
