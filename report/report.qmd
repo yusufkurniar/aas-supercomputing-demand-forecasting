@@ -1,0 +1,76 @@
+---
+title: "Forecasting Demand for National Research Supercomputing"
+subtitle: "Australian Academy of Science Internship Project"
+author: "Yusuf Kurnia Romadhon"
+
+bibliography: ../references.bib
+
+format:
+  pdf:
+    documentclass: article
+    toc: true
+    toc-depth: 2
+    number-sections: true
+    colorlinks: true
+    geometry:
+      - margin=2.5cm
+
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+
+
+# Introduction and Objectives
+
+## Project Background and Motivation
+
+High-performance computing (HPC) is an important component of Australia's research infrastructure, supporting computationally intensive research across a wide range of scientific fields [@AAS2024FutureComputing]. Australia has two national Tier-1 HPC facilities accessible to researchers: the National Computational Infrastructure (NCI) and the Pawsey Supercomputing Research Centre [@NCIWhoWeAre; @PawseyAbout].
+
+As research becomes increasingly data- and compute-intensive, understanding how demand for HPC resources is changing is important for planning Australia's future national research infrastructure [@AAS2024FutureComputing].
+
+The purpose of this project, undertaken with the Australian Academy of Science, is to analyse historical Australian research computing demand and develop evidence-based projections of future HPC demand to 2030. The analysis is intended to support national policy discussions relating to public compute investment and future research infrastructure planning [@HPCInternshipBrief].
+
+The project combines data engineering, descriptive analysis and forecasting using publicly available NCI and Pawsey data, particularly information from the National Computational Merit Allocation Scheme (NCMAS). Additional indicators are considered where sufficiently consistent and relevant data are available [@HPCInternshipBrief].
+
+## The Forecasting Problem
+
+One of the main challenges in forecasting national research computing demand is that observed HPC allocation does not necessarily represent the full level of research demand.
+
+National allocation schemes operate under finite capacity. As a result, allocated compute represents the amount of resources awarded rather than necessarily the amount researchers would use if additional capacity were available. Requested compute provides additional evidence of demand, but it may also understate underlying need where researchers constrain their requests based on expected availability or where potential users do not apply [@HPCInternshipBrief].
+
+The analysis therefore distinguishes between requested compute, allocated compute, the gap between requested and allocated compute, and broader underlying or latent demand, which cannot be observed directly from the available allocation data.
+
+A further challenge is the comparability of historical HPC information. Reporting practices, hardware systems, compute units and service-unit accounting have changed over time. CPU and GPU resources are also not directly interchangeable, while changes in Field of Research (FoR) classifications affect comparisons of research allocation across years.
+
+These limitations are particularly important because the available annual time series is relatively short. The analysis therefore documents where historical values are directly reported, derived, estimated or based on assumptions. Forecasting results are interpreted alongside these limitations rather than as precise measurements of unconstrained demand.
+
+## Project Objectives
+
+The primary objective is to develop evidence-based projections of Australian national research computing demand to 2030, while accounting for limitations in historical data availability and comparability.
+
+The project has five specific objectives:
+
+1. **Construct a documented historical dataset** of national HPC demand and allocation using publicly available NCI, Pawsey and NCMAS sources, while retaining data provenance and reporting limitations.
+
+2. **Improve historical comparability** by examining differences in reporting practices, computing systems, resource types and measurement units, and applying defensible standardisation or conversion methods where possible.
+
+3. **Analyse historical demand and allocation patterns**, including requested and allocated compute, oversubscription, CPU and GPU resources, and changes in Field of Research allocation composition.
+
+4. **Develop and evaluate forecasting approaches** appropriate for the length and quality of the available historical series, including assessments of predictive accuracy, modelling assumptions and sensitivity.
+
+5. **Develop demand scenarios to 2030** and discuss their implications for future national research computing requirements, including uncertainty and limitations.
+
+These objectives reflect the internship brief's emphasis on longitudinal data assembly, descriptive analysis, structural demand modelling and scenario development [@HPCInternshipBrief].
+
+## Project Approach and Contributions
+
+The project follows a structured analytical process covering data collection, variable definition, integration, standardisation, conversion, descriptive analysis, model development, evaluation, selection and scenario forecasting.
+
+An important contribution is the development of a documented historical dataset that brings together information reported across different years, facilities and computing systems. The analysis also distinguishes directly reported values from derived or estimated measures, allowing the reliability and comparability of historical observations to be assessed.
+
+Forecasting approaches are evaluated using the available annual data, and alternative scenarios are developed to examine possible changes in demand through 2030. The resulting analysis provides evidence for infrastructure planning discussions while recognising that historical allocation and requested compute do not fully capture underlying research demand.
+
+The detailed data preparation, modelling procedures and reproducible code are documented separately in the project's technical Quarto documentation and Git repository.
