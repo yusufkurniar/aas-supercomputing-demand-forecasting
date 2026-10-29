@@ -47,7 +47,7 @@ execute:
 
 High-performance computing (HPC) is an important component of Australia's research infrastructure, supporting computationally intensive research across a wide range of scientific fields [@AAS2024FutureComputing]. Australia has two national Tier-1 HPC facilities accessible to researchers: the National Computational Infrastructure (NCI) and the Pawsey Supercomputing Research Centre [@NCIWhoWeAre; @PawseyAbout].
 
-As research becomes increasingly data- and compute-intensive, understanding how demand for HPC resources is changing is important for planning Australia's future national research infrastructure [@AAS2024FutureComputing].
+As research becomes increasingly data and compute intensive, understanding how demand for HPC resources is changing is important for planning Australia's future national research infrastructure [@AAS2024FutureComputing].
 
 The purpose of this project, undertaken with the Australian Academy of Science, is to analyse historical Australian research computing demand and develop evidence-based projections of future HPC demand to 2030. The analysis is intended to support national policy discussions relating to public compute investment and future research infrastructure planning [@HPCInternshipBrief].
 
@@ -57,11 +57,12 @@ The project combines data engineering, descriptive analysis and forecasting usin
 
 One of the main challenges in forecasting national research computing demand is that observed HPC allocation does not necessarily represent the full level of research demand.
 
-National allocation schemes operate under finite capacity. As a result, allocated compute represents the amount of resources awarded rather than necessarily the amount researchers would use if additional capacity were available. Requested compute provides additional evidence of demand, but it may also understate underlying need where researchers constrain their requests based on expected availability or where potential users do not apply [@HPCInternshipBrief].
+National allocation schemes operate under finite capacity. As a result, allocated compute represents the amount of resources awarded rather than necessarily the amount researchers would use if additional capacity were available [@NCMAS2014Info; @NCMAS2020Info; @HPCInternshipBrief]. Requested compute provides additional evidence of demand, but it may also understate underlying need where researchers constrain their requests based on expected availability or where potential users do not apply [@HPCInternshipBrief].
 
 The analysis therefore distinguishes between requested compute, allocated compute, the gap between requested and allocated compute, and broader underlying or latent demand, which cannot be observed directly from the available allocation data.
 
-A further challenge is the comparability of historical HPC information. Reporting practices, hardware systems, compute units and service-unit accounting have changed over time. CPU and GPU resources are also not directly interchangeable, while changes in Field of Research (FoR) classifications affect comparisons of research allocation across years.
+A further challenge is the comparability of historical HPC information. Reporting practices, hardware systems, compute units and service-unit accounting have changed over time. CPU and GPU resources are also not directly interchangeable, while
+changes in Field of Research (FoR) classifications affect comparisons of research allocation across years [@ABSANZSRC2020].
 
 These limitations are particularly important because the available annual time series is relatively short. The analysis therefore documents where historical values are directly reported, derived, estimated or based on assumptions. Forecasting results are interpreted alongside these limitations rather than as precise measurements of unconstrained demand.
 
