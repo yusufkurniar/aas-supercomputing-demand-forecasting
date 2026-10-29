@@ -137,7 +137,7 @@ This ratio indicates pressure on available allocations but does not measure all 
 
 Historical records use different measurement units, including service units (SU), kilo service units (kSU), million compute hours, CPU core-hours and GPU hours. Service units are accounting measures that depend on the computing system and resource type. Consequently, values expressed in kSU are not necessarily computationally equivalent across facilities.
 
-CPU core-hours and GPU hours were treated as separate measures. Their conversion procedures are described in Section 2.5.
+CPU core-hours and GPU hours were treated as separate measures. Their conversion procedures are described in the Compute Resource Conversion section.
 
 ## Data Standardisation
 
@@ -240,7 +240,7 @@ Table @tbl-for-alignment summarises the analytical grouping applied to the repor
 
 : Analytical FoR grouping rules used for longitudinal comparison across 2014–2026. {#tbl-for-alignment}
 
-Physical Sciences and Chemical Sciences were retained as separate groups, while Earth and Environmental Sciences and Engineering and Technology were combined where historical reporting differed in detail.
+Physical Sciences, Chemical Sciences, Earth and Environmental Sciences, and Engineering and Technology were retained as separate analytical groups. Related subfields were combined within these groups where historical reporting differed in detail.
 
 The groupings were developed for analytical consistency and do not represent official one-to-one conversions between ANZSRC 2008 and ANZSRC 2020. Original research field labels and allocation values were preserved.
 
@@ -449,3 +449,507 @@ After model evaluation and selection, the selected specifications were fitted to
 The resulting projections represent extrapolations of historical demand measures under stated assumptions. They are not direct estimates of future computing capacity requirements, and they do not account explicitly for changes in national research policy, future computing architectures or potential constraints on access to HPC resources.
 
 The limited number of annual observations, differences in historical accounting and the short GPU series restrict the certainty of the projections. These limitations were considered when comparing model results and interpreting the 2030 scenarios.
+
+
+
+# Results
+
+## Initial Analysis
+
+The initial analysis examined historical HPC demand and allocation, CPU and GPU resources, and the distribution of allocations across Fields of Research (FoR). The results were used to identify trends, assess differences in reporting coverage and determine which series were suitable for forecasting.
+
+```{r}
+#| label: setup-chapter4
+#| include: false
+
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(scales)
+library(stringr)
+
+# Resolve paths from either the project root or report/ directory.
+find_project_file <- function(path) {
+  candidates <- c(path, file.path("..", path))
+  existing <- candidates[file.exists(candidates)]
+
+  if (length(existing) == 0) {
+    stop("Required project file not found: ", path)
+  }
+
+  existing[1]
+}
+
+data_dir <- "assets/data/data converted"
+
+annual_converted <- readRDS(
+  find_project_file(
+    file.path(data_dir, "annual_demand_allocation_converted.rds")
+  )
+)
+
+historical_gpu_scenarios <- readRDS(
+  find_project_file(
+    file.path(data_dir, "historical_gpu_scenarios.rds")
+  )
+)
+
+for_plot_data <- readRDS(
+  find_project_file(
+    file.path(data_dir, "for_2014_2026_harmonised_shares.rds")
+  )
+)
+
+annual_analysis <- annual_converted |>
+  arrange(year) |>
+  mutate(
+    demand_allocation_gap_ksu =
+      demand_ksu - allocation_ksu,
+    fulfilment_rate_pct =
+      100 * allocation_ksu / demand_ksu,
+    demand_growth_pct =
+      100 * (demand_ksu / lag(demand_ksu) - 1),
+    allocation_growth_pct =
+      100 * (allocation_ksu / lag(allocation_ksu) - 1)
+  )
+
+stopifnot(
+  nrow(annual_analysis) == 13,
+  all(sort(annual_analysis$year) == 2014:2026),
+  all(!is.na(annual_analysis$demand_ksu)),
+  all(!is.na(annual_analysis$allocation_ksu))
+)
+```
+
+### Historical HPC Demand and Allocation
+
+Figure @fig-historical-hpc shows historical demand and allocation between 2014 and 2026.
+
+```{r}
+#| label: fig-historical-hpc
+#| fig-cap: "Historical HPC demand and allocation, 2014–2026."
+#| fig-width: 8
+#| fig-height: 4.5
+#| out-width: 100%
+#| echo: false
+#| warning: false
+
+annual_plot_data <- annual_analysis |>
+  select(
+    year,
+    Demand = demand_ksu,
+    Allocation = allocation_ksu
+  ) |>
+  pivot_longer(
+    cols = c(Demand, Allocation),
+    names_to = "measure",
+    values_to = "value_ksu"
+  )
+
+ggplot(
+  annual_plot_data,
+  aes(
+    x = year,
+    y = value_ksu,
+    colour = measure
+  )
+) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 2) +
+  scale_x_continuous(breaks = 2014:2026) +
+  scale_y_continuous(
+    labels = label_comma()
+  ) +
+  labs(
+    x = "Year",
+    y = "Compute (kSU)",
+    colour = NULL
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "bottom"
+  )
+```
+
+Demand increased from approximately 131,356 kSU in 2014 to 2,242,817 kSU in 2026, while allocation increased from approximately 83,505 kSU to 872,288 kSU.
+
+Demand exceeded allocation throughout the analytical period. The largest recorded difference occurred in 2026, when requested resources exceeded allocations by approximately 1.37 million kSU. The fulfilment rate declined from 56.0% in 2025 to 38.9% in 2026.
+
+The series shows changes in growth around 2018, 2021 and 2026. However, historical reporting differences and conversion assumptions affect comparability. The increase in recorded demand cannot be attributed entirely to changes in researcher requirements.
+
+### CPU Demand and Allocation
+
+CPU resources were analysed separately from aggregate HPC demand because service-unit accounting differs across computing systems.
+
+```{r}
+#| label: fig-historical-cpu
+#| fig-cap: "Historical CPU demand and allocation, 2014–2026. Earlier values include estimates."
+#| fig-width: 8
+#| fig-height: 4.5
+#| out-width: 100%
+#| echo: false
+#| warning: false
+
+cpu_plot_data <- annual_converted |>
+  select(
+    year,
+    Demand = demand_cpu_core_hours,
+    Allocation = allocation_cpu_core_hours
+  ) |>
+  pivot_longer(
+    cols = c(Demand, Allocation),
+    names_to = "measure",
+    values_to = "cpu_core_hours"
+  )
+
+ggplot(
+  cpu_plot_data,
+  aes(
+    x = year,
+    y = cpu_core_hours,
+    colour = measure
+  )
+) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 2) +
+  scale_x_continuous(breaks = 2014:2026) +
+  scale_y_continuous(
+    labels = label_number(
+      scale = 1e-6,
+      accuracy = 1
+    )
+  ) +
+  labs(
+    x = "Year",
+    y = "CPU core-hours (millions)",
+    colour = NULL
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "bottom"
+  )
+```
+
+Figure @fig-historical-cpu shows the development of CPU demand and allocation in core-hours. The series provides a separate measure of CPU resource requirements after applying the conversion rules documented in Chapter 2.
+
+The historical values include estimated observations, particularly in earlier years. Consequently, the long-term trend is useful for examining the overall direction of CPU requirements, but individual year-to-year changes should not be interpreted as exact changes in physical resource consumption.
+
+### GPU Demand and Allocation
+
+GPU demand was examined separately because the historical records have more limited coverage and require additional conversion assumptions.
+
+Figure @fig-historical-gpu retains the baseline series and historical low–high conversion scenarios from the technical analysis.
+
+```{r}
+#| label: fig-historical-gpu
+#| fig-cap: "Historical GPU demand and allocation, 2014–2026. Shaded areas show historical conversion scenarios, not statistical confidence intervals."
+#| fig-width: 8
+#| fig-height: 4.7
+#| out-width: 100%
+#| echo: false
+#| warning: false
+
+gpu_plot_data <- annual_converted |>
+  select(
+    year,
+    Demand = demand_gpu_hours,
+    Allocation = allocation_gpu_hours
+  ) |>
+  pivot_longer(
+    cols = c(Demand, Allocation),
+    names_to = "measure",
+    values_to = "gpu_hours"
+  )
+
+gpu_uncertainty_data <- historical_gpu_scenarios |>
+  select(
+    year,
+    demand_gpu_hours_low,
+    demand_gpu_hours_high,
+    allocation_gpu_hours_low,
+    allocation_gpu_hours_high
+  ) |>
+  pivot_longer(
+    cols = -year,
+    names_to = c("measure", ".value"),
+    names_pattern =
+      "(demand|allocation)_(gpu_hours_low|gpu_hours_high)"
+  ) |>
+  mutate(
+    measure = recode(
+      measure,
+      demand = "Demand",
+      allocation = "Allocation"
+    )
+  )
+
+ggplot() +
+  geom_ribbon(
+    data = gpu_uncertainty_data,
+    aes(
+      x = year,
+      ymin = gpu_hours_low,
+      ymax = gpu_hours_high,
+      fill = measure,
+      group = measure
+    ),
+    alpha = 0.18,
+    colour = NA
+  ) +
+  geom_line(
+    data = gpu_plot_data,
+    aes(
+      x = year,
+      y = gpu_hours,
+      colour = measure
+    ),
+    linewidth = 1
+  ) +
+  geom_point(
+    data = gpu_plot_data,
+    aes(
+      x = year,
+      y = gpu_hours,
+      colour = measure
+    ),
+    size = 2
+  ) +
+  scale_x_continuous(breaks = 2014:2026) +
+  scale_y_continuous(
+    labels = label_number(
+      scale = 1e-6,
+      accuracy = 0.1
+    )
+  ) +
+  labs(
+    x = "Year",
+    y = "GPU-hours (millions)",
+    colour = NULL,
+    fill = NULL
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "bottom"
+  )
+```
+
+The historical GPU series is less certain than the CPU series. The 2014–2021 values include hypothetical conversion scenarios, while the 2022–2026 period contains a mixture of reported and derived resource estimates.
+
+The shaded ranges represent uncertainty associated with historical conversion assumptions rather than statistical prediction intervals.
+
+For this reason, the forecasting analysis uses the shorter 2022–2026 GPU series. This reduces reliance on earlier conversion assumptions but leaves only five annual observations for model development.
+
+### Field of Research Allocation Composition
+
+The FoR analysis examines how HPC allocations were distributed across research disciplines.
+
+To support longitudinal comparison, the reported research fields were consolidated into nine analytical groups. These groupings were developed for the project and do not represent official one-to-one conversions between FoR 2008 and FoR 2020.
+
+```{r}
+#| label: fig-for-composition
+#| fig-cap: "Annual HPC allocation shares by harmonised Field of Research group, 2014–2026."
+#| fig-width: 8
+#| fig-height: 5.5
+#| out-width: 100%
+#| echo: false
+#| warning: false
+
+# Reuse the harmonised allocation shares saved in Chapter 6.
+for_group_order <- for_plot_data |>
+  group_by(for_visual_group) |>
+  summarise(
+    average_share = mean(allocation_share, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  arrange(desc(average_share)) |>
+  pull(for_visual_group)
+
+for_plot_data <- for_plot_data |>
+  mutate(
+    for_visual_group = factor(
+      for_visual_group,
+      levels = for_group_order
+    )
+  )
+
+stopifnot(
+  all(
+    abs(
+      for_plot_data |>
+        group_by(year) |>
+        summarise(
+          total = sum(allocation_share),
+          .groups = "drop"
+        ) |>
+        pull(total) - 1
+    ) < 1e-6
+  )
+)
+
+ggplot(
+  for_plot_data,
+  aes(
+    x = factor(year),
+    y = allocation_share,
+    fill = for_visual_group
+  )
+) +
+  geom_col(
+    width = 0.8,
+    position = position_stack(reverse = TRUE)
+  ) +
+  scale_y_continuous(
+    labels = label_percent(),
+    breaks = seq(0, 1, 0.25)
+  ) +
+  coord_cartesian(ylim = c(0, 1)) +
+  labs(
+    x = "Year",
+    y = "Share of annual allocation",
+    fill = "Research field",
+    caption = paste(
+      "Analytical FoR groups, not official ANZSRC divisions.",
+      "2017 includes Pawsey-wide reporting.",
+      "Allocation shares do not measure unmet demand."
+    )
+  ) +
+  theme_minimal(base_size = 10) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "bottom",
+    legend.text = element_text(size = 8),
+    plot.caption = element_text(size = 8)
+  ) +
+  guides(
+    fill = guide_legend(ncol = 3)
+  )
+```
+
+Across 2014–2026, Engineering and Technology accounted for an average annual allocation share of approximately 25.2%, followed by Earth and Environmental Sciences at 23.5%, Physical Sciences at 19.3% and Chemical Sciences at 18.5%.
+
+The composition differs between reporting periods. During 2021–2026, Engineering and Technology accounted for approximately 34.9% of average annual allocations, while Physical Sciences represented 22.1%, Chemical Sciences 17.8% and Earth and Environmental Sciences 14.0%.
+
+These results are based on the average of annual allocation shares rather than pooled allocations across all years. Differences between periods must also be interpreted in the context of changes in classification, reporting coverage and the 2016/17 Pawsey-wide records.
+
+The FoR results describe how resources were allocated, not independently observed demand from individual research fields.
+
+## Forecast Model Evaluation
+
+The forecasting models were evaluated using rolling-origin, one-step-ahead predictions. Root Mean Squared Error (RMSE) and Mean Absolute Error (MAE) were used to compare forecast accuracy.
+
+### Overall HPC Demand
+
+The linear trend achieved the lowest RMSE and MAE for overall HPC demand during the 2021–2026 evaluation period.
+
+Its RMSE was approximately 290,898 kSU, compared with 314,588 kSU for the drift model, 378,864 kSU for the naïve benchmark and 511,614 kSU for the log-linear trend.
+
+The linear trend was therefore selected as the central model. However, the results are based on six evaluation years, and the substantial increase in 2026 affects the fitted trend.
+
+### CPU Demand
+
+For CPU demand, the linear and log-linear models performed similarly.
+
+The linear trend achieved the lowest RMSE of approximately 157.72 million core-hours, while the log-linear model achieved a slightly lower MAE.
+
+The linear trend was preferred because it provided competitive forecast accuracy without assuming continued proportional growth. The log-linear model was retained as an alternative growth scenario.
+
+### GPU Demand
+
+GPU model evaluation was limited to forecasts for 2025 and 2026.
+
+The naïve benchmark achieved the lowest RMSE, approximately 0.441 million GPU-hours. However, two evaluation years provide insufficient evidence to establish a reliable long-term forecasting model.
+
+The naïve model was retained as a reference, while linear and log-linear trends were used to explore alternative growth assumptions.
+
+## Demand Forecasts to 2030
+
+### Overall HPC Demand
+
+The selected linear trend projects overall HPC demand of approximately 2.02 million kSU in 2027, increasing to 2.50 million kSU in 2030.
+
+The model excluding the 2026 observation produces a lower 2030 projection of approximately 2.29 million kSU. In contrast, the log-linear model projects approximately 6.48 million kSU.
+
+The difference illustrates the sensitivity of longer-term projections to the latest observation and the assumed growth pattern. The log-linear trajectory should not be interpreted as a validated upper bound because it performed less well during historical evaluation.
+
+### CPU Demand
+
+The central CPU forecast increases from approximately 1.13 billion core-hours in 2027 to 1.37 billion core-hours in 2030.
+
+Excluding 2026 reduces the 2030 projection to approximately 1.26 billion core-hours, while the log-linear model produces approximately 2.48 billion core-hours.
+
+The central linear model provides a reference for planning, while the alternative trajectories illustrate the consequences of different growth assumptions.
+
+### GPU Demand
+
+GPU projections show greater uncertainty because of the shorter historical series.
+
+The naïve benchmark maintains the latest estimate at approximately 3.00 million GPU-hours through 2030. The linear trend projects approximately 3.37 million GPU-hours, while the log-linear trend projects approximately 3.68 million GPU-hours.
+
+These are exploratory scenarios rather than reliable long-term predictions. The short historical record limits the ability to determine whether GPU demand will stabilise or continue growing.
+
+## Field of Research Scenarios
+
+The FoR scenarios apply alternative historical allocation compositions to the projected overall HPC demand.
+
+Three reference periods were considered: the earlier period (2014–2020), the recent period (2021–2026) and the full period (2014–2026).
+
+The recent-period composition gives greater weight to Engineering and Technology, while the earlier-period composition places greater emphasis on Earth and Environmental Sciences.
+
+These differences affect the indicative distribution of future HPC resources across disciplines. However, the estimates are conditional on historical allocation shares and do not represent independently modelled FoR-specific demand.
+
+The comparison is therefore more useful for examining the sensitivity of future resource distribution to allocation assumptions than for predicting precise disciplinary requirements.
+
+## Summary of Results
+
+The historical analysis identifies increasing pressure between recorded HPC demand and available allocations, particularly in 2026. CPU and GPU demand also show different measurement and forecasting challenges, with GPU analysis constrained by the shorter and less consistent historical record.
+
+The linear trend provides the central forecast for overall HPC and CPU demand. By 2030, these models project approximately 2.50 million kSU and 1.37 billion CPU core-hours, respectively.
+
+GPU forecasts remain exploratory, while FoR scenarios show how assumptions about historical allocation composition affect the indicative distribution of future resources.
+
+These results provide the basis for the discussion of forecasting uncertainty and national HPC planning implications in the following chapter.
+
+
+# Discussion
+
+## Interpretation of the Main Findings
+
+The historical records show a persistent difference between requested and allocated HPC resources. This difference was particularly pronounced in 2026. It indicates pressure within the reported allocation system, although it cannot be interpreted as a direct measure of all unmet research demand. Researchers may adjust requests to expected capacity, and some potential demand is not captured by the allocation process.
+
+The forecast evaluation favoured a linear trend for overall HPC demand and CPU demand. These models produced competitive one-step-ahead accuracy and avoided the assumption that historical proportional growth would continue unchanged through 2030. Nevertheless, the central projections remain conditional on the historical accounting measures and the assumption that recent trends provide useful information about future requests.
+
+The GPU results require greater caution. The model comparison used only two evaluation years, and the 2022–2026 modelling series includes derived estimates. Differences between the naïve, linear and log-linear projections should therefore be read as exploratory outcomes under different assumptions, not as evidence that one growth path will occur.
+
+## Implications for National HPC Planning
+
+The analysis provides a documented basis for discussing the scale and direction of reported HPC demand. The projected increase in overall requests suggests that national infrastructure planning should consider demand growth alongside the historical difference between requests and allocations.
+
+However, forecast kSU values are accounting measures rather than direct measures of interchangeable computing capacity. Hardware changes, system-specific service-unit factors, GPU adoption and the design of allocation schemes may all affect the relationship between reported requests and the resources required to meet them.
+
+The FoR scenarios provide a complementary view of possible distributional changes. They show that the implied allocation of future resources across disciplines depends on which historical period is used to represent research-field composition. These results are suitable for sensitivity analysis but should not be treated as direct forecasts of unmet demand within individual disciplines.
+
+## Limitations and Future Work
+
+The principal limitation is the short and uneven historical record. Overall HPC and CPU demand contain 13 annual observations, while the GPU modelling period contains only five. Historical differences in reporting scope and conversion assumptions also limit comparisons across facilities and years.
+
+The analysis relies on publicly available records. It does not incorporate confidential application-level information, direct measures of rejected or discouraged requests, or future changes in policy and computing technology. Consequently, the forecasts should be updated as more consistent annual records become available.
+
+Future work could improve the analysis by obtaining longer and more detailed requested-versus-allocated series, validating conversion factors directly with facility operators, and recording CPU and GPU demand using stable resource definitions. Consistent FoR-level request data would also allow research-field demand to be modelled directly rather than approximated through allocation shares.
+
+# Conclusion
+
+This project assembled and standardised publicly available Australian national research HPC records covering 2014–2026 and developed demand projections through 2030. It combined data preparation, conversion validation, descriptive analysis, rolling-origin forecast evaluation and scenario development.
+
+The historical analysis found that recorded HPC requests exceeded allocations throughout the study period. For overall HPC demand and CPU demand, the linear trend was selected as the central forecasting approach. The corresponding 2030 projections were approximately 2.50 million kSU and 1.37 billion CPU core-hours. Alternative models produced substantially different outcomes, particularly under compounded proportional growth assumptions.
+
+GPU forecasts and FoR scenarios were treated more cautiously because of limited historical coverage and the distinction between allocated resources and independently observed demand. The results offer a transparent reference for future infrastructure discussions rather than a precise estimate of unconstrained national computing requirements.
+
+The main contribution is a reproducible analytical framework that makes the underlying data sources, conversion assumptions, model choices and forecasting limitations explicit. The accompanying technical Quarto documentation and Git repository preserve the detailed implementation for review and future updates.
+
+# References
+
+::: {#refs}
+:::
