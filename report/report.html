@@ -2722,19 +2722,19 @@ Table 3: Analytical FoR grouping rules used for longitudinal comparison across 
 <p>The forecasting analysis was designed to estimate national research supercomputing demand through 2030 using the historical data prepared in Chapter 2.</p>
 <p>Three quantitative demand measures were examined separately: overall High-Performance Computing (HPC) demand in kilo service units (kSU), CPU demand in core-hours and GPU demand in GPU-hours. These measures have different accounting conventions and historical coverage, so they were not combined into a single physical computing measure.</p>
 <p>A separate approach was used to examine demand across Fields of Research (FoR). Because consistent historical requests by research field were not available, FoR scenarios were developed using observed allocation shares rather than independent forecasts of researcher demand.</p>
-<p>The analysis used relatively simple forecasting methods because the annual datasets contain few observations. Model selection considered historical predictive accuracy, the assumptions underlying future growth and the suitability of each model for projections to 2030.</p>
+<p>The analysis used relatively simple forecasting methods because the annual datasets contain few observations. These methods provide interpretable benchmarks and allow different growth assumptions to be compared <span class="citation" data-cites="HyndmanAthanasopoulos2021">(<a href="#ref-HyndmanAthanasopoulos2021" role="doc-biblioref">Hyndman and Athanasopoulos 2021</a>)</span>. Model selection considered historical predictive accuracy, the assumptions underlying future growth and the suitability of each model for projections to 2030.</p>
 </section>
 <section id="forecasting-models" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="forecasting-models"><span class="header-section-number">3.2</span> Forecasting Models</h2>
-<p>Four forecasting approaches were considered: naïve forecasting, drift, linear trend and log-linear trend. The naïve and drift methods provided benchmarks against which the trend models could be evaluated.</p>
+<p>Four forecasting approaches were considered: naïve forecasting, drift, linear trend and log-linear trend. These are established approaches to time series forecasting and regression-based trend modelling <span class="citation" data-cites="HyndmanAthanasopoulos2021">(<a href="#ref-HyndmanAthanasopoulos2021" role="doc-biblioref">Hyndman and Athanasopoulos 2021</a>)</span>. The naïve and drift methods provided benchmarks against which the trend models could be evaluated.</p>
 <section id="naïve-and-drift-benchmarks" class="level3" data-number="3.2.1">
 <h3 data-number="3.2.1" class="anchored" data-anchor-id="naïve-and-drift-benchmarks"><span class="header-section-number">3.2.1</span> Naïve and Drift Benchmarks</h3>
-<p>The naïve method assumes that the next observation will equal the latest observed value:</p>
+<p>The naïve method assumes that the next observation will equal the latest observed value <span class="citation" data-cites="HyndmanAthanasopoulos2021">(<a href="#ref-HyndmanAthanasopoulos2021" role="doc-biblioref">Hyndman and Athanasopoulos 2021</a>)</span>:</p>
 <p><span class="math display">\[
 \hat{y}_{T+h} = y_T
 \]</span></p>
 <p>where <span class="math inline">\(y_T\)</span> is the most recent observation and <span class="math inline">\(h\)</span> is the forecast horizon.</p>
-<p>The drift method extends the average annual change observed between the first and last training observations:</p>
+<p>The drift method extends the average annual change observed between the first and last training observations <span class="citation" data-cites="HyndmanAthanasopoulos2021">(<a href="#ref-HyndmanAthanasopoulos2021" role="doc-biblioref">Hyndman and Athanasopoulos 2021</a>)</span>:</p>
 <p><span class="math display">\[
 \hat{y}_{T+h} =
 y_T + h\left(\frac{y_T-y_1}{T-1}\right)
@@ -2743,7 +2743,7 @@ y_T + h\left(\frac{y_T-y_1}{T-1}\right)
 </section>
 <section id="linear-trend-model" class="level3" data-number="3.2.2">
 <h3 data-number="3.2.2" class="anchored" data-anchor-id="linear-trend-model"><span class="header-section-number">3.2.2</span> Linear Trend Model</h3>
-<p>The linear trend model assumes that demand changes by a constant absolute amount each year:</p>
+<p>The linear trend model assumes that demand changes by a constant absolute amount each year <span class="citation" data-cites="HyndmanAthanasopoulos2021">(<a href="#ref-HyndmanAthanasopoulos2021" role="doc-biblioref">Hyndman and Athanasopoulos 2021</a>)</span>:</p>
 <p><span class="math display">\[
 y_t = \beta_0 + \beta_1 t + \varepsilon_t
 \]</span></p>
@@ -2753,7 +2753,7 @@ y_t = \beta_0 + \beta_1 t + \varepsilon_t
 </section>
 <section id="log-linear-trend-model" class="level3" data-number="3.2.3">
 <h3 data-number="3.2.3" class="anchored" data-anchor-id="log-linear-trend-model"><span class="header-section-number">3.2.3</span> Log-Linear Trend Model</h3>
-<p>The log-linear model assumes approximately constant proportional growth:</p>
+<p>The log-linear model assumes approximately constant proportional growth <span class="citation" data-cites="HyndmanAthanasopoulos2021">(<a href="#ref-HyndmanAthanasopoulos2021" role="doc-biblioref">Hyndman and Athanasopoulos 2021</a>)</span>:</p>
 <p><span class="math display">\[
 \log(y_t) = \beta_0 + \beta_1 t + \varepsilon_t
 \]</span></p>
@@ -2822,15 +2822,15 @@ Table 4: Forecasting targets and historical coverage.
 <h2 data-number="3.4" class="anchored" data-anchor-id="model-evaluation"><span class="header-section-number">3.4</span> Model Evaluation</h2>
 <section id="rolling-origin-cross-validation" class="level3" data-number="3.4.1">
 <h3 data-number="3.4.1" class="anchored" data-anchor-id="rolling-origin-cross-validation"><span class="header-section-number">3.4.1</span> Rolling-Origin Cross-Validation</h3>
-<p>Forecasting performance was assessed using expanding-window, one-step-ahead rolling-origin cross-validation.</p>
+<p>Forecasting performance was assessed using expanding-window, one-step-ahead rolling-origin cross-validation. This approach evaluates forecasts against observations that were not available when the models were fitted <span class="citation" data-cites="Tashman2000 HyndmanAthanasopoulos2021">(<a href="#ref-Tashman2000" role="doc-biblioref">Tashman 2000</a>; <a href="#ref-HyndmanAthanasopoulos2021" role="doc-biblioref">Hyndman and Athanasopoulos 2021</a>)</span>.</p>
 <p>Under this approach, a model was fitted using the observations available up to a particular year and then used to predict the following year. The training window was expanded by one observation for each subsequent evaluation.</p>
 <p>This approach preserves the chronological order of the data and avoids using future observations to estimate earlier forecasts.</p>
 <p>For overall HPC and CPU demand, the initial training period covered 2014–2020. One-step-ahead forecasts were evaluated for 2021–2026, producing six forecast errors for each model.</p>
-<p>For GPU demand, the initial training period covered 2022–2024, with forecasts evaluated for 2025 and 2026. This provided only two forecast errors, making GPU model comparisons less reliable than those for overall HPC and CPU demand.</p>
+<p>For GPU demand, the initial training period covered 2022–2024, with forecasts evaluated for 2025 and 2026. This provided only two forecast errors, making GPU model comparisons less reliable than those for overall HPC and CPU demand. Because evaluation used one-step-ahead forecasts, the accuracy measures do not directly establish performance over the full four-year projection horizon.</p>
 </section>
 <section id="forecast-accuracy-measures" class="level3" data-number="3.4.2">
 <h3 data-number="3.4.2" class="anchored" data-anchor-id="forecast-accuracy-measures"><span class="header-section-number">3.4.2</span> Forecast Accuracy Measures</h3>
-<p>Model accuracy was assessed using Root Mean Squared Error (RMSE) and Mean Absolute Error (MAE).</p>
+<p>Model accuracy was assessed using Root Mean Squared Error (RMSE) and Mean Absolute Error (MAE), two commonly used measures of forecast accuracy <span class="citation" data-cites="HyndmanKoehler2006 HyndmanAthanasopoulos2021">(<a href="#ref-HyndmanKoehler2006" role="doc-biblioref">Hyndman and Koehler 2006</a>; <a href="#ref-HyndmanAthanasopoulos2021" role="doc-biblioref">Hyndman and Athanasopoulos 2021</a>)</span>.</p>
 <p>RMSE was calculated as:</p>
 <p><span class="math display">\[
 \text{RMSE} =
@@ -3116,6 +3116,12 @@ Australian Academy of Science. 2026. <em>Internship Project Brief: Forecasting D
 <div id="ref-ABSANZSRC2020" class="csl-entry" role="listitem">
 Australian Bureau of Statistics. 2020. <span>“Australian and New Zealand Standard Research Classification (ANZSRC), 2020.”</span> <a href="https://www.abs.gov.au/statistics/classifications/australian-and-new-zealand-standard-research-classification-anzsrc/2020">https://www.abs.gov.au/statistics/classifications/australian-and-new-zealand-standard-research-classification-anzsrc/2020</a>.
 </div>
+<div id="ref-HyndmanAthanasopoulos2021" class="csl-entry" role="listitem">
+Hyndman, Rob J., and George Athanasopoulos. 2021. <em>Forecasting: Principles and Practice</em>. 3rd ed. OTexts. <a href="https://otexts.com/fpp3/">https://otexts.com/fpp3/</a>.
+</div>
+<div id="ref-HyndmanKoehler2006" class="csl-entry" role="listitem">
+Hyndman, Rob J., and Anne B. Koehler. 2006. <span>“Another Look at Measures of Forecast Accuracy.”</span> <em>International Journal of Forecasting</em> 22 (4): 679–88. <a href="https://doi.org/10.1016/j.ijforecast.2006.03.001">https://doi.org/10.1016/j.ijforecast.2006.03.001</a>.
+</div>
 <div id="ref-NCI201314" class="csl-entry" role="listitem">
 National Computational Infrastructure. 2014a. <em>Annual Report 2013/14</em>. <a href="https://nci.org.au/sites/default/files/annual-reports/2019-07/About%20Us_Annual%20Reports_2013-14.pdf">https://nci.org.au/sites/default/files/annual-reports/2019-07/About%20Us_Annual%20Reports_2013-14.pdf</a>.
 </div>
@@ -3187,6 +3193,9 @@ Pawsey Supercomputing Research Centre. n.d.-b. <em>Changes in Supercomputing Ser
 </div>
 <div id="ref-PawseySetonixTransition" class="csl-entry" role="listitem">
 Pawsey Supercomputing Research Centre. n.d.-c. <em>Setonix Fires up for Researchers</em>. Accessed October 18, 2026. <a href="https://pawsey.org.au/setonix-fires-up-for-researchers/">https://pawsey.org.au/setonix-fires-up-for-researchers/</a>.
+</div>
+<div id="ref-Tashman2000" class="csl-entry" role="listitem">
+Tashman, Leonard J. 2000. <span>“Out-of-Sample Tests of Forecasting Accuracy: An Analysis and Review.”</span> <em>International Journal of Forecasting</em> 16 (4): 437–50. <a href="https://doi.org/10.1016/S0169-2070(00)00065-0">https://doi.org/10.1016/S0169-2070(00)00065-0</a>.
 </div>
 </div>
 </section>

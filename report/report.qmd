@@ -271,15 +271,15 @@ Three quantitative demand measures were examined separately: overall High-Perfor
 
 A separate approach was used to examine demand across Fields of Research (FoR). Because consistent historical requests by research field were not available, FoR scenarios were developed using observed allocation shares rather than independent forecasts of researcher demand.
 
-The analysis used relatively simple forecasting methods because the annual datasets contain few observations. Model selection considered historical predictive accuracy, the assumptions underlying future growth and the suitability of each model for projections to 2030.
+The analysis used relatively simple forecasting methods because the annual datasets contain few observations. These methods provide interpretable benchmarks and allow different growth assumptions to be compared [@HyndmanAthanasopoulos2021]. Model selection considered historical predictive accuracy, the assumptions underlying future growth and the suitability of each model for projections to 2030.
 
 ## Forecasting Models
 
-Four forecasting approaches were considered: naïve forecasting, drift, linear trend and log-linear trend. The naïve and drift methods provided benchmarks against which the trend models could be evaluated.
+Four forecasting approaches were considered: naïve forecasting, drift, linear trend and log-linear trend. These are established approaches to time series forecasting and regression-based trend modelling [@HyndmanAthanasopoulos2021]. The naïve and drift methods provided benchmarks against which the trend models could be evaluated.
 
 ### Naïve and Drift Benchmarks
 
-The naïve method assumes that the next observation will equal the latest observed value:
+The naïve method assumes that the next observation will equal the latest observed value [@HyndmanAthanasopoulos2021]:
 
 $$
 \hat{y}_{T+h} = y_T
@@ -287,7 +287,7 @@ $$
 
 where $y_T$ is the most recent observation and $h$ is the forecast horizon.
 
-The drift method extends the average annual change observed between the first and last training observations:
+The drift method extends the average annual change observed between the first and last training observations [@HyndmanAthanasopoulos2021]:
 
 $$
 \hat{y}_{T+h} =
@@ -298,7 +298,7 @@ These benchmarks provided a comparison with methods that explicitly estimate a t
 
 ### Linear Trend Model
 
-The linear trend model assumes that demand changes by a constant absolute amount each year:
+The linear trend model assumes that demand changes by a constant absolute amount each year [@HyndmanAthanasopoulos2021]:
 
 $$
 y_t = \beta_0 + \beta_1 t + \varepsilon_t
@@ -312,7 +312,7 @@ However, a linear trend assumes that the historical absolute change continues ov
 
 ### Log-Linear Trend Model
 
-The log-linear model assumes approximately constant proportional growth:
+The log-linear model assumes approximately constant proportional growth [@HyndmanAthanasopoulos2021]:
 
 $$
 \log(y_t) = \beta_0 + \beta_1 t + \varepsilon_t
@@ -352,7 +352,7 @@ All models were fitted separately for each demand measure. Forecasts were expres
 
 ### Rolling-Origin Cross-Validation
 
-Forecasting performance was assessed using expanding-window, one-step-ahead rolling-origin cross-validation.
+Forecasting performance was assessed using expanding-window, one-step-ahead rolling-origin cross-validation. This approach evaluates forecasts against observations that were not available when the models were fitted [@Tashman2000; @HyndmanAthanasopoulos2021].
 
 Under this approach, a model was fitted using the observations available up to a particular year and then used to predict the following year. The training window was expanded by one observation for each subsequent evaluation.
 
@@ -360,11 +360,11 @@ This approach preserves the chronological order of the data and avoids using fut
 
 For overall HPC and CPU demand, the initial training period covered 2014–2020. One-step-ahead forecasts were evaluated for 2021–2026, producing six forecast errors for each model.
 
-For GPU demand, the initial training period covered 2022–2024, with forecasts evaluated for 2025 and 2026. This provided only two forecast errors, making GPU model comparisons less reliable than those for overall HPC and CPU demand.
+For GPU demand, the initial training period covered 2022–2024, with forecasts evaluated for 2025 and 2026. This provided only two forecast errors, making GPU model comparisons less reliable than those for overall HPC and CPU demand. Because evaluation used one-step-ahead forecasts, the accuracy measures do not directly establish performance over the full four-year projection horizon.
 
 ### Forecast Accuracy Measures
 
-Model accuracy was assessed using Root Mean Squared Error (RMSE) and Mean Absolute Error (MAE).
+Model accuracy was assessed using Root Mean Squared Error (RMSE) and Mean Absolute Error (MAE), two commonly used measures of forecast accuracy [@HyndmanKoehler2006; @HyndmanAthanasopoulos2021].
 
 RMSE was calculated as:
 
@@ -449,8 +449,6 @@ After model evaluation and selection, the selected specifications were fitted to
 The resulting projections represent extrapolations of historical demand measures under stated assumptions. They are not direct estimates of future computing capacity requirements, and they do not account explicitly for changes in national research policy, future computing architectures or potential constraints on access to HPC resources.
 
 The limited number of annual observations, differences in historical accounting and the short GPU series restrict the certainty of the projections. These limitations were considered when comparing model results and interpreting the 2030 scenarios.
-
-
 
 # Results
 
