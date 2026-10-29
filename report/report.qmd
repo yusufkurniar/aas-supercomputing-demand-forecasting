@@ -259,3 +259,193 @@ A specific comparability issue occurs in the 2016/17 Pawsey records, where facil
 Historical conversion assumptions, incomplete CPU/GPU breakdowns and differences between FoR reporting classifications introduce additional uncertainty. These issues were documented rather than removed from the analysis.
 
 The short annual series and limited GPU coverage also constrain the forecasting methods that can be evaluated. These limitations are considered in the model evaluation and sensitivity analysis presented later in the report.
+
+
+# Forecasting Methodology
+
+## Forecasting Framework
+
+The forecasting analysis was designed to estimate national research supercomputing demand through 2030 using the historical data prepared in Chapter 2.
+
+Three quantitative demand measures were examined separately: overall High-Performance Computing (HPC) demand in kilo service units (kSU), CPU demand in core-hours and GPU demand in GPU-hours. These measures have different accounting conventions and historical coverage, so they were not combined into a single physical computing measure.
+
+A separate approach was used to examine demand across Fields of Research (FoR). Because consistent historical requests by research field were not available, FoR scenarios were developed using observed allocation shares rather than independent forecasts of researcher demand.
+
+The analysis used relatively simple forecasting methods because the annual datasets contain few observations. Model selection considered historical predictive accuracy, the assumptions underlying future growth and the suitability of each model for projections to 2030.
+
+## Forecasting Models
+
+Four forecasting approaches were considered: naïve forecasting, drift, linear trend and log-linear trend. The naïve and drift methods provided benchmarks against which the trend models could be evaluated.
+
+### Naïve and Drift Benchmarks
+
+The naïve method assumes that the next observation will equal the latest observed value:
+
+$$
+\hat{y}_{T+h} = y_T
+$$
+
+where $y_T$ is the most recent observation and $h$ is the forecast horizon.
+
+The drift method extends the average annual change observed between the first and last training observations:
+
+$$
+\hat{y}_{T+h} =
+y_T + h\left(\frac{y_T-y_1}{T-1}\right)
+$$
+
+These benchmarks provided a comparison with methods that explicitly estimate a trend from the full training sample.
+
+### Linear Trend Model
+
+The linear trend model assumes that demand changes by a constant absolute amount each year:
+
+$$
+y_t = \beta_0 + \beta_1 t + \varepsilon_t
+$$
+
+where $y_t$ represents demand in year $t$, $\beta_0$ is the intercept, $\beta_1$ is the estimated annual change and $\varepsilon_t$ is the error term.
+
+This specification is straightforward to interpret. For example, when CPU demand is expressed in millions of core-hours, the estimated trend coefficient represents the average annual increase in that unit.
+
+However, a linear trend assumes that the historical absolute change continues over the forecast period. It does not account directly for future changes in computing technology, allocation policies or research funding.
+
+### Log-Linear Trend Model
+
+The log-linear model assumes approximately constant proportional growth:
+
+$$
+\log(y_t) = \beta_0 + \beta_1 t + \varepsilon_t
+$$
+
+The corresponding growth rate is:
+
+$$
+g = \left(e^{\beta_1}-1\right)\times100\%
+$$
+
+where $g$ is the implied annual percentage growth rate.
+
+Unlike the linear model, the log-linear specification allows the absolute annual increase to grow as demand rises. This can produce substantially higher long-term projections when historical growth is strong.
+
+The model requires positive demand observations and assumes that proportional growth remains relevant over the forecast horizon. Its projections were therefore considered alongside the linear model rather than accepted solely on the basis of historical fit.
+
+## Forecasting Targets and Historical Coverage
+
+The forecasting models were applied separately to the available demand measures.
+
+| Forecasting target | Historical period | Measurement unit | Main consideration |
+|---|---|---|---|
+| Overall HPC demand | 2014–2026 | kSU | Historical reporting and accounting comparability |
+| CPU demand | 2014–2026 | Million CPU core-hours | System-specific conversion assumptions |
+| GPU demand | 2022–2026 | Million GPU-hours | Shorter series and estimated resource-level values |
+
+: Forecasting targets and historical coverage. {#tbl-forecast-targets}
+
+The overall HPC and CPU series cover 13 annual observations. GPU demand required a shorter modelling period because earlier GPU values were constructed using hypothetical conversion scenarios rather than sufficiently supported resource-level demand observations.
+
+The GPU analysis therefore focused on 2022–2026. These recent values also include derived estimates and working conversion assumptions, which were considered when interpreting forecast reliability.
+
+All models were fitted separately for each demand measure. Forecasts were expressed in the corresponding units rather than combining CPU core-hours and GPU hours.
+
+## Model Evaluation
+
+### Rolling-Origin Cross-Validation
+
+Forecasting performance was assessed using expanding-window, one-step-ahead rolling-origin cross-validation.
+
+Under this approach, a model was fitted using the observations available up to a particular year and then used to predict the following year. The training window was expanded by one observation for each subsequent evaluation.
+
+This approach preserves the chronological order of the data and avoids using future observations to estimate earlier forecasts.
+
+For overall HPC and CPU demand, the initial training period covered 2014–2020. One-step-ahead forecasts were evaluated for 2021–2026, producing six forecast errors for each model.
+
+For GPU demand, the initial training period covered 2022–2024, with forecasts evaluated for 2025 and 2026. This provided only two forecast errors, making GPU model comparisons less reliable than those for overall HPC and CPU demand.
+
+### Forecast Accuracy Measures
+
+Model accuracy was assessed using Root Mean Squared Error (RMSE) and Mean Absolute Error (MAE).
+
+RMSE was calculated as:
+
+$$
+\text{RMSE} =
+\sqrt{
+\frac{1}{n}
+\sum_{t=1}^{n}
+(y_t-\hat{y}_t)^2
+}
+$$
+
+MAE was calculated as:
+
+$$
+\text{MAE} =
+\frac{1}{n}
+\sum_{t=1}^{n}
+|y_t-\hat{y}_t|
+$$
+
+where $y_t$ is the observed value, $\hat{y}_t$ is the forecast value and $n$ is the number of evaluated forecasts.
+
+Both measures are expressed in the same units as the forecasting target. Lower values indicate better predictive accuracy.
+
+RMSE gives greater weight to larger errors, while MAE measures the average absolute error. Both were considered because individual observations can have a substantial influence on accuracy measures when the evaluation period is short.
+
+Model performance was compared within each demand measure. RMSE and MAE values were not compared directly across HPC, CPU and GPU series because their measurement units differ.
+
+## Model Selection and Sensitivity Analysis
+
+Model selection considered predictive accuracy, interpretability and the assumptions required to extend historical trends through 2030.
+
+A model with the lowest historical error was not automatically selected if its growth assumptions produced projections that were difficult to justify from the available evidence.
+
+The linear and log-linear specifications were compared particularly closely because they represent different future growth patterns. Linear models assume a constant absolute annual increase, while log-linear models imply compounded proportional growth.
+
+A sensitivity analysis was also conducted by fitting trend models with and without the 2026 observation. This examined how strongly the latest reported year influenced estimated growth and the resulting projections.
+
+The comparison was intended to assess sensitivity to the historical sample rather than determine whether the 2026 observation represented a temporary or permanent change.
+
+Forecast trajectories derived from different model specifications were treated as alternative assumptions, not formal statistical prediction intervals.
+
+## Field of Research Scenario Development
+
+FoR scenarios were developed separately from the overall HPC, CPU and GPU forecasting models.
+
+The available FoR data describe the distribution of allocated computing resources across research fields. They do not provide a consistent historical series of independently observed demand for every research field.
+
+A top-down approach was therefore used. The selected overall HPC demand projection was distributed across the nine harmonised FoR groups using alternative assumptions about future allocation shares.
+
+For research field $i$ and forecast year $t$, the indicative allocation-share-based demand was calculated as:
+
+$$
+\hat{D}_{i,t} = \hat{D}_t \times s_i
+$$
+
+where $\hat{D}_t$ is the overall forecast HPC demand and $s_i$ is the assumed share for research field $i$.
+
+Three historical periods were examined to construct alternative share assumptions:
+
+| Scenario | Historical basis | Purpose |
+|---|---|---|
+| Recent composition | 2021–2026 | Reflect the more recent FoR reporting period |
+| Full-period composition | 2014–2026 | Reflect the broader historical allocation pattern |
+| Earlier composition | 2014–2020 | Examine sensitivity to the earlier research-field distribution |
+
+: Historical periods used to construct FoR allocation-share scenarios. {#tbl-for-scenarios}
+
+For each scenario, the relevant historical allocation shares were used to derive a distribution across the harmonised research-field groups.
+
+Differences in category coverage were considered when preparing the historical averages. Missing research-field observations were not automatically treated as zero allocations, and scenario shares were normalised where required to produce a complete distribution.
+
+These scenarios illustrate how alternative assumptions about research-field composition affect the distribution of forecast demand. They do not represent independently validated forecasts of future requests by FoR.
+
+## Forecast Horizon and Interpretation
+
+The final forecasting horizon covers 2027–2030.
+
+After model evaluation and selection, the selected specifications were fitted to the available historical data to generate future projections. Alternative growth assumptions and sensitivity specifications were retained to examine how the forecasts changed under different modelling choices.
+
+The resulting projections represent extrapolations of historical demand measures under stated assumptions. They are not direct estimates of future computing capacity requirements, and they do not account explicitly for changes in national research policy, future computing architectures or potential constraints on access to HPC resources.
+
+The limited number of annual observations, differences in historical accounting and the short GPU series restrict the certainty of the projections. These limitations were considered when comparing model results and interpreting the 2030 scenarios.
