@@ -2420,7 +2420,7 @@ window.Quarto = {
 <h1 data-number="1"><span class="header-section-number">1</span> Introduction and Objectives</h1>
 <section id="project-background-and-motivation" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="project-background-and-motivation"><span class="header-section-number">1.1</span> Project Background and Motivation</h2>
-<p>High-performance computing (HPC) is an important component of Australia’s research infrastructure, supporting computationally intensive research across a wide range of scientific fields <span class="citation" data-cites="AAS2024FutureComputing">(<a href="#ref-AAS2024FutureComputing" role="doc-biblioref">Australian Academy of Science 2024</a>)</span>. Australia has two national Tier-1 HPC facilities accessible to researchers: the National Computational Infrastructure (NCI) and the Pawsey Supercomputing Research Centre <span class="citation" data-cites="NCIWhoWeAre PawseyAbout">(<a href="#ref-NCIWhoWeAre" role="doc-biblioref">National Computational Infrastructure, n.d.</a>; <a href="#ref-PawseyAbout" role="doc-biblioref">Pawsey Supercomputing Research Centre, n.d.</a>)</span>.</p>
+<p>High-performance computing (HPC) is an important component of Australia’s research infrastructure, supporting computationally intensive research across a wide range of scientific fields <span class="citation" data-cites="AAS2024FutureComputing">(<a href="#ref-AAS2024FutureComputing" role="doc-biblioref">Australian Academy of Science 2024</a>)</span>. Australia has two national Tier-1 HPC facilities accessible to researchers: the National Computational Infrastructure (NCI) and the Pawsey Supercomputing Research Centre <span class="citation" data-cites="NCIWhoWeAre PawseyAbout">(<a href="#ref-NCIWhoWeAre" role="doc-biblioref">National Computational Infrastructure, n.d.-b</a>; <a href="#ref-PawseyAbout" role="doc-biblioref">Pawsey Supercomputing Research Centre, n.d.-a</a>)</span>.</p>
 <p>As research becomes increasingly data and compute intensive, understanding how demand for HPC resources is changing is important for planning Australia’s future national research infrastructure <span class="citation" data-cites="AAS2024FutureComputing">(<a href="#ref-AAS2024FutureComputing" role="doc-biblioref">Australian Academy of Science 2024</a>)</span>.</p>
 <p>The purpose of this project, undertaken with the Australian Academy of Science, is to analyse historical Australian research computing demand and develop evidence-based projections of future HPC demand to 2030. The analysis is intended to support national policy discussions relating to public compute investment and future research infrastructure planning <span class="citation" data-cites="HPCInternshipBrief">(<a href="#ref-HPCInternshipBrief" role="doc-biblioref">Australian Academy of Science 2026</a>)</span>.</p>
 <p>The project combines data engineering, descriptive analysis and forecasting using publicly available NCI and Pawsey data, particularly information from the National Computational Merit Allocation Scheme (NCMAS). Additional indicators are considered where sufficiently consistent and relevant data are available <span class="citation" data-cites="HPCInternshipBrief">(<a href="#ref-HPCInternshipBrief" role="doc-biblioref">Australian Academy of Science 2026</a>)</span>.</p>
@@ -2428,7 +2428,7 @@ window.Quarto = {
 <section id="the-forecasting-problem" class="level2" data-number="1.2">
 <h2 data-number="1.2" class="anchored" data-anchor-id="the-forecasting-problem"><span class="header-section-number">1.2</span> The Forecasting Problem</h2>
 <p>One of the main challenges in forecasting national research computing demand is that observed HPC allocation does not necessarily represent the full level of research demand.</p>
-<p>National allocation schemes operate under finite capacity. As a result, allocated compute represents the amount of resources awarded rather than necessarily the amount researchers would use if additional capacity were available <span class="citation" data-cites="NCMAS2014Info NCMAS2020Info HPCInternshipBrief">(<a href="#ref-NCMAS2014Info" role="doc-biblioref">National Computational Infrastructure 2014</a>, <a href="#ref-NCMAS2020Info" role="doc-biblioref">2020</a>; <a href="#ref-HPCInternshipBrief" role="doc-biblioref">Australian Academy of Science 2026</a>)</span>. Requested compute provides additional evidence of demand, but it may also understate underlying need where researchers constrain their requests based on expected availability or where potential users do not apply <span class="citation" data-cites="HPCInternshipBrief">(<a href="#ref-HPCInternshipBrief" role="doc-biblioref">Australian Academy of Science 2026</a>)</span>.</p>
+<p>National allocation schemes operate under finite capacity. As a result, allocated compute represents the amount of resources awarded rather than necessarily the amount researchers would use if additional capacity were available <span class="citation" data-cites="NCMAS2014Info NCMAS2020Info HPCInternshipBrief">(<a href="#ref-NCMAS2014Info" role="doc-biblioref">National Computational Infrastructure 2014b</a>, <a href="#ref-NCMAS2020Info" role="doc-biblioref">2020b</a>; <a href="#ref-HPCInternshipBrief" role="doc-biblioref">Australian Academy of Science 2026</a>)</span>. Requested compute provides additional evidence of demand, but it may also understate underlying need where researchers constrain their requests based on expected availability or where potential users do not apply <span class="citation" data-cites="HPCInternshipBrief">(<a href="#ref-HPCInternshipBrief" role="doc-biblioref">Australian Academy of Science 2026</a>)</span>.</p>
 <p>The analysis therefore distinguishes between requested compute, allocated compute, the gap between requested and allocated compute, and broader underlying or latent demand, which cannot be observed directly from the available allocation data.</p>
 <p>A further challenge is the comparability of historical HPC information. Reporting practices, hardware systems, compute units and service-unit accounting have changed over time. CPU and GPU resources are also not directly interchangeable, while changes in Field of Research (FoR) classifications affect comparisons of research allocation across years <span class="citation" data-cites="ABSANZSRC2020">(<a href="#ref-ABSANZSRC2020" role="doc-biblioref">Australian Bureau of Statistics 2020</a>)</span>.</p>
 <p>These limitations are particularly important because the available annual time series is relatively short. The analysis therefore documents where historical values are directly reported, derived, estimated or based on assumptions. Forecasting results are interpreted alongside these limitations rather than as precise measurements of unconstrained demand.</p>
@@ -2458,8 +2458,8 @@ window.Quarto = {
 <h1 data-number="2"><span class="header-section-number">2</span> Data Sources and Preparation</h1>
 <section id="data-sources-and-coverage" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="data-sources-and-coverage"><span class="header-section-number">2.1</span> Data Sources and Coverage</h2>
-<p>The analysis covers 13 financial years, from 2013/14 to 2025/26, represented by analytical years 2014–2026. Data were assembled from National Computational Infrastructure (NCI) annual reports, Pawsey Supercomputing Research Centre publications and National Computational Merit Allocation Scheme (NCMAS) outcomes.</p>
-<p>The sources provide different levels of detail. Earlier publications mainly contain annual or facility-level summaries, while more recent NCMAS outcomes include project-level allocations, computing resources and research fields.</p>
+<p>The analysis covers 13 financial years, from 2013/14 to 2025/26, represented by analytical years 2014–2026. Earlier data were assembled primarily from National Computational Infrastructure (NCI) annual reports and Pawsey Supercomputing Research Centre publications <span class="citation" data-cites="NCI201314 NCI201415 NCI201516 NCI201617 Pawsey201617 NCI201718 NCI201819 NCI201920">(<a href="#ref-NCI201314" role="doc-biblioref">National Computational Infrastructure 2014a</a>, <a href="#ref-NCI201415" role="doc-biblioref">2015</a>, <a href="#ref-NCI201516" role="doc-biblioref">2016</a>, <a href="#ref-NCI201617" role="doc-biblioref">2017</a>, <a href="#ref-NCI201718" role="doc-biblioref">2018</a>, <a href="#ref-NCI201819" role="doc-biblioref">2019</a>, <a href="#ref-NCI201920" role="doc-biblioref">2020a</a>; <a href="#ref-Pawsey201617" role="doc-biblioref">Pawsey Supercomputing Research Centre 2017</a>)</span>. More recent data were drawn from National Computational Merit Allocation Scheme (NCMAS) outcomes <span class="citation" data-cites="NCMAS2021 NCMAS2022 NCMAS2023 NCMAS2024 NCMAS2025 NCMAS2026">(<a href="#ref-NCMAS2021" role="doc-biblioref">National Computational Merit Allocation Scheme 2021</a>, <a href="#ref-NCMAS2022" role="doc-biblioref">2022</a>, <a href="#ref-NCMAS2023" role="doc-biblioref">2023</a>, <a href="#ref-NCMAS2024" role="doc-biblioref">2024</a>, <a href="#ref-NCMAS2025" role="doc-biblioref">2025</a>, <a href="#ref-NCMAS2026" role="doc-biblioref">2026</a>)</span>.</p>
+<p>The sources provide different levels of detail. Earlier publications mainly contain annual or facility-level summaries, while more recent NCMAS outcomes include project-level allocations, computing resources and research fields <span class="citation" data-cites="NCMAS2021 NCMAS2024 NCMAS2026">(<a href="#ref-NCMAS2021" role="doc-biblioref">National Computational Merit Allocation Scheme 2021</a>, <a href="#ref-NCMAS2024" role="doc-biblioref">2024</a>, <a href="#ref-NCMAS2026" role="doc-biblioref">2026</a>)</span>. Different documents sometimes supplied requested compute, allocations and FoR information for the same year. Historical applicant guidance was also reviewed to understand changes in allocation rules and resource definitions <span class="citation" data-cites="NCMAS2014Info NCMAS2020Info NCMAS2023Info NCMAS2024Info NCMAS2026Info">(<a href="#ref-NCMAS2014Info" role="doc-biblioref">National Computational Infrastructure 2014b</a>, <a href="#ref-NCMAS2020Info" role="doc-biblioref">2020b</a>, <a href="#ref-NCMAS2023Info" role="doc-biblioref">2022</a>, <a href="#ref-NCMAS2024Info" role="doc-biblioref">2023</a>, <a href="#ref-NCMAS2026Info" role="doc-biblioref">2025</a>)</span>.</p>
 <div id="tbl-data-sources" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-data-sources-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -2516,12 +2516,12 @@ Table 1: Main data sources and their analytical roles.
 </section>
 <section id="variable-definitions-and-measurement-units" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="variable-definitions-and-measurement-units"><span class="header-section-number">2.3</span> Variable Definitions and Measurement Units</h2>
-<p>The main annual variables are requested compute, allocated compute and the difference between them. Where both measures are available on a comparable basis, the request-to-allocation ratio is calculated as:</p>
+<p>The main annual variables are requested compute and allocated compute. Their difference is the observed request–allocation gap, not a direct estimate of latent demand. Where both measures are available on a comparable basis, the request-to-allocation ratio is calculated as:</p>
 <p><span class="math display">\[
 R_t = \frac{D_t}{A_t}
 \]</span></p>
 <p>where <span class="math inline">\(D_t\)</span> represents requested compute and <span class="math inline">\(A_t\)</span> represents allocated compute in year <span class="math inline">\(t\)</span>.</p>
-<p>This ratio indicates pressure on available allocations but does not measure all unmet research demand. It is calculated only when the two values have compatible units and reporting scope.</p>
+<p>This ratio indicates pressure on available allocations but does not measure all unmet research demand. The corresponding fulfilment rate is <span class="math inline">\(A_t/D_t\)</span>, and the request–allocation gap is <span class="math inline">\(D_t-A_t\)</span>. All three indicators are calculated only when the values have compatible units and reporting scope <span class="citation" data-cites="HPCInternshipBrief">(<a href="#ref-HPCInternshipBrief" role="doc-biblioref">Australian Academy of Science 2026</a>)</span>.</p>
 <p>Historical records use different measurement units, including service units (SU), kilo service units (kSU), million compute hours, CPU core-hours and GPU hours. Service units are accounting measures that depend on the computing system and resource type. Consequently, values expressed in kSU are not necessarily computationally equivalent across facilities.</p>
 <p>CPU core-hours and GPU hours were treated as separate measures. Their conversion procedures are described in the Compute Resource Conversion section.</p>
 </section>
@@ -2534,7 +2534,7 @@ R_t = \frac{D_t}{A_t}
 </section>
 <section id="compute-resource-conversion" class="level2" data-number="2.5">
 <h2 data-number="2.5" class="anchored" data-anchor-id="compute-resource-conversion"><span class="header-section-number">2.5</span> Compute Resource Conversion</h2>
-<p>Historical demand and allocation values were reported using different accounting conventions. To improve comparability, compute-resource conversion was undertaken according to the reporting year, computing system, resource type and available accounting documentation.</p>
+<p>Historical demand and allocation values were reported using different accounting conventions. To improve comparability, compute-resource conversion was undertaken according to the reporting year, computing system, resource type and available accounting documentation <span class="citation" data-cites="NCIGadiTransition PawseySetonixTransition Pawsey2023Services">(<a href="#ref-NCIGadiTransition" role="doc-biblioref">National Computational Infrastructure, n.d.-a</a>; <a href="#ref-PawseySetonixTransition" role="doc-biblioref">Pawsey Supercomputing Research Centre, n.d.-c</a>, <a href="#ref-Pawsey2023Services" role="doc-biblioref">n.d.-b</a>)</span>.</p>
 <p>The conversion process preserved original observations and distinguished directly reported values from derived and assumed estimates. Documented system-specific factors were prioritised, while assumptions were recorded where direct conversion information was unavailable.</p>
 <section id="conversion-formulas" class="level3" data-number="2.5.1">
 <h3 data-number="2.5.1" class="anchored" data-anchor-id="conversion-formulas"><span class="header-section-number">2.5.1</span> Conversion Formulas</h3>
@@ -2623,22 +2623,22 @@ Table 2: Main compute-resource conversion rules recorded in the year-by-year co
 </div>
 </figure>
 </div>
-<p>The factors were applied to the corresponding system and reporting period rather than to aggregate kSU values without a resource breakdown.</p>
-<p>For the earlier years, a factor of 1 SU per CPU core-hour was used as a baseline assumption where a more specific accounting factor was unavailable. The 2019/20 records required identification of the CPU and GPU resource components before applying separate conversions.</p>
+<p>The factors were compiled from system-specific documentation and the project’s recorded conversion assumptions <span class="citation" data-cites="NCIGadiTransition PawseySetonixTransition Pawsey2023Services NCMAS2026Info">(<a href="#ref-NCIGadiTransition" role="doc-biblioref">National Computational Infrastructure, n.d.-a</a>, <a href="#ref-NCMAS2026Info" role="doc-biblioref">2025</a>; <a href="#ref-PawseySetonixTransition" role="doc-biblioref">Pawsey Supercomputing Research Centre, n.d.-c</a>, <a href="#ref-Pawsey2023Services" role="doc-biblioref">n.d.-b</a>)</span>. They were applied to the corresponding system and reporting period, rather than indiscriminately to aggregate kSU values without a resource breakdown.</p>
+<p>For the earlier years, a factor of 1 SU per CPU core-hour was used as a baseline assumption where a more specific accounting factor was unavailable. For some 2019/20 records, the original technical conversion used a documented working assumption of 100% Gadi CPU-equivalent at 2 SU per CPU core-hour because a reliable CPU/GPU split was unavailable. This assumption should not be interpreted as a directly observed resource breakdown.</p>
 <p>Historical Fornax GPU records could not be converted reliably using the available information. These observations were retained with their original units rather than assigned an unsupported conversion factor.</p>
 </section>
 <section id="conversion-validation-and-limitations" class="level3" data-number="2.5.3">
 <h3 data-number="2.5.3" class="anchored" data-anchor-id="conversion-validation-and-limitations"><span class="header-section-number">2.5.3</span> Conversion Validation and Limitations</h3>
 <p>Converted values were reviewed against the original reported units, available system-level records and published annual totals where comparable information was available.</p>
-<p>CPU and GPU resources were kept separate because their physical computing hours are not interchangeable. Aggregate service-unit totals were not converted into CPU or GPU hours unless the relevant resource breakdown and accounting factors were available.</p>
+<p>CPU and GPU resources were kept separate because their physical computing hours are not interchangeable. Aggregate service-unit totals were converted into CPU or GPU hours only where the resource breakdown and accounting factors were available, or where a documented working assumption was applied. Conversions based on assumptions were identified separately from directly reported values.</p>
 <p>Missing historical GPU observations were treated as unavailable information rather than evidence of zero demand. Conversion status and supporting assumptions were retained to distinguish reported values, calculated measures and estimates.</p>
-<p>The complete year-by-year conversion worksheet, calculations and validation code are provided in the technical project documentation.</p>
+<p>The complete year-by-year conversion worksheet, calculations and validation code are provided in the technical project documentation. Resource-specific FoR estimates produced later in the workflow distribute annual values using historical allocation shares; they are not directly observed field-level CPU or GPU demand.</p>
 </section>
 </section>
 <section id="field-of-research-classification-alignment" class="level2" data-number="2.6">
 <h2 data-number="2.6" class="anchored" data-anchor-id="field-of-research-classification-alignment"><span class="header-section-number">2.6</span> Field of Research Classification Alignment</h2>
 <p>The FoR data were standardised in two stages to support comparisons across 2014–2026.</p>
-<p>The first stage addressed differences between the FoR 2008-based reporting period (2014–2020) and the FoR 2020-based period (2021–2026). Selected historical fields were combined into broader reporting categories through <code>for_analysis_group</code>, while the existing standardised categories were retained for the later period.</p>
+<p>The first stage addressed differences between the FoR 2008-based reporting period (2014–2020) and the FoR 2020-based period (2021–2026) <span class="citation" data-cites="ABSANZSRC2020">(<a href="#ref-ABSANZSRC2020" role="doc-biblioref">Australian Bureau of Statistics 2020</a>)</span>. Selected historical fields were combined into broader reporting categories through <code>for_analysis_group</code>, while the existing standardised categories were retained for the later period.</p>
 <p>The second stage established nine analytical groups for longitudinal comparison through <code>for_visual_group</code>. These groups were informed by the broader research-field categories used in NCI and Pawsey annual reporting. Related categories were combined where reporting detail differed across years, rather than assuming that the two FoR classification systems were directly equivalent.</p>
 <p>Original field labels were cleaned by removing numerical prefixes, standardising case, replacing ampersands and removing excess whitespace. The cleaned labels were then assigned to the nine groups using explicit matching rules.</p>
 <p>Table <a href="#tbl-for-alignment" class="quarto-xref">Table 3</a> summarises the analytical grouping applied to the reported research fields.</p>
@@ -2710,7 +2710,7 @@ Table 3: Analytical FoR grouping rules used for longitudinal comparison across 
 <h2 data-number="2.7" class="anchored" data-anchor-id="data-quality-assessment"><span class="header-section-number">2.7</span> Data Quality Assessment</h2>
 <p>Data quality was assessed using source provenance, reporting scope, measurement-unit comparability and the availability of directly observed values.</p>
 <p>The final datasets contain both directly reported observations and reconstructed historical measures. Their reliability therefore varies across reporting years and resource types.</p>
-<p>A specific comparability issue occurs in the 2016/17 Pawsey records, where facility-wide usage information differs in scope from NCMAS allocation data. This distinction was retained when preparing the historical FoR dataset.</p>
+<p>A specific comparability issue occurs in the 2016/17 Pawsey records, where facility-wide usage information differs in scope from NCMAS allocation data <span class="citation" data-cites="Pawsey201617">(<a href="#ref-Pawsey201617" role="doc-biblioref">Pawsey Supercomputing Research Centre 2017</a>)</span>. This distinction was retained when preparing the historical FoR dataset.</p>
 <p>Historical conversion assumptions, incomplete CPU/GPU breakdowns and differences between FoR reporting classifications introduce additional uncertainty. These issues were documented rather than removed from the analysis.</p>
 <p>The short annual series and limited GPU coverage also constrain the forecasting methods that can be evaluated. These limitations are considered in the model evaluation and sensitivity analysis presented later in the report.</p>
 </section>
@@ -3116,17 +3116,77 @@ Australian Academy of Science. 2026. <em>Internship Project Brief: Forecasting D
 <div id="ref-ABSANZSRC2020" class="csl-entry" role="listitem">
 Australian Bureau of Statistics. 2020. <span>“Australian and New Zealand Standard Research Classification (ANZSRC), 2020.”</span> <a href="https://www.abs.gov.au/statistics/classifications/australian-and-new-zealand-standard-research-classification-anzsrc/2020">https://www.abs.gov.au/statistics/classifications/australian-and-new-zealand-standard-research-classification-anzsrc/2020</a>.
 </div>
+<div id="ref-NCI201314" class="csl-entry" role="listitem">
+National Computational Infrastructure. 2014a. <em>Annual Report 2013/14</em>. <a href="https://nci.org.au/sites/default/files/annual-reports/2019-07/About%20Us_Annual%20Reports_2013-14.pdf">https://nci.org.au/sites/default/files/annual-reports/2019-07/About%20Us_Annual%20Reports_2013-14.pdf</a>.
+</div>
 <div id="ref-NCMAS2014Info" class="csl-entry" role="listitem">
-National Computational Infrastructure. 2014. <span>“NCMAS Information for Applicants.”</span> <a href="https://nci.org.au/news-events/news/ncmas-information-applicants">https://nci.org.au/news-events/news/ncmas-information-applicants</a>.
+National Computational Infrastructure. 2014b. <span>“NCMAS Information for Applicants.”</span> <a href="https://nci.org.au/news-events/news/ncmas-information-applicants">https://nci.org.au/news-events/news/ncmas-information-applicants</a>.
+</div>
+<div id="ref-NCI201415" class="csl-entry" role="listitem">
+National Computational Infrastructure. 2015. <em>Annual Report 2014/15</em>. <a href="https://nci.org.au/sites/default/files/annual-reports/2019-07/About%20Us_Annual%20Reports_2014-15.pdf">https://nci.org.au/sites/default/files/annual-reports/2019-07/About%20Us_Annual%20Reports_2014-15.pdf</a>.
+</div>
+<div id="ref-NCI201516" class="csl-entry" role="listitem">
+National Computational Infrastructure. 2016. <em>Annual Report 2015/16</em>. <a href="https://nci.org.au/sites/default/files/annual-reports/2019-07/About%20Us_Annual%20Reports_2015-16.pdf">https://nci.org.au/sites/default/files/annual-reports/2019-07/About%20Us_Annual%20Reports_2015-16.pdf</a>.
+</div>
+<div id="ref-NCI201617" class="csl-entry" role="listitem">
+National Computational Infrastructure. 2017. <em>Annual Report 2016/17</em>. <a href="https://nci.org.au/sites/default/files/annual-reports/2019-07/About%20Us_Annual%20Reports_2016-17.pdf">https://nci.org.au/sites/default/files/annual-reports/2019-07/About%20Us_Annual%20Reports_2016-17.pdf</a>.
+</div>
+<div id="ref-NCI201718" class="csl-entry" role="listitem">
+National Computational Infrastructure. 2018. <em>Annual Report 2017/18</em>. <a href="https://nci.org.au/sites/default/files/annual-reports/2019-07/About%20Us_Annual%20Reports_2017-18.pdf">https://nci.org.au/sites/default/files/annual-reports/2019-07/About%20Us_Annual%20Reports_2017-18.pdf</a>.
+</div>
+<div id="ref-NCI201819" class="csl-entry" role="listitem">
+National Computational Infrastructure. 2019. <em>Annual Report 2018/19</em>. <a href="https://nci.org.au/sites/default/files/annual-reports/2019-11/NCI%20Report%202019%20web.pdf">https://nci.org.au/sites/default/files/annual-reports/2019-11/NCI%20Report%202019%20web.pdf</a>.
+</div>
+<div id="ref-NCI201920" class="csl-entry" role="listitem">
+National Computational Infrastructure. 2020a. <em>Annual Report 2019/20</em>. <a href="https://nci.org.au/sites/default/files/annual-reports/2021-01/NCI%20Annual%20report%202019-20%20web_final_opt2.pdf">https://nci.org.au/sites/default/files/annual-reports/2021-01/NCI%20Annual%20report%202019-20%20web_final_opt2.pdf</a>.
 </div>
 <div id="ref-NCMAS2020Info" class="csl-entry" role="listitem">
-National Computational Infrastructure. 2020. <em>NCMAS 2020 Information for Applicants</em>. <a href="https://nci.org.au/sites/default/files/documents/2019-10/NCMAS-2020-InformationForApplicants.pdf">https://nci.org.au/sites/default/files/documents/2019-10/NCMAS-2020-InformationForApplicants.pdf</a>.
+National Computational Infrastructure. 2020b. <em>NCMAS 2020 Information for Applicants</em>. <a href="https://nci.org.au/sites/default/files/documents/2019-10/NCMAS-2020-InformationForApplicants.pdf">https://nci.org.au/sites/default/files/documents/2019-10/NCMAS-2020-InformationForApplicants.pdf</a>.
+</div>
+<div id="ref-NCMAS2023Info" class="csl-entry" role="listitem">
+National Computational Infrastructure. 2022. <em>NCMAS 2023 Information for Applicants</em>. <a href="https://my.nci.org.au/mancini-assets/media/mas/ncmas/2023/NCMAS2023-NCMAS_2023_Info4Applicants_v5-20220830T164026AEST.pdf">https://my.nci.org.au/mancini-assets/media/mas/ncmas/2023/NCMAS2023-NCMAS_2023_Info4Applicants_v5-20220830T164026AEST.pdf</a>.
+</div>
+<div id="ref-NCMAS2024Info" class="csl-entry" role="listitem">
+National Computational Infrastructure. 2023. <em>NCMAS 2024 Information for Applicants</em>. <a href="https://my.nci.org.au/mancini-assets/media/mas/ncmas/2024/NCMAS2024-NCMAS_2024_-_Information_for_Applicants_20231109-20231109T131740AEDT.pdf">https://my.nci.org.au/mancini-assets/media/mas/ncmas/2024/NCMAS2024-NCMAS_2024_-_Information_for_Applicants_20231109-20231109T131740AEDT.pdf</a>.
+</div>
+<div id="ref-NCMAS2026Info" class="csl-entry" role="listitem">
+National Computational Infrastructure. 2025. <em>NCMAS 2026 Information for Applicants</em>. <a href="https://my.nci.org.au/mancini-assets/media/mas/ncmas/2026/NCMAS2026-Information_for_Applicants-20251023T122535AEDT.pdf">https://my.nci.org.au/mancini-assets/media/mas/ncmas/2026/NCMAS2026-Information_for_Applicants-20251023T122535AEDT.pdf</a>.
+</div>
+<div id="ref-NCIGadiTransition" class="csl-entry" role="listitem">
+National Computational Infrastructure. n.d.-a. <em>HPC Systems</em>. Accessed October 18, 2026. <a href="https://nci.org.au/infrastructure/hpc-systems">https://nci.org.au/infrastructure/hpc-systems</a>.
 </div>
 <div id="ref-NCIWhoWeAre" class="csl-entry" role="listitem">
-National Computational Infrastructure. n.d. <span>“Who We Are.”</span> Accessed October 4, 2026. <a href="https://nci.org.au/">https://nci.org.au/</a>.
+National Computational Infrastructure. n.d.-b. <span>“Who We Are.”</span> Accessed October 4, 2026. <a href="https://nci.org.au/">https://nci.org.au/</a>.
+</div>
+<div id="ref-NCMAS2021" class="csl-entry" role="listitem">
+National Computational Merit Allocation Scheme. 2021. <span>“NCMAS 2021 Outcomes.”</span> <a href="https://my.nci.org.au/mancini/ncmas/2021/outcomes">https://my.nci.org.au/mancini/ncmas/2021/outcomes</a>.
+</div>
+<div id="ref-NCMAS2022" class="csl-entry" role="listitem">
+National Computational Merit Allocation Scheme. 2022. <span>“NCMAS 2022 Outcomes.”</span> <a href="https://my.nci.org.au/mancini/ncmas/2022/outcomes">https://my.nci.org.au/mancini/ncmas/2022/outcomes</a>.
+</div>
+<div id="ref-NCMAS2023" class="csl-entry" role="listitem">
+National Computational Merit Allocation Scheme. 2023. <span>“NCMAS 2023 Outcomes.”</span> <a href="https://my.nci.org.au/mancini/ncmas/2023/outcomes">https://my.nci.org.au/mancini/ncmas/2023/outcomes</a>.
+</div>
+<div id="ref-NCMAS2024" class="csl-entry" role="listitem">
+National Computational Merit Allocation Scheme. 2024. <span>“NCMAS 2024 Outcomes.”</span> <a href="https://my.nci.org.au/mancini/ncmas/2024/outcomes">https://my.nci.org.au/mancini/ncmas/2024/outcomes</a>.
+</div>
+<div id="ref-NCMAS2025" class="csl-entry" role="listitem">
+National Computational Merit Allocation Scheme. 2025. <span>“NCMAS 2025 Outcomes.”</span> <a href="https://my.nci.org.au/mancini/ncmas/2025/outcomes">https://my.nci.org.au/mancini/ncmas/2025/outcomes</a>.
+</div>
+<div id="ref-NCMAS2026" class="csl-entry" role="listitem">
+National Computational Merit Allocation Scheme. 2026. <span>“NCMAS 2026 Outcomes.”</span> <a href="https://my.nci.org.au/mancini/ncmas/2026/outcomes">https://my.nci.org.au/mancini/ncmas/2026/outcomes</a>.
+</div>
+<div id="ref-Pawsey201617" class="csl-entry" role="listitem">
+Pawsey Supercomputing Research Centre. 2017. <em>Annual Report 2016/17</em>. <a href="https://pawsey.org.au/wp-content/uploads/2018/10/Pawsey-Annual-Report-2016-2017.pdf">https://pawsey.org.au/wp-content/uploads/2018/10/Pawsey-Annual-Report-2016-2017.pdf</a>.
 </div>
 <div id="ref-PawseyAbout" class="csl-entry" role="listitem">
-Pawsey Supercomputing Research Centre. n.d. <span>“About Pawsey.”</span> Accessed October 4, 2026. <a href="https://pawsey.org.au/">https://pawsey.org.au/</a>.
+Pawsey Supercomputing Research Centre. n.d.-a. <span>“About Pawsey.”</span> Accessed October 4, 2026. <a href="https://pawsey.org.au/">https://pawsey.org.au/</a>.
+</div>
+<div id="ref-Pawsey2023Services" class="csl-entry" role="listitem">
+Pawsey Supercomputing Research Centre. n.d.-b. <em>Changes in Supercomputing Services for 2023</em>. Accessed October 18, 2026. <a href="https://pawsey.atlassian.net/wiki/spaces/US/pages/51927586/Changes+in+Supercomputing+Services+for+2023">https://pawsey.atlassian.net/wiki/spaces/US/pages/51927586/Changes+in+Supercomputing+Services+for+2023</a>.
+</div>
+<div id="ref-PawseySetonixTransition" class="csl-entry" role="listitem">
+Pawsey Supercomputing Research Centre. n.d.-c. <em>Setonix Fires up for Researchers</em>. Accessed October 18, 2026. <a href="https://pawsey.org.au/setonix-fires-up-for-researchers/">https://pawsey.org.au/setonix-fires-up-for-researchers/</a>.
 </div>
 </div>
 </section>

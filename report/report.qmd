@@ -99,9 +99,9 @@ The detailed data preparation, modelling procedures and reproducible code are do
 
 ## Data Sources and Coverage
 
-The analysis covers 13 financial years, from 2013/14 to 2025/26, represented by analytical years 2014–2026. Data were assembled from National Computational Infrastructure (NCI) annual reports, Pawsey Supercomputing Research Centre publications and National Computational Merit Allocation Scheme (NCMAS) outcomes.
+The analysis covers 13 financial years, from 2013/14 to 2025/26, represented by analytical years 2014–2026. Earlier data were assembled primarily from National Computational Infrastructure (NCI) annual reports and Pawsey Supercomputing Research Centre publications [@NCI201314; @NCI201415; @NCI201516; @NCI201617; @Pawsey201617; @NCI201718; @NCI201819; @NCI201920]. More recent data were drawn from National Computational Merit Allocation Scheme (NCMAS) outcomes [@NCMAS2021; @NCMAS2022; @NCMAS2023; @NCMAS2024; @NCMAS2025; @NCMAS2026].
 
-The sources provide different levels of detail. Earlier publications mainly contain annual or facility-level summaries, while more recent NCMAS outcomes include project-level allocations, computing resources and research fields.
+The sources provide different levels of detail. Earlier publications mainly contain annual or facility-level summaries, while more recent NCMAS outcomes include project-level allocations, computing resources and research fields [@NCMAS2021; @NCMAS2024; @NCMAS2026]. Different documents sometimes supplied requested compute, allocations and FoR information for the same year. Historical applicant guidance was also reviewed to understand changes in allocation rules and resource definitions [@NCMAS2014Info; @NCMAS2020Info; @NCMAS2023Info; @NCMAS2024Info; @NCMAS2026Info].
 
 | Source | Information extracted | Use in analysis |
 |---|---|---|
@@ -126,7 +126,7 @@ Observations were distinguished according to whether they were directly reported
 
 ## Variable Definitions and Measurement Units
 
-The main annual variables are requested compute, allocated compute and the difference between them. Where both measures are available on a comparable basis, the request-to-allocation ratio is calculated as:
+The main annual variables are requested compute and allocated compute. Their difference is the observed request–allocation gap, not a direct estimate of latent demand. Where both measures are available on a comparable basis, the request-to-allocation ratio is calculated as:
 
 $$
 R_t = \frac{D_t}{A_t}
@@ -134,7 +134,7 @@ $$
 
 where $D_t$ represents requested compute and $A_t$ represents allocated compute in year $t$.
 
-This ratio indicates pressure on available allocations but does not measure all unmet research demand. It is calculated only when the two values have compatible units and reporting scope.
+This ratio indicates pressure on available allocations but does not measure all unmet research demand. The corresponding fulfilment rate is $A_t/D_t$, and the request–allocation gap is $D_t-A_t$. All three indicators are calculated only when the values have compatible units and reporting scope [@HPCInternshipBrief].
 
 Historical records use different measurement units, including service units (SU), kilo service units (kSU), million compute hours, CPU core-hours and GPU hours. Service units are accounting measures that depend on the computing system and resource type. Consequently, values expressed in kSU are not necessarily computationally equivalent across facilities.
 
@@ -152,7 +152,7 @@ Categorical standardisation was completed separately from compute-resource conve
 
 ## Compute Resource Conversion
 
-Historical demand and allocation values were reported using different accounting conventions. To improve comparability, compute-resource conversion was undertaken according to the reporting year, computing system, resource type and available accounting documentation.
+Historical demand and allocation values were reported using different accounting conventions. To improve comparability, compute-resource conversion was undertaken according to the reporting year, computing system, resource type and available accounting documentation [@NCIGadiTransition; @PawseySetonixTransition; @Pawsey2023Services].
 
 The conversion process preserved original observations and distinguished directly reported values from derived and assumed estimates. Documented system-specific factors were prioritised, while assumptions were recorded where direct conversion information was unavailable.
 
@@ -199,9 +199,9 @@ Table @tbl-conversion-factors summarises the principal conversion rules document
 
 : Main compute-resource conversion rules recorded in the year-by-year conversion worksheet. {#tbl-conversion-factors}
 
-The factors were applied to the corresponding system and reporting period rather than to aggregate kSU values without a resource breakdown.
+The factors were compiled from system-specific documentation and the project’s recorded conversion assumptions [@NCIGadiTransition; @PawseySetonixTransition; @Pawsey2023Services; @NCMAS2026Info]. They were applied to the corresponding system and reporting period, rather than indiscriminately to aggregate kSU values without a resource breakdown.
 
-For the earlier years, a factor of 1 SU per CPU core-hour was used as a baseline assumption where a more specific accounting factor was unavailable. The 2019/20 records required identification of the CPU and GPU resource components before applying separate conversions.
+For the earlier years, a factor of 1 SU per CPU core-hour was used as a baseline assumption where a more specific accounting factor was unavailable. For some 2019/20 records, the original technical conversion used a documented working assumption of 100% Gadi CPU-equivalent at 2 SU per CPU core-hour because a reliable CPU/GPU split was unavailable. This assumption should not be interpreted as a directly observed resource breakdown.
 
 Historical Fornax GPU records could not be converted reliably using the available information. These observations were retained with their original units rather than assigned an unsupported conversion factor.
 
@@ -209,17 +209,17 @@ Historical Fornax GPU records could not be converted reliably using the availabl
 
 Converted values were reviewed against the original reported units, available system-level records and published annual totals where comparable information was available.
 
-CPU and GPU resources were kept separate because their physical computing hours are not interchangeable. Aggregate service-unit totals were not converted into CPU or GPU hours unless the relevant resource breakdown and accounting factors were available.
+CPU and GPU resources were kept separate because their physical computing hours are not interchangeable. Aggregate service-unit totals were converted into CPU or GPU hours only where the resource breakdown and accounting factors were available, or where a documented working assumption was applied. Conversions based on assumptions were identified separately from directly reported values.
 
 Missing historical GPU observations were treated as unavailable information rather than evidence of zero demand. Conversion status and supporting assumptions were retained to distinguish reported values, calculated measures and estimates.
 
-The complete year-by-year conversion worksheet, calculations and validation code are provided in the technical project documentation.
+The complete year-by-year conversion worksheet, calculations and validation code are provided in the technical project documentation. Resource-specific FoR estimates produced later in the workflow distribute annual values using historical allocation shares; they are not directly observed field-level CPU or GPU demand.
 
 ## Field of Research Classification Alignment
 
 The FoR data were standardised in two stages to support comparisons across 2014–2026.
 
-The first stage addressed differences between the FoR 2008-based reporting period (2014–2020) and the FoR 2020-based period (2021–2026). Selected historical fields were combined into broader reporting categories through `for_analysis_group`, while the existing standardised categories were retained for the later period.
+The first stage addressed differences between the FoR 2008-based reporting period (2014–2020) and the FoR 2020-based period (2021–2026) [@ABSANZSRC2020]. Selected historical fields were combined into broader reporting categories through `for_analysis_group`, while the existing standardised categories were retained for the later period.
 
 The second stage established nine analytical groups for longitudinal comparison through `for_visual_group`. These groups were informed by the broader research-field categories used in NCI and Pawsey annual reporting. Related categories were combined where reporting detail differed across years, rather than assuming that the two FoR classification systems were directly equivalent.
 
@@ -255,12 +255,11 @@ Data quality was assessed using source provenance, reporting scope, measurement-
 
 The final datasets contain both directly reported observations and reconstructed historical measures. Their reliability therefore varies across reporting years and resource types.
 
-A specific comparability issue occurs in the 2016/17 Pawsey records, where facility-wide usage information differs in scope from NCMAS allocation data. This distinction was retained when preparing the historical FoR dataset.
+A specific comparability issue occurs in the 2016/17 Pawsey records, where facility-wide usage information differs in scope from NCMAS allocation data [@Pawsey201617]. This distinction was retained when preparing the historical FoR dataset.
 
 Historical conversion assumptions, incomplete CPU/GPU breakdowns and differences between FoR reporting classifications introduce additional uncertainty. These issues were documented rather than removed from the analysis.
 
 The short annual series and limited GPU coverage also constrain the forecasting methods that can be evaluated. These limitations are considered in the model evaluation and sensitivity analysis presented later in the report.
-
 
 # Forecasting Methodology
 
