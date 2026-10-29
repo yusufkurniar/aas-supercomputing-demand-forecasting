@@ -41,7 +41,6 @@ execute:
   message: false
 ---
 
-
 # Introduction and Objectives
 
 ## Project Background and Motivation
@@ -93,3 +92,170 @@ An important contribution is the development of a documented historical dataset 
 Forecasting approaches are evaluated using the available annual data, and alternative scenarios are developed to examine possible changes in demand through 2030. The resulting analysis provides evidence for infrastructure planning discussions while recognising that historical allocation and requested compute do not fully capture underlying research demand.
 
 The detailed data preparation, modelling procedures and reproducible code are documented separately in the project's technical Quarto documentation and Git repository.
+
+
+# Data Sources and Preparation
+
+## Data Sources and Coverage
+
+The analysis covers 13 financial years, from 2013/14 to 2025/26, represented by analytical years 2014–2026. Data were assembled from National Computational Infrastructure (NCI) annual reports, Pawsey Supercomputing Research Centre publications and National Computational Merit Allocation Scheme (NCMAS) outcomes.
+
+The sources provide different levels of detail. Earlier publications mainly contain annual or facility-level summaries, while more recent NCMAS outcomes include project-level allocations, computing resources and research fields.
+
+| Source | Information extracted | Use in analysis |
+|---|---|---|
+| NCI annual reports | Historical allocations, computing systems and reported resources | Historical series construction |
+| Pawsey publications | Allocation information, computing systems and resource usage | Supplementary facility evidence and cross-checks |
+| NCMAS outcomes | Requested and allocated resources, projects and research fields | Demand, allocation and FoR analysis |
+| Supporting publications | Accounting rules, resource descriptions and contextual indicators | Conversion assumptions and interpretation |
+
+: Main data sources and their analytical roles. {#tbl-data-sources}
+
+Research funding, workforce and research activity indicators were also examined as potential explanatory variables. Their suitability for forecasting was assessed according to historical coverage, consistency and relevance.
+
+## Data Integration and Provenance
+
+Information extracted from the source publications was organised into two main analytical datasets: an annual demand and allocation summary, and a Field of Research (FoR) allocation composition dataset.
+
+The integration process aligned reporting periods, identified the scope of each observation and reconciled detailed records with available annual totals. Financial years were assigned to their ending year; for example, 2013/14 was recorded as 2014.
+
+Available provenance information was retained, including source documents, reporting periods, original values, measurement units and derivation notes.
+
+Observations were distinguished according to whether they were directly reported, calculated from source information or estimated using documented assumptions. This distinction was preserved in the subsequent analysis.
+
+## Variable Definitions and Measurement Units
+
+The main annual variables are requested compute, allocated compute and the difference between them. Where both measures are available on a comparable basis, the request-to-allocation ratio is calculated as:
+
+$$
+R_t = \frac{D_t}{A_t}
+$$
+
+where $D_t$ represents requested compute and $A_t$ represents allocated compute in year $t$.
+
+This ratio indicates pressure on available allocations but does not measure all unmet research demand. It is calculated only when the two values have compatible units and reporting scope.
+
+Historical records use different measurement units, including service units (SU), kilo service units (kSU), million compute hours, CPU core-hours and GPU hours. Service units are accounting measures that depend on the computing system and resource type. Consequently, values expressed in kSU are not necessarily computationally equivalent across facilities.
+
+CPU core-hours and GPU hours were treated as separate measures. Their conversion procedures are described in Section 2.5.
+
+## Data Standardisation
+
+Data standardisation included consistent year labels, research field names, computing system identifiers, resource types and provenance classifications.
+
+Financial-year labels were aligned to their ending year, while system and resource identifiers were reviewed to distinguish CPU, GPU and aggregate observations.
+
+Original values and reporting units were retained alongside standardised fields. Missing resource breakdowns were not treated as directly observed values, and records with different reporting scopes were identified before aggregation.
+
+Categorical standardisation was completed separately from compute-resource conversion and FoR classification alignment, which are described in the following sections.
+
+## Compute Resource Conversion
+
+Historical demand and allocation values were reported using different accounting conventions. To improve comparability, compute-resource conversion was undertaken according to the reporting year, computing system, resource type and available accounting documentation.
+
+The conversion process preserved original observations and distinguished directly reported values from derived and assumed estimates. Documented system-specific factors were prioritised, while assumptions were recorded where direct conversion information was unavailable.
+
+### Conversion Formulas
+
+The general relationship between service units and kilo service units is:
+
+$$
+\text{SU} = \text{kSU} \times 1{,}000
+$$
+
+For CPU resources reported in kSU, CPU core-hours were calculated as:
+
+$$
+\text{CPU core-hours} =
+\frac{\text{CPU kSU} \times 1{,}000}
+{\text{SU per CPU core-hour}}
+$$
+
+For GPU resources reported in kSU, GPU hours were calculated as:
+
+$$
+\text{GPU hours} =
+\frac{\text{GPU kSU} \times 1{,}000}
+{\text{SU per GPU hour}}
+$$
+
+The denominators represent the accounting factors applicable to each computing system and resource type. These factors were not assumed to be constant across all systems or reporting periods.
+
+Where values were already reported in CPU core-hours or GPU hours, they were retained without additional service-unit conversion. Values reported in millions of hours were multiplied by 1,000,000, subject to confirmation of the original resource definition.
+
+### System-Specific Conversion Rules
+
+Table @tbl-conversion-factors summarises the principal conversion rules documented in the year-by-year conversion worksheet.
+
+| System or resource | Reporting period | SU per resource-hour | Treatment |
+|---|---|---:|---|
+| Raijin CPU and Magnus CPU | Selected historical years from 2013/14 | 1 | Historical baseline; assumptions apply to some records |
+| Gadi CPU | 2020/21–2025/26 | 2 | System-specific accounting factor |
+| Setonix CPU | 2021/22–2025/26 | 1 | System-specific accounting factor |
+| Setonix GPU | 2021/22–2025/26 | 128 | GPU accounting factor |
+| Setonix Q | 2025/26 | 256 | GH200 GPU-hour conversion |
+| Previously reported million core-hours | Selected historical years | Not applicable | Multiply by 1,000,000 |
+
+: Main compute-resource conversion rules recorded in the year-by-year conversion worksheet. {#tbl-conversion-factors}
+
+The factors were applied to the corresponding system and reporting period rather than to aggregate kSU values without a resource breakdown.
+
+For the earlier years, a factor of 1 SU per CPU core-hour was used as a baseline assumption where a more specific accounting factor was unavailable. The 2019/20 records required identification of the CPU and GPU resource components before applying separate conversions.
+
+Historical Fornax GPU records could not be converted reliably using the available information. These observations were retained with their original units rather than assigned an unsupported conversion factor.
+
+### Conversion Validation and Limitations
+
+Converted values were reviewed against the original reported units, available system-level records and published annual totals where comparable information was available.
+
+CPU and GPU resources were kept separate because their physical computing hours are not interchangeable. Aggregate service-unit totals were not converted into CPU or GPU hours unless the relevant resource breakdown and accounting factors were available.
+
+Missing historical GPU observations were treated as unavailable information rather than evidence of zero demand. Conversion status and supporting assumptions were retained to distinguish reported values, calculated measures and estimates.
+
+The complete year-by-year conversion worksheet, calculations and validation code are provided in the technical project documentation.
+
+## Field of Research Classification Alignment
+
+The FoR data were standardised in two stages to support comparisons across 2014–2026.
+
+The first stage addressed differences between the FoR 2008-based reporting period (2014–2020) and the FoR 2020-based period (2021–2026). Selected historical fields were combined into broader reporting categories through `for_analysis_group`, while the existing standardised categories were retained for the later period.
+
+The second stage established nine analytical groups for longitudinal comparison through `for_visual_group`. These groups were informed by the broader research-field categories used in NCI and Pawsey annual reporting. Related categories were combined where reporting detail differed across years, rather than assuming that the two FoR classification systems were directly equivalent.
+
+Original field labels were cleaned by removing numerical prefixes, standardising case, replacing ampersands and removing excess whitespace. The cleaned labels were then assigned to the nine groups using explicit matching rules.
+
+Table @tbl-for-alignment summarises the analytical grouping applied to the reported research fields.
+
+| Analytical group | Reported fields included |
+|---|---|
+| Physical Sciences | Physical sciences and radioastronomy |
+| Chemical Sciences | Chemical sciences |
+| Earth & Environmental Sciences | Earth sciences, environmental sciences and geosciences |
+| Engineering & Technology | Engineering and technology |
+| Biological & Agricultural Sciences | Biological, agricultural, veterinary and food sciences |
+| Medical & Health Sciences | Medical, health, biomedical and clinical sciences |
+| Mathematics & Computing | Mathematical sciences, computing and information sciences |
+| Social Sciences, Humanities & Built Environment | Psychology, economics, humanities, social sciences, design and built environment |
+| Unclassified & Operational | Other, unreported, unclassified and Pawsey operational categories |
+
+: Analytical FoR grouping rules used for longitudinal comparison across 2014–2026. {#tbl-for-alignment}
+
+Physical Sciences and Chemical Sciences were retained as separate groups, while Earth and Environmental Sciences and Engineering and Technology were combined where historical reporting differed in detail.
+
+The groupings were developed for analytical consistency and do not represent official one-to-one conversions between ANZSRC 2008 and ANZSRC 2020. Original research field labels and allocation values were preserved.
+
+Validation checks confirmed that all 133 FoR records had the required classification and allocation information, all reported fields were assigned to one of the nine analytical groups, and annual allocation shares summed to 100%.
+
+The complete mapping rules and validation code are available in the technical Quarto documentation.
+
+## Data Quality Assessment
+
+Data quality was assessed using source provenance, reporting scope, measurement-unit comparability and the availability of directly observed values.
+
+The final datasets contain both directly reported observations and reconstructed historical measures. Their reliability therefore varies across reporting years and resource types.
+
+A specific comparability issue occurs in the 2016/17 Pawsey records, where facility-wide usage information differs in scope from NCMAS allocation data. This distinction was retained when preparing the historical FoR dataset.
+
+Historical conversion assumptions, incomplete CPU/GPU breakdowns and differences between FoR reporting classifications introduce additional uncertainty. These issues were documented rather than removed from the analysis.
+
+The short annual series and limited GPU coverage also constrain the forecasting methods that can be evaluated. These limitations are considered in the model evaluation and sensitivity analysis presented later in the report.
