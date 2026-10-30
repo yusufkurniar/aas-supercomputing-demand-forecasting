@@ -2329,8 +2329,6 @@ The residual diagnostics support the use of the linear models as interpretable f
 
 ### Evaluation Summary
 
-### Evaluation Summary
-
 The rolling-origin evaluation identified different forecasting results for overall HPC, CPU and GPU demand. The model selection considered forecast accuracy, historical data coverage, growth assumptions and the reliability of the underlying observations.
 
 For **overall HPC demand**, the linear trend achieved the lowest RMSE (290,898 kSU) and MAE (198,295 kSU) across six evaluation years. Its RMSE was 23.2% lower than the naïve benchmark, although the improvement over drift was smaller at 7.5%. The linear model was therefore selected as the central forecasting model, with drift providing a useful benchmark. The log-linear model was retained as an alternative growth scenario despite its weaker historical accuracy.
@@ -2347,13 +2345,427 @@ Overall, the evaluation supports using the **linear trend as the central referen
 
 ## Demand Forecasts to 2030
 
+
 ### Overall HPC Demand
 
-The selected linear trend projects overall HPC demand of approximately 2.02 million kSU in 2027, increasing to 2.50 million kSU in 2030.
+The rolling-origin evaluation in Section 4.2.1 identified the linear trend as the most accurate of the four models for overall HPC demand. The model was therefore fitted to the complete 2014–2026 series to generate the central projections for 2027–2030.
 
-The model excluding the 2026 observation produces a lower 2030 projection of approximately 2.29 million kSU. In contrast, the log-linear model projects approximately 6.48 million kSU.
+Three alternative specifications were retained to examine how the projections depend on the historical observations and growth assumptions. The first excludes 2026 from the linear model to assess the influence of the latest observation. The other two use log-linear trends, fitted with and without 2026, to examine the implications of continued proportional growth.
 
-The difference illustrates the sensitivity of longer-term projections to the latest observation and the assumed growth pattern. The log-linear trajectory should not be interpreted as a validated upper bound because it performed less well during historical evaluation.
+This comparison is important because recorded HPC requests increased sharply in 2026. Including this observation increased the estimated annual linear growth from approximately 144,357 to 161,992 kSU, or 12.2%. The alternative specifications therefore assess the sensitivity of the 2030 projections to both the latest observation and the assumed growth pattern.
+
+@fig-hpc-forecast-scenarios connects the historical observations with the four projected trajectories. The 2030 values are labelled to show the differences between the forecasting assumptions.
+
+```{r}
+#| label: fig-hpc-forecast-scenarios
+#| fig-cap: "Historical HPC demand and alternative projections to 2030. The full-history linear model provides the central forecast. Alternative trajectories show sensitivity to the 2026 observation and growth assumptions."
+#| fig-width: 10
+#| fig-height: 6
+#| out-width: 100%
+#| echo: false
+#| warning: false
+#| message: false
+
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(scales)
+
+# Prepare historical HPC demand
+hpc_model_data <- annual_analysis |>
+  transmute(
+    year = as.integer(year),
+    time = as.integer(year) - 2014,
+    demand_ksu = as.numeric(demand_ksu)
+  ) |>
+  arrange(year)
+
+stopifnot(
+  identical(hpc_model_data$year, 2014:2026),
+  all(is.finite(hpc_model_data$demand_ksu)),
+  all(hpc_model_data$demand_ksu > 0)
+)
+
+# Data excluding the latest observation
+hpc_model_pre2026 <- hpc_model_data |>
+  filter(year <= 2025)
+
+# Fit four model specifications
+overall_linear <- lm(
+  demand_ksu ~ time,
+  data = hpc_model_data
+)
+
+overall_linear_pre2026 <- lm(
+  demand_ksu ~ time,
+  data = hpc_model_pre2026
+)
+
+overall_loglinear <- lm(
+  log(demand_ksu) ~ time,
+  data = hpc_model_data
+)
+
+overall_loglinear_pre2026 <- lm(
+  log(demand_ksu) ~ time,
+  data = hpc_model_pre2026
+)
+
+# Historical observations
+hpc_history <- hpc_model_data |>
+  transmute(
+    year,
+    demand_m = demand_ksu / 1e6
+  )
+
+# Include 2026 as a fitted anchor
+# and 2027–2030 as forecast years
+hpc_projection_years <- tibble(
+  year = 2026:2030,
+  time = (2026:2030) - 2014
+)
+
+# Generate four scenario trajectories
+hpc_scenario_wide <- hpc_projection_years |>
+  transmute(
+    year,
+    `Central linear` = as.numeric(
+      predict(
+        overall_linear,
+        newdata = hpc_projection_years
+      )
+    ) / 1e6,
+    `Linear excluding 2026` = as.numeric(
+      predict(
+        overall_linear_pre2026,
+        newdata = hpc_projection_years
+      )
+    ) / 1e6,
+    `Log-linear full history` = exp(
+      as.numeric(
+        predict(
+          overall_loglinear,
+          newdata = hpc_projection_years
+        )
+      )
+    ) / 1e6,
+    `Log-linear excluding 2026` = exp(
+      as.numeric(
+        predict(
+          overall_loglinear_pre2026,
+          newdata = hpc_projection_years
+        )
+      )
+    ) / 1e6
+  )
+
+scenario_levels <- c(
+  "Central linear",
+  "Linear excluding 2026",
+  "Log-linear full history",
+  "Log-linear excluding 2026"
+)
+
+hpc_scenario_long <- hpc_scenario_wide |>
+  pivot_longer(
+    cols = -year,
+    names_to = "scenario",
+    values_to = "demand_m"
+  ) |>
+  mutate(
+    scenario = factor(
+      scenario,
+      levels = scenario_levels
+    )
+  )
+
+# Label the four 2030 endpoints
+hpc_end_labels <- hpc_scenario_long |>
+  filter(year == 2030) |>
+  mutate(
+    label = sprintf("%.2f", demand_m)
+  )
+
+scenario_colours <- c(
+  "Central linear" = "#0077A8",
+  "Linear excluding 2026" = "#64748B",
+  "Log-linear full history" = "#D97706",
+  "Log-linear excluding 2026" = "#B91C1C"
+)
+
+scenario_linetypes <- c(
+  "Central linear" = "solid",
+  "Linear excluding 2026" = "dashed",
+  "Log-linear full history" = "dotdash",
+  "Log-linear excluding 2026" = "longdash"
+)
+
+ggplot() +
+  annotate(
+    "rect",
+    xmin = 2026.5,
+    xmax = 2030.7,
+    ymin = -Inf,
+    ymax = Inf,
+    fill = "#EFF5F9",
+    alpha = 0.7
+  ) +
+  geom_line(
+    data = hpc_history,
+    aes(x = year, y = demand_m),
+    colour = "#173A5E",
+    linewidth = 1.2
+  ) +
+  geom_point(
+    data = hpc_history,
+    aes(x = year, y = demand_m),
+    colour = "#173A5E",
+    size = 1.8
+  ) +
+  geom_line(
+    data = hpc_scenario_long,
+    aes(
+      x = year,
+      y = demand_m,
+      colour = scenario,
+      linetype = scenario,
+      group = scenario
+    ),
+    linewidth = 1
+  ) +
+  geom_point(
+    data = filter(
+      hpc_scenario_long,
+      year >= 2027
+    ),
+    aes(
+      x = year,
+      y = demand_m,
+      colour = scenario
+    ),
+    size = 2
+  ) +
+  geom_text(
+    data = hpc_end_labels,
+    aes(
+      x = year,
+      y = demand_m,
+      label = label,
+      colour = scenario
+    ),
+    hjust = -0.3,
+    size = 3.3,
+    fontface = "bold",
+    show.legend = FALSE
+  ) +
+  geom_vline(
+    xintercept = 2026.5,
+    linetype = "dotted",
+    colour = "#64748B"
+  ) +
+  scale_colour_manual(
+    values = scenario_colours
+  ) +
+  scale_linetype_manual(
+    values = scenario_linetypes
+  ) +
+  scale_x_continuous(
+    breaks = c(
+      2014, 2016, 2018, 2020,
+      2022, 2024, 2026,
+      2027, 2028, 2029, 2030
+    ),
+    limits = c(2014, 2031),
+    expand = expansion(mult = 0.01)
+  ) +
+  scale_y_continuous(
+    labels = label_number(accuracy = 0.1),
+    expand = expansion(mult = c(0.03, 0.08))
+  ) +
+  labs(
+    x = "Year",
+    y = "HPC demand (million kSU)",
+    colour = NULL,
+    linetype = NULL,
+    caption = paste(
+      "Shading indicates the projection period.",
+      "Scenario lines begin at fitted 2026 values,",
+      "not necessarily observed 2026 demand.",
+      "Alternative scenarios are not prediction interval bounds."
+    )
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    legend.position = "bottom",
+    legend.text = element_text(size = 9),
+    panel.grid.minor = element_blank(),
+    plot.caption = element_text(size = 8)
+  ) +
+  guides(
+    colour = guide_legend(ncol = 2),
+    linetype = guide_legend(ncol = 2)
+  )
+```
+
+The central linear model projects approximately 2.02 million kSU in 2027, increasing by around 161,992 kSU annually to reach 2.50 million kSU in 2030. This represents an increase of approximately 11.6% from the reconstructed 2026 demand of 2.24 million kSU.
+
+Excluding the 2026 observation reduces the 2030 projection to approximately 2.29 million kSU, around 210,000 kSU below the central forecast. This difference shows that the latest observation influences the estimated growth rate, even when the same linear model is used.
+
+The full-history log-linear model produces a substantially higher 2030 projection of approximately 6.48 million kSU. Unlike the linear model, which assumes a constant absolute annual increase, the log-linear model extends proportional growth. As a result, its projected annual increases become progressively larger.
+
+However, the log-linear model recorded the highest RMSE and MAE during the rolling-origin evaluation in Section 4.2.1. Its higher projection is therefore retained to illustrate sensitivity to the growth assumption, rather than as an equally supported central forecast or a validated upper limit.
+
+For planning purposes, the difference between the linear and log-linear projections is more substantial than the difference caused by excluding 2026. This indicates that the assumed growth pattern has a greater influence on the 2030 estimate than the latest observation alone. The linear model is therefore retained as the central reference, while the alternative trajectories illustrate how different assumptions affect the longer-term outlook.
+
+These projections describe recorded HPC requests rather than unconstrained researcher demand. They provide a basis for considering future national computing requirements, but should not be interpreted as precise estimates of the capacity that facilities will need to provide. The statistical uncertainty around the selected central forecast is examined separately in Section 4.3.2.
+
+### Prediction Intervals and Forecast Uncertainty
+
+The differences between forecasting scenarios describe uncertainty arising from model selection and historical data. Statistical prediction intervals address a different question: how much future annual demand might vary around the selected linear trend if the fitted model and its error assumptions remain appropriate.
+
+Figure @fig-hpc-forecast-intervals shows the central projection with 80% and 95% model-based prediction intervals.
+
+
+```{r}
+#| label: fig-hpc-forecast-intervals
+#| fig-cap: "Central HPC demand projection with 80% and 95% model-based prediction intervals, 2027–2030. Intervals are conditional on the fitted linear model."
+#| fig-width: 9
+#| fig-height: 5.2
+#| out-width: 100%
+#| echo: false
+#| warning: false
+#| message: false
+
+library(dplyr)
+library(ggplot2)
+library(scales)
+
+# Use the selected full-history linear trend model
+# fitted to 2014–2026 in Section 4.3.1.
+stopifnot(
+  exists("overall_linear"),
+  inherits(overall_linear, "lm")
+)
+
+# Define future years using the same time index
+# as the fitted model.
+hpc_future <- tibble(
+  year = 2027:2030,
+  time = (2027:2030) - 2014
+)
+
+# Calculate 80% prediction intervals
+hpc_pi_80 <- predict(
+  overall_linear,
+  newdata = hpc_future,
+  interval = "prediction",
+  level = 0.80
+)
+
+# Calculate 95% prediction intervals
+hpc_pi_95 <- predict(
+  overall_linear,
+  newdata = hpc_future,
+  interval = "prediction",
+  level = 0.95
+)
+
+# Combine forecasts and interval bounds
+# Convert kSU to million kSU for plotting.
+hpc_intervals <- tibble(
+  year = hpc_future$year,
+  forecast = hpc_pi_95[, "fit"] / 1e6,
+  lower_80 = hpc_pi_80[, "lwr"] / 1e6,
+  upper_80 = hpc_pi_80[, "upr"] / 1e6,
+  lower_95 = hpc_pi_95[, "lwr"] / 1e6,
+  upper_95 = hpc_pi_95[, "upr"] / 1e6
+)
+
+# Verify that the intervals are correctly ordered
+stopifnot(
+  all(hpc_intervals$lower_95 <= hpc_intervals$lower_80),
+  all(hpc_intervals$lower_80 <= hpc_intervals$forecast),
+  all(hpc_intervals$forecast <= hpc_intervals$upper_80),
+  all(hpc_intervals$upper_80 <= hpc_intervals$upper_95)
+)
+
+# Plot the selected forecast and uncertainty bands
+ggplot(
+  hpc_intervals,
+  aes(x = year)
+) +
+  geom_ribbon(
+    aes(
+      ymin = lower_95,
+      ymax = upper_95
+    ),
+    fill = "#B9D9EA",
+    alpha = 0.65
+  ) +
+  geom_ribbon(
+    aes(
+      ymin = lower_80,
+      ymax = upper_80
+    ),
+    fill = "#5FA7CD",
+    alpha = 0.55
+  ) +
+  geom_line(
+    aes(y = forecast),
+    colour = "#0077A8",
+    linewidth = 1.2
+  ) +
+  geom_point(
+    aes(y = forecast),
+    colour = "#0077A8",
+    size = 2.8
+  ) +
+  geom_text(
+    aes(
+      y = forecast,
+      label = sprintf("%.2f", forecast)
+    ),
+    vjust = -1,
+    size = 3.5,
+    fontface = "bold",
+    colour = "#173A5E"
+  ) +
+  scale_x_continuous(
+    breaks = 2027:2030
+  ) +
+  scale_y_continuous(
+    labels = label_number(
+      accuracy = 0.1
+    ),
+    expand = expansion(
+      mult = c(0.08, 0.12)
+    )
+  ) +
+  labs(
+    x = "Forecast year",
+    y = "HPC demand (million kSU)",
+    caption = paste(
+      "Darker band: 80% prediction interval.",
+      "Lighter band: 95% prediction interval.",
+      "Intervals exclude uncertainty from alternative model specifications."
+    )
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    panel.grid.minor = element_blank(),
+    plot.caption = element_text(
+      size = 8
+    )
+  )
+```
+
+The selected linear model projects approximately 2.50 million kSU in 2030, with a 95% prediction interval of approximately 1.98–3.03 million kSU. The interval is substantially wider than the annual increase estimated by the model, showing that uncertainty remains important even when the central trend is relatively stable.
+
+These intervals depend on the linear regression assumptions and the historical series used to fit the model. They do not account for possible changes in computing technology, reporting practices, research funding or the underlying relationship between requested and actual computing requirements.
+
+The residual diagnostics in Section 4.2.4 provide some evidence about the fitted model's assumptions, but the short annual series limits how confidently these assumptions can be extended through 2030.
+
+Overall, the linear model provides a transparent central estimate of approximately 2.50 million kSU for national HPC planning in 2030. The model excluding 2026 demonstrates sensitivity to the latest observation, while the log-linear alternatives show how different growth assumptions can produce much larger projections. These results should be interpreted as conditional planning estimates rather than precise future capacity requirements.
 
 ### CPU Demand
 
@@ -2392,7 +2804,6 @@ The linear trend provides the central forecast for overall HPC and CPU demand. B
 GPU forecasts remain exploratory, while FoR scenarios show how assumptions about historical allocation composition affect the indicative distribution of future resources.
 
 These results provide the basis for the discussion of forecasting uncertainty and national HPC planning implications in the following chapter.
-
 
 # Discussion
 
