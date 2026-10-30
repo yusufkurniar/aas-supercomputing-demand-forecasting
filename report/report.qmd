@@ -4092,13 +4092,15 @@ These findings can support national HPC planning discussions while identifying t
 
 # Conclusion
 
-This project assembled and standardised publicly available Australian national research HPC records covering 2014–2026 and developed demand projections through 2030. It combined data preparation, conversion validation, descriptive analysis, rolling-origin forecast evaluation and scenario development.
+This project assembled and standardised publicly available Australian national research HPC records covering 2014–2026 and developed demand projections through 2030. The analysis combined historical data reconstruction, resource conversion, descriptive analysis, rolling-origin forecast evaluation and scenario development. It also documented the assumptions and limitations associated with using publicly reported computing data.
 
-The historical analysis found that recorded HPC requests exceeded allocations throughout the study period. For overall HPC demand and CPU demand, the linear trend was selected as the central forecasting approach. The corresponding 2030 projections were approximately 2.50 million kSU and 1.37 billion CPU core-hours. Alternative models produced substantially different outcomes, particularly under compounded proportional growth assumptions.
+The historical analysis identified a substantial difference between requested and allocated HPC resources. In 2026, recorded demand reached approximately 2.24 million kSU, compared with allocations of approximately 872,000 kSU, representing a fulfilment rate of 38.9%. This finding indicates increasing pressure within the reported allocation system, although the difference cannot be treated as a complete measure of unmet national research demand.
 
-GPU forecasts and FoR scenarios were treated more cautiously because of limited historical coverage and the distinction between allocated resources and independently observed demand. The results offer a transparent reference for future infrastructure discussions rather than a precise estimate of unconstrained national computing requirements.
+The forecasting evaluation selected linear trend models as the central approach for overall HPC and CPU demand. By 2030, these models project approximately 2.50 million kSU of overall HPC demand and 1.37 billion CPU core-hours. Alternative models and the exclusion of the 2026 observation produced substantially different projections, demonstrating the importance of historical data coverage and growth assumptions when interpreting longer-term forecasts.
 
-The main contribution is a reproducible analytical framework that makes the underlying data sources, conversion assumptions, model choices and forecasting limitations explicit. The accompanying technical Quarto documentation and Git repository preserve the detailed implementation for review and future updates.
+GPU projections remained exploratory because only five annual modelling observations were available. The Field of Research scenarios also demonstrated that the indicative distribution of future national HPC demand depends on the historical allocation period selected. These findings highlight the need to distinguish between modelled demand, historical allocations and actual computing capacity.
+
+The main contribution of this project is a reproducible analytical framework that brings together historical data, documented conversion assumptions, forecast evaluation and scenario analysis. The results provide the Australian Academy of Science with an evidence-based reference for discussing future national HPC requirements, while making the uncertainty and data limitations clear. The accompanying Quarto documentation and Git repository preserve the detailed methods and calculations for future review and updates.
 
 # References
 
