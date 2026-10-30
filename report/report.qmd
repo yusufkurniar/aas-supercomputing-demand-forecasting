@@ -2619,7 +2619,7 @@ For planning purposes, the difference between the linear and log-linear projecti
 
 These projections describe recorded HPC requests rather than unconstrained researcher demand. They provide a basis for considering future national computing requirements, but should not be interpreted as precise estimates of the capacity that facilities will need to provide. The statistical uncertainty around the selected central forecast is examined separately in Section 4.3.2.
 
-### Prediction Intervals and Forecast Uncertainty
+#### Prediction Intervals and Forecast Uncertainty
 
 The differences between forecasting scenarios describe uncertainty arising from model selection and historical data. Statistical prediction intervals address a different question: how much future annual demand might vary around the selected linear trend if the fitted model and its error assumptions remain appropriate.
 
@@ -2767,13 +2767,388 @@ The residual diagnostics in Section 4.2.4 provide some evidence about the fitted
 
 Overall, the linear model provides a transparent central estimate of approximately 2.50 million kSU for national HPC planning in 2030. The model excluding 2026 demonstrates sensitivity to the latest observation, while the log-linear alternatives show how different growth assumptions can produce much larger projections. These results should be interpreted as conditional planning estimates rather than precise future capacity requirements.
 
+
+
 ### CPU Demand
 
-The central CPU forecast increases from approximately 1.13 billion core-hours in 2027 to 1.37 billion core-hours in 2030.
+The rolling-origin evaluation in Section 4.2.2 showed that the linear and log-linear models performed similarly when forecasting CPU demand. The linear model achieved the lowest RMSE of 157.72 million core-hours, while the log-linear model achieved the lowest MAE of 133.74 million core-hours. The linear trend was selected as the central model because it provided competitive accuracy without assuming continued compounded growth.
 
-Excluding 2026 reduces the 2030 projection to approximately 1.26 billion core-hours, while the log-linear model produces approximately 2.48 billion core-hours.
+The selected model was fitted to the complete 2014–2026 CPU series to generate projections for 2027–2030. Three alternative specifications were retained: a linear model excluding 2026, and log-linear models fitted with and without 2026. These alternatives examine the effects of the latest observation and different growth assumptions.
 
-The central linear model provides a reference for planning, while the alternative trajectories illustrate the consequences of different growth assumptions.
+The 2026 observation is important because including it increased the estimated annual linear growth from approximately 72.41 million to 81.01 million core-hours, or 11.9%. With only 13 annual observations, the latest data can influence the estimated trend and projections several years ahead. @fig-cpu-forecast-scenarios compares the historical CPU demand series with the four projected trajectories.
+
+```{r}
+#| label: fig-cpu-forecast-scenarios
+#| fig-cap: "Historical CPU demand and alternative projections to 2030. The full-history linear model provides the central forecast; other trajectories illustrate sensitivity to the 2026 observation and growth assumptions."
+#| fig-width: 10
+#| fig-height: 6
+#| out-width: 100%
+#| echo: false
+#| warning: false
+#| message: false
+
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(scales)
+
+# Prepare historical CPU demand in million core-hours
+cpu_model_data <- annual_converted |>
+  transmute(
+    year = as.integer(year),
+    time = as.integer(year) - 2014,
+    demand_m = as.numeric(demand_cpu_core_hours) / 1e6
+  ) |>
+  arrange(year)
+
+stopifnot(
+  identical(cpu_model_data$year, 2014:2026),
+  all(is.finite(cpu_model_data$demand_m)),
+  all(cpu_model_data$demand_m > 0)
+)
+
+# Historical sample excluding 2026
+cpu_model_pre2026 <- cpu_model_data |>
+  filter(year <= 2025)
+
+# Fit four CPU forecasting specifications
+cpu_linear <- lm(
+  demand_m ~ time,
+  data = cpu_model_data
+)
+
+cpu_linear_pre2026 <- lm(
+  demand_m ~ time,
+  data = cpu_model_pre2026
+)
+
+cpu_loglinear <- lm(
+  log(demand_m) ~ time,
+  data = cpu_model_data
+)
+
+cpu_loglinear_pre2026 <- lm(
+  log(demand_m) ~ time,
+  data = cpu_model_pre2026
+)
+
+# Fitted 2026 anchors and future forecast years
+cpu_projection_years <- tibble(
+  year = 2026:2030,
+  time = (2026:2030) - 2014
+)
+
+# Generate four forecast trajectories
+cpu_scenario_wide <- cpu_projection_years |>
+  transmute(
+    year,
+    `Central linear` = as.numeric(
+      predict(cpu_linear, newdata = cpu_projection_years)
+    ),
+    `Linear excluding 2026` = as.numeric(
+      predict(cpu_linear_pre2026, newdata = cpu_projection_years)
+    ),
+    `Log-linear full history` = exp(as.numeric(
+      predict(cpu_loglinear, newdata = cpu_projection_years)
+    )),
+    `Log-linear excluding 2026` = exp(as.numeric(
+      predict(cpu_loglinear_pre2026, newdata = cpu_projection_years)
+    ))
+  )
+
+cpu_scenario_long <- cpu_scenario_wide |>
+  pivot_longer(
+    cols = -year,
+    names_to = "scenario",
+    values_to = "demand_m"
+  ) |>
+  mutate(
+    scenario = factor(
+      scenario,
+      levels = c(
+        "Central linear",
+        "Linear excluding 2026",
+        "Log-linear full history",
+        "Log-linear excluding 2026"
+      )
+    )
+  )
+
+# Label the four 2030 endpoints
+# Separate the two close log-linear labels vertically
+cpu_end_labels <- cpu_scenario_long |>
+  filter(year == 2030) |>
+  mutate(
+    label = comma(round(demand_m)),
+    label_y = case_when(
+      scenario == "Log-linear full history" ~ demand_m - 65,
+      scenario == "Log-linear excluding 2026" ~ demand_m + 65,
+      TRUE ~ demand_m
+    )
+  )
+
+scenario_colours <- c(
+  "Central linear" = "#0077A8",
+  "Linear excluding 2026" = "#64748B",
+  "Log-linear full history" = "#D97706",
+  "Log-linear excluding 2026" = "#B91C1C"
+)
+
+scenario_linetypes <- c(
+  "Central linear" = "solid",
+  "Linear excluding 2026" = "dashed",
+  "Log-linear full history" = "dotdash",
+  "Log-linear excluding 2026" = "longdash"
+)
+
+ggplot() +
+  annotate(
+    "rect",
+    xmin = 2026.5,
+    xmax = 2030.7,
+    ymin = -Inf,
+    ymax = Inf,
+    fill = "#EFF5F9",
+    alpha = 0.7
+  ) +
+  geom_line(
+    data = cpu_model_data,
+    aes(x = year, y = demand_m),
+    colour = "#173A5E",
+    linewidth = 1.2
+  ) +
+  geom_point(
+    data = cpu_model_data,
+    aes(x = year, y = demand_m),
+    colour = "#173A5E",
+    size = 1.8
+  ) +
+  geom_line(
+    data = cpu_scenario_long,
+    aes(
+      x = year,
+      y = demand_m,
+      colour = scenario,
+      linetype = scenario,
+      group = scenario
+    ),
+    linewidth = 1
+  ) +
+  geom_point(
+    data = filter(cpu_scenario_long, year >= 2027),
+    aes(
+      x = year,
+      y = demand_m,
+      colour = scenario
+    ),
+    size = 2
+  ) +
+  geom_text(
+    data = cpu_end_labels,
+    aes(
+      x = year,
+      y = label_y,
+      label = label,
+      colour = scenario
+    ),
+    hjust = -0.25,
+    size = 3.2,
+    fontface = "bold",
+    show.legend = FALSE
+  ) +
+  geom_vline(
+    xintercept = 2026.5,
+    linetype = "dotted",
+    colour = "#64748B"
+  ) +
+  scale_colour_manual(
+    values = scenario_colours
+  ) +
+  scale_linetype_manual(
+    values = scenario_linetypes
+  ) +
+  scale_x_continuous(
+    breaks = c(
+      2014, 2016, 2018, 2020, 2022,
+      2024, 2026, 2027, 2028, 2029, 2030
+    ),
+    limits = c(2014, 2031),
+    expand = expansion(mult = 0.01)
+  ) +
+  scale_y_continuous(
+    labels = label_comma(accuracy = 1),
+    expand = expansion(mult = c(0.03, 0.08))
+  ) +
+  labs(
+    x = "Year",
+    y = "CPU demand (million core-hours)",
+    colour = NULL,
+    linetype = NULL,
+    caption = paste(
+      "Shading indicates the projection period.",
+      "Scenario lines begin at fitted 2026 values.",
+      "Alternative scenarios are not prediction interval bounds."
+    )
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    legend.position = "bottom",
+    legend.text = element_text(size = 9),
+    panel.grid.minor = element_blank(),
+    plot.caption = element_text(size = 8)
+  ) +
+  guides(
+    colour = guide_legend(ncol = 2),
+    linetype = guide_legend(ncol = 2)
+  )
+```
+
+The central linear model projects CPU demand of approximately 1.13 billion core-hours in 2027, increasing by around 81.01 million core-hours annually to reach 1.37 billion core-hours in 2030. This represents an increase of approximately 10.9% from the reconstructed 2026 CPU demand.
+
+Excluding the 2026 observation reduces the 2030 projection to approximately 1.26 billion core-hours, around 106 million core-hours below the central forecast. This difference indicates that the latest observation has a noticeable influence on the fitted trend. With only 13 annual observations, changes in the latest data can affect projections several years ahead.
+
+The full-history log-linear model produces a substantially higher projection of approximately 2.48 billion core-hours in 2030. This is approximately 81% higher than the central linear projection for the same year, despite the two models achieving similar accuracy during the one-year-ahead evaluation period. The difference arises because the log-linear model extends proportional growth, while the linear model assumes a constant absolute annual increase.
+
+The two log-linear specifications also produce relatively similar projections when 2026 is included or excluded. This contrasts with the linear models, where excluding 2026 has a more noticeable effect on the 2030 projection. The comparison suggests that the log-linear CPU projections are less sensitive to the latest observation, although both depend on the assumption of continued proportional growth.
+
+Unlike overall HPC demand, the log-linear CPU model performed competitively during rolling-origin evaluation. Its RMSE was approximately 1.5% higher than the linear model, while its MAE was approximately 3.5% lower. Therefore, the higher log-linear projection cannot be dismissed on the basis of historical forecast accuracy alone.
+
+However, similar one-year-ahead accuracy does not establish that proportional growth will continue through 2030. The difference between the linear and log-linear projections illustrates how model assumptions become increasingly important over longer forecast horizons.
+
+The linear model was retained as the central planning reference because it achieved the lowest RMSE and provides a more conservative and interpretable projection. The log-linear alternatives were retained to examine the implications of continued proportional growth rather than treated as equally likely outcomes.
+
+#### CPU Prediction Intervals
+
+The alternative CPU projections illustrate uncertainty associated with model selection and the inclusion of the 2026 observation. Prediction intervals address a different source of uncertainty by estimating how future observations may vary around the selected linear trend, assuming its statistical assumptions remain appropriate.
+
+@fig-cpu-forecast-intervals presents the central CPU forecast with 80% and 95% prediction intervals for 2027–2030.
+
+```{r}
+#| label: fig-cpu-forecast-intervals
+#| fig-cap: "Central CPU demand projection with 80% and 95% model-based prediction intervals, 2027–2030. Intervals are conditional on the fitted linear model."
+#| fig-width: 9
+#| fig-height: 5.2
+#| out-width: 100%
+#| echo: false
+#| warning: false
+#| message: false
+
+# Use the selected CPU linear model from the previous chunk
+stopifnot(
+  exists("cpu_linear"),
+  inherits(cpu_linear, "lm")
+)
+
+# Future years, using the same model time index
+cpu_future <- tibble(
+  year = 2027:2030,
+  time = (2027:2030) - 2014
+)
+
+# Calculate model-based prediction intervals
+cpu_pi_80 <- predict(
+  cpu_linear,
+  newdata = cpu_future,
+  interval = "prediction",
+  level = 0.80
+)
+
+cpu_pi_95 <- predict(
+  cpu_linear,
+  newdata = cpu_future,
+  interval = "prediction",
+  level = 0.95
+)
+
+# Combine forecasts and interval bounds
+cpu_intervals <- tibble(
+  year = cpu_future$year,
+  forecast = cpu_pi_95[, "fit"],
+  lower_80 = cpu_pi_80[, "lwr"],
+  upper_80 = cpu_pi_80[, "upr"],
+  lower_95 = cpu_pi_95[, "lwr"],
+  upper_95 = cpu_pi_95[, "upr"]
+)
+
+stopifnot(
+  all(cpu_intervals$lower_95 <= cpu_intervals$lower_80),
+  all(cpu_intervals$lower_80 <= cpu_intervals$forecast),
+  all(cpu_intervals$forecast <= cpu_intervals$upper_80),
+  all(cpu_intervals$upper_80 <= cpu_intervals$upper_95)
+)
+
+ggplot(
+  cpu_intervals,
+  aes(x = year)
+) +
+  geom_ribbon(
+    aes(
+      ymin = lower_95,
+      ymax = upper_95
+    ),
+    fill = "#B9D9EA",
+    alpha = 0.65
+  ) +
+  geom_ribbon(
+    aes(
+      ymin = lower_80,
+      ymax = upper_80
+    ),
+    fill = "#5FA7CD",
+    alpha = 0.55
+  ) +
+  geom_line(
+    aes(y = forecast),
+    colour = "#0077A8",
+    linewidth = 1.2
+  ) +
+  geom_point(
+    aes(y = forecast),
+    colour = "#0077A8",
+    size = 2.8
+  ) +
+  geom_text(
+    aes(
+      y = forecast,
+      label = comma(round(forecast))
+    ),
+    vjust = -1,
+    size = 3.5,
+    fontface = "bold",
+    colour = "#173A5E"
+  ) +
+  scale_x_continuous(
+    breaks = 2027:2030
+  ) +
+  scale_y_continuous(
+    labels = label_comma(accuracy = 1),
+    expand = expansion(mult = c(0.08, 0.12))
+  ) +
+  labs(
+    x = "Forecast year",
+    y = "CPU demand (million core-hours)",
+    caption = paste(
+      "Darker band: 80% prediction interval.",
+      "Lighter band: 95% prediction interval.",
+      "Intervals exclude uncertainty from alternative model specifications."
+    )
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    panel.grid.minor = element_blank(),
+    plot.caption = element_text(size = 8)
+  )
+```
+
+The selected linear model projects approximately 1,369.90 million CPU core-hours in 2030, with a 95% prediction interval of approximately 974.24–1,765.55 million core-hours. The interval is relatively wide compared with the estimated annual increase of 81.01 million core-hours, indicating substantial uncertainty around individual future observations.
+
+These intervals are conditional on the fitted linear model. They do not account for additional uncertainty associated with historical resource conversions, changes in computing infrastructure, reporting practices or alternative growth assumptions.
+
+The full-history log-linear projection of approximately 2.48 billion core-hours lies well above the central model's 95% prediction interval. This does not invalidate either model. Instead, it demonstrates that a prediction interval calculated from one model does not capture the different outcomes produced by alternative model specifications.
+
+The residual diagnostics in Section 4.2.4 provide additional information about the fitted model assumptions. However, the limited number of annual observations and historical reporting differences mean that the statistical intervals should be interpreted cautiously.
+
+The central CPU forecast provides a reference for assessing future computing demand, while the alternative trajectories show how projections change under different growth assumptions. The large difference between the linear and log-linear projections indicates that planning decisions should consider more than one possible growth path. These CPU estimates should also be interpreted alongside overall HPC demand, rather than added together, because they represent related measures of computing requirements.
 
 ### GPU Demand
 
