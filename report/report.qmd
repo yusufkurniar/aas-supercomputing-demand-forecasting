@@ -871,13 +871,14 @@ Figure @fig-historical-gpu retains the baseline series and historical low–high
 
 ```{r}
 #| label: fig-historical-gpu
-#| fig-cap: "Historical GPU demand and allocation, 2014–2026. Shaded areas show historical conversion scenarios, not statistical confidence intervals."
-#| fig-width: 8
-#| fig-height: 4.7
+#| fig-cap: "Historical GPU demand and allocation, 2014–2026. Dashed lines and shaded ranges indicate assumption-based historical estimates; solid lines show the 2022–2026 forecasting sample."
+#| fig-width: 9
+#| fig-height: 5.7
 #| out-width: 100%
 #| echo: false
 #| warning: false
 
+# Prepare baseline GPU data
 gpu_plot_data <- annual_converted |>
   select(
     year,
@@ -888,8 +889,12 @@ gpu_plot_data <- annual_converted |>
     cols = c(Demand, Allocation),
     names_to = "measure",
     values_to = "gpu_hours"
+  ) |>
+  mutate(
+    gpu_m = gpu_hours / 1e6
   )
 
+# Prepare historical low-high conversion scenarios
 gpu_uncertainty_data <- historical_gpu_scenarios |>
   select(
     year,
@@ -909,10 +914,30 @@ gpu_uncertainty_data <- historical_gpu_scenarios |>
       measure,
       demand = "Demand",
       allocation = "Allocation"
-    )
+    ),
+    gpu_hours_low = gpu_hours_low / 1e6,
+    gpu_hours_high = gpu_hours_high / 1e6
+  ) |>
+  filter(year <= 2021)
+
+# Historical assumption-based period
+gpu_early <- gpu_plot_data |>
+  filter(year <= 2021)
+
+# Recent period, including 2021 as a visual connection
+gpu_recent <- gpu_plot_data |>
+  filter(year >= 2021)
+
+# Labels only for 2022–2026
+gpu_labels <- gpu_plot_data |>
+  filter(year >= 2022) |>
+  mutate(
+    value_label = sprintf("%.2f", gpu_m)
   )
 
 ggplot() +
+
+  # Historical conversion scenario ranges
   geom_ribbon(
     data = gpu_uncertainty_data,
     aes(
@@ -925,49 +950,171 @@ ggplot() +
     alpha = 0.18,
     colour = NA
   ) +
+
+  # Boundary between historical scenarios and forecasting data
+  geom_vline(
+    xintercept = 2021.5,
+    linetype = "dotted",
+    colour = "#6B7280",
+    linewidth = 0.7
+  ) +
+
+  # Dashed lines for 2014–2021
   geom_line(
-    data = gpu_plot_data,
+    data = gpu_early,
     aes(
       x = year,
-      y = gpu_hours,
-      colour = measure
+      y = gpu_m,
+      colour = measure,
+      group = measure
     ),
+    linetype = "dashed",
     linewidth = 1
   ) +
+
+  # Solid lines for 2022–2026
+  geom_line(
+    data = gpu_recent,
+    aes(
+      x = year,
+      y = gpu_m,
+      colour = measure,
+      group = measure
+    ),
+    linewidth = 1.1
+  ) +
+
+  # All annual points
   geom_point(
     data = gpu_plot_data,
     aes(
       x = year,
-      y = gpu_hours,
+      y = gpu_m,
       colour = measure
     ),
-    size = 2
+    size = 2.2
   ) +
-  scale_x_continuous(breaks = 2014:2026) +
+
+  # Recent demand labels
+  geom_text(
+    data = gpu_labels |>
+      filter(measure == "Demand"),
+    aes(
+      x = year,
+      y = gpu_m,
+      label = value_label
+    ),
+    colour = "#0077A8",
+    fontface = "bold",
+    size = 2.8,
+    vjust = -1.1
+  ) +
+
+  # Recent allocation labels
+  geom_text(
+    data = gpu_labels |>
+      filter(measure == "Allocation"),
+    aes(
+      x = year,
+      y = gpu_m,
+      label = value_label
+    ),
+    colour = "#B87800",
+    fontface = "bold",
+    size = 2.8,
+    vjust = 1.8
+  ) +
+
+  # Historical scenario annotation
+  annotate(
+    "label",
+    x = 2016.5,
+    y = 2.75,
+    label = paste(
+      "2014–2021",
+      "Assumption-based",
+      "historical scenarios",
+      sep = "\n"
+    ),
+    size = 3.1,
+    colour = "#173A5E",
+    fill = "white",
+    label.size = 0.2
+  ) +
+
+  # Forecasting sample annotation
+  annotate(
+    "label",
+    x = 2024,
+    y = 0.55,
+    label = "2022–2026\nForecasting sample",
+    size = 3.1,
+    colour = "#173A5E",
+    fill = "white",
+    label.size = 0.2
+  ) +
+
+  scale_x_continuous(
+    breaks = 2014:2026,
+    expand = expansion(mult = c(0.03, 0.06))
+  ) +
+
   scale_y_continuous(
-    labels = label_number(
-      scale = 1e-6,
-      accuracy = 0.1
+    breaks = seq(0, 3.5, 0.5),
+    labels = label_number(accuracy = 0.1),
+    limits = c(0, 3.5),
+    expand = expansion(mult = c(0.02, 0.02))
+  ) +
+
+  scale_colour_manual(
+    values = c(
+      "Demand" = "#0077A8",
+      "Allocation" = "#E69F00"
     )
   ) +
+
+  scale_fill_manual(
+    values = c(
+      "Demand" = "#0077A8",
+      "Allocation" = "#E69F00"
+    )
+  ) +
+
   labs(
     x = "Year",
     y = "GPU-hours (millions)",
     colour = NULL,
-    fill = NULL
+    fill = NULL,
+    caption = paste(
+      "Shading represents historical conversion scenarios,",
+      "not statistical confidence intervals."
+    )
   ) +
+
   theme_minimal(base_size = 11) +
   theme(
-    axis.text.x = element_text(angle = 45, hjust = 1),
-    legend.position = "bottom"
+    axis.text.x = element_text(
+      angle = 45,
+      hjust = 1
+    ),
+    legend.position = "bottom",
+    panel.grid.minor = element_blank(),
+    plot.caption = element_text(size = 8),
+    plot.margin = margin(15, 20, 10, 15)
   )
 ```
 
-The historical GPU series is less certain than the CPU series. The 2014–2021 values include hypothetical conversion scenarios, while the 2022–2026 period contains a mixture of reported and derived resource estimates.
+GPU demand was analysed separately because historical reporting was less consistent than for CPU resources. Earlier publications did not provide sufficiently detailed GPU-hour information to construct a comparable series across the full 2014–2026 period. Some records were reported in service units, while others lacked the system-specific information needed for reliable conversion into GPU-hours.
 
-The shaded ranges represent uncertainty associated with historical conversion assumptions rather than statistical prediction intervals.
+To examine possible historical patterns, the analysis developed baseline and low–high conversion scenarios for 2014–2021. These scenarios used documented working assumptions where direct conversion factors or resource breakdowns were unavailable. The purpose was to assess how different assumptions could affect the reconstructed historical series, rather than to present the estimates as verified GPU demand. The shaded areas in @fig-historical-gpu therefore represent alternative historical conversion assumptions, not statistical confidence intervals.
 
-For this reason, the forecasting analysis uses the shorter 2022–2026 GPU series. This reduces reliance on earlier conversion assumptions but leaves only five annual observations for model development.
+The reconstructed series suggests that GPU requirements may have increased before 2022. However, the size of this increase is sensitive to the conversion assumptions. The historical estimates were retained in the descriptive analysis to document the available evidence and illustrate the limitations of reconstructing GPU demand from incomplete records. Removing them entirely would conceal an important source of uncertainty identified during data preparation.
+
+For forecasting, the analysis used only the 2022–2026 observations. This period provided a more consistent basis for examining GPU demand following the introduction of Setonix, although some values still required conversion or estimation. Restricting the modelling sample reduced dependence on the less supported historical assumptions but left only five annual observations.
+
+The recent series shows that estimated GPU demand increased to approximately 3.00 million GPU-hours by 2026, while allocations remained around 1.25 million GPU-hours. The official Setonix GPU requests also increased by approximately 123% in service units between 2023 and 2026, providing separate evidence of growing requests. However, growth measured in service units should not be treated as directly equivalent to growth in physical GPU-hours.
+
+Overall, the GPU analysis indicates increasing demand but greater measurement uncertainty than for aggregate HPC or CPU resources. The historical scenarios remain useful for explaining the data limitations, while the shorter forecasting sample provides a more defensible, although still limited, basis for projecting GPU demand through 2030.
 
 ### Field of Research Allocation Composition
 
