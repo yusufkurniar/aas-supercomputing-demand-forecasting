@@ -1339,33 +1339,539 @@ The comparison between periods also requires caution. The earlier observations w
 
 The FoR analysis describes the distribution of allocated resources rather than the distribution of independently observed demand. Nevertheless, the differences between the earlier and recent periods provide a useful basis for the allocation-share scenarios developed in Section 4.4. These scenarios examine how alternative historical compositions would affect the indicative distribution of projected HPC demand through 2030.
 
+
 ## Forecast Model Evaluation
 
-The forecasting models were evaluated using rolling-origin, one-step-ahead predictions. Root Mean Squared Error (RMSE) and Mean Absolute Error (MAE) were used to compare forecast accuracy.
+The four forecasting models were evaluated before generating demand projections to 2030. The purpose was to assess whether estimating a historical trend improved one-year-ahead predictions compared with the naïve and drift benchmarks.
+
+An expanding-window rolling-origin evaluation was used. For overall HPC and CPU demand, the first training period covered 2014–2020. Each model was fitted using those observations and used to predict demand in 2021. The training period was then extended by one year, and the process was repeated until 2026. This produced six one-year-ahead forecasts for each model.
+
+The same four models were evaluated at every forecast origin: naïve, drift, linear trend and log-linear trend. At each stage, only observations available before the forecast year were used. Forecast accuracy was assessed using Root Mean Squared Error (RMSE) and Mean Absolute Error (MAE), as described in Chapter 3.
+
+The evaluation was conducted separately for overall HPC, CPU and GPU demand because their measurement units and historical coverage differ.
+
 
 ### Overall HPC Demand
 
-The linear trend achieved the lowest RMSE and MAE for overall HPC demand during the 2021–2026 evaluation period.
+The overall HPC evaluation compared four forecasting methods using six one-year-ahead predictions from 2021 to 2026. Each prediction was generated using an expanding training window, starting with observations from 2014–2020. This allowed the models to be compared on their ability to predict new observations rather than their fit to the complete historical series.
 
-Its RMSE was approximately 290,898 kSU, compared with 314,588 kSU for the drift model, 378,864 kSU for the naïve benchmark and 511,614 kSU for the log-linear trend.
+Figure @fig-hpc-cv presents the observed HPC demand alongside the forecasts from each model. The four panels use the same vertical scale to allow direct comparison.
 
-The linear trend was therefore selected as the central model. However, the results are based on six evaluation years, and the substantial increase in 2026 affects the fitted trend.
+```{r}
+#| label: fig-hpc-cv
+#| fig-cap: "Observed overall HPC demand and rolling-origin one-year-ahead forecasts, 2021–2026. All panels use the same vertical scale."
+#| fig-width: 10
+#| fig-height: 7
+#| out-width: 100%
+#| echo: false
+#| warning: false
+#| message: false
+
+# Prepare historical HPC demand
+hpc_cv_data <- annual_analysis |>
+  dplyr::transmute(
+    year = as.integer(year),
+    demand_ksu = as.numeric(demand_ksu)
+  ) |>
+  dplyr::arrange(year)
+
+stopifnot(
+  identical(hpc_cv_data$year, 2014:2026),
+  all(is.finite(hpc_cv_data$demand_ksu)),
+  all(hpc_cv_data$demand_ksu > 0)
+)
+
+# Rolling-origin evaluation
+hpc_cv_predictions <- dplyr::bind_rows(
+  lapply(2021:2026, function(test_year) {
+
+    training <- hpc_cv_data |>
+      dplyr::filter(year < test_year)
+
+    actual <- hpc_cv_data |>
+      dplyr::filter(year == test_year) |>
+      dplyr::pull(demand_ksu)
+
+    first_value <- training$demand_ksu[1]
+    last_value <- dplyr::last(training$demand_ksu)
+    n <- nrow(training)
+
+    # Naïve forecast
+    pred_naive <- last_value
+
+    # Drift forecast
+    pred_drift <- last_value +
+      (last_value - first_value) / (n - 1)
+
+    # Linear trend
+    fit_linear <- lm(
+      demand_ksu ~ year,
+      data = training
+    )
+
+    pred_linear <- as.numeric(
+      predict(
+        fit_linear,
+        newdata = data.frame(year = test_year)
+      )
+    )
+
+    # Log-linear trend
+    fit_loglinear <- lm(
+      log(demand_ksu) ~ year,
+      data = training
+    )
+
+    pred_loglinear <- as.numeric(
+      exp(
+        predict(
+          fit_loglinear,
+          newdata = data.frame(year = test_year)
+        )
+      )
+    )
+
+    tibble::tibble(
+      year = test_year,
+      actual = actual,
+      `Naïve` = pred_naive,
+      `Drift` = pred_drift,
+      `Linear trend` = pred_linear,
+      `Log-linear trend` = pred_loglinear
+    )
+  })
+)
+
+# Reshape predictions for plotting
+hpc_cv_long <- hpc_cv_predictions |>
+  tidyr::pivot_longer(
+    cols = c(
+      `Naïve`,
+      `Drift`,
+      `Linear trend`,
+      `Log-linear trend`
+    ),
+    names_to = "model",
+    values_to = "forecast"
+  ) |>
+  dplyr::mutate(
+    model = factor(
+      model,
+      levels = c(
+        "Naïve",
+        "Drift",
+        "Linear trend",
+        "Log-linear trend"
+      )
+    ),
+    actual_m = actual / 1e6,
+    forecast_m = forecast / 1e6
+  )
+
+# Four-panel forecast comparison
+ggplot(
+  hpc_cv_long,
+  aes(x = year)
+) +
+  geom_line(
+    aes(
+      y = actual_m,
+      colour = "Observed"
+    ),
+    linewidth = 1.2
+  ) +
+  geom_point(
+    aes(
+      y = actual_m,
+      colour = "Observed"
+    ),
+    size = 2.3
+  ) +
+  geom_line(
+    aes(
+      y = forecast_m,
+      colour = "Forecast"
+    ),
+    linewidth = 1,
+    linetype = "dashed"
+  ) +
+  geom_point(
+    aes(
+      y = forecast_m,
+      colour = "Forecast"
+    ),
+    size = 2
+  ) +
+  facet_wrap(
+    ~model,
+    ncol = 2,
+    scales = "fixed"
+  ) +
+  scale_colour_manual(
+    values = c(
+      "Observed" = "#173A5E",
+      "Forecast" = "#E69F00"
+    )
+  ) +
+  scale_x_continuous(
+    breaks = 2021:2026
+  ) +
+  scale_y_continuous(
+    labels = scales::label_number(
+      accuracy = 0.1
+    )
+  ) +
+  labs(
+    x = "Evaluation year",
+    y = "HPC demand (million kSU)",
+    colour = NULL,
+    caption = paste(
+      "Observed values are shown in dark blue.",
+      "Dashed orange lines represent one-year-ahead forecasts",
+      "from expanding training windows."
+    )
+  ) +
+  theme_minimal(base_size = 10) +
+  theme(
+    strip.text = element_text(
+      face = "bold",
+      size = 11
+    ),
+    axis.text.x = element_text(
+      angle = 45,
+      hjust = 1
+    ),
+    legend.position = "bottom",
+    panel.grid.minor = element_blank(),
+    plot.caption = element_text(size = 8)
+  )
+```
+
+The four models showed different forecasting patterns. The naïve model tended to underestimate demand during periods of growth because it used the previous year's observation. Drift generally followed the upward trend more closely, while the linear model produced forecasts that were relatively close to observed demand, particularly from 2023 to 2025.
+
+The log-linear model behaved differently. Its forecasts were higher than observed demand in most evaluation years, with the difference becoming more pronounced after 2022. This suggests that extending the historical proportional growth rate was less suitable for predicting annual HPC demand over the evaluation period.
+
+The largest forecasting challenge occurred in 2026. Recorded demand reached approximately 2.24 million kSU, compared with 1.56 million kSU in 2025. This represents an estimated increase of 43.3%, although the calculation depends on the reconstructed 2025 value. All four models underestimated the 2026 observation, including the linear model. The result shows that even the better-performing methods struggled to anticipate a large increase using historical observations alone.
+
+@tbl-hpc-accuracy summarises forecast accuracy across the six evaluation years.
+
+| Model | RMSE (kSU) | MAE (kSU) | RMSE rank |
+|---|---:|---:|---:|
+| Linear trend | **290,898** | **198,295** | **1** |
+| Drift | 314,588 | 221,778 | 2 |
+| Naïve | 378,864 | 283,000 | 3 |
+| Log-linear trend | 511,614 | 466,991 | 4 |
+
+: Rolling-origin forecast accuracy for overall HPC demand, 2021–2026. {#tbl-hpc-accuracy}
+
+The linear trend achieved the lowest RMSE of 290,898 kSU and MAE of 198,295 kSU. Its RMSE was approximately 23.2% lower than the naïve benchmark and 7.5% lower than drift. Although linear performed best overall, the relatively small difference from drift suggests that its improvement over a simple historical-growth benchmark was modest.
+
+The log-linear model recorded the highest RMSE of 511,614 kSU and MAE of 466,991 kSU. Its larger errors indicate that the proportional-growth assumption was less effective for one-year-ahead forecasting during 2021–2026, despite producing a stronger upward trajectory.
+
+Based on these results, the linear trend was selected as the central forecasting model for overall HPC demand. However, the evaluation was limited to six forecast years, and the final model was sensitive to the latest observation. Including 2026 increased the estimated annual trend from approximately 144,357 to 161,992 kSU, an increase of 12.2%.
+
+The model excluding 2026 was therefore retained for sensitivity analysis. The log-linear model was also retained as an alternative scenario to examine the implications of continued proportional growth, rather than as a preferred forecasting method.
+
+The evaluation supports using the linear model as the central reference, but its one-year-ahead accuracy does not guarantee reliable projections through 2030. Section 4.3 examines how different growth assumptions and the inclusion of 2026 affect the resulting forecasts.
 
 ### CPU Demand
 
-For CPU demand, the linear and log-linear models performed similarly.
+CPU demand was evaluated using the same expanding-window procedure and six evaluation years as overall HPC demand. The four models were compared using forecasts expressed in millions of CPU core-hours.
 
-The linear trend achieved the lowest RMSE of approximately 157.72 million core-hours, while the log-linear model achieved a slightly lower MAE.
+Table @tbl-cpu-accuracy presents the results.
 
-The linear trend was preferred because it provided competitive forecast accuracy without assuming continued proportional growth. The log-linear model was retained as an alternative growth scenario.
+| Model | RMSE (million core-hours) | MAE (million core-hours) | RMSE rank |
+|---|---:|---:|---:|
+| Linear trend | **157.72** | 138.65 | **1** |
+| Log-linear trend | 160.18 | **133.74** | 2 |
+| Drift | 242.61 | 193.69 | 3 |
+| Naïve | 260.05 | 228.45 | 4 |
+
+: Rolling-origin forecast accuracy for CPU demand, 2021–2026. {#tbl-cpu-accuracy}
+
+Unlike overall HPC demand, the CPU evaluation did not identify the same leading model under both accuracy measures.
+
+The linear trend achieved the lowest RMSE of approximately 157.72 million core-hours, while the log-linear trend achieved the lowest MAE of 133.74 million core-hours. The RMSE difference between the two models was approximately 1.5%, indicating relatively similar one-year-ahead performance.
+
+The choice between these models therefore required consideration beyond historical accuracy. The linear trend assumes a constant absolute increase, while the log-linear trend assumes continued proportional growth. Although their short-term accuracy was similar, these assumptions produced substantially different projections through 2030.
+
+The linear model was selected as the central CPU forecasting specification because it provided competitive accuracy without requiring sustained compounded growth. The log-linear model was retained as an alternative scenario.
+
+The sensitivity analysis also showed that including 2026 increased the estimated linear annual CPU growth from approximately 72.41 million to 81.01 million core-hours, an increase of 11.9%.
+
+These findings indicate that CPU demand was more difficult to distinguish between the two trend models than overall HPC demand. The selection of the linear model reflects both its historical performance and the greater transparency of its long-term growth assumption.
 
 ### GPU Demand
 
-GPU model evaluation was limited to forecasts for 2025 and 2026.
+GPU forecasting was evaluated separately because the modelling dataset contained only five annual observations from 2022–2026.
 
-The naïve benchmark achieved the lowest RMSE, approximately 0.441 million GPU-hours. However, two evaluation years provide insufficient evidence to establish a reliable long-term forecasting model.
+The initial training period covered 2022–2024. One-year-ahead predictions were evaluated for 2025 and 2026, providing only two forecast errors for each model.
 
-The naïve model was retained as a reference, while linear and log-linear trends were used to explore alternative growth assumptions.
+The naïve benchmark achieved the lowest RMSE of approximately 0.441 million GPU-hours and the lowest MAE of approximately 0.353 million GPU-hours. The drift model ranked second, followed by log-linear and linear trend models.
+
+However, the two-year evaluation period was too short to establish a reliable ranking of long-term GPU forecasting methods. Individual observations had a substantial influence on the accuracy results.
+
+The naïve model was therefore retained as the reference projection, holding demand at the latest estimated level. Linear and log-linear models were also retained to examine alternative growth assumptions through 2030.
+
+Unlike overall HPC and CPU demand, the GPU analysis did not provide sufficient historical evidence to justify a single preferred long-term growth model. The resulting projections were treated as exploratory scenarios rather than reliable estimates of future GPU requirements.
+
+### Residual Diagnostics
+
+The rolling-origin evaluation assessed how accurately the models predicted observations that were not used during fitting. Residual diagnostics were then conducted on the selected linear trend models for overall HPC and CPU demand to examine whether systematic patterns remained in the fitted errors.
+
+The residual autocorrelation function (ACF) was examined alongside the Ljung–Box test. The test assesses whether residual autocorrelation is present across the selected lags. Q–Q plots were also used to examine departures from the normal distribution, which are relevant when interpreting model-based prediction intervals.
+
+Figure @fig-model-diagnostics presents these diagnostics for both selected models.
+
+```{r}
+#| label: fig-model-diagnostics
+#| fig-cap: "Residual diagnostics for the selected linear trend models: ACF and normal Q–Q plots for overall HPC and CPU demand."
+#| fig-width: 10
+#| fig-height: 7
+#| out-width: 100%
+#| echo: false
+#| warning: false
+#| message: false
+
+library(ggplot2)
+library(dplyr)
+library(patchwork)
+
+# Prepare the same historical series used for forecasting
+hpc_diagnostic_data <- annual_analysis |>
+  transmute(
+    year = as.integer(year),
+    demand = as.numeric(demand_ksu)
+  ) |>
+  arrange(year)
+
+cpu_diagnostic_data <- annual_converted |>
+  transmute(
+    year = as.integer(year),
+    demand = as.numeric(demand_cpu_core_hours) / 1e6
+  ) |>
+  arrange(year)
+
+stopifnot(
+  identical(hpc_diagnostic_data$year, 2014:2026),
+  identical(cpu_diagnostic_data$year, 2014:2026),
+  all(is.finite(hpc_diagnostic_data$demand)),
+  all(is.finite(cpu_diagnostic_data$demand))
+)
+
+# Fit selected full-history linear trend models
+hpc_diagnostic_fit <- lm(
+  demand ~ year,
+  data = hpc_diagnostic_data
+)
+
+cpu_diagnostic_fit <- lm(
+  demand ~ year,
+  data = cpu_diagnostic_data
+)
+
+# Residual ACF plot function
+make_acf_plot <- function(model, title) {
+
+  residual_values <- residuals(model)
+
+  acf_result <- acf(
+    residual_values,
+    plot = FALSE,
+    lag.max = 5
+  )
+
+  acf_data <- tibble(
+    lag = as.numeric(acf_result$lag)[-1],
+    autocorrelation = as.numeric(acf_result$acf)[-1]
+  )
+
+  confidence_limit <- 1.96 / sqrt(length(residual_values))
+
+  ggplot(
+    acf_data,
+    aes(
+      x = lag,
+      y = autocorrelation
+    )
+  ) +
+    geom_hline(
+      yintercept = 0,
+      colour = "#555555"
+    ) +
+    geom_hline(
+      yintercept = c(
+        -confidence_limit,
+        confidence_limit
+      ),
+      colour = "#CC6677",
+      linetype = "dashed",
+      linewidth = 0.6
+    ) +
+    geom_segment(
+      aes(
+        xend = lag,
+        yend = 0
+      ),
+      colour = "#0077A8",
+      linewidth = 1
+    ) +
+    geom_point(
+      colour = "#0077A8",
+      size = 2
+    ) +
+    scale_x_continuous(
+      breaks = 1:5
+    ) +
+    coord_cartesian(
+      ylim = c(-1, 1)
+    ) +
+    labs(
+      title = title,
+      x = "Lag (years)",
+      y = "Residual ACF"
+    ) +
+    theme_minimal(base_size = 10) +
+    theme(
+      panel.grid.minor = element_blank()
+    )
+}
+
+# Normal Q-Q plot function
+make_qq_plot <- function(model, title) {
+
+  residual_data <- tibble(
+    residual = as.numeric(residuals(model))
+  )
+
+  ggplot(
+    residual_data,
+    aes(sample = residual)
+  ) +
+    stat_qq(
+      colour = "#0077A8",
+      size = 2
+    ) +
+    stat_qq_line(
+      colour = "#CC6677",
+      linewidth = 0.8
+    ) +
+    labs(
+      title = title,
+      x = "Theoretical quantiles",
+      y = "Residual quantiles"
+    ) +
+    theme_minimal(base_size = 10) +
+    theme(
+      panel.grid.minor = element_blank()
+    )
+}
+
+# Create the four diagnostic panels
+p_hpc_acf <- make_acf_plot(
+  hpc_diagnostic_fit,
+  "A. HPC residual ACF"
+)
+
+p_hpc_qq <- make_qq_plot(
+  hpc_diagnostic_fit,
+  "B. HPC normal Q-Q plot"
+)
+
+p_cpu_acf <- make_acf_plot(
+  cpu_diagnostic_fit,
+  "C. CPU residual ACF"
+)
+
+p_cpu_qq <- make_qq_plot(
+  cpu_diagnostic_fit,
+  "D. CPU normal Q-Q plot"
+)
+
+(p_hpc_acf | p_hpc_qq) /
+  (p_cpu_acf | p_cpu_qq) +
+  plot_annotation(
+    caption = paste(
+      "Diagnostics use in-sample residuals from",
+      "linear trend models fitted to 2014–2026.",
+      "Dashed ACF bounds are approximate reference limits."
+    )
+  )
+```
+
+The ACF plots show residual correlations at different lags, with dashed reference limits indicating the approximate range expected under white noise. The Q–Q plots compare the observed residual distributions with a theoretical normal distribution.
+
+The Ljung–Box test was also applied to examine residual autocorrelation. Table @tbl-ljung-box reports the results for the two selected models.
+
+```{r}
+#| label: tbl-ljung-box
+#| tbl-cap: "Ljung–Box residual autocorrelation tests for the selected linear trend models."
+#| echo: false
+#| warning: false
+
+# Use lag 3, with two fitted regression coefficients
+# (intercept and trend) for the degrees-of-freedom adjustment.
+diagnostic_lag <- 3
+
+hpc_lb <- Box.test(
+  residuals(hpc_diagnostic_fit),
+  lag = diagnostic_lag,
+  type = "Ljung-Box",
+  fitdf = 2
+)
+
+cpu_lb <- Box.test(
+  residuals(cpu_diagnostic_fit),
+  lag = diagnostic_lag,
+  type = "Ljung-Box",
+  fitdf = 2
+)
+
+diagnostic_results <- tibble(
+  `Demand measure` = c(
+    "Overall HPC",
+    "CPU"
+  ),
+  `Ljung-Box statistic` = c(
+    unname(hpc_lb$statistic),
+    unname(cpu_lb$statistic)
+  ),
+  `Lag` = diagnostic_lag,
+  `Adjusted degrees of freedom` = c(
+    unname(hpc_lb$parameter),
+    unname(cpu_lb$parameter)
+  ),
+  `p-value` = c(
+    hpc_lb$p.value,
+    cpu_lb$p.value
+  )
+)
+
+knitr::kable(
+  diagnostic_results,
+  digits = 3
+)
+```
+
+The Ljung–Box results should be interpreted alongside the ACF plots. A p-value above 0.05 indicates insufficient evidence to reject the null hypothesis of no residual autocorrelation at the tested lags. However, the test has limited power with only 13 annual observations.
+
+The Q–Q plots provide a separate assessment of residual normality. Any departures from the reference line, particularly at the extremes, should be considered when interpreting the statistical prediction intervals.
+
+These diagnostics complement the rolling-origin accuracy results but do not establish that the fitted historical trends will continue through 2030. The short sample, historical reporting differences and sensitivity to the 2026 observation remain important limitations.
+
+### Evaluation Summary
+
+The model evaluation produced different results across the three computing measures.
+
+For overall HPC demand, the linear trend achieved the lowest RMSE and MAE and was selected as the central forecasting model.
+
+For CPU demand, the linear and log-linear trends performed similarly, but the linear model was preferred because it provided a simpler and more transparent basis for long-term projection.
+
+For GPU demand, the naïve benchmark performed best over the two available evaluation years, although the limited sample prevented a reliable assessment of longer-term predictive performance.
+
+The results demonstrate why model selection cannot depend solely on the lowest historical forecast error. The forecasting horizon, historical data coverage, measurement assumptions and sensitivity to recent observations also need to be considered.
+
+The selected models and alternative growth assumptions form the basis for the demand projections and scenarios presented in the following section.
 
 ## Demand Forecasts to 2030
 
