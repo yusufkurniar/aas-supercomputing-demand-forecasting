@@ -2341,12 +2341,11 @@ window.Quarto = {
   <li><a href="#data-sources-and-preparation" id="toc-data-sources-and-preparation" class="nav-link" data-scroll-target="#data-sources-and-preparation"><span class="header-section-number">2</span> Data Sources and Preparation</a>
   <ul class="collapse">
   <li><a href="#data-sources-and-coverage" id="toc-data-sources-and-coverage" class="nav-link" data-scroll-target="#data-sources-and-coverage"><span class="header-section-number">2.1</span> Data Sources and Coverage</a></li>
-  <li><a href="#data-integration-and-provenance" id="toc-data-integration-and-provenance" class="nav-link" data-scroll-target="#data-integration-and-provenance"><span class="header-section-number">2.2</span> Data Integration and Provenance</a></li>
+  <li><a href="#data-integration-standardisation-and-provenance" id="toc-data-integration-standardisation-and-provenance" class="nav-link" data-scroll-target="#data-integration-standardisation-and-provenance"><span class="header-section-number">2.2</span> Data Integration, Standardisation and Provenance</a></li>
   <li><a href="#variable-definitions-and-measurement-units" id="toc-variable-definitions-and-measurement-units" class="nav-link" data-scroll-target="#variable-definitions-and-measurement-units"><span class="header-section-number">2.3</span> Variable Definitions and Measurement Units</a></li>
-  <li><a href="#data-standardisation" id="toc-data-standardisation" class="nav-link" data-scroll-target="#data-standardisation"><span class="header-section-number">2.4</span> Data Standardisation</a></li>
-  <li><a href="#compute-resource-conversion" id="toc-compute-resource-conversion" class="nav-link" data-scroll-target="#compute-resource-conversion"><span class="header-section-number">2.5</span> Compute Resource Conversion</a></li>
-  <li><a href="#field-of-research-classification-alignment" id="toc-field-of-research-classification-alignment" class="nav-link" data-scroll-target="#field-of-research-classification-alignment"><span class="header-section-number">2.6</span> Field of Research Classification Alignment</a></li>
-  <li><a href="#data-quality-assessment" id="toc-data-quality-assessment" class="nav-link" data-scroll-target="#data-quality-assessment"><span class="header-section-number">2.7</span> Data Quality Assessment</a></li>
+  <li><a href="#compute-resource-conversion" id="toc-compute-resource-conversion" class="nav-link" data-scroll-target="#compute-resource-conversion"><span class="header-section-number">2.4</span> Compute Resource Conversion</a></li>
+  <li><a href="#field-of-research-classification-alignment" id="toc-field-of-research-classification-alignment" class="nav-link" data-scroll-target="#field-of-research-classification-alignment"><span class="header-section-number">2.5</span> Field of Research Classification Alignment</a></li>
+  <li><a href="#data-quality-assessment" id="toc-data-quality-assessment" class="nav-link" data-scroll-target="#data-quality-assessment"><span class="header-section-number">2.6</span> Data Quality Assessment</a></li>
   </ul></li>
   <li><a href="#forecasting-methodology" id="toc-forecasting-methodology" class="nav-link" data-scroll-target="#forecasting-methodology"><span class="header-section-number">3</span> Forecasting Methodology</a>
   <ul class="collapse">
@@ -2483,12 +2482,12 @@ Table 1: Main data sources and their analytical roles.
 </div>
 <p>Research funding, workforce and research activity indicators were also examined as potential explanatory variables. Their suitability for forecasting was assessed according to historical coverage, consistency and relevance.</p>
 </section>
-<section id="data-integration-and-provenance" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="data-integration-and-provenance"><span class="header-section-number">2.2</span> Data Integration and Provenance</h2>
-<p>Information extracted from the source publications was organised into two main analytical datasets: an annual demand and allocation summary, and a Field of Research (FoR) allocation composition dataset.</p>
-<p>The integration process aligned reporting periods, identified the scope of each observation and reconciled detailed records with available annual totals. Financial years were assigned to their ending year; for example, 2013/14 was recorded as 2014.</p>
-<p>Available provenance information was retained, including source documents, reporting periods, original values, measurement units and derivation notes.</p>
-<p>Observations were distinguished according to whether they were directly reported, calculated from source information or estimated using documented assumptions. This distinction was preserved in the subsequent analysis.</p>
+<section id="data-integration-standardisation-and-provenance" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="data-integration-standardisation-and-provenance"><span class="header-section-number">2.2</span> Data Integration, Standardisation and Provenance</h2>
+<p>Information from NCI, Pawsey and NCMAS publications was organised into two datasets: an annual demand and allocation summary, and a Field of Research (FoR) allocation composition dataset. Records were aligned by reporting year, computing system and resource type, with detailed observations checked against published annual totals where available.</p>
+<p>Financial years were assigned to their ending year; for example, 2013/14 was recorded as 2014. Computing system names, resource identifiers and research field labels were standardised to support comparisons across reporting periods. CPU, GPU and aggregate computing resources were identified separately, and differences in reporting scope were recorded before aggregation.</p>
+<p>Original values, measurement units and source references were retained alongside standardised fields. Each observation was identified as directly reported, calculated from source information or estimated using documented assumptions. Missing resource breakdowns were not treated as observed values.</p>
+<p>System-specific resource conversions and FoR classification alignment are described in Sections 2.4 and 2.5, respectively.</p>
 </section>
 <section id="variable-definitions-and-measurement-units" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="variable-definitions-and-measurement-units"><span class="header-section-number">2.3</span> Variable Definitions and Measurement Units</h2>
@@ -2501,19 +2500,12 @@ R_t = \frac{D_t}{A_t}
 <p>Historical records use different measurement units, including service units (SU), kilo service units (kSU), million compute hours, CPU core-hours and GPU hours. Service units are accounting measures that depend on the computing system and resource type. Consequently, values expressed in kSU are not necessarily computationally equivalent across facilities.</p>
 <p>CPU core-hours and GPU hours were treated as separate measures. Their conversion procedures are described in the Compute Resource Conversion section.</p>
 </section>
-<section id="data-standardisation" class="level2" data-number="2.4">
-<h2 data-number="2.4" class="anchored" data-anchor-id="data-standardisation"><span class="header-section-number">2.4</span> Data Standardisation</h2>
-<p>Data standardisation included consistent year labels, research field names, computing system identifiers, resource types and provenance classifications.</p>
-<p>Financial-year labels were aligned to their ending year, while system and resource identifiers were reviewed to distinguish CPU, GPU and aggregate observations.</p>
-<p>Original values and reporting units were retained alongside standardised fields. Missing resource breakdowns were not treated as directly observed values, and records with different reporting scopes were identified before aggregation.</p>
-<p>Categorical standardisation was completed separately from compute-resource conversion and FoR classification alignment, which are described in the following sections.</p>
-</section>
-<section id="compute-resource-conversion" class="level2" data-number="2.5">
-<h2 data-number="2.5" class="anchored" data-anchor-id="compute-resource-conversion"><span class="header-section-number">2.5</span> Compute Resource Conversion</h2>
+<section id="compute-resource-conversion" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="compute-resource-conversion"><span class="header-section-number">2.4</span> Compute Resource Conversion</h2>
 <p>Historical demand and allocation values were reported using different accounting conventions. To improve comparability, compute-resource conversion was undertaken according to the reporting year, computing system, resource type and available accounting documentation <span class="citation" data-cites="NCIGadiTransition PawseySetonixTransition Pawsey2023Services">(<a href="#ref-NCIGadiTransition" role="doc-biblioref">National Computational Infrastructure, n.d.-a</a>; <a href="#ref-PawseySetonixTransition" role="doc-biblioref">Pawsey Supercomputing Research Centre, n.d.-c</a>, <a href="#ref-Pawsey2023Services" role="doc-biblioref">n.d.-b</a>)</span>.</p>
 <p>The conversion process preserved original observations and distinguished directly reported values from derived and assumed estimates. Documented system-specific factors were prioritised, while assumptions were recorded where direct conversion information was unavailable.</p>
-<section id="conversion-formulas" class="level3" data-number="2.5.1">
-<h3 data-number="2.5.1" class="anchored" data-anchor-id="conversion-formulas"><span class="header-section-number">2.5.1</span> Conversion Formulas</h3>
+<section id="conversion-formulas" class="level3" data-number="2.4.1">
+<h3 data-number="2.4.1" class="anchored" data-anchor-id="conversion-formulas"><span class="header-section-number">2.4.1</span> Conversion Formulas</h3>
 <p>The general relationship between service units and kilo service units is:</p>
 <p><span class="math display">\[
 \text{SU} = \text{kSU} \times 1{,}000
@@ -2533,8 +2525,8 @@ R_t = \frac{D_t}{A_t}
 <p>The denominators represent the accounting factors applicable to each computing system and resource type. These factors were not assumed to be constant across all systems or reporting periods.</p>
 <p>Where values were already reported in CPU core-hours or GPU hours, they were retained without additional service-unit conversion. Values reported in millions of hours were multiplied by 1,000,000, subject to confirmation of the original resource definition.</p>
 </section>
-<section id="system-specific-conversion-rules" class="level3" data-number="2.5.2">
-<h3 data-number="2.5.2" class="anchored" data-anchor-id="system-specific-conversion-rules"><span class="header-section-number">2.5.2</span> System-Specific Conversion Rules</h3>
+<section id="system-specific-conversion-rules" class="level3" data-number="2.4.2">
+<h3 data-number="2.4.2" class="anchored" data-anchor-id="system-specific-conversion-rules"><span class="header-section-number">2.4.2</span> System-Specific Conversion Rules</h3>
 <p>Table <a href="#tbl-conversion-factors" class="quarto-xref">Table 2</a> summarises the principal conversion rules documented in the year-by-year conversion worksheet.</p>
 <div id="tbl-conversion-factors" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -2603,16 +2595,16 @@ Table 2: Main compute-resource conversion rules recorded in the year-by-year co
 <p>For the earlier years, a factor of 1 SU per CPU core-hour was used as a baseline assumption where a more specific accounting factor was unavailable. For some 2019/20 records, the original technical conversion used a documented working assumption of 100% Gadi CPU-equivalent at 2 SU per CPU core-hour because a reliable CPU/GPU split was unavailable. This assumption should not be interpreted as a directly observed resource breakdown.</p>
 <p>Historical Fornax GPU records could not be converted reliably using the available information. These observations were retained with their original units rather than assigned an unsupported conversion factor.</p>
 </section>
-<section id="conversion-validation-and-limitations" class="level3" data-number="2.5.3">
-<h3 data-number="2.5.3" class="anchored" data-anchor-id="conversion-validation-and-limitations"><span class="header-section-number">2.5.3</span> Conversion Validation and Limitations</h3>
+<section id="conversion-validation-and-limitations" class="level3" data-number="2.4.3">
+<h3 data-number="2.4.3" class="anchored" data-anchor-id="conversion-validation-and-limitations"><span class="header-section-number">2.4.3</span> Conversion Validation and Limitations</h3>
 <p>Converted values were reviewed against the original reported units, available system-level records and published annual totals where comparable information was available.</p>
 <p>CPU and GPU resources were kept separate because their physical computing hours are not interchangeable. Aggregate service-unit totals were converted into CPU or GPU hours only where the resource breakdown and accounting factors were available, or where a documented working assumption was applied. Conversions based on assumptions were identified separately from directly reported values.</p>
 <p>Missing historical GPU observations were treated as unavailable information rather than evidence of zero demand. Conversion status and supporting assumptions were retained to distinguish reported values, calculated measures and estimates.</p>
 <p>The complete year-by-year conversion worksheet, calculations and validation code are provided in the technical project documentation. Resource-specific FoR estimates produced later in the workflow distribute annual values using historical allocation shares; they are not directly observed field-level CPU or GPU demand.</p>
 </section>
 </section>
-<section id="field-of-research-classification-alignment" class="level2" data-number="2.6">
-<h2 data-number="2.6" class="anchored" data-anchor-id="field-of-research-classification-alignment"><span class="header-section-number">2.6</span> Field of Research Classification Alignment</h2>
+<section id="field-of-research-classification-alignment" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="field-of-research-classification-alignment"><span class="header-section-number">2.5</span> Field of Research Classification Alignment</h2>
 <p>The FoR data were standardised in two stages to support comparisons across 2014–2026.</p>
 <p>The first stage addressed differences between the FoR 2008-based reporting period (2014–2020) and the FoR 2020-based period (2021–2026) <span class="citation" data-cites="ABSANZSRC2020">(<a href="#ref-ABSANZSRC2020" role="doc-biblioref">Australian Bureau of Statistics 2020</a>)</span>. Selected historical fields were combined into broader reporting categories through <code>for_analysis_group</code>, while the existing standardised categories were retained for the later period.</p>
 <p>The second stage established nine analytical groups for longitudinal comparison through <code>for_visual_group</code>. These groups were informed by the broader research-field categories used in NCI and Pawsey annual reporting. Related categories were combined where reporting detail differed across years, rather than assuming that the two FoR classification systems were directly equivalent.</p>
@@ -2682,8 +2674,8 @@ Table 3: Analytical FoR grouping rules used for longitudinal comparison across 
 <p>Validation checks confirmed that all 133 FoR records had the required classification and allocation information, all reported fields were assigned to one of the nine analytical groups, and annual allocation shares summed to 100%.</p>
 <p>The complete mapping rules and validation code are available in the technical Quarto documentation.</p>
 </section>
-<section id="data-quality-assessment" class="level2" data-number="2.7">
-<h2 data-number="2.7" class="anchored" data-anchor-id="data-quality-assessment"><span class="header-section-number">2.7</span> Data Quality Assessment</h2>
+<section id="data-quality-assessment" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="data-quality-assessment"><span class="header-section-number">2.6</span> Data Quality Assessment</h2>
 <p>Data quality was assessed using source provenance, reporting scope, measurement-unit comparability and the availability of directly observed values.</p>
 <p>The final datasets contain both directly reported observations and reconstructed historical measures. Their reliability therefore varies across reporting years and resource types.</p>
 <p>A specific comparability issue occurs in the 2016/17 Pawsey records, where facility-wide usage information differs in scope from NCMAS allocation data <span class="citation" data-cites="Pawsey201617">(<a href="#ref-Pawsey201617" role="doc-biblioref">Pawsey Supercomputing Research Centre 2017</a>)</span>. This distinction was retained when preparing the historical FoR dataset.</p>

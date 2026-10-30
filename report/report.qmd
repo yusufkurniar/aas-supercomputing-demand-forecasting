@@ -90,15 +90,15 @@ The sources provide different levels of detail. Earlier publications mainly cont
 
 Research funding, workforce and research activity indicators were also examined as potential explanatory variables. Their suitability for forecasting was assessed according to historical coverage, consistency and relevance.
 
-## Data Integration and Provenance
+## Data Integration, Standardisation and Provenance
 
-Information extracted from the source publications was organised into two main analytical datasets: an annual demand and allocation summary, and a Field of Research (FoR) allocation composition dataset.
+Information from NCI, Pawsey and NCMAS publications was organised into two datasets: an annual demand and allocation summary, and a Field of Research (FoR) allocation composition dataset. Records were aligned by reporting year, computing system and resource type, with detailed observations checked against published annual totals where available.
 
-The integration process aligned reporting periods, identified the scope of each observation and reconciled detailed records with available annual totals. Financial years were assigned to their ending year; for example, 2013/14 was recorded as 2014.
+Financial years were assigned to their ending year; for example, 2013/14 was recorded as 2014. Computing system names, resource identifiers and research field labels were standardised to support comparisons across reporting periods. CPU, GPU and aggregate computing resources were identified separately, and differences in reporting scope were recorded before aggregation.
 
-Available provenance information was retained, including source documents, reporting periods, original values, measurement units and derivation notes.
+Original values, measurement units and source references were retained alongside standardised fields. Each observation was identified as directly reported, calculated from source information or estimated using documented assumptions. Missing resource breakdowns were not treated as observed values.
 
-Observations were distinguished according to whether they were directly reported, calculated from source information or estimated using documented assumptions. This distinction was preserved in the subsequent analysis.
+System-specific resource conversions and FoR classification alignment are described in Sections 2.4 and 2.5, respectively.
 
 ## Variable Definitions and Measurement Units
 
@@ -115,16 +115,6 @@ This ratio indicates pressure on available allocations but does not measure all 
 Historical records use different measurement units, including service units (SU), kilo service units (kSU), million compute hours, CPU core-hours and GPU hours. Service units are accounting measures that depend on the computing system and resource type. Consequently, values expressed in kSU are not necessarily computationally equivalent across facilities.
 
 CPU core-hours and GPU hours were treated as separate measures. Their conversion procedures are described in the Compute Resource Conversion section.
-
-## Data Standardisation
-
-Data standardisation included consistent year labels, research field names, computing system identifiers, resource types and provenance classifications.
-
-Financial-year labels were aligned to their ending year, while system and resource identifiers were reviewed to distinguish CPU, GPU and aggregate observations.
-
-Original values and reporting units were retained alongside standardised fields. Missing resource breakdowns were not treated as directly observed values, and records with different reporting scopes were identified before aggregation.
-
-Categorical standardisation was completed separately from compute-resource conversion and FoR classification alignment, which are described in the following sections.
 
 ## Compute Resource Conversion
 
