@@ -1574,11 +1574,208 @@ The model excluding 2026 was therefore retained for sensitivity analysis. The lo
 
 The evaluation supports using the linear model as the central reference, but its one-year-ahead accuracy does not guarantee reliable projections through 2030. Section 4.3 examines how different growth assumptions and the inclusion of 2026 affect the resulting forecasts.
 
+
 ### CPU Demand
 
-CPU demand was evaluated using the same expanding-window procedure and six evaluation years as overall HPC demand. The four models were compared using forecasts expressed in millions of CPU core-hours.
+CPU demand was evaluated using the same expanding-window procedure as overall HPC demand. The first training sample covered 2014–2020, followed by six one-year-ahead forecasts for 2021–2026. All four models were fitted separately at each forecast origin, using CPU demand expressed in millions of core-hours.
 
-Table @tbl-cpu-accuracy presents the results.
+The CPU series presents a different forecasting challenge from overall HPC demand. Historical CPU demand increased over the full period but also showed substantial year-to-year changes, particularly around 2020–2023. As discussed in Section 4.1.2, transitions from Raijin to Gadi and from Magnus to Setonix may affect comparisons between years, although these changes cannot be established as the direct causes of the observed fluctuations.
+
+@fig-cpu-cv compares the observed CPU demand with the one-year-ahead predictions from each model. The four panels use the same vertical scale.
+
+```{r}
+#| label: fig-cpu-cv
+#| fig-cap: "Observed CPU demand and rolling-origin one-year-ahead forecasts, 2021–2026. All panels use the same vertical scale."
+#| fig-width: 10
+#| fig-height: 6.3
+#| out-width: 100%
+#| echo: false
+#| warning: false
+#| message: false
+
+# Prepare historical CPU demand in million core-hours
+cpu_cv_data <- annual_converted |>
+  dplyr::transmute(
+    year = as.integer(year),
+    demand = as.numeric(demand_cpu_core_hours) / 1e6
+  ) |>
+  dplyr::arrange(year)
+
+stopifnot(
+  identical(cpu_cv_data$year, 2014:2026),
+  all(is.finite(cpu_cv_data$demand)),
+  all(cpu_cv_data$demand > 0)
+)
+
+# Rolling-origin, one-year-ahead evaluation
+cpu_cv_predictions <- dplyr::bind_rows(
+  lapply(2021:2026, function(test_year) {
+
+    training <- cpu_cv_data |>
+      dplyr::filter(year < test_year)
+
+    actual <- cpu_cv_data |>
+      dplyr::filter(year == test_year) |>
+      dplyr::pull(demand)
+
+    first_value <- training$demand[1]
+    last_value <- dplyr::last(training$demand)
+    n <- nrow(training)
+
+    # Naive benchmark
+    pred_naive <- last_value
+
+    # Drift benchmark
+    pred_drift <- last_value +
+      (last_value - first_value) / (n - 1)
+
+    # Linear trend
+    fit_linear <- lm(
+      demand ~ year,
+      data = training
+    )
+
+    pred_linear <- as.numeric(
+      predict(
+        fit_linear,
+        newdata = data.frame(year = test_year)
+      )
+    )
+
+    # Log-linear trend
+    fit_loglinear <- lm(
+      log(demand) ~ year,
+      data = training
+    )
+
+    pred_loglinear <- as.numeric(
+      exp(
+        predict(
+          fit_loglinear,
+          newdata = data.frame(year = test_year)
+        )
+      )
+    )
+
+    tibble::tibble(
+      year = test_year,
+      actual = actual,
+      `Naïve` = pred_naive,
+      `Drift` = pred_drift,
+      `Linear trend` = pred_linear,
+      `Log-linear trend` = pred_loglinear
+    )
+  })
+)
+
+# Reshape for faceted plotting
+cpu_cv_long <- cpu_cv_predictions |>
+  tidyr::pivot_longer(
+    cols = c(
+      `Naïve`,
+      `Drift`,
+      `Linear trend`,
+      `Log-linear trend`
+    ),
+    names_to = "model",
+    values_to = "forecast"
+  ) |>
+  dplyr::mutate(
+    model = factor(
+      model,
+      levels = c(
+        "Naïve",
+        "Drift",
+        "Linear trend",
+        "Log-linear trend"
+      )
+    )
+  )
+
+# Faceted forecast comparison
+ggplot(
+  cpu_cv_long,
+  aes(x = year)
+) +
+  geom_line(
+    aes(
+      y = actual,
+      colour = "Observed"
+    ),
+    linewidth = 1.2
+  ) +
+  geom_point(
+    aes(
+      y = actual,
+      colour = "Observed"
+    ),
+    size = 2.3
+  ) +
+  geom_line(
+    aes(
+      y = forecast,
+      colour = "Forecast"
+    ),
+    linewidth = 1,
+    linetype = "dashed"
+  ) +
+  geom_point(
+    aes(
+      y = forecast,
+      colour = "Forecast"
+    ),
+    size = 2
+  ) +
+  facet_wrap(
+    ~model,
+    ncol = 2,
+    scales = "fixed"
+  ) +
+  scale_colour_manual(
+    values = c(
+      "Observed" = "#173A5E",
+      "Forecast" = "#E69F00"
+    )
+  ) +
+  scale_x_continuous(
+    breaks = 2021:2026
+  ) +
+  scale_y_continuous(
+    labels = scales::label_number(
+      accuracy = 0.1
+    )
+  ) +
+  labs(
+    x = "Evaluation year",
+    y = "CPU demand (million core-hours)",
+    colour = NULL,
+    caption = paste(
+      "Dark blue lines show observed CPU demand.",
+      "Dashed orange lines show one-year-ahead forecasts",
+      "generated using expanding training windows."
+    )
+  ) +
+  theme_minimal(base_size = 10) +
+  theme(
+    strip.text = element_text(
+      face = "bold",
+      size = 11
+    ),
+    axis.text.x = element_text(
+      angle = 45,
+      hjust = 1
+    ),
+    legend.position = "bottom",
+    panel.grid.minor = element_blank(),
+    plot.caption = element_text(size = 8)
+  )
+```
+
+he four models responded differently to changes in CPU demand during the evaluation period. The naïve model generally underestimated demand during periods of growth, while the drift model produced larger errors when the direction of demand changed. Both models struggled to anticipate the decline in 2022, following the higher recorded demand in 2021.
+
+The linear trend produced forecasts that were relatively close to observed demand in 2023–2025, although it consistently underestimated demand during the later evaluation years. The log-linear model generally overestimated demand from 2022 to 2025, but its forecast for 2026 was much closer to the observed value. These differences explain why neither trend model consistently outperformed the other across individual years.
+
+@tbl-cpu-accuracy summarises the results across the six evaluation years.
 
 | Model | RMSE (million core-hours) | MAE (million core-hours) | RMSE rank |
 |---|---:|---:|---:|
@@ -1589,17 +1786,17 @@ Table @tbl-cpu-accuracy presents the results.
 
 : Rolling-origin forecast accuracy for CPU demand, 2021–2026. {#tbl-cpu-accuracy}
 
-Unlike overall HPC demand, the CPU evaluation did not identify the same leading model under both accuracy measures.
+The linear trend achieved the lowest RMSE of 157.72 million core-hours, while the log-linear model achieved the lowest MAE of 133.74 million core-hours. The linear model's RMSE was approximately 1.5% lower than log-linear, whereas the log-linear model's MAE was approximately 3.5% lower than linear.
 
-The linear trend achieved the lowest RMSE of approximately 157.72 million core-hours, while the log-linear trend achieved the lowest MAE of 133.74 million core-hours. The RMSE difference between the two models was approximately 1.5%, indicating relatively similar one-year-ahead performance.
+These results show that the preferred model depends on how forecast errors are measured. Linear performed slightly better when larger errors received greater weight, while log-linear achieved a lower average absolute error. Neither model clearly dominated the other.
 
-The choice between these models therefore required consideration beyond historical accuracy. The linear trend assumes a constant absolute increase, while the log-linear trend assumes continued proportional growth. Although their short-term accuracy was similar, these assumptions produced substantially different projections through 2030.
+The choice between these models becomes more important when projecting demand through 2030. The linear model assumes a constant absolute annual increase, whereas log-linear assumes continued proportional growth. Their similar short-term accuracy does not imply that their longer-term projections will be similar.
 
-The linear model was selected as the central CPU forecasting specification because it provided competitive accuracy without requiring sustained compounded growth. The log-linear model was retained as an alternative scenario.
+The linear trend was selected as the central CPU forecasting model because it achieved the lowest RMSE and provided a more interpretable assumption for long-term planning. The log-linear model was retained as an alternative scenario because of its competitive historical accuracy, particularly its performance in 2026.
 
-The sensitivity analysis also showed that including 2026 increased the estimated linear annual CPU growth from approximately 72.41 million to 81.01 million core-hours, an increase of 11.9%.
+The latest observation also affected the fitted linear trend. Including 2026 increased the estimated annual growth from approximately 72.41 million to 81.01 million core-hours, an increase of 11.9%. This indicates that the central forecast remains sensitive to individual observations in the historical series.
 
-These findings indicate that CPU demand was more difficult to distinguish between the two trend models than overall HPC demand. The selection of the linear model reflects both its historical performance and the greater transparency of its long-term growth assumption.
+Overall, the CPU results provide less decisive evidence for choosing between linear and log-linear growth than the overall HPC results. Section 4.3 therefore compares the central CPU projection with alternative growth assumptions and the sensitivity model excluding 2026.
 
 ### GPU Demand
 
