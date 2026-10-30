@@ -693,57 +693,175 @@ CPU resources were analysed separately from aggregate HPC demand because service
 
 ```{r}
 #| label: fig-historical-cpu
-#| fig-cap: "Historical CPU demand and allocation, 2014–2026. Earlier values include estimates."
-#| fig-width: 8
-#| fig-height: 4.5
+#| fig-cap: "Historical CPU requests and allocations, 2014–2026. Shading shows the recorded gap; values include system-specific conversions and estimates."
+#| fig-width: 9
+#| fig-height: 5.7
 #| out-width: 100%
 #| echo: false
 #| warning: false
 
-cpu_plot_data <- annual_converted |>
-  select(
-    year,
-    Demand = demand_cpu_core_hours,
-    Allocation = allocation_cpu_core_hours
-  ) |>
-  pivot_longer(
-    cols = c(Demand, Allocation),
-    names_to = "measure",
-    values_to = "cpu_core_hours"
+cpu_plot <- annual_converted |>
+  arrange(year) |>
+  mutate(
+    demand_m = demand_cpu_core_hours / 1e6,
+    allocation_m = allocation_cpu_core_hours / 1e6,
+    gap_m = demand_m - allocation_m,
+    demand_label = sprintf("%.0f", demand_m),
+    allocation_label = sprintf("%.0f", allocation_m)
   )
 
-ggplot(
-  cpu_plot_data,
-  aes(
-    x = year,
-    y = cpu_core_hours,
-    colour = measure
-  )
-) +
-  geom_line(linewidth = 1) +
-  geom_point(size = 2) +
-  scale_x_continuous(breaks = 2014:2026) +
+latest_cpu <- cpu_plot |>
+  filter(year == 2026)
+
+ggplot(cpu_plot, aes(x = year)) +
+
+  # Demand-allocation gap
+  geom_ribbon(
+    aes(
+      ymin = allocation_m,
+      ymax = demand_m
+    ),
+    fill = "#D9EAF5",
+    alpha = 0.8
+  ) +
+
+  # System transition markers
+  geom_vline(
+    xintercept = c(2020, 2023),
+    linetype = "dotted",
+    colour = "#8A969F",
+    linewidth = 0.5
+  ) +
+
+  # Demand
+  geom_line(
+    aes(y = demand_m, colour = "Requested"),
+    linewidth = 1.15
+  ) +
+  geom_point(
+    aes(y = demand_m, colour = "Requested"),
+    size = 2.2
+  ) +
+
+  # Allocation
+  geom_line(
+    aes(y = allocation_m, colour = "Allocated"),
+    linewidth = 1.15
+  ) +
+  geom_point(
+    aes(y = allocation_m, colour = "Allocated"),
+    size = 2.2
+  ) +
+
+  # All annual demand labels
+  geom_text(
+    aes(
+      y = demand_m,
+      label = demand_label
+    ),
+    colour = "#0077A8",
+    size = 2.7,
+    fontface = "bold",
+    vjust = -1.1
+  ) +
+
+  # All annual allocation labels
+  geom_text(
+    aes(
+      y = allocation_m,
+      label = allocation_label
+    ),
+    colour = "#B87800",
+    size = 2.7,
+    fontface = "bold",
+    vjust = 1.8
+  ) +
+
+  # Transition annotations in upper chart area
+  annotate(
+    "label",
+    x = 2018.6,
+    y = 1120,
+    label = "Raijin to Gadi\n2019–2020",
+    size = 3,
+    colour = "#173A5E",
+    fill = "white",
+    label.size = 0.2
+  ) +
+  annotate(
+    "label",
+    x = 2022.3,
+    y = 1120,
+    label = "Magnus to Setonix\n2022–2023",
+    size = 3,
+    colour = "#173A5E",
+    fill = "white",
+    label.size = 0.2
+  ) +
+
+  # 2026 gap indicator
+  geom_segment(
+    data = latest_cpu,
+    aes(
+      x = year,
+      xend = year,
+      y = allocation_m,
+      yend = demand_m
+    ),
+    colour = "#315A7D",
+    linewidth = 0.8,
+    linetype = "dashed"
+  ) +
+
+  scale_x_continuous(
+    breaks = 2014:2026,
+    expand = expansion(mult = c(0.03, 0.06))
+  ) +
+
   scale_y_continuous(
-    labels = label_number(
-      scale = 1e-6,
-      accuracy = 1
+    breaks = seq(0, 1400, 250),
+    labels = label_comma(),
+    limits = c(0, 1400),
+    expand = expansion(mult = c(0.02, 0.02))
+  ) +
+
+  scale_colour_manual(
+    values = c(
+      "Requested" = "#0077A8",
+      "Allocated" = "#E69F00"
     )
   ) +
+
   labs(
     x = "Year",
     y = "CPU core-hours (millions)",
-    colour = NULL
+    colour = NULL,
+    caption = paste(
+      "Dotted lines mark approximate system transitions.",
+      "Historical values include converted and estimated observations."
+    )
   ) +
+
   theme_minimal(base_size = 11) +
   theme(
-    axis.text.x = element_text(angle = 45, hjust = 1),
-    legend.position = "bottom"
+    axis.text.x = element_text(
+      angle = 45,
+      hjust = 1
+    ),
+    legend.position = "bottom",
+    panel.grid.minor = element_blank(),
+    plot.margin = margin(15, 20, 10, 15),
+    plot.caption = element_text(size = 8)
   )
 ```
 
-Figure @fig-historical-cpu shows the development of CPU demand and allocation in core-hours. The series provides a separate measure of CPU resource requirements after applying the conversion rules documented in Chapter 2.
+Figure @fig-historical-cpu shows CPU demand generally increased between 2014 and 2026, although the historical series shows several sharp changes. The most noticeable fluctuations occurred around 2019–2020 and 2021–2022, followed by sustained growth from 2023. By 2026, estimated CPU demand reached approximately 1.24 billion core-hours, while allocations remained close to 520 million core-hours. The widening difference indicates that requested CPU resources increased faster than the resources allocated.
 
-The historical values include estimated observations, particularly in earlier years. Consequently, the long-term trend is useful for examining the overall direction of CPU requirements, but individual year-to-year changes should not be interpreted as exact changes in physical resource consumption.
+Two major system transitions are relevant to interpreting these changes. NCI transitioned from Raijin to Gadi around 2019–2020, while Pawsey transitioned from Magnus to Setonix around 2022–2023. These changes introduced different computing architectures and service-unit accounting rules. They may contribute to discontinuities in the reconstructed CPU series, but the available data do not establish them as direct causes of the observed fluctuations.
+
+The historical CPU values also contain estimates and system-specific conversions, particularly in earlier years. For example, some 2019/20 records were converted using a documented Gadi CPU-equivalent assumption because a reliable CPU and GPU breakdown was unavailable. Consequently, changes between adjacent years should not be interpreted as exact changes in physical computing demand.
+
+Despite these limitations, the longer-term pattern is clear: estimated CPU requests increased substantially, while allocations did not increase at the same rate. This supports analysing CPU demand separately from aggregate HPC service units and provides the historical basis for the CPU forecasting models evaluated in Section 4.2.
 
 ### GPU Demand and Allocation
 
