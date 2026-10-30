@@ -3150,13 +3150,406 @@ The residual diagnostics in Section 4.2.4 provide additional information about t
 
 The central CPU forecast provides a reference for assessing future computing demand, while the alternative trajectories show how projections change under different growth assumptions. The large difference between the linear and log-linear projections indicates that planning decisions should consider more than one possible growth path. These CPU estimates should also be interpreted alongside overall HPC demand, rather than added together, because they represent related measures of computing requirements.
 
+
 ### GPU Demand
 
-GPU projections show greater uncertainty because of the shorter historical series.
+Unlike overall HPC and CPU demand, no central GPU forecasting model was selected. Formal prediction intervals were not reported because the five-year modelling series and uncertainty in the underlying estimates provided insufficient evidence for reliable statistical intervals.
 
-The naïve benchmark maintains the latest estimate at approximately 3.00 million GPU-hours through 2030. The linear trend projects approximately 3.37 million GPU-hours, while the log-linear trend projects approximately 3.68 million GPU-hours.
+Following the project review, GPU projections were retained as exploratory findings and excluded from the initial national HPC planning scenarios. Those scenarios instead use the selected overall HPC demand projection and historical Field of Research allocation shares.
 
-These are exploratory scenarios rather than reliable long-term predictions. The short historical record limits the ability to determine whether GPU demand will stabilise or continue growing.
+The GPU results nevertheless highlight an important limitation for future planning. More consistent records of GPU requests, allocations, usage and hardware configurations would be needed to support reliable GPU-specific forecasts. Until such data become available, the projections should be used to examine modelling sensitivity rather than estimate future national GPU capacity requirements.
+
+Figure @fig-gpu-forecast-scenarios shows the historical GPU demand estimates and the five exploratory trajectories through 2030.
+
+```{r}
+#| label: fig-gpu-forecast-scenarios
+#| fig-cap: "Historical GPU demand estimates and five exploratory projections to 2030. The scenarios show sensitivity to growth assumptions and the inclusion of 2026; they are not validated forecasts or prediction interval bounds."
+#| fig-width: 10
+#| fig-height: 6
+#| out-width: 100%
+#| echo: false
+#| warning: false
+#| message: false
+
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(scales)
+
+# --------------------------------------------------
+# 1. Load the original Chapter 10 GPU models
+# --------------------------------------------------
+
+gpu_model_paths <- c(
+  "assets/models/gpu_models.rds",
+  "../assets/models/gpu_models.rds",
+  "../../assets/models/gpu_models.rds"
+)
+
+gpu_existing_paths <- gpu_model_paths[
+  file.exists(gpu_model_paths)
+]
+
+if (length(gpu_existing_paths) == 0) {
+  stop(
+    "Cannot locate gpu_models.rds. ",
+    "Copy the original Chapter 07 model file into ",
+    "report/assets/models/ or update gpu_model_paths."
+  )
+}
+
+gpu_models <- readRDS(gpu_existing_paths[1])
+
+gpu_linear <- gpu_models$gpu_linear
+gpu_linear_pre2026 <- gpu_models$gpu_linear_pre2026
+gpu_loglinear <- gpu_models$gpu_loglinear
+gpu_loglinear_pre2026 <- gpu_models$gpu_loglinear_pre2026
+
+stopifnot(
+  inherits(gpu_linear, "lm"),
+  inherits(gpu_linear_pre2026, "lm"),
+  inherits(gpu_loglinear, "lm"),
+  inherits(gpu_loglinear_pre2026, "lm")
+)
+
+# --------------------------------------------------
+# 2. Recover the historical modelling observations
+# --------------------------------------------------
+
+gpu_training <- model.frame(gpu_linear)
+
+stopifnot(
+  all(
+    c("time", "gpu_million_hours") %in%
+      names(gpu_training)
+  )
+)
+
+gpu_history <- tibble::tibble(
+  year = as.integer(2022 + gpu_training$time),
+  gpu_million_hours = as.numeric(
+    gpu_training$gpu_million_hours
+  )
+) |>
+  arrange(year)
+
+stopifnot(
+  identical(gpu_history$year, 2022:2026),
+  all(is.finite(gpu_history$gpu_million_hours)),
+  all(gpu_history$gpu_million_hours > 0)
+)
+
+gpu_latest <- gpu_history |>
+  filter(year == 2026) |>
+  pull(gpu_million_hours)
+
+# --------------------------------------------------
+# 3. Reproduce the original Chapter 10 scenarios
+# --------------------------------------------------
+
+gpu_future <- data.frame(
+  year = 2027:2030,
+  time = (2027:2030) - 2022
+)
+
+gpu_scenarios <- gpu_future |>
+  transmute(
+    year,
+
+    `Naïve benchmark` = rep(
+      gpu_latest,
+      length(year)
+    ),
+
+    `Linear including 2026` = as.numeric(
+      predict(
+        gpu_linear,
+        newdata = gpu_future
+      )
+    ),
+
+    `Linear excluding 2026` = as.numeric(
+      predict(
+        gpu_linear_pre2026,
+        newdata = gpu_future
+      )
+    ),
+
+    `Log-linear including 2026` = exp(
+      as.numeric(
+        predict(
+          gpu_loglinear,
+          newdata = gpu_future
+        )
+      )
+    ),
+
+    `Log-linear excluding 2026` = exp(
+      as.numeric(
+        predict(
+          gpu_loglinear_pre2026,
+          newdata = gpu_future
+        )
+      )
+    )
+  )
+
+stopifnot(
+  identical(gpu_scenarios$year, 2027:2030),
+  all(is.finite(as.matrix(gpu_scenarios[, -1]))),
+  all(as.matrix(gpu_scenarios[, -1]) > 0)
+)
+
+# Check the 2030 results against Chapter 10.
+gpu_expected_2030 <- c(
+  `Naïve benchmark` = 3.003,
+  `Linear including 2026` = 3.371,
+  `Linear excluding 2026` = 2.252,
+  `Log-linear including 2026` = 3.681,
+  `Log-linear excluding 2026` = 2.406
+)
+
+gpu_actual_2030 <- unlist(
+  gpu_scenarios[
+    gpu_scenarios$year == 2030,
+    names(gpu_expected_2030)
+  ],
+  use.names = TRUE
+)
+
+if (any(
+  abs(gpu_actual_2030 - gpu_expected_2030) > 0.02
+)) {
+  stop(
+    "GPU 2030 projections do not match the ",
+    "original Chapter 10 results. ",
+    "Check the model file before proceeding."
+  )
+}
+
+# --------------------------------------------------
+# 4. Prepare the plotting data
+# --------------------------------------------------
+
+# Start scenario lines at their own fitted 2026
+# values. The naïve benchmark starts at the
+# observed/estimated 2026 demand.
+
+gpu_anchor <- tibble::tibble(
+  year = 2026L,
+
+  `Naïve benchmark` = gpu_latest,
+
+  `Linear including 2026` = as.numeric(
+    predict(
+      gpu_linear,
+      newdata = data.frame(time = 4)
+    )
+  ),
+
+  `Linear excluding 2026` = as.numeric(
+    predict(
+      gpu_linear_pre2026,
+      newdata = data.frame(time = 4)
+    )
+  ),
+
+  `Log-linear including 2026` = exp(
+    as.numeric(
+      predict(
+        gpu_loglinear,
+        newdata = data.frame(time = 4)
+      )
+    )
+  ),
+
+  `Log-linear excluding 2026` = exp(
+    as.numeric(
+      predict(
+        gpu_loglinear_pre2026,
+        newdata = data.frame(time = 4)
+      )
+    )
+  )
+)
+
+gpu_plot_data <- bind_rows(
+  gpu_anchor,
+  gpu_scenarios
+) |>
+  pivot_longer(
+    cols = -year,
+    names_to = "scenario",
+    values_to = "demand"
+  ) |>
+  mutate(
+    scenario = factor(
+      scenario,
+      levels = c(
+        "Naïve benchmark",
+        "Linear including 2026",
+        "Linear excluding 2026",
+        "Log-linear including 2026",
+        "Log-linear excluding 2026"
+      )
+    )
+  )
+
+gpu_colours <- c(
+  "Naïve benchmark" = "#0077A8",
+  "Linear including 2026" = "#2563EB",
+  "Linear excluding 2026" = "#64748B",
+  "Log-linear including 2026" = "#D97706",
+  "Log-linear excluding 2026" = "#B91C1C"
+)
+
+gpu_linetypes <- c(
+  "Naïve benchmark" = "dotted",
+  "Linear including 2026" = "solid",
+  "Linear excluding 2026" = "dashed",
+  "Log-linear including 2026" = "dotdash",
+  "Log-linear excluding 2026" = "longdash"
+)
+
+# --------------------------------------------------
+# 5. Plot historical demand and future scenarios
+# --------------------------------------------------
+
+ggplot() +
+
+  annotate(
+    "rect",
+    xmin = 2026.5,
+    xmax = 2030.5,
+    ymin = -Inf,
+    ymax = Inf,
+    fill = "#EFF5F9",
+    alpha = 0.7
+  ) +
+
+  geom_line(
+    data = gpu_history,
+    aes(
+      x = year,
+      y = gpu_million_hours
+    ),
+    colour = "#173A5E",
+    linewidth = 1.3
+  ) +
+
+  geom_point(
+    data = gpu_history,
+    aes(
+      x = year,
+      y = gpu_million_hours
+    ),
+    colour = "#173A5E",
+    size = 2.5
+  ) +
+
+  geom_line(
+    data = gpu_plot_data,
+    aes(
+      x = year,
+      y = demand,
+      colour = scenario,
+      linetype = scenario,
+      group = scenario
+    ),
+    linewidth = 1
+  ) +
+
+  geom_point(
+    data = filter(
+      gpu_plot_data,
+      year == 2030
+    ),
+    aes(
+      x = year,
+      y = demand,
+      colour = scenario
+    ),
+    size = 2.5
+  ) +
+
+  geom_vline(
+    xintercept = 2026.5,
+    linetype = "dotted",
+    colour = "#64748B"
+  ) +
+
+  scale_colour_manual(
+    values = gpu_colours
+  ) +
+
+  scale_linetype_manual(
+    values = gpu_linetypes
+  ) +
+
+  scale_x_continuous(
+    breaks = 2022:2030
+  ) +
+
+  scale_y_continuous(
+    labels = label_number(
+      accuracy = 0.1
+    ),
+    expand = expansion(
+      mult = c(0.06, 0.12)
+    )
+  ) +
+
+  labs(
+    x = "Year",
+    y = "GPU demand (million GPU-hours)",
+    colour = NULL,
+    linetype = NULL,
+    caption = paste(
+      "Shading indicates the projection period.",
+      "Scenario lines start at their fitted 2026 values;",
+      "the naïve benchmark starts at the latest estimate.",
+      "Scenarios are not prediction intervals."
+    )
+  ) +
+
+  theme_minimal(
+    base_size = 11
+  ) +
+
+  theme(
+    legend.position = "bottom",
+    legend.text = element_text(
+      size = 8
+    ),
+    panel.grid.minor = element_blank(),
+    plot.caption = element_text(
+      size = 8
+    )
+  ) +
+
+  guides(
+    colour = guide_legend(ncol = 2),
+    linetype = guide_legend(ncol = 2)
+  )
+```
+
+The five scenarios produce different estimates of GPU demand in 2030. The naïve benchmark maintains the latest estimated demand at approximately 3.00 million GPU-hours. The full-history linear model projects 3.37 million GPU-hours, while the full-history log-linear model projects 3.68 million GPU-hours.
+
+Excluding 2026 produces substantially lower projections. The linear model excluding 2026 projects approximately 2.25 million GPU-hours in 2030, while the corresponding log-linear model projects 2.41 million GPU-hours.
+
+The difference between the two linear specifications is approximately 1.12 million GPU-hours in 2030. The full-history linear projection is around 49.7% higher than the projection excluding 2026. This shows that the latest observation has a substantial influence on the estimated growth trajectory.
+
+Across the five scenarios, the 2030 estimates range from approximately 2.25 to 3.68 million GPU-hours. This range reflects differences in the historical sample and model assumptions. It should not be interpreted as a statistical prediction interval or as validated lower and upper limits for future GPU requirements.
+
+The naïve benchmark's favourable rolling-origin performance also requires caution. Although it achieved the lowest errors over the two evaluation years, this does not establish that GPU demand will remain constant through 2030. Similarly, the higher projections from the trend models do not provide reliable evidence that continued growth will occur.
+
+Unlike overall HPC and CPU demand, no central GPU forecasting model was selected. Formal 80% and 95% prediction intervals were also not reported because the short historical series and uncertainty in the underlying estimates would make these intervals highly dependent on the modelling assumptions.
+
+Following the project review, GPU projections were retained as exploratory findings but excluded from the initial national HPC planning scenarios. Those initial scenarios instead use the selected overall HPC demand projection and historical Field of Research allocation shares.
+
+This decision reflects the limitations of the available data rather than the importance of GPU computing. More consistent records of GPU requests, allocations, usage and hardware configurations would be needed before GPU-specific forecasts could support infrastructure planning with greater confidence.
+
+Overall, the GPU analysis demonstrates that different growth assumptions and the inclusion of a single recent observation can substantially change longer-term projections. The results are useful for identifying uncertainty and informing future modelling, but they should not be treated as validated estimates of national GPU capacity requirements.
 
 ## Field of Research Scenarios
 
