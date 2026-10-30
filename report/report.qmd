@@ -2,8 +2,6 @@
 title: "Forecasting Demand for National Research Supercomputing"
 subtitle: "Australian Academy of Science | Australian HPC Demand to 2030"
 author: "Yusuf Kurnia Romadhon"
-date: "2026-10-31"
-date-format: "D MMMM YYYY"
 
 bibliography: ../references.bib
 
@@ -26,14 +24,16 @@ format:
     embed-resources: true
 
   pdf:
-    documentclass: report
-    classoption: oneside
+    documentclass: article
     toc: true
     toc-depth: 2
     number-sections: true
     colorlinks: false
+    fontsize: 11pt
     geometry:
-      - margin=2.5cm
+      - margin=2.2cm
+    linestretch: 1.1
+    fig-pos: H
 
 execute:
   echo: false
@@ -43,57 +43,41 @@ execute:
 
 # Introduction and Objectives
 
-## Project Background and Motivation
+## Project Background and Forecasting Problem
 
-High-performance computing (HPC) is an important component of Australia's research infrastructure, supporting computationally intensive research across a wide range of scientific fields [@AAS2024FutureComputing]. Australia has two national Tier-1 HPC facilities accessible to researchers: the National Computational Infrastructure (NCI) and the Pawsey Supercomputing Research Centre [@NCIWhoWeAre; @PawseyAbout].
+High-performance computing (HPC) supports research that requires substantial computing resources, including scientific simulations and large-scale data analysis [@AAS2024FutureComputing]. In Australia, the National Computational Infrastructure (NCI) and the Pawsey Supercomputing Research Centre operate the two national Tier-1 HPC facilities available to researchers [@NCIWhoWeAre; @PawseyAbout].
 
-As research becomes increasingly data and compute intensive, understanding how demand for HPC resources is changing is important for planning Australia's future national research infrastructure [@AAS2024FutureComputing].
+This project was undertaken with the Australian Academy of Science to examine historical research computing demand and forecast national HPC demand through 2030. It uses publicly available records from NCI, Pawsey and the National Computational Merit Allocation Scheme (NCMAS) to analyse requested and allocated computing resources. The results are intended to inform discussions about future national computing infrastructure and public investment [@HPCInternshipBrief].
 
-The purpose of this project, undertaken with the Australian Academy of Science, is to analyse historical Australian research computing demand and develop evidence-based projections of future HPC demand to 2030. The analysis is intended to support national policy discussions relating to public compute investment and future research infrastructure planning [@HPCInternshipBrief].
+Forecasting demand is difficult because allocated computing resources do not necessarily represent what researchers need. Allocation schemes operate within available capacity, so researchers may receive less computing time than they request [@NCMAS2014Info; @NCMAS2020Info]. Requested compute also has limitations, as researchers may restrict their applications based on expected availability or choose not to apply. The analysis therefore distinguishes requested compute, allocated compute and the gap between them, while recognising that underlying demand cannot be measured directly from these records [@HPCInternshipBrief].
 
-The project combines data engineering, descriptive analysis and forecasting using publicly available NCI and Pawsey data, particularly information from the National Computational Merit Allocation Scheme (NCMAS). Additional indicators are considered where sufficiently consistent and relevant data are available [@HPCInternshipBrief].
-
-## The Forecasting Problem
-
-One of the main challenges in forecasting national research computing demand is that observed HPC allocation does not necessarily represent the full level of research demand.
-
-National allocation schemes operate under finite capacity. As a result, allocated compute represents the amount of resources awarded rather than necessarily the amount researchers would use if additional capacity were available [@NCMAS2014Info; @NCMAS2020Info; @HPCInternshipBrief]. Requested compute provides additional evidence of demand, but it may also understate underlying need where researchers constrain their requests based on expected availability or where potential users do not apply [@HPCInternshipBrief].
-
-The analysis therefore distinguishes between requested compute, allocated compute, the gap between requested and allocated compute, and broader underlying or latent demand, which cannot be observed directly from the available allocation data.
-
-A further challenge is the comparability of historical HPC information. Reporting practices, hardware systems, compute units and service-unit accounting have changed over time. CPU and GPU resources are also not directly interchangeable, while
-changes in Field of Research (FoR) classifications affect comparisons of research allocation across years [@ABSANZSRC2020].
-
-These limitations are particularly important because the available annual time series is relatively short. The analysis therefore documents where historical values are directly reported, derived, estimated or based on assumptions. Forecasting results are interpreted alongside these limitations rather than as precise measurements of unconstrained demand.
+Historical comparisons are further affected by changes in computing systems, reporting practices and service-unit accounting. CPU and GPU resources are measured differently, while revisions to Field of Research (FoR) classifications affect comparisons across years [@ABSANZSRC2020]. Given the limited annual observations, the analysis distinguishes directly reported values from estimates and converted measures when preparing the historical dataset and interpreting forecasts.
 
 ## Project Objectives
 
-The primary objective is to develop evidence-based projections of Australian national research computing demand to 2030, while accounting for limitations in historical data availability and comparability.
+The main objective is to forecast Australian national research computing demand through 2030 using available historical records, while documenting the limitations of the data and the assumptions required for comparison.
 
-The project has five specific objectives:
+The project has five objectives:
 
-1.  **Construct a documented historical dataset** of national HPC demand and allocation using publicly available NCI, Pawsey and NCMAS sources, while retaining data provenance and reporting limitations.
+1. **Construct a historical dataset** of HPC demand and allocation from publicly available NCI, Pawsey and NCMAS records, with documented sources and reporting limitations.
 
-2.  **Improve historical comparability** by examining differences in reporting practices, computing systems, resource types and measurement units, and applying defensible standardisation or conversion methods where possible.
+2. **Standardise historical measures** by examining changes in computing systems, resource units and reporting practices, and applying conversion methods where necessary.
 
-3.  **Analyse historical demand and allocation patterns**, including requested and allocated compute, oversubscription, CPU and GPU resources, and changes in Field of Research allocation composition.
+3. **Analyse demand and allocation patterns**, including requested and allocated resources, the gap between them, CPU and GPU demand, and FoR allocation composition.
 
-4.  **Develop and evaluate forecasting approaches** appropriate for the length and quality of the available historical series, including assessments of predictive accuracy, modelling assumptions and sensitivity.
+4. **Develop and evaluate forecasting models** using the available annual observations, comparing forecast accuracy, model assumptions and sensitivity to recent data.
 
-5.  **Develop demand scenarios to 2030** and discuss their implications for future national research computing requirements, including uncertainty and limitations.
+5. **Develop demand scenarios through 2030** and examine how different growth assumptions and historical FoR allocation patterns affect the results.
 
-These objectives reflect the internship brief's emphasis on longitudinal data assembly, descriptive analysis, structural demand modelling and scenario development [@HPCInternshipBrief].
+These objectives are consistent with the data analysis, forecasting and scenario development requirements in the internship brief [@HPCInternshipBrief].
 
 ## Project Approach and Contributions
 
-The project follows a structured analytical process covering data collection, variable definition, integration, standardisation, conversion, descriptive analysis, model development, evaluation, selection and scenario forecasting.
+The project combines annual records from different reporting periods and computing systems into a historical dataset covering 2014–2026. Where reported measures were not directly comparable, conversion assumptions were documented and applied. The analysis also identifies estimated values separately from directly reported observations.
 
-An important contribution is the development of a documented historical dataset that brings together information reported across different years, facilities and computing systems. The analysis also distinguishes directly reported values from derived or estimated measures, allowing the reliability and comparability of historical observations to be assessed.
+Forecasting models were compared using rolling-origin evaluation before selecting central projections for overall HPC and CPU demand. GPU projections were retained as exploratory analysis because of limited historical observations. Historical FoR allocation shares were used to construct alternative distributions of projected national demand.
 
-Forecasting approaches are evaluated using the available annual data, and alternative scenarios are developed to examine possible changes in demand through 2030. The resulting analysis provides evidence for infrastructure planning discussions while recognising that historical allocation and requested compute do not fully capture underlying research demand.
-
-The detailed data preparation, modelling procedures and reproducible code are documented separately in the project's technical Quarto documentation and Git repository.
-
+The project delivers the historical datasets, evaluated forecasting models and demand scenarios through 2030. The accompanying Quarto documentation and Git repository contain the data preparation steps, calculations and code used to reproduce the analysis.
 
 # Data Sources and Preparation
 
@@ -3573,7 +3557,7 @@ $$
 D_{f,t}^{(s)} = \widehat{D}_{t} \times w_f^{(s)}
 $$
 
-where \(D_{f,t}^{(s)}\) represents the illustrative demand for research field \(f\) in year \(t\) under scenario \(s\), \(\widehat{D}_{t}\) is the national HPC demand projection, and \(w_f^{(s)}\) is the normalised historical allocation share.
+where $D_{f,t}^{(s)}$ represents the illustrative demand for research field $f$ in year $t$ under scenario $s$, $\widehat{D}_{t}$ is the national HPC demand projection, and $w_f^{(s)}$ is the normalised historical allocation share.
 
 The normalisation is calculated as:
 
@@ -3583,7 +3567,7 @@ w_f^{(s)} =
 {\sum_j \overline{a}_j^{(s)}}
 $$
 
-where \(\overline{a}_f^{(s)}\) is the mean observed annual allocation share for research field \(f\) during reference period \(s\). The denominator sums the mean shares across the nine groups.
+where $\overline{a}_f^{(s)}$ is the mean observed annual allocation share for research field $f$ during reference period $s$. The denominator sums the mean shares across the nine groups.
 
 This method gives equal weight to each available annual observation within a research field, rather than giving more weight to years with larger total allocations. Missing categories are not treated as confirmed zero allocations. Normalisation ensures that the weights sum to 100%, but it does not correct incomplete historical reporting.
 
