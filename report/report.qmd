@@ -71,14 +71,6 @@ The project has five objectives:
 
 These objectives are consistent with the data analysis, forecasting and scenario development requirements in the internship brief [@HPCInternshipBrief].
 
-## Project Approach and Contributions
-
-The project combines annual records from different reporting periods and computing systems into a historical dataset covering 2014–2026. Where reported measures were not directly comparable, conversion assumptions were documented and applied. The analysis also identifies estimated values separately from directly reported observations.
-
-Forecasting models were compared using rolling-origin evaluation before selecting central projections for overall HPC and CPU demand. GPU projections were retained as exploratory analysis because of limited historical observations. Historical FoR allocation shares were used to construct alternative distributions of projected national demand.
-
-The project delivers the historical datasets, evaluated forecasting models and demand scenarios through 2030. The accompanying Quarto documentation and Git repository contain the data preparation steps, calculations and code used to reproduce the analysis.
-
 # Data Sources and Preparation
 
 ## Data Sources and Coverage
