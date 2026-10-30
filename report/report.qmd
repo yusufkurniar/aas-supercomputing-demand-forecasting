@@ -3553,25 +3553,402 @@ Overall, the GPU analysis demonstrates that different growth assumptions and the
 
 ## Field of Research Scenarios
 
-The FoR scenarios apply alternative historical allocation compositions to the projected overall HPC demand.
+The previous sections presented national HPC and CPU demand projections, alongside exploratory GPU projections, through 2030. However, the national forecast does not show how computing demand might be distributed across research disciplines. This section examines that question using historical Field of Research (FoR) allocation shares.
 
-Three reference periods were considered: the earlier period (2014–2020), the recent period (2021–2026) and the full period (2014–2026).
+The available FoR records do not provide a consistent series of demand requests for every research field. Therefore, the scenarios apply historical allocation shares to the selected national HPC demand projection. The results are illustrative distributions of projected national demand, not independently estimated forecasts of demand within individual research fields.
 
-The recent-period composition gives greater weight to Engineering and Technology, while the earlier-period composition places greater emphasis on Earth and Environmental Sciences.
+### Scenario Construction
 
-These differences affect the indicative distribution of future HPC resources across disciplines. However, the estimates are conditional on historical allocation shares and do not represent independently modelled FoR-specific demand.
+Three historical reference periods were considered:
 
-The comparison is therefore more useful for examining the sensitivity of future resource distribution to allocation assumptions than for predicting precise disciplinary requirements.
+1. **Earlier period (2014–2020):** The allocation composition recorded before 2021.
+2. **Recent period (2021–2026):** The latest six years of allocation records.
+3. **Full period (2014–2026):** The allocation composition across the complete historical series.
+
+The scenario construction followed four steps. First, reported FoR categories were consolidated into nine analytical groups, as described in Section 4.1. Second, annual allocation shares were calculated for each reported group. Third, the mean of the available annual shares was calculated within each reference period and normalised to produce weights totalling 100%. Finally, these weights were applied to the selected national HPC demand projections for 2027–2030.
+
+The calculation is:
+
+$$
+D_{f,t}^{(s)} = \widehat{D}_{t} \times w_f^{(s)}
+$$
+
+where \(D_{f,t}^{(s)}\) represents the illustrative demand for research field \(f\) in year \(t\) under scenario \(s\), \(\widehat{D}_{t}\) is the national HPC demand projection, and \(w_f^{(s)}\) is the normalised historical allocation share.
+
+The normalisation is calculated as:
+
+$$
+w_f^{(s)} =
+\frac{\overline{a}_f^{(s)}}
+{\sum_j \overline{a}_j^{(s)}}
+$$
+
+where \(\overline{a}_f^{(s)}\) is the mean observed annual allocation share for research field \(f\) during reference period \(s\). The denominator sums the mean shares across the nine groups.
+
+This method gives equal weight to each available annual observation within a research field, rather than giving more weight to years with larger total allocations. Missing categories are not treated as confirmed zero allocations. Normalisation ensures that the weights sum to 100%, but it does not correct incomplete historical reporting.
+
+The weights are held constant throughout 2027–2030. This isolates the effect of choosing different historical allocation compositions without introducing additional assumptions about future changes in research-field shares.
+
+### Historical Allocation Assumptions
+
+@fig-for-scenario-comparison compares the normalised allocation shares for the three reference periods. All nine research-field groups are included.
+
+
+```{r}
+#| label: fig-for-scenario-comparison
+#| fig-cap: "Normalised Field of Research allocation shares across three historical reference periods."
+#| fig-width: 11
+#| fig-height: 7.5
+#| out-width: 100%
+#| echo: false
+#| warning: false
+#| message: false
+
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(scales)
+
+# Prepare historical FoR allocation data
+for_scenario_source <- for_plot_data |>
+  transmute(
+    year = as.integer(year),
+    for_group = as.character(for_visual_group),
+    allocation_share = as.numeric(allocation_share)
+  ) |>
+  filter(
+    year >= 2014,
+    year <= 2026,
+    !is.na(for_group),
+    is.finite(allocation_share)
+  )
+
+stopifnot(
+  identical(
+    sort(unique(for_scenario_source$year)),
+    2014:2026
+  ),
+  all(for_scenario_source$allocation_share >= 0)
+)
+
+# Calculate normalised allocation weights
+make_for_weights <- function(data, start_year, end_year,
+                             period_label) {
+  data |>
+    filter(
+      year >= start_year,
+      year <= end_year
+    ) |>
+    group_by(for_group) |>
+    summarise(
+      mean_share = mean(allocation_share),
+      years_reported = n_distinct(year),
+      .groups = "drop"
+    ) |>
+    mutate(
+      scenario_share = mean_share / sum(mean_share),
+      period = period_label
+    )
+}
+
+# Three historical reference periods
+for_scenario_weights <- bind_rows(
+  make_for_weights(
+    for_scenario_source, 2014, 2020,
+    "Earlier (2014–2020)"
+  ),
+  make_for_weights(
+    for_scenario_source, 2021, 2026,
+    "Recent (2021–2026)"
+  ),
+  make_for_weights(
+    for_scenario_source, 2014, 2026,
+    "Full period (2014–2026)"
+  )
+)
+
+# Verify that each scenario sums to 100%
+for_weight_check <- for_scenario_weights |>
+  group_by(period) |>
+  summarise(
+    total_share = sum(scenario_share),
+    .groups = "drop"
+  )
+
+stopifnot(
+  all(abs(for_weight_check$total_share - 1) < 1e-10)
+)
+
+# Set the order of historical periods
+for_scenario_weights <- for_scenario_weights |>
+  mutate(
+    period = factor(
+      period,
+      levels = c(
+        "Earlier (2014–2020)",
+        "Recent (2021–2026)",
+        "Full period (2014–2026)"
+      )
+    )
+  )
+
+# Order research fields by their largest allocation share
+for_group_order <- for_scenario_weights |>
+  group_by(for_group) |>
+  summarise(
+    max_share = max(scenario_share),
+    .groups = "drop"
+  ) |>
+  arrange(max_share) |>
+  pull(for_group)
+
+for_scenario_weights <- for_scenario_weights |>
+  mutate(
+    for_group = factor(
+      for_group,
+      levels = for_group_order
+    )
+  )
+
+# Create the revised chart
+ggplot(
+  for_scenario_weights,
+  aes(
+    x = scenario_share,
+    y = for_group,
+    fill = period
+  )
+) +
+  geom_col(
+    position = position_dodge(width = 0.8),
+    width = 0.72
+  ) +
+  scale_fill_manual(
+    values = c(
+      "Earlier (2014–2020)" = "#64748B",
+      "Recent (2021–2026)" = "#0077A8",
+      "Full period (2014–2026)" = "#D97706"
+    )
+  ) +
+  scale_x_continuous(
+    labels = label_percent(accuracy = 1),
+    expand = expansion(mult = c(0, 0.08))
+  ) +
+  labs(
+    x = "Normalised historical allocation share",
+    y = NULL,
+    fill = NULL,
+    caption = paste(
+      "Weights use observed-year means.",
+      "Historical category coverage and reporting differ."
+    )
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    legend.position = "bottom",
+    legend.text = element_text(size = 10),
+    legend.key.width = grid::unit(1.5, "cm"),
+    axis.text.y = element_text(size = 10),
+    axis.text.x = element_text(size = 10),
+    axis.title.x = element_text(size = 11),
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor = element_blank(),
+    plot.caption = element_text(size = 9)
+  )
+```
+
+
+@tbl-for-weights reports the normalised scenario weights for all nine research-field groups. The number of reported years is also included to show where the historical coverage differs.
+
+```{r}
+#| label: tbl-for-weights
+#| tbl-cap: "Normalised FoR allocation weights and reporting coverage across the three historical reference periods."
+#| echo: false
+#| warning: false
+#| message: false
+
+for_weights_table <- for_scenario_weights |>
+  mutate(
+    for_group = as.character(for_group),
+    period = as.character(period),
+    share_label = sprintf(
+      "%.2f%% (%d)",
+      100 * scenario_share,
+      years_reported
+    )
+  ) |>
+  select(
+    for_group,
+    period,
+    share_label
+  ) |>
+  pivot_wider(
+    names_from = period,
+    values_from = share_label
+  ) |>
+  arrange(
+    for_group
+  )
+
+knitr::kable(
+  for_weights_table,
+  col.names = c(
+    "Research field",
+    "Earlier (2014–2020)",
+    "Recent (2021–2026)",
+    "Full period (2014–2026)"
+  )
+)
+```
+
+*Note: Each cell shows the normalised allocation weight followed by the number of years with reported observations in parentheses. The reference periods contain seven, six and thirteen years respectively. Percentages are normalised within each period.*
+
+The earlier-period scenario gives the largest allocation weight to Earth and Environmental Sciences at approximately 30.38%. Chemical Sciences follows at 18.28%, with Physical Sciences and Engineering and Technology accounting for 16.26% and 16.24% respectively.
+
+The recent-period composition differs considerably. Engineering and Technology becomes the largest group at 33.28%, followed by Physical Sciences (21.11%), Chemical Sciences (17.02%) and Earth and Environmental Sciences (13.36%).
+
+Engineering and Technology therefore gains approximately 17.04 percentage points between the earlier and recent scenarios. Over the same comparison, Earth and Environmental Sciences loses approximately 17.02 percentage points.
+
+The full-period weights lie between these two compositions for the major research fields. Engineering and Technology accounts for approximately 24.19%, Earth and Environmental Sciences for 22.55%, Physical Sciences for 18.55% and Chemical Sciences for 17.74%.
+
+Reporting coverage also differs across research fields. For example, the recent-period weight for Unclassified and Operational is based on only two reported years, while most major research fields have observations for all six years. Social Sciences, Humanities and Built Environment has only five reported years across the full period. Because the weights are calculated from available observations, groups with incomplete coverage may not represent the entire reference period.
+
+These differences should not automatically be interpreted as changes in underlying research demand. The historical records span the FoR 2008 and FoR 2020 classification systems. In addition, the 2017 Pawsey-wide reporting scope differs from other observations, while the completeness of category reporting varies across years.
+
+The normalised weights therefore provide a consistent calculation method for comparing the constructed scenarios, but they do not remove differences in classification, facility coverage or reporting completeness. Nor do they establish that research priorities or computing requirements changed by the same percentages.
+
+### Illustrative Distribution of Demand in 2030
+
+The three historical allocation compositions were applied to the same selected national HPC demand projection.
+
+The central linear model projects approximately 2.50 million kSU in 2030. Each scenario distributes this national total across the nine research-field groups using its corresponding normalised weights.
+
+@tbl-for-2030 presents the resulting distributions. Calculations use the unrounded national forecast.
+
+```{r}
+#| label: tbl-for-2030
+#| tbl-cap: "Illustrative 2030 HPC demand distribution under three historical FoR allocation scenarios, in kSU."
+#| echo: false
+#| warning: false
+#| message: false
+
+stopifnot(exists("overall_linear"))
+
+hpc_2030_ksu <- as.numeric(
+  predict(
+    overall_linear,
+    newdata = data.frame(
+      year = 2030,
+      time = 2030 - 2014
+    )
+  )
+)
+
+stopifnot(
+  length(hpc_2030_ksu) == 1,
+  is.finite(hpc_2030_ksu),
+  hpc_2030_ksu > 0
+)
+
+for_2030_results <- for_scenario_weights |>
+  mutate(
+    projected_ksu = hpc_2030_ksu * scenario_share
+  )
+
+for_2030_check <- for_2030_results |>
+  group_by(period) |>
+  summarise(
+    scenario_total = sum(projected_ksu),
+    .groups = "drop"
+  )
+
+stopifnot(
+  all(
+    abs(
+      for_2030_check$scenario_total - hpc_2030_ksu
+    ) < 1e-6
+  )
+)
+
+for_2030_table <- for_2030_results |>
+  mutate(
+    for_group = as.character(for_group),
+    period = as.character(period)
+  ) |>
+  select(
+    for_group,
+    period,
+    projected_ksu
+  ) |>
+  pivot_wider(
+    names_from = period,
+    values_from = projected_ksu
+  ) |>
+  arrange(
+    desc(`Recent (2021–2026)`)
+  ) |>
+  mutate(
+    across(
+      where(is.numeric),
+      ~ format(
+        round(.x),
+        big.mark = ",",
+        trim = TRUE,
+        scientific = FALSE
+      )
+    )
+  )
+
+knitr::kable(
+  for_2030_table,
+  col.names = c(
+    "Research field",
+    "Earlier (2014–2020)",
+    "Recent (2021–2026)",
+    "Full period (2014–2026)"
+  )
+)
+```
+
+The choice of historical reference period produces substantial differences in the indicative distribution of national HPC demand. The national forecast remains unchanged between scenarios; only the assumed distribution differs.
+
+Under the recent-period scenario, Engineering and Technology accounts for approximately 832,908 kSU in 2030, compared with 406,401 kSU under the earlier-period scenario. This is a difference of 426,507 kSU, even though both scenarios use the same national demand projection.
+
+Earth and Environmental Sciences shows the opposite pattern. Its indicative allocation decreases from 760,374 kSU under the earlier-period scenario to 334,353 kSU under the recent-period scenario, a difference of 426,021 kSU.
+
+Under the recent-period scenario, Physical Sciences accounts for approximately 528,466 kSU, while Chemical Sciences accounts for 425,998 kSU. The corresponding full-period estimates are 464,339 kSU and 443,903 kSU, respectively.
+
+These differences arise entirely from the historical allocation weights applied to the same national forecast. The choice of reference period is therefore an important modelling assumption, not merely a presentation choice.
+
+The figures should not be interpreted as confirmed future allocations or direct forecasts of researcher demand. They are conditional estimates showing how the national forecast would be distributed if each historical allocation composition were maintained.
+
+### Interpretation and Planning Implications
+
+The three scenarios provide different views of how projected national HPC demand might be distributed.
+
+The earlier-period scenario reflects a composition in which Earth and Environmental Sciences received a larger share of allocations. The recent-period scenario places greater weight on Engineering and Technology. The full-period scenario provides a broader historical reference, although it remains affected by reporting differences across the complete series.
+
+The results also demonstrate an important limitation of using allocation records as a proxy for demand. Allocations reflect computing resources made available through allocation processes, which may be lower than the resources requested or required by researchers. Therefore, the indicative distributions should not be interpreted as direct measures of future research-field demand.
+
+The FoR classification change and differences in facility reporting also limit how confidently historical shifts can be attributed to changes in research activity.
+
+For national HPC planning, the main implication is that the assumed research-field composition can materially change the indicative distribution of a fixed national forecast. The difference of approximately 426,500 kSU for Engineering and Technology illustrates this sensitivity. Comparing alternative reference periods makes the uncertainty more visible than selecting one historical composition as definitive.
+
+More consistent FoR-level records of requested, allocated and used computing resources would support stronger future analysis. A validated mapping between historical classification systems and more complete reporting across facilities would also improve the reliability of research-field comparisons.
+
+Overall, the FoR scenarios extend the selected national HPC forecast by showing how different historical allocation assumptions affect its illustrative distribution. They provide a basis for examining planning sensitivity, but they do not establish independently validated forecasts of future demand for individual research fields.
 
 ## Summary of Results
 
-The historical analysis identifies increasing pressure between recorded HPC demand and available allocations, particularly in 2026. CPU and GPU demand also show different measurement and forecasting challenges, with GPU analysis constrained by the shorter and less consistent historical record.
+The historical analysis identified increasing pressure between recorded HPC demand and available allocations. In 2026, recorded HPC demand reached approximately 2.24 million kSU, while allocations were approximately 872,000 kSU. This represented a fulfilment rate of 38.9%, indicating that recorded requests substantially exceeded allocated resources.
 
-The linear trend provides the central forecast for overall HPC and CPU demand. By 2030, these models project approximately 2.50 million kSU and 1.37 billion CPU core-hours, respectively.
+The rolling-origin evaluation selected the linear trend as the central forecasting model for overall HPC and CPU demand. By 2030, these models project approximately 2.50 million kSU and 1.37 billion CPU core-hours, respectively. Alternative growth assumptions produce substantially different projections, particularly under the log-linear models. The results are also sensitive to the inclusion of the 2026 observation.
 
-GPU forecasts remain exploratory, while FoR scenarios show how assumptions about historical allocation composition affect the indicative distribution of future resources.
+GPU forecasting remained exploratory because only five annual modelling observations were available. The five scenarios produced 2030 estimates ranging from approximately 2.25 to 3.68 million GPU-hours. No central GPU forecast was selected, and these projections were excluded from the initial national HPC planning scenarios.
 
-These results provide the basis for the discussion of forecasting uncertainty and national HPC planning implications in the following chapter.
+The FoR scenarios demonstrated that the indicative distribution of projected national demand depends strongly on historical allocation assumptions. Engineering and Technology accounted for 16.24% of the earlier-period scenario compared with 33.28% of the recent-period scenario. Applying these weights to the same national forecast produced a difference of approximately 426,500 kSU in its indicative 2030 allocation.
+
+Together, these findings show that forecasting results depend not only on historical model accuracy but also on data coverage, measurement assumptions, growth specifications and scenario construction. Their implications for national HPC planning are discussed in the following chapter.
 
 # Discussion
 
