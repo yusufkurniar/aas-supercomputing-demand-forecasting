@@ -1798,19 +1798,261 @@ The latest observation also affected the fitted linear trend. Including 2026 inc
 
 Overall, the CPU results provide less decisive evidence for choosing between linear and log-linear growth than the overall HPC results. Section 4.3 therefore compares the central CPU projection with alternative growth assumptions and the sensitivity model excluding 2026.
 
+
 ### GPU Demand
 
-GPU forecasting was evaluated separately because the modelling dataset contained only five annual observations from 2022–2026.
+GPU demand was evaluated separately because the modelling dataset contained only five annual observations from 2022–2026. Earlier GPU-hour values were based on hypothetical conversion assumptions rather than sufficiently supported resource-level demand observations. These earlier values were retained for historical sensitivity analysis but excluded from the forecasting evaluation, as explained in Section 4.1.3.
 
-The initial training period covered 2022–2024. One-year-ahead predictions were evaluated for 2025 and 2026, providing only two forecast errors for each model.
+The initial training period covered 2022–2024. Each of the four forecasting methods was used to predict 2025, after which the training sample was extended through 2025 to predict 2026. This produced only two one-year-ahead forecast errors for each model, compared with six for overall HPC and CPU demand.
 
-The naïve benchmark achieved the lowest RMSE of approximately 0.441 million GPU-hours and the lowest MAE of approximately 0.353 million GPU-hours. The drift model ranked second, followed by log-linear and linear trend models.
+The observed GPU series also differs from the other demand measures. Estimated GPU demand fell sharply from approximately 2.66 million GPU-hours in 2022 to 1.34 million in 2023, before increasing again and reaching approximately 3.00 million GPU-hours in 2026. These changes, together with the limited historical coverage, made it difficult to establish a consistent growth pattern.
 
-However, the two-year evaluation period was too short to establish a reliable ranking of long-term GPU forecasting methods. Individual observations had a substantial influence on the accuracy results.
+@fig-gpu-cv compares observed GPU demand with the forecasts from the naïve, drift, linear and log-linear models. Because only two evaluation years were available, the figure shows individual forecast errors rather than suggesting a continuous forecast trajectory.
 
-The naïve model was therefore retained as the reference projection, holding demand at the latest estimated level. Linear and log-linear models were also retained to examine alternative growth assumptions through 2030.
+```{r}
+#| label: fig-gpu-cv
+#| fig-cap: "Observed GPU demand and exploratory one-year-ahead forecasts, 2025–2026. Vertical segments show the difference between observed and forecast values. Only two evaluation years were available."
+#| fig-width: 10
+#| fig-height: 6.2
+#| out-width: 100%
+#| echo: false
+#| warning: false
+#| message: false
 
-Unlike overall HPC and CPU demand, the GPU analysis did not provide sufficient historical evidence to justify a single preferred long-term growth model. The resulting projections were treated as exploratory scenarios rather than reliable estimates of future GPU requirements.
+# Prepare GPU demand in million GPU-hours.
+# Only 2022–2026 is used for model evaluation.
+
+gpu_cv_data <- annual_converted |>
+  dplyr::transmute(
+    year = as.integer(year),
+    demand = as.numeric(demand_gpu_hours) / 1e6
+  ) |>
+  dplyr::filter(
+    year >= 2022,
+    year <= 2026
+  ) |>
+  dplyr::arrange(year)
+
+stopifnot(
+  identical(gpu_cv_data$year, 2022:2026),
+  all(is.finite(gpu_cv_data$demand)),
+  all(gpu_cv_data$demand > 0)
+)
+
+# Expanding-window rolling-origin evaluation.
+# Training: 2022–2024 -> predict 2025
+# Training: 2022–2025 -> predict 2026
+
+gpu_cv_predictions <- dplyr::bind_rows(
+  lapply(2025:2026, function(test_year) {
+
+    training <- gpu_cv_data |>
+      dplyr::filter(year < test_year)
+
+    actual <- gpu_cv_data |>
+      dplyr::filter(year == test_year) |>
+      dplyr::pull(demand)
+
+    n <- nrow(training)
+
+    first_value <- training$demand[1]
+    last_value <- dplyr::last(training$demand)
+
+    # Naïve benchmark
+    pred_naive <- last_value
+
+    # Drift benchmark
+    pred_drift <- last_value +
+      (last_value - first_value) / (n - 1)
+
+    # Linear trend
+    fit_linear <- lm(
+      demand ~ year,
+      data = training
+    )
+
+    pred_linear <- as.numeric(
+      predict(
+        fit_linear,
+        newdata = data.frame(year = test_year)
+      )
+    )
+
+    # Log-linear trend
+    fit_loglinear <- lm(
+      log(demand) ~ year,
+      data = training
+    )
+
+    pred_loglinear <- as.numeric(
+      exp(
+        predict(
+          fit_loglinear,
+          newdata = data.frame(year = test_year)
+        )
+      )
+    )
+
+    tibble::tibble(
+      year = test_year,
+      actual = actual,
+      `Naïve` = pred_naive,
+      `Drift` = pred_drift,
+      `Linear trend` = pred_linear,
+      `Log-linear trend` = pred_loglinear
+    )
+  })
+)
+
+# Long-format data for the chart and accuracy table
+
+gpu_cv_long <- gpu_cv_predictions |>
+  tidyr::pivot_longer(
+    cols = c(
+      `Naïve`,
+      `Drift`,
+      `Linear trend`,
+      `Log-linear trend`
+    ),
+    names_to = "model",
+    values_to = "forecast"
+  ) |>
+  dplyr::mutate(
+    model = factor(
+      model,
+      levels = c(
+        "Naïve",
+        "Drift",
+        "Linear trend",
+        "Log-linear trend"
+      )
+    )
+  )
+
+# Four-panel comparison showing individual forecast errors
+
+ggplot(
+  gpu_cv_long,
+  aes(x = factor(year))
+) +
+  geom_segment(
+    aes(
+      xend = factor(year),
+      y = actual,
+      yend = forecast
+    ),
+    colour = "#A0A0A0",
+    linewidth = 0.9,
+    linetype = "dashed"
+  ) +
+  geom_point(
+    aes(
+      y = actual,
+      colour = "Observed"
+    ),
+    size = 3
+  ) +
+  geom_point(
+    aes(
+      y = forecast,
+      colour = "Forecast"
+    ),
+    size = 3,
+    shape = 17
+  ) +
+  facet_wrap(
+    ~model,
+    ncol = 2,
+    scales = "fixed"
+  ) +
+  scale_colour_manual(
+    values = c(
+      "Observed" = "#173A5E",
+      "Forecast" = "#E69F00"
+    )
+  ) +
+  scale_y_continuous(
+    labels = scales::label_number(
+      accuracy = 0.1
+    ),
+    expand = expansion(mult = c(0.08, 0.12))
+  ) +
+  labs(
+    x = "Evaluation year",
+    y = "GPU demand (million GPU-hours)",
+    colour = NULL,
+    caption = paste(
+      "Circles show observed values; triangles show forecasts.",
+      "Dashed vertical segments indicate forecast errors.",
+      "All panels use the same vertical scale."
+    )
+  ) +
+  theme_minimal(base_size = 10) +
+  theme(
+    strip.text = element_text(
+      face = "bold",
+      size = 11
+    ),
+    legend.position = "bottom",
+    panel.grid.minor = element_blank(),
+    plot.caption = element_text(size = 8)
+  )
+```
+
+The evaluation provides only a limited comparison of model performance. With two forecast years, individual errors have a large influence on the accuracy measures. A model that performs well for these observations may behave differently over a longer period.
+
+The naïve model achieved the lowest RMSE and MAE, indicating that using the latest observed GPU demand produced smaller errors than extending a trend during this short evaluation. However, this result does not establish that GPU demand will remain constant or that the naïve method is suitable for forecasting through 2030.
+
+@tbl-gpu-accuracy reports the calculated accuracy results for the four models.
+
+```{r}
+#| label: tbl-gpu-accuracy
+#| tbl-cap: "Exploratory rolling-origin forecast accuracy for GPU demand, 2025–2026."
+#| echo: false
+#| warning: false
+#| message: false
+
+gpu_accuracy <- gpu_cv_long |>
+  dplyr::group_by(model) |>
+  dplyr::summarise(
+    RMSE = sqrt(
+      mean((actual - forecast)^2)
+    ),
+    MAE = mean(
+      abs(actual - forecast)
+    ),
+    .groups = "drop"
+  ) |>
+  dplyr::arrange(RMSE) |>
+  dplyr::mutate(
+    `RMSE rank` = dplyr::row_number()
+  )
+
+gpu_accuracy_table <- gpu_accuracy |>
+  dplyr::transmute(
+    Model = as.character(model),
+    `RMSE (million GPU-hours)` = round(RMSE, 3),
+    `MAE (million GPU-hours)` = round(MAE, 3),
+    `RMSE rank` = `RMSE rank`
+  )
+
+knitr::kable(
+  gpu_accuracy_table,
+  align = c("l", "r", "r", "r")
+)
+```
+
+The naïve benchmark achieved the lowest RMSE (0.441 million GPU-hours) and MAE (0.353 million GPU-hours), followed by drift, log-linear trend and linear trend. Unlike the overall HPC and CPU evaluations, the simpler benchmark performed better than the models estimating historical growth.
+
+Figure 7 shows that all four models underestimated GPU demand in 2026. The naïve model projected approximately 2.39 million GPU-hours, compared with the estimated value of 3.00 million GPU-hours. The trend models also failed to anticipate this increase. This illustrates the difficulty of forecasting GPU demand when the historical series contains substantial changes over a short period.
+
+The accuracy rankings should nevertheless be interpreted cautiously. Only two forecast errors were available for each model, and the underlying GPU-hour series includes derived estimates and conversion assumptions. Consequently, the evaluation does not provide sufficient evidence to establish that the naïve model will remain the most accurate approach over a longer forecast horizon.
+
+The naïve model was retained as a reference because of its lower evaluation errors. Linear and log-linear models were also retained to examine the consequences of different growth assumptions. However, none of these models was selected as a reliable central GPU forecast.
+
+Following the project review, GPU projections were treated as exploratory and excluded from the initial national HPC planning scenarios. Those scenarios instead use the selected overall HPC demand projection and historical Field of Research allocation shares. This distinction prevents the more uncertain GPU estimates from being presented as independently validated planning requirements.
+
+The exploratory GPU projections are presented in Section 4.3 to show how different modelling assumptions affect the results through 2030. More consistent historical records of GPU requests, allocations and usage, together with validated conversion factors, would be needed to support reliable GPU-specific forecasting.
 
 ### Residual Diagnostics
 
