@@ -459,7 +459,7 @@ stopifnot(
 #| label: fig-historical-hpc
 #| fig-cap: "Historical HPC requests and allocations, 2014–2026. Shading represents the recorded request–allocation gap. Values are in million kSU."
 #| fig-width: 9
-#| fig-height: 5.5
+#| fig-height: 5.1
 #| out-width: 100%
 #| echo: false
 #| warning: false
@@ -619,7 +619,7 @@ The 2026 increase in requests was approximately 43.3% relative to the reconstruc
 #| label: fig-historical-cpu
 #| fig-cap: "Historical CPU requests and allocations, 2014–2026. Shading shows the recorded gap; values include system-specific conversions and estimates."
 #| fig-width: 9
-#| fig-height: 5.7
+#| fig-height: 5.1
 #| out-width: 100%
 #| echo: false
 #| warning: false
@@ -791,7 +791,7 @@ The reconstructed series contains sharp changes around 2019–2022, when Raijin 
 #| label: fig-historical-gpu
 #| fig-cap: "Historical GPU demand and allocation, 2014–2026. Dashed lines and shaded ranges indicate assumption-based historical estimates; solid lines show the 2022–2026 forecasting sample."
 #| fig-width: 9
-#| fig-height: 5.7
+#| fig-height: 5.1
 #| out-width: 100%
 #| echo: false
 #| warning: false
@@ -1036,7 +1036,7 @@ Estimated GPU requests increased from 2023 to 2026, but the five-year modelling 
 #| label: fig-for-composition
 #| fig-cap: "HPC allocation composition by Field of Research, 2014–2026. The lower panel compares average annual shares across two reporting periods."
 #| fig-width: 10
-#| fig-height: 9
+#| fig-height: 7
 #| out-width: 100%
 #| echo: false
 #| warning: false
@@ -1257,7 +1257,7 @@ The naïve, drift, linear trend and log-linear trend models were compared using 
 #| label: fig-hpc-cv
 #| fig-cap: "Observed overall HPC demand and rolling-origin one-year-ahead forecasts, 2021–2026. All panels use the same vertical scale."
 #| fig-width: 10
-#| fig-height: 7
+#| fig-height: 5
 #| out-width: 100%
 #| echo: false
 #| warning: false
@@ -1445,14 +1445,54 @@ ggplot(
 
 @tbl-hpc-accuracy summarises forecast accuracy over 2021–2026. The linear trend achieved the lowest RMSE (290,898 kSU) and MAE (198,295 kSU). Its RMSE was 23.2% lower than naïve and 7.5% lower than drift. The log-linear model performed worst, with an RMSE of 511,614 kSU.
 
-| Model | RMSE (kSU) | MAE (kSU) | RMSE rank |
-|---|---:|---:|---:|
-| Linear trend | **290,898** | **198,295** | **1** |
-| Drift | 314,588 | 221,778 | 2 |
-| Naïve | 378,864 | 283,000 | 3 |
-| Log-linear trend | 511,614 | 466,991 | 4 |
+```{r}
+#| label: tbl-hpc-accuracy
+#| tbl-cap: "Rolling-origin forecast accuracy for overall HPC demand, 2021–2026."
+#| echo: false
+#| warning: false
+#| message: false
 
-: Rolling-origin forecast accuracy for overall HPC demand, 2021–2026. {#tbl-hpc-accuracy}
+hpc_accuracy <- hpc_cv_long |>
+  dplyr::group_by(model) |>
+  dplyr::summarise(
+    RMSE = sqrt(mean((actual - forecast)^2)),
+    MAE = mean(abs(actual - forecast)),
+    .groups = "drop"
+  ) |>
+  dplyr::arrange(RMSE) |>
+  dplyr::mutate(
+    `RMSE rank` = dplyr::row_number()
+  )
+
+hpc_accuracy_table <- hpc_accuracy |>
+  dplyr::transmute(
+    Model = as.character(model),
+    `RMSE (kSU)` = format(
+      round(RMSE),
+      big.mark = ",",
+      scientific = FALSE,
+      trim = TRUE
+    ),
+    `MAE (kSU)` = format(
+      round(MAE),
+      big.mark = ",",
+      scientific = FALSE,
+      trim = TRUE
+    ),
+    `RMSE rank` = `RMSE rank`
+  )
+
+
+knitr::kable(
+  hpc_accuracy_table,
+  align = c("l", "r", "r", "r")
+) |>
+  kableExtra::kable_styling(
+    latex_options = "HOLD_position",
+    font_size = 9,
+    full_width = FALSE
+  )
+```
 
 The linear trend was selected as the central HPC forecasting model because it had the lowest evaluation errors and assumes a constant absolute annual increase. However, including 2026 increased the fitted annual trend from approximately 144,357 to 161,992 kSU (12.2%). The model excluding 2026 was therefore retained for sensitivity analysis, while the log-linear model was retained to examine continued proportional growth.
 
@@ -1466,7 +1506,7 @@ The evaluation is based on six one-year-ahead forecasts. It does not establish h
 #| label: fig-cpu-cv
 #| fig-cap: "Observed CPU demand and rolling-origin one-year-ahead forecasts, 2021–2026. All panels use the same vertical scale."
 #| fig-width: 10
-#| fig-height: 6.3
+#| fig-height: 5
 #| out-width: 100%
 #| echo: false
 #| warning: false
@@ -1652,14 +1692,44 @@ ggplot(
 
 @tbl-cpu-accuracy reports forecast accuracy across the six evaluation years. The linear trend achieved the lowest RMSE (157.72 million core-hours), while the log-linear model achieved the lowest MAE (133.74 million core-hours). The difference in RMSE between the two models was approximately 1.5%, compared with 3.5% for MAE. Neither model performed best on both measures.
 
-| Model | RMSE (million core-hours) | MAE (million core-hours) | RMSE rank |
-|---|---:|---:|---:|
-| Linear trend | **157.72** | 138.65 | **1** |
-| Log-linear trend | 160.18 | **133.74** | 2 |
-| Drift | 242.61 | 193.69 | 3 |
-| Naïve | 260.05 | 228.45 | 4 |
+```{r}
+#| label: tbl-cpu-accuracy
+#| tbl-cap: "Rolling-origin forecast accuracy for CPU demand, 2021–2026."
+#| echo: false
+#| warning: false
+#| message: false
 
-: Rolling-origin forecast accuracy for CPU demand, 2021–2026. {#tbl-cpu-accuracy}
+cpu_accuracy <- cpu_cv_long |>
+  dplyr::group_by(model) |>
+  dplyr::summarise(
+    RMSE = sqrt(mean((actual - forecast)^2)),
+    MAE = mean(abs(actual - forecast)),
+    .groups = "drop"
+  ) |>
+  dplyr::arrange(RMSE) |>
+  dplyr::mutate(
+    `RMSE rank` = dplyr::row_number()
+  )
+
+cpu_accuracy_table <- cpu_accuracy |>
+  dplyr::transmute(
+    Model = as.character(model),
+    `RMSE (million core-hours)` = round(RMSE, 2),
+    `MAE (million core-hours)` = round(MAE, 2),
+    `RMSE rank` = `RMSE rank`
+  )
+
+
+knitr::kable(
+  cpu_accuracy_table,
+  align = c("l", "r", "r", "r")
+) |>
+  kableExtra::kable_styling(
+    latex_options = "HOLD_position",
+    font_size = 9,
+    full_width = FALSE
+  )
+```
 
 The linear trend was selected as the central CPU forecasting model because it had the lowest RMSE and assumes a constant annual increase in demand. The log-linear model was retained as an alternative because its MAE was lower and its proportional-growth assumption produces a different forecast trajectory through 2030.
 
@@ -1673,7 +1743,7 @@ Including the 2026 observation increased the estimated annual growth rate in the
 #| label: fig-gpu-cv
 #| fig-cap: "Observed GPU demand and exploratory one-year-ahead forecasts, 2025–2026. Vertical segments show the difference between observed and forecast values. Only two evaluation years were available."
 #| fig-width: 10
-#| fig-height: 6.2
+#| fig-height: 4.5
 #| out-width: 100%
 #| echo: false
 #| warning: false
@@ -1895,26 +1965,27 @@ gpu_accuracy_table <- gpu_accuracy |>
 knitr::kable(
   gpu_accuracy_table,
   align = c("l", "r", "r", "r")
-)
+) |>
+  kableExtra::kable_styling(
+    latex_options = "HOLD_position",
+    font_size = 9,
+    full_width = FALSE
+  )
 ```
 
 These rankings are based on only two forecast errors per model. The GPU series also includes converted and estimated observations, so the results do not establish which method would perform best over a longer period. In particular, the naïve model's lower evaluation errors do not imply that GPU demand will remain constant through 2030.
 
-The naïve model was retained as a reference, while linear and log-linear trends were used to examine alternative growth assumptions. No model was selected as a central GPU forecast. GPU projections were therefore treated as exploratory and excluded from the initial national HPC planning scenarios, which use the overall HPC demand forecast and historical Field of Research allocation shares.
-
-Section 4.3 presents the exploratory GPU projections through 2030.
+The naïve model was retained as a reference, while linear and log-linear trends were used to examine alternative growth assumptions. No model was selected as a central GPU forecast. GPU projections were therefore treated as exploratory and excluded from the initial national HPC planning scenarios, which use the overall HPC demand forecast and historical Field of Research allocation shares. Section 4.3 presents the exploratory GPU projections through 2030.
 
 ### Residual Diagnostics
 
-Residual diagnostics were conducted on the selected linear trend models fitted to the full 2014–2026 HPC and CPU demand series. The analysis examined residual autocorrelation using ACF plots and Ljung–Box tests, and departures from normality using Q–Q plots. These checks were used to assess the assumptions underlying the model-based prediction intervals.
-
-@fig-model-diagnostics shows the residual ACF and Q–Q plots for both models.
+Residual diagnostics were conducted on the selected linear trend models fitted to the full 2014–2026 HPC and CPU demand series. The analysis examined residual autocorrelation using ACF plots and Ljung–Box tests, and departures from normality using Q–Q plots. These checks were used to assess the assumptions underlying the model-based prediction intervals. @fig-model-diagnostics shows the residual ACF and Q–Q plots for both models.
 
 ```{r}
 #| label: fig-model-diagnostics
 #| fig-cap: "Residual diagnostics for the selected linear trend models fitted to 2014–2026: residual ACF and normal Q–Q plots for overall HPC and CPU demand."
 #| fig-width: 10
-#| fig-height: 7
+#| fig-height: 4.5
 #| out-width: 100%
 #| echo: false
 #| warning: false
@@ -2089,9 +2160,7 @@ p_cpu_qq <- make_qq_plot(
   )
 ```
 
-The ACF plots show that none of the displayed residual correlations exceeds the approximate reference limits. HPC residual correlations are generally small, while CPU residuals show negative correlations at lags 1 and 4.
-
-@tbl-ljung-box reports the Ljung–Box tests using three lags.
+The ACF plots show that none of the displayed residual correlations exceeds the approximate reference limits. HPC residual correlations are generally small, while CPU residuals show negative correlations at lags 1 and 4. @tbl-ljung-box reports the Ljung–Box tests using three lags.
 
 ```{r}
 #| label: tbl-ljung-box
@@ -2149,7 +2218,12 @@ diagnostic_results <- tibble(
 knitr::kable(
   diagnostic_results,
   align = c("l", "r", "r", "r", "r")
-)
+) |>
+  kableExtra::kable_styling(
+    latex_options = "HOLD_position",
+    font_size = 9,
+    full_width = FALSE
+  )
 ```
 
 Neither test rejected the null hypothesis of no residual autocorrelation at the 5% significance level (HPC: p = 0.965; CPU: p = 0.554). However, with only 13 annual observations, these results do not establish that the residuals are independent.
@@ -2162,15 +2236,13 @@ The diagnostics did not identify statistically significant residual autocorrelat
 
 ### Overall HPC Demand
 
-The linear trend model was selected for the central HPC demand forecast based on its rolling-origin accuracy (Section 4.2.1). It was fitted to the 2014–2026 series to project demand through 2030. Three alternatives were also examined: a linear model excluding 2026 and two log-linear models fitted with and without 2026. These specifications assess sensitivity to the latest observation and the assumed growth pattern.
-
-@fig-hpc-forecast-scenarios compares the historical observations and four projected trajectories.
+The linear trend model was selected for the central HPC demand forecast based on its rolling-origin accuracy (Section 4.2.1). It was fitted to the 2014–2026 series to project demand through 2030. Three alternatives were also examined: a linear model excluding 2026 and two log-linear models fitted with and without 2026. These specifications assess sensitivity to the latest observation and the assumed growth pattern. @fig-hpc-forecast-scenarios compares the historical observations and four projected trajectories.
 
 ```{r}
 #| label: fig-hpc-forecast-scenarios
 #| fig-cap: "Historical HPC demand and alternative projections to 2030. The full-history linear model provides the central forecast. Alternative trajectories show sensitivity to the 2026 observation and growth assumptions."
 #| fig-width: 10
-#| fig-height: 6
+#| fig-height: 3
 #| out-width: 100%
 #| echo: false
 #| warning: false
@@ -2412,8 +2484,8 @@ ggplot() +
     plot.caption = element_text(size = 8)
   ) +
   guides(
-    colour = guide_legend(ncol = 2),
-    linetype = guide_legend(ncol = 2)
+    colour = guide_legend(nrow = 1, byrow = TRUE),
+    linetype = guide_legend(nrow = 1, byrow = TRUE)
   )
 ```
 
@@ -2425,15 +2497,13 @@ The results show that the choice between linear and proportional growth has a gr
 
 #### Prediction Intervals and Forecast Uncertainty
 
-The alternative forecasting scenarios show how projections change under different model assumptions. Statistical prediction intervals instead estimate the range of future annual demand under the selected linear model and its error assumptions.
-
-@fig-hpc-prediction-intervals shows the central HPC forecast with 80% and 95% prediction intervals.
+The alternative forecasting scenarios show how projections change under different model assumptions. Statistical prediction intervals instead estimate the range of future annual demand under the selected linear model and its error assumptions. @fig-hpc-forecast-intervals shows the central HPC forecast with 80% and 95% prediction intervals.
 
 ```{r}
 #| label: fig-hpc-forecast-intervals
 #| fig-cap: "Central HPC demand projection with 80% and 95% model-based prediction intervals, 2027–2030. Intervals are conditional on the fitted linear model."
 #| fig-width: 9
-#| fig-height: 5.2
+#| fig-height: 2
 #| out-width: 100%
 #| echo: false
 #| warning: false
@@ -2568,15 +2638,13 @@ The intervals do not account for alternative growth models, changes in computing
 
 ### CPU Demand
 
-The linear trend model was fitted to the 2014–2026 CPU demand series to project demand through 2030. Three alternatives were examined: a linear model excluding 2026 and two log-linear models fitted with and without 2026. The linear model was retained as the central forecast based on its slightly lower RMSE in Section 4.2.2.
-
-@fig-cpu-forecast-scenarios compares the historical CPU demand series with the four projected trajectories.
+The linear trend model was fitted to the 2014–2026 CPU demand series to project demand through 2030. Three alternatives were examined: a linear model excluding 2026 and two log-linear models fitted with and without 2026. The linear model was retained as the central forecast based on its slightly lower RMSE in Section 4.2.2. @fig-cpu-forecast-scenarios compares the historical CPU demand series with the four projected trajectories.
 
 ```{r}
 #| label: fig-cpu-forecast-scenarios
 #| fig-cap: "Historical CPU demand and alternative projections to 2030. The full-history linear model provides the central forecast; other trajectories illustrate sensitivity to the 2026 observation and growth assumptions."
 #| fig-width: 10
-#| fig-height: 6
+#| fig-height: 3
 #| out-width: 100%
 #| echo: false
 #| warning: false
@@ -2793,8 +2861,8 @@ ggplot() +
     plot.caption = element_text(size = 8)
   ) +
   guides(
-    colour = guide_legend(ncol = 2),
-    linetype = guide_legend(ncol = 2)
+    colour = guide_legend(nrow = 1, byrow = TRUE),
+    linetype = guide_legend(nrow = 1, byrow = TRUE)
   )
 ```
 
@@ -2808,15 +2876,13 @@ The log-linear models were retained as alternative scenarios because of their co
 
 #### CPU Prediction Intervals
 
-The alternative CPU forecasts show the effects of model selection and excluding 2026. Prediction intervals instead describe uncertainty around future annual observations under the selected linear model.
-
-@fig-cpu-forecast-intervals presents the central CPU forecast with 80% and 95% prediction intervals for 2027–2030.
+The alternative CPU forecasts show the effects of model selection and excluding 2026. Prediction intervals instead describe uncertainty around future annual observations under the selected linear model. @fig-cpu-forecast-intervals presents the central CPU forecast with 80% and 95% prediction intervals for 2027–2030.
 
 ```{r}
 #| label: fig-cpu-forecast-intervals
 #| fig-cap: "Central CPU demand projection with 80% and 95% model-based prediction intervals, 2027–2030. Intervals are conditional on the fitted linear model."
 #| fig-width: 9
-#| fig-height: 5.2
+#| fig-height: 2
 #| out-width: 100%
 #| echo: false
 #| warning: false
@@ -2933,21 +2999,17 @@ The central model projects approximately 1.37 billion CPU core-hours in 2030, wi
 
 The full-history log-linear projection of 2.48 billion core-hours lies above this interval. This is not a contradiction: the interval reflects uncertainty within the linear model, whereas the log-linear projection uses a different growth assumption.
 
-The intervals do not account for uncertainty in historical resource conversions, changes in computing systems or alternative model specifications. The residual diagnostics in Section 4.2.4 also showed departures from normality in the CPU residuals. These limitations affect how confidently the intervals can be interpreted.
-
-CPU projections should be considered alongside overall HPC demand rather than added to it, because the two series represent related computing requirements.
+The intervals do not account for uncertainty in historical resource conversions, changes in computing systems or alternative model specifications. The residual diagnostics in Section 4.2.4 also showed departures from normality in the CPU residuals. These limitations affect how confidently the intervals can be interpreted. CPU projections should be considered alongside overall HPC demand rather than added to it, because the two series represent related computing requirements.
 
 ### GPU Demand
 
-GPU demand projections were treated as exploratory because only five annual observations from 2022–2026 were available for modelling. No central model or statistical prediction intervals were selected, as discussed in Section 4.2.3.
-
-@fig-gpu-forecast-scenarios compares the historical GPU demand estimates with five projections through 2030.
+GPU demand projections were treated as exploratory because only five annual observations from 2022–2026 were available for modelling. No central model or statistical prediction intervals were selected, as discussed in Section 4.2.3. @fig-gpu-forecast-scenarios compares the historical GPU demand estimates with five projections through 2030.
 
 ```{r}
 #| label: fig-gpu-forecast-scenarios
 #| fig-cap: "Historical GPU demand estimates and five exploratory projections to 2030. Scenarios reflect different growth assumptions and the inclusion of 2026."
 #| fig-width: 10
-#| fig-height: 5.5
+#| fig-height: 3
 #| out-width: 100%
 #| echo: false
 #| warning: false
@@ -3256,13 +3318,15 @@ ggplot() +
   theme_minimal(base_size = 11) +
   theme(
     legend.position = "bottom",
-    legend.text = element_text(size = 8),
+    legend.text = element_text(size = 7),
+    legend.key.width = grid::unit(0.8, "cm"),
+    legend.spacing.x = grid::unit(0.08, "cm"),
     panel.grid.minor = element_blank(),
     plot.caption = element_text(size = 8)
   ) +
   guides(
-    colour = guide_legend(ncol = 2),
-    linetype = guide_legend(ncol = 2)
+    colour = guide_legend(nrow = 1, byrow = TRUE),
+    linetype = guide_legend(nrow = 1, byrow = TRUE)
   )
 ```
 
@@ -3299,7 +3363,7 @@ Each available year received equal weight. Missing observations were not treated
 #| label: fig-for-scenario-comparison
 #| fig-cap: "Normalised Field of Research allocation shares across three historical reference periods."
 #| fig-width: 11
-#| fig-height: 7.5
+#| fig-height: 5.5
 #| out-width: 100%
 #| echo: false
 #| warning: false
@@ -3499,7 +3563,12 @@ knitr::kable(
     "Recent (2021–2026)",
     "Full period (2014–2026)"
   )
-)
+) |>
+  kableExtra::kable_styling(
+    latex_options = "HOLD_position",
+    font_size = 9,
+    full_width = FALSE
+  )
 ```
 
 *Note: Each cell shows the normalised allocation weight followed by the number of years with reported observations in parentheses. The reference periods contain seven, six and thirteen years respectively. Percentages are normalised within each period.*
@@ -3522,9 +3591,7 @@ The normalised weights therefore provide a consistent calculation method for com
 
 The three historical allocation compositions were applied to the same selected national HPC demand projection.
 
-The central linear model projects approximately 2.50 million kSU in 2030. Each scenario distributes this national total across the nine research-field groups using its corresponding normalised weights.
-
-@tbl-for-2030 presents the resulting distributions. Calculations use the unrounded national forecast.
+The central linear model projects approximately 2.50 million kSU in 2030. Each scenario distributes this national total across the nine research-field groups using its corresponding normalised weights. @tbl-for-2030 presents the resulting distributions. Calculations use the unrounded national forecast.
 
 ```{r}
 #| label: tbl-for-2030
@@ -3608,7 +3675,12 @@ knitr::kable(
     "Recent (2021–2026)",
     "Full period (2014–2026)"
   )
-)
+) |>
+  kableExtra::kable_styling(
+    latex_options = "HOLD_position",
+    font_size = 9,
+    full_width = FALSE
+  )
 ```
 
 The choice of historical reference period produces substantial differences in the indicative distribution of national HPC demand. The national forecast remains unchanged between scenarios; only the assumed distribution differs.
