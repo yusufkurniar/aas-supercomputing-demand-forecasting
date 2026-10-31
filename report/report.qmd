@@ -3274,29 +3274,11 @@ GPU projections were excluded from the initial national HPC planning scenarios b
 
 ## Field of Research Scenarios
 
-The previous sections presented national HPC and CPU demand projections, alongside exploratory GPU projections, through 2030. However, the national forecast does not show how computing demand might be distributed across research disciplines. This section examines that question using historical Field of Research (FoR) allocation shares.
-
-The available FoR records do not provide a consistent series of demand requests for every research field. Therefore, the scenarios apply historical allocation shares to the selected national HPC demand projection. The results are illustrative distributions of projected national demand, not independently estimated forecasts of demand within individual research fields.
+Historical Field of Research (FoR) allocation shares were used to distribute the selected national HPC demand forecast across nine research-field groups. Three reference periods were compared: 2014–2020, 2021–2026 and 2014–2026. Because consistent field-level request data were unavailable, the resulting distributions represent allocation-share scenarios rather than independent forecasts of demand by research field.
 
 ### Scenario Construction
 
-Three historical reference periods were considered:
-
-1. **Earlier period (2014–2020):** The allocation composition recorded before 2021.
-2. **Recent period (2021–2026):** The latest six years of allocation records.
-3. **Full period (2014–2026):** The allocation composition across the complete historical series.
-
-The scenario construction followed four steps. First, reported FoR categories were consolidated into nine analytical groups, as described in Section 4.1. Second, annual allocation shares were calculated for each reported group. Third, the mean of the available annual shares was calculated within each reference period and normalised to produce weights totalling 100%. Finally, these weights were applied to the selected national HPC demand projections for 2027–2030.
-
-The calculation is:
-
-$$
-D_{f,t}^{(s)} = \widehat{D}_{t} \times w_f^{(s)}
-$$
-
-where $D_{f,t}^{(s)}$ represents the illustrative demand for research field $f$ in year $t$ under scenario $s$, $\widehat{D}_{t}$ is the national HPC demand projection, and $w_f^{(s)}$ is the normalised historical allocation share.
-
-The normalisation is calculated as:
+For each reference period, the mean allocation share of each research-field group was calculated using its available annual observations. These means were normalised so that the nine groups accounted for 100% of the projected national demand:
 
 $$
 w_f^{(s)} =
@@ -3304,11 +3286,9 @@ w_f^{(s)} =
 {\sum_j \overline{a}_j^{(s)}}
 $$
 
-where $\overline{a}_f^{(s)}$ is the mean observed annual allocation share for research field $f$ during reference period $s$. The denominator sums the mean shares across the nine groups.
+where $w_f^{(s)}$ is the normalised weight for research field $f$ under scenario $s$, and $\overline{a}_f^{(s)}$ is its mean annual allocation share during the selected period.
 
-This method gives equal weight to each available annual observation within a research field, rather than giving more weight to years with larger total allocations. Missing categories are not treated as confirmed zero allocations. Normalisation ensures that the weights sum to 100%, but it does not correct incomplete historical reporting.
-
-The weights are held constant throughout 2027–2030. This isolates the effect of choosing different historical allocation compositions without introducing additional assumptions about future changes in research-field shares.
+Each available year received equal weight. Missing observations were not treated as zero, and the resulting weights were held constant for 2027–2030. The calculations therefore compare historical allocation compositions without assuming future changes in research-field shares.
 
 ### Historical Allocation Assumptions
 
@@ -3639,25 +3619,9 @@ Earth and Environmental Sciences shows the opposite pattern. Its indicative allo
 
 Under the recent-period scenario, Physical Sciences accounts for approximately 528,466 kSU, while Chemical Sciences accounts for 425,998 kSU. The corresponding full-period estimates are 464,339 kSU and 443,903 kSU, respectively.
 
-These differences arise entirely from the historical allocation weights applied to the same national forecast. The choice of reference period is therefore an important modelling assumption, not merely a presentation choice.
+The differences arise from applying alternative historical allocation weights to the same national HPC forecast. The choice of reference period is therefore an important modelling assumption, with Engineering and Technology showing a difference of approximately 426,500 kSU between the earlier and recent scenarios.
 
-The figures should not be interpreted as confirmed future allocations or direct forecasts of researcher demand. They are conditional estimates showing how the national forecast would be distributed if each historical allocation composition were maintained.
-
-### Interpretation and Planning Implications
-
-The three scenarios provide different views of how projected national HPC demand might be distributed.
-
-The earlier-period scenario reflects a composition in which Earth and Environmental Sciences received a larger share of allocations. The recent-period scenario places greater weight on Engineering and Technology. The full-period scenario provides a broader historical reference, although it remains affected by reporting differences across the complete series.
-
-The results also demonstrate an important limitation of using allocation records as a proxy for demand. Allocations reflect computing resources made available through allocation processes, which may be lower than the resources requested or required by researchers. Therefore, the indicative distributions should not be interpreted as direct measures of future research-field demand.
-
-The FoR classification change and differences in facility reporting also limit how confidently historical shifts can be attributed to changes in research activity.
-
-For national HPC planning, the main implication is that the assumed research-field composition can materially change the indicative distribution of a fixed national forecast. The difference of approximately 426,500 kSU for Engineering and Technology illustrates this sensitivity. Comparing alternative reference periods makes the uncertainty more visible than selecting one historical composition as definitive.
-
-More consistent FoR-level records of requested, allocated and used computing resources would support stronger future analysis. A validated mapping between historical classification systems and more complete reporting across facilities would also improve the reliability of research-field comparisons.
-
-Overall, the FoR scenarios extend the selected national HPC forecast by showing how different historical allocation assumptions affect its illustrative distribution. They provide a basis for examining planning sensitivity, but they do not establish independently validated forecasts of future demand for individual research fields.
+These estimates do not represent confirmed future allocations or independently forecast research-field demand. They illustrate how a fixed national forecast would be distributed under different historical allocation assumptions. The implications for infrastructure planning are discussed in Chapter 5.
 
 ## Summary of Results
 
