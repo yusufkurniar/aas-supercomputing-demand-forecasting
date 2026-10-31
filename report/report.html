@@ -3107,10 +3107,7 @@ Table 7: Rolling-origin forecast accuracy for CPU demand, 2021–2026.
 </section>
 <section id="gpu-demand" class="level3" data-number="4.2.3">
 <h3 data-number="4.2.3" class="anchored" data-anchor-id="gpu-demand"><span class="header-section-number">4.2.3</span> GPU Demand</h3>
-<p>GPU demand was evaluated separately because the modelling dataset contained only five annual observations from 2022–2026. Earlier GPU-hour values were based on hypothetical conversion assumptions rather than sufficiently supported resource-level demand observations. These earlier values were retained for historical sensitivity analysis but excluded from the forecasting evaluation, as explained in Section 4.1.3.</p>
-<p>The initial training period covered 2022–2024. Each of the four forecasting methods was used to predict 2025, after which the training sample was extended through 2025 to predict 2026. This produced only two one-year-ahead forecast errors for each model, compared with six for overall HPC and CPU demand.</p>
-<p>The observed GPU series also differs from the other demand measures. Estimated GPU demand fell sharply from approximately 2.66 million GPU-hours in 2022 to 1.34 million in 2023, before increasing again and reaching approximately 3.00 million GPU-hours in 2026. These changes, together with the limited historical coverage, made it difficult to establish a consistent growth pattern.</p>
-<p><a href="#fig-gpu-cv" class="quarto-xref">Figure 7</a> compares observed GPU demand with the forecasts from the naïve, drift, linear and log-linear models. Because only two evaluation years were available, the figure shows individual forecast errors rather than suggesting a continuous forecast trajectory.</p>
+<p><a href="#fig-gpu-cv" class="quarto-xref">Figure 7</a> compares observed GPU demand with one-year-ahead forecasts for 2025 and 2026. The vertical segments show the forecast errors for each model. All four models underestimated demand in 2026, when estimated GPU requests reached approximately 3.00 million GPU-hours. The naïve model forecast approximately 2.39 million GPU-hours, while the trend models also failed to anticipate the increase.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-gpu-cv" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -3125,9 +3122,7 @@ Figure 7: Observed GPU demand and exploratory one-year-ahead forecasts, 2025–
 </div>
 </div>
 </div>
-<p>The evaluation provides only a limited comparison of model performance. With two forecast years, individual errors have a large influence on the accuracy measures. A model that performs well for these observations may behave differently over a longer period.</p>
-<p>The naïve model achieved the lowest RMSE and MAE, indicating that using the latest observed GPU demand produced smaller errors than extending a trend during this short evaluation. However, this result does not establish that GPU demand will remain constant or that the naïve method is suitable for forecasting through 2030.</p>
-<p><a href="#tbl-gpu-accuracy" class="quarto-xref">Table 8</a> reports the calculated accuracy results for the four models.</p>
+<p><a href="#tbl-gpu-accuracy" class="quarto-xref">Table 8</a> reports the accuracy results from the two evaluation years. The naïve model achieved the lowest RMSE (0.441 million GPU-hours) and MAE (0.353 million GPU-hours), followed by drift, log-linear trend and linear trend.</p>
 <div class="cell">
 <div id="tbl-gpu-accuracy" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -3183,12 +3178,9 @@ Table 8: Exploratory rolling-origin forecast accuracy for GPU demand, 2025–20
 </figure>
 </div>
 </div>
-<p>The naïve benchmark achieved the lowest RMSE (0.441 million GPU-hours) and MAE (0.353 million GPU-hours), followed by drift, log-linear trend and linear trend. Unlike the overall HPC and CPU evaluations, the simpler benchmark performed better than the models estimating historical growth.</p>
-<p>Figure 7 shows that all four models underestimated GPU demand in 2026. The naïve model projected approximately 2.39 million GPU-hours, compared with the estimated value of 3.00 million GPU-hours. The trend models also failed to anticipate this increase. This illustrates the difficulty of forecasting GPU demand when the historical series contains substantial changes over a short period.</p>
-<p>The accuracy rankings should nevertheless be interpreted cautiously. Only two forecast errors were available for each model, and the underlying GPU-hour series includes derived estimates and conversion assumptions. Consequently, the evaluation does not provide sufficient evidence to establish that the naïve model will remain the most accurate approach over a longer forecast horizon.</p>
-<p>The naïve model was retained as a reference because of its lower evaluation errors. Linear and log-linear models were also retained to examine the consequences of different growth assumptions. However, none of these models was selected as a reliable central GPU forecast.</p>
-<p>Following the project review, GPU projections were treated as exploratory and excluded from the initial national HPC planning scenarios. Those scenarios instead use the selected overall HPC demand projection and historical Field of Research allocation shares. This distinction prevents the more uncertain GPU estimates from being presented as independently validated planning requirements.</p>
-<p>The exploratory GPU projections are presented in Section 4.3 to show how different modelling assumptions affect the results through 2030. More consistent historical records of GPU requests, allocations and usage, together with validated conversion factors, would be needed to support reliable GPU-specific forecasting.</p>
+<p>These rankings are based on only two forecast errors per model. The GPU series also includes converted and estimated observations, so the results do not establish which method would perform best over a longer period. In particular, the naïve model’s lower evaluation errors do not imply that GPU demand will remain constant through 2030.</p>
+<p>The naïve model was retained as a reference, while linear and log-linear trends were used to examine alternative growth assumptions. No model was selected as a central GPU forecast. GPU projections were therefore treated as exploratory and excluded from the initial national HPC planning scenarios, which use the overall HPC demand forecast and historical Field of Research allocation shares.</p>
+<p>Section 4.3 presents the exploratory GPU projections through 2030.</p>
 </section>
 <section id="residual-diagnostics" class="level3" data-number="4.2.4">
 <h3 data-number="4.2.4" class="anchored" data-anchor-id="residual-diagnostics"><span class="header-section-number">4.2.4</span> Residual Diagnostics</h3>
