@@ -1022,8 +1022,6 @@ ggplot() +
   )
 ```
 
-### GPU Demand and Allocation
-
 @fig-historical-gpu shows historical GPU requests and allocations, including alternative conversion assumptions for 2014–2021 and the shorter 2022–2026 forecasting sample.
 
 Earlier GPU records lacked consistent GPU-hour measures and system-specific conversion information. Baseline and low–high estimates were therefore constructed using documented assumptions. The shaded range represents differences between these historical conversion assumptions, not statistical confidence intervals. Because these estimates depend heavily on the assumptions, they were excluded from model evaluation.
@@ -2164,13 +2162,9 @@ The diagnostics did not identify statistically significant residual autocorrelat
 
 ### Overall HPC Demand
 
-The rolling-origin evaluation in Section 4.2.1 identified the linear trend as the most accurate of the four models for overall HPC demand. The model was therefore fitted to the complete 2014–2026 series to generate the central projections for 2027–2030.
+The linear trend model was selected for the central HPC demand forecast based on its rolling-origin accuracy (Section 4.2.1). It was fitted to the 2014–2026 series to project demand through 2030. Three alternatives were also examined: a linear model excluding 2026 and two log-linear models fitted with and without 2026. These specifications assess sensitivity to the latest observation and the assumed growth pattern.
 
-Three alternative specifications were retained to examine how the projections depend on the historical observations and growth assumptions. The first excludes 2026 from the linear model to assess the influence of the latest observation. The other two use log-linear trends, fitted with and without 2026, to examine the implications of continued proportional growth.
-
-This comparison is important because recorded HPC requests increased sharply in 2026. Including this observation increased the estimated annual linear growth from approximately 144,357 to 161,992 kSU, or 12.2%. The alternative specifications therefore assess the sensitivity of the 2030 projections to both the latest observation and the assumed growth pattern.
-
-@fig-hpc-forecast-scenarios connects the historical observations with the four projected trajectories. The 2030 values are labelled to show the differences between the forecasting assumptions.
+@fig-hpc-forecast-scenarios compares the historical observations and four projected trajectories.
 
 ```{r}
 #| label: fig-hpc-forecast-scenarios
@@ -2423,24 +2417,17 @@ ggplot() +
   )
 ```
 
-The central linear model projects approximately 2.02 million kSU in 2027, increasing by around 161,992 kSU annually to reach 2.50 million kSU in 2030. This represents an increase of approximately 11.6% from the reconstructed 2026 demand of 2.24 million kSU.
+The central linear model projects HPC demand of approximately 2.02 million kSU in 2027 and 2.50 million kSU in 2030, increasing by 161,992 kSU annually. Excluding 2026 reduces the 2030 projection to approximately 2.29 million kSU, or 210,000 kSU below the central estimate.
 
-Excluding the 2026 observation reduces the 2030 projection to approximately 2.29 million kSU, around 210,000 kSU below the central forecast. This difference shows that the latest observation influences the estimated growth rate, even when the same linear model is used.
+The full-history log-linear model projects approximately 6.48 million kSU in 2030. This substantially higher estimate reflects its assumption of continued proportional growth rather than a constant annual increase. However, the log-linear model had the highest forecast errors in Section 4.2.1 and was retained as a sensitivity scenario rather than a central forecast or validated upper bound.
 
-The full-history log-linear model produces a substantially higher 2030 projection of approximately 6.48 million kSU. Unlike the linear model, which assumes a constant absolute annual increase, the log-linear model extends proportional growth. As a result, its projected annual increases become progressively larger.
-
-However, the log-linear model recorded the highest RMSE and MAE during the rolling-origin evaluation in Section 4.2.1. Its higher projection is therefore retained to illustrate sensitivity to the growth assumption, rather than as an equally supported central forecast or a validated upper limit.
-
-For planning purposes, the difference between the linear and log-linear projections is more substantial than the difference caused by excluding 2026. This indicates that the assumed growth pattern has a greater influence on the 2030 estimate than the latest observation alone. The linear model is therefore retained as the central reference, while the alternative trajectories illustrate how different assumptions affect the longer-term outlook.
-
-These projections describe recorded HPC requests rather than unconstrained researcher demand. They provide a basis for considering future national computing requirements, but should not be interpreted as precise estimates of the capacity that facilities will need to provide. The statistical uncertainty around the selected central forecast is examined separately in Section 4.3.2.
+The results show that the choice between linear and proportional growth has a greater effect on the 2030 projection than excluding the 2026 observation. The linear model remains the central reference, while the alternatives illustrate uncertainty arising from model assumptions. All projections represent recorded HPC requests, not precise future infrastructure capacity requirements.
 
 #### Prediction Intervals and Forecast Uncertainty
 
-The differences between forecasting scenarios describe uncertainty arising from model selection and historical data. Statistical prediction intervals address a different question: how much future annual demand might vary around the selected linear trend if the fitted model and its error assumptions remain appropriate.
+The alternative forecasting scenarios show how projections change under different model assumptions. Statistical prediction intervals instead estimate the range of future annual demand under the selected linear model and its error assumptions.
 
-Figure @fig-hpc-forecast-intervals shows the central projection with 80% and 95% model-based prediction intervals.
-
+@fig-hpc-prediction-intervals shows the central HPC forecast with 80% and 95% prediction intervals.
 
 ```{r}
 #| label: fig-hpc-forecast-intervals
@@ -2575,15 +2562,9 @@ ggplot(
   )
 ```
 
-The selected linear model projects approximately 2.50 million kSU in 2030, with a 95% prediction interval of approximately 1.98–3.03 million kSU. The interval is substantially wider than the annual increase estimated by the model, showing that uncertainty remains important even when the central trend is relatively stable.
+The central model projects approximately 2.50 million kSU in 2030, with a 95% prediction interval of 1.98–3.03 million kSU. This interval reflects uncertainty around an individual future annual observation, conditional on the fitted linear trend.
 
-These intervals depend on the linear regression assumptions and the historical series used to fit the model. They do not account for possible changes in computing technology, reporting practices, research funding or the underlying relationship between requested and actual computing requirements.
-
-The residual diagnostics in Section 4.2.4 provide some evidence about the fitted model's assumptions, but the short annual series limits how confidently these assumptions can be extended through 2030.
-
-Overall, the linear model provides a transparent central estimate of approximately 2.50 million kSU for national HPC planning in 2030. The model excluding 2026 demonstrates sensitivity to the latest observation, while the log-linear alternatives show how different growth assumptions can produce much larger projections. These results should be interpreted as conditional planning estimates rather than precise future capacity requirements.
-
-
+The intervals do not account for alternative growth models, changes in computing technology or reporting practices, or demand that is not captured by recorded requests. The residual diagnostics in Section 4.2.4 also identified limitations in assessing the model's error assumptions using only 13 annual observations. The intervals should therefore not be treated as definitive bounds on future national HPC demand.
 
 ### CPU Demand
 
