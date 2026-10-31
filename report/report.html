@@ -2966,14 +2966,10 @@ Figure 4: HPC allocation composition by Field of Research, 2014–2026. The low
 </section>
 <section id="forecast-model-evaluation" class="level2" data-number="4.2">
 <h2 data-number="4.2" class="anchored" data-anchor-id="forecast-model-evaluation"><span class="header-section-number">4.2</span> Forecast Model Evaluation</h2>
-<p>The four forecasting models were evaluated before generating demand projections to 2030. The purpose was to assess whether estimating a historical trend improved one-year-ahead predictions compared with the naïve and drift benchmarks.</p>
-<p>An expanding-window rolling-origin evaluation was used. For overall HPC and CPU demand, the first training period covered 2014–2020. Each model was fitted using those observations and used to predict demand in 2021. The training period was then extended by one year, and the process was repeated until 2026. This produced six one-year-ahead forecasts for each model.</p>
-<p>The same four models were evaluated at every forecast origin: naïve, drift, linear trend and log-linear trend. At each stage, only observations available before the forecast year were used. Forecast accuracy was assessed using Root Mean Squared Error (RMSE) and Mean Absolute Error (MAE), as described in Chapter 3.</p>
-<p>The evaluation was conducted separately for overall HPC, CPU and GPU demand because their measurement units and historical coverage differ.</p>
+<p>The naïve, drift, linear trend and log-linear trend models were compared using one-year-ahead rolling-origin forecasts. Overall HPC and CPU accuracy was evaluated over 2021–2026, while GPU accuracy was evaluated over 2025–2026. Results are reported separately because the three demand measures use different units and historical periods.</p>
 <section id="overall-hpc-demand" class="level3" data-number="4.2.1">
 <h3 data-number="4.2.1" class="anchored" data-anchor-id="overall-hpc-demand"><span class="header-section-number">4.2.1</span> Overall HPC Demand</h3>
-<p>The overall HPC evaluation compared four forecasting methods using six one-year-ahead predictions from 2021 to 2026. Each prediction was generated using an expanding training window, starting with observations from 2014–2020. This allowed the models to be compared on their ability to predict new observations rather than their fit to the complete historical series.</p>
-<p>Figure <a href="#fig-hpc-cv" class="quarto-xref">Figure 5</a> presents the observed HPC demand alongside the forecasts from each model. The four panels use the same vertical scale to allow direct comparison.</p>
+<p><a href="#fig-hpc-cv" class="quarto-xref">Figure 5</a> compares observed HPC demand with one-year-ahead forecasts from the four models. The naïve model generally underestimated demand during periods of growth, while drift and linear trend followed the observed series more closely. The log-linear model tended to overestimate demand, particularly after 2022. However, all four models underestimated the sharp increase in 2026.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-hpc-cv" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -2988,10 +2984,7 @@ Figure 5: Observed overall HPC demand and rolling-origin one-year-ahead forecas
 </div>
 </div>
 </div>
-<p>The four models showed different forecasting patterns. The naïve model tended to underestimate demand during periods of growth because it used the previous year’s observation. Drift generally followed the upward trend more closely, while the linear model produced forecasts that were relatively close to observed demand, particularly from 2023 to 2025.</p>
-<p>The log-linear model behaved differently. Its forecasts were higher than observed demand in most evaluation years, with the difference becoming more pronounced after 2022. This suggests that extending the historical proportional growth rate was less suitable for predicting annual HPC demand over the evaluation period.</p>
-<p>The largest forecasting challenge occurred in 2026. Recorded demand reached approximately 2.24 million kSU, compared with 1.56 million kSU in 2025. This represents an estimated increase of 43.3%, although the calculation depends on the reconstructed 2025 value. All four models underestimated the 2026 observation, including the linear model. The result shows that even the better-performing methods struggled to anticipate a large increase using historical observations alone.</p>
-<p><a href="#tbl-hpc-accuracy" class="quarto-xref">Table 6</a> summarises forecast accuracy across the six evaluation years.</p>
+<p><a href="#tbl-hpc-accuracy" class="quarto-xref">Table 6</a> summarises forecast accuracy over 2021–2026. The linear trend achieved the lowest RMSE (290,898 kSU) and MAE (198,295 kSU). Its RMSE was 23.2% lower than naïve and 7.5% lower than drift. The log-linear model performed worst, with an RMSE of 511,614 kSU.</p>
 <div id="tbl-hpc-accuracy" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-hpc-accuracy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -3037,11 +3030,8 @@ Table 6: Rolling-origin forecast accuracy for overall HPC demand, 2021–2026.
 </div>
 </figure>
 </div>
-<p>The linear trend achieved the lowest RMSE of 290,898 kSU and MAE of 198,295 kSU. Its RMSE was approximately 23.2% lower than the naïve benchmark and 7.5% lower than drift. Although linear performed best overall, the relatively small difference from drift suggests that its improvement over a simple historical-growth benchmark was modest.</p>
-<p>The log-linear model recorded the highest RMSE of 511,614 kSU and MAE of 466,991 kSU. Its larger errors indicate that the proportional-growth assumption was less effective for one-year-ahead forecasting during 2021–2026, despite producing a stronger upward trajectory.</p>
-<p>Based on these results, the linear trend was selected as the central forecasting model for overall HPC demand. However, the evaluation was limited to six forecast years, and the final model was sensitive to the latest observation. Including 2026 increased the estimated annual trend from approximately 144,357 to 161,992 kSU, an increase of 12.2%.</p>
-<p>The model excluding 2026 was therefore retained for sensitivity analysis. The log-linear model was also retained as an alternative scenario to examine the implications of continued proportional growth, rather than as a preferred forecasting method.</p>
-<p>The evaluation supports using the linear model as the central reference, but its one-year-ahead accuracy does not guarantee reliable projections through 2030. Section 4.3 examines how different growth assumptions and the inclusion of 2026 affect the resulting forecasts.</p>
+<p>The linear trend was selected as the central HPC forecasting model because it had the lowest evaluation errors and assumes a constant absolute annual increase. However, including 2026 increased the fitted annual trend from approximately 144,357 to 161,992 kSU (12.2%). The model excluding 2026 was therefore retained for sensitivity analysis, while the log-linear model was retained to examine continued proportional growth.</p>
+<p>The evaluation is based on six one-year-ahead forecasts. It does not establish how accurately the selected model will predict demand through 2030. Section 4.3 compares the resulting projections and alternative growth assumptions.</p>
 </section>
 <section id="cpu-demand" class="level3" data-number="4.2.2">
 <h3 data-number="4.2.2" class="anchored" data-anchor-id="cpu-demand"><span class="header-section-number">4.2.2</span> CPU Demand</h3>
