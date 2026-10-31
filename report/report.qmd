@@ -1462,11 +1462,7 @@ The evaluation is based on six one-year-ahead forecasts. It does not establish h
 
 ### CPU Demand
 
-CPU demand was evaluated using the same expanding-window procedure as overall HPC demand. The first training sample covered 2014–2020, followed by six one-year-ahead forecasts for 2021–2026. All four models were fitted separately at each forecast origin, using CPU demand expressed in millions of core-hours.
-
-The CPU series presents a different forecasting challenge from overall HPC demand. Historical CPU demand increased over the full period but also showed substantial year-to-year changes, particularly around 2020–2023. As discussed in Section 4.1.2, transitions from Raijin to Gadi and from Magnus to Setonix may affect comparisons between years, although these changes cannot be established as the direct causes of the observed fluctuations.
-
-@fig-cpu-cv compares the observed CPU demand with the one-year-ahead predictions from each model. The four panels use the same vertical scale.
+@fig-cpu-cv compares observed CPU demand with one-year-ahead forecasts from the four models over 2021–2026. The naïve and drift models struggled with changes in demand, particularly the decline in 2022. The linear trend produced forecasts relatively close to observed demand during 2023–2025 but underestimated demand in the later evaluation years. The log-linear model generally overestimated demand from 2022 to 2025, although its 2026 forecast was closer to the observed value.
 
 ```{r}
 #| label: fig-cpu-cv
@@ -1656,11 +1652,7 @@ ggplot(
   )
 ```
 
-he four models responded differently to changes in CPU demand during the evaluation period. The naïve model generally underestimated demand during periods of growth, while the drift model produced larger errors when the direction of demand changed. Both models struggled to anticipate the decline in 2022, following the higher recorded demand in 2021.
-
-The linear trend produced forecasts that were relatively close to observed demand in 2023–2025, although it consistently underestimated demand during the later evaluation years. The log-linear model generally overestimated demand from 2022 to 2025, but its forecast for 2026 was much closer to the observed value. These differences explain why neither trend model consistently outperformed the other across individual years.
-
-@tbl-cpu-accuracy summarises the results across the six evaluation years.
+@tbl-cpu-accuracy reports forecast accuracy across the six evaluation years. The linear trend achieved the lowest RMSE (157.72 million core-hours), while the log-linear model achieved the lowest MAE (133.74 million core-hours). The difference in RMSE between the two models was approximately 1.5%, compared with 3.5% for MAE. Neither model performed best on both measures.
 
 | Model | RMSE (million core-hours) | MAE (million core-hours) | RMSE rank |
 |---|---:|---:|---:|
@@ -1671,18 +1663,9 @@ The linear trend produced forecasts that were relatively close to observed deman
 
 : Rolling-origin forecast accuracy for CPU demand, 2021–2026. {#tbl-cpu-accuracy}
 
-The linear trend achieved the lowest RMSE of 157.72 million core-hours, while the log-linear model achieved the lowest MAE of 133.74 million core-hours. The linear model's RMSE was approximately 1.5% lower than log-linear, whereas the log-linear model's MAE was approximately 3.5% lower than linear.
+The linear trend was selected as the central CPU forecasting model because it had the lowest RMSE and assumes a constant annual increase in demand. The log-linear model was retained as an alternative because its MAE was lower and its proportional-growth assumption produces a different forecast trajectory through 2030.
 
-These results show that the preferred model depends on how forecast errors are measured. Linear performed slightly better when larger errors received greater weight, while log-linear achieved a lower average absolute error. Neither model clearly dominated the other.
-
-The choice between these models becomes more important when projecting demand through 2030. The linear model assumes a constant absolute annual increase, whereas log-linear assumes continued proportional growth. Their similar short-term accuracy does not imply that their longer-term projections will be similar.
-
-The linear trend was selected as the central CPU forecasting model because it achieved the lowest RMSE and provided a more interpretable assumption for long-term planning. The log-linear model was retained as an alternative scenario because of its competitive historical accuracy, particularly its performance in 2026.
-
-The latest observation also affected the fitted linear trend. Including 2026 increased the estimated annual growth from approximately 72.41 million to 81.01 million core-hours, an increase of 11.9%. This indicates that the central forecast remains sensitive to individual observations in the historical series.
-
-Overall, the CPU results provide less decisive evidence for choosing between linear and log-linear growth than the overall HPC results. Section 4.3 therefore compares the central CPU projection with alternative growth assumptions and the sensitivity model excluding 2026.
-
+Including the 2026 observation increased the estimated annual growth rate in the linear model from 72.41 million to 81.01 million CPU core-hours (11.9%). This shows that the fitted trend is sensitive to the latest observation. The model excluding 2026 was retained to assess how this difference affects the projections through 2030 (Section 4.3).
 
 ### GPU Demand
 
