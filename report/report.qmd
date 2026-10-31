@@ -453,7 +453,7 @@ stopifnot(
 
 ### Historical HPC Demand and Allocation
 
-Figure @fig-historical-hpc shows historical demand and allocation between 2014 and 2026.
+@fig-historical-hpc shows historical HPC requests and allocations from 2014 to 2026.
 
 ```{r}
 #| label: fig-historical-hpc
@@ -609,19 +609,11 @@ ggplot(hpc_plot, aes(x = year)) +
   )
 ```
 
-Recorded HPC demand increased from 131,356 kSU in 2014 to 2,242,817 kSU in 2026, while allocations increased from 83,505 kSU to 872,288 kSU. Although both measures increased, demand grew more rapidly, resulting in a widening gap between requested and allocated resources.
+Recorded requests increased from 131,356 kSU in 2014 to 2,242,817 kSU in 2026, while allocations increased from 83,505 to 872,288 kSU. Between 2023 and 2026, requests grew by approximately 68%, compared with 6% for allocations. The request–allocation gap reached 1.37 million kSU in 2026, and the fulfilment rate fell from 56.0% in 2025 to 38.9%.
 
-The difference became particularly pronounced during 2023–2026. Over this period, recorded requests increased by approximately 68%, compared with only 6% for allocations. By 2026, the gap had reached approximately 1.37 million kSU, while the fulfilment rate declined from 56.0% in 2025 to 38.9% in 2026. This indicates increasing pressure on the computing resources available through the allocation scheme.
-
-The historical pattern also requires consideration of changes in computing systems and reporting practices. Raijin transitioned to Gadi around 2019–2020, while Magnus transitioned to Setonix around 2022–2023. These changes introduced differences in resource accounting and may affect comparisons between reporting periods. They should not, however, be treated as confirmed explanations for the observed changes in demand.
-
-The increase in 2026 also depends partly on the reconstructed 2025 value. The estimated annual demand growth of 43.3% should therefore be interpreted with this limitation in mind. In addition, the reported 2026 allocation figure excludes 12,000 kSU associated with Setonix Q.
-
-Overall, the results indicate that recorded HPC requests have grown faster than allocations, particularly in recent years. However, the request–allocation gap measures pressure within the observed allocation system and should not be interpreted as a complete estimate of unmet national research demand.
+The 2026 increase in requests was approximately 43.3% relative to the reconstructed 2025 value. Changes in computing systems and accounting practices may also affect historical comparisons, particularly around the Raijin–Gadi and Magnus–Setonix transitions. The 2026 allocation figure excludes 12,000 kSU associated with Setonix Q. The observed gap indicates pressure on allocated resources, but does not measure all unmet national research demand.
 
 ### CPU Demand and Allocation
-
-CPU resources were analysed separately from aggregate HPC demand because service-unit accounting differs across computing systems.
 
 ```{r}
 #| label: fig-historical-cpu
@@ -787,19 +779,13 @@ ggplot(cpu_plot, aes(x = year)) +
   )
 ```
 
-Figure @fig-historical-cpu shows CPU demand generally increased between 2014 and 2026, although the historical series shows several sharp changes. The most noticeable fluctuations occurred around 2019–2020 and 2021–2022, followed by sustained growth from 2023. By 2026, estimated CPU demand reached approximately 1.24 billion core-hours, while allocations remained close to 520 million core-hours. The widening difference indicates that requested CPU resources increased faster than the resources allocated.
+@fig-historical-cpu shows historical CPU requests and allocations from 2014 to 2026, including converted and estimated values.
 
-Two major system transitions are relevant to interpreting these changes. NCI transitioned from Raijin to Gadi around 2019–2020, while Pawsey transitioned from Magnus to Setonix around 2022–2023. These changes introduced different computing architectures and service-unit accounting rules. They may contribute to discontinuities in the reconstructed CPU series, but the available data do not establish them as direct causes of the observed fluctuations.
+Estimated CPU requests reached approximately 1.24 billion core-hours in 2026, compared with allocations of approximately 519 million core-hours. Requests increased substantially after 2022, while allocations changed relatively little between 2023 and 2026.
 
-The historical CPU values also contain estimates and system-specific conversions, particularly in earlier years. For example, some 2019/20 records were converted using a documented Gadi CPU-equivalent assumption because a reliable CPU and GPU breakdown was unavailable. Consequently, changes between adjacent years should not be interpreted as exact changes in physical computing demand.
-
-Despite these limitations, the longer-term pattern is clear: estimated CPU requests increased substantially, while allocations did not increase at the same rate. This supports analysing CPU demand separately from aggregate HPC service units and provides the historical basis for the CPU forecasting models evaluated in Section 4.2.
+The reconstructed series contains sharp changes around 2019–2022, when Raijin was replaced by Gadi and Magnus by Setonix. These transitions involved different computing systems and accounting rules, but the available records do not establish them as the causes of the fluctuations. Some 2019/20 observations also relied on a Gadi CPU-equivalent assumption because the CPU/GPU breakdown was unavailable. The long-term increase in estimated CPU requests is therefore more informative than individual year-to-year changes.
 
 ### GPU Demand and Allocation
-
-GPU demand was examined separately because the historical records have more limited coverage and require additional conversion assumptions.
-
-Figure @fig-historical-gpu retains the baseline series and historical low–high conversion scenarios from the technical analysis.
 
 ```{r}
 #| label: fig-historical-gpu
@@ -1036,24 +1022,17 @@ ggplot() +
   )
 ```
 
-GPU demand was analysed separately because historical reporting was less consistent than for CPU resources. Earlier publications did not provide sufficiently detailed GPU-hour information to construct a comparable series across the full 2014–2026 period. Some records were reported in service units, while others lacked the system-specific information needed for reliable conversion into GPU-hours.
+### GPU Demand and Allocation
 
-To examine possible historical patterns, the analysis developed baseline and low–high conversion scenarios for 2014–2021. These scenarios used documented working assumptions where direct conversion factors or resource breakdowns were unavailable. The purpose was to assess how different assumptions could affect the reconstructed historical series, rather than to present the estimates as verified GPU demand. The shaded areas in @fig-historical-gpu therefore represent alternative historical conversion assumptions, not statistical confidence intervals.
+@fig-historical-gpu shows historical GPU requests and allocations, including alternative conversion assumptions for 2014–2021 and the shorter 2022–2026 forecasting sample.
 
-The reconstructed series suggests that GPU requirements may have increased before 2022. However, the size of this increase is sensitive to the conversion assumptions. The historical estimates were retained in the descriptive analysis to document the available evidence and illustrate the limitations of reconstructing GPU demand from incomplete records. Removing them entirely would conceal an important source of uncertainty identified during data preparation.
+Earlier GPU records lacked consistent GPU-hour measures and system-specific conversion information. Baseline and low–high estimates were therefore constructed using documented assumptions. The shaded range represents differences between these historical conversion assumptions, not statistical confidence intervals. Because these estimates depend heavily on the assumptions, they were excluded from model evaluation.
 
-For forecasting, the analysis used only the 2022–2026 observations. This period provided a more consistent basis for examining GPU demand following the introduction of Setonix, although some values still required conversion or estimation. Restricting the modelling sample reduced dependence on the less supported historical assumptions but left only five annual observations.
+The 2022–2026 series provides a more consistent, although still partly estimated, basis for forecasting. Estimated GPU requests reached approximately 3.00 million GPU-hours in 2026, compared with allocations of approximately 1.25 million GPU-hours. Official Setonix GPU requests also increased by approximately 123% in service units between 2023 and 2026, although this percentage cannot be interpreted as equivalent growth in GPU-hours.
 
-The recent series shows that estimated GPU demand increased to approximately 3.00 million GPU-hours by 2026, while allocations remained around 1.25 million GPU-hours. The official Setonix GPU requests also increased by approximately 123% in service units between 2023 and 2026, providing separate evidence of growing requests. However, growth measured in service units should not be treated as directly equivalent to growth in physical GPU-hours.
-
-Overall, the GPU analysis indicates increasing demand but greater measurement uncertainty than for aggregate HPC or CPU resources. The historical scenarios remain useful for explaining the data limitations, while the shorter forecasting sample provides a more defensible, although still limited, basis for projecting GPU demand through 2030.
+Estimated GPU requests increased from 2023 to 2026, but the five-year modelling sample and reliance on converted observations limit the reliability of forecasts through 2030.
 
 ### Field of Research Allocation Composition
-
-The FoR analysis examines how HPC allocations were distributed across research disciplines.
-
-To support longitudinal comparison, the reported research fields were consolidated into nine analytical groups. These groupings were developed for the project and do not represent official one-to-one conversions between FoR 2008 and FoR 2020.
-
 
 ```{r}
 #| label: fig-for-composition
@@ -1259,18 +1238,13 @@ p_period <- ggplot(
   )
 ```
 
-The distribution of HPC allocations across research fields varied considerably between 2014 and 2026. The annual composition shows changes in the relative importance of several fields, particularly Engineering and Technology, Earth and Environmental Sciences, Physical Sciences and Chemical Sciences. These four groups accounted for most of the reported allocations across the historical period.
+@fig-for-composition shows the annual distribution of HPC allocations across nine analytical Field of Research (FoR) groups and compares average annual shares between 2014–2020 and 2021–2026.
 
-During 2014–2020, Earth and Environmental Sciences had the largest average annual allocation share, at approximately 32%. Chemical Sciences accounted for around 19%, while Physical Sciences and Engineering and Technology each represented approximately 17%. Earth and Environmental Sciences were particularly prominent in 2014 and 2015, accounting for approximately 42% and 39% of annual allocations, respectively.
+During 2014–2020, Earth and Environmental Sciences accounted for approximately 32% of average annual allocations, followed by Chemical Sciences at 19%. Physical Sciences and Engineering and Technology each represented approximately 17%. In 2021–2026, Engineering and Technology became the largest group at approximately 35%, followed by Physical Sciences at 22%, Chemical Sciences at 18%, and Earth and Environmental Sciences at 14%.
 
-The composition was different during 2021–2026. Engineering and Technology became the largest group, accounting for approximately 35% of average annual allocations and reaching approximately 41% in 2022. Physical Sciences represented around 22%, followed by Chemical Sciences at 18% and Earth and Environmental Sciences at 14%. This indicates a substantially different allocation profile in the recent reporting period.
+These differences should be interpreted alongside the change from FoR 2008 to FoR 2020 classifications and the inclusion of Pawsey-wide reporting in 2016/17. The nine analytical groups support comparison but cannot eliminate differences in classification or reporting scope.
 
-The concentration of allocations in particular fields is relevant to national HPC planning because different research disciplines may require different combinations of computing resources. For example, the prominence of Engineering and Technology in recent allocations provides context for examining computing-intensive engineering workloads. However, the aggregated FoR records do not identify which projects or technologies caused these patterns.
-
-The comparison between periods also requires caution. The earlier observations were based largely on FoR 2008 classifications, while the recent period uses FoR 2020. The nine analytical groups were developed to support comparison, but the mapping cannot fully eliminate differences between the classification systems. In addition, the 2016/17 records include Pawsey-wide reporting, which differs in scope from the NCMAS allocation records used for other years. Therefore, the observed changes should not be interpreted as direct evidence of equivalent changes in national research priorities.
-
-The FoR analysis describes the distribution of allocated resources rather than the distribution of independently observed demand. Nevertheless, the differences between the earlier and recent periods provide a useful basis for the allocation-share scenarios developed in Section 4.4. These scenarios examine how alternative historical compositions would affect the indicative distribution of projected HPC demand through 2030.
-
+The results describe allocation shares rather than independently observed demand by research field. The earlier and recent distributions are used to construct alternative FoR scenarios in Section 4.4.
 
 ## Forecast Model Evaluation
 
