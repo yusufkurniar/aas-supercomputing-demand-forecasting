@@ -2568,11 +2568,9 @@ The intervals do not account for alternative growth models, changes in computing
 
 ### CPU Demand
 
-The rolling-origin evaluation in Section 4.2.2 showed that the linear and log-linear models performed similarly when forecasting CPU demand. The linear model achieved the lowest RMSE of 157.72 million core-hours, while the log-linear model achieved the lowest MAE of 133.74 million core-hours. The linear trend was selected as the central model because it provided competitive accuracy without assuming continued compounded growth.
+The linear trend model was fitted to the 2014–2026 CPU demand series to project demand through 2030. Three alternatives were examined: a linear model excluding 2026 and two log-linear models fitted with and without 2026. The linear model was retained as the central forecast based on its slightly lower RMSE in Section 4.2.2.
 
-The selected model was fitted to the complete 2014–2026 CPU series to generate projections for 2027–2030. Three alternative specifications were retained: a linear model excluding 2026, and log-linear models fitted with and without 2026. These alternatives examine the effects of the latest observation and different growth assumptions.
-
-The 2026 observation is important because including it increased the estimated annual linear growth from approximately 72.41 million to 81.01 million core-hours, or 11.9%. With only 13 annual observations, the latest data can influence the estimated trend and projections several years ahead. @fig-cpu-forecast-scenarios compares the historical CPU demand series with the four projected trajectories.
+@fig-cpu-forecast-scenarios compares the historical CPU demand series with the four projected trajectories.
 
 ```{r}
 #| label: fig-cpu-forecast-scenarios
@@ -2800,23 +2798,17 @@ ggplot() +
   )
 ```
 
-The central linear model projects CPU demand of approximately 1.13 billion core-hours in 2027, increasing by around 81.01 million core-hours annually to reach 1.37 billion core-hours in 2030. This represents an increase of approximately 10.9% from the reconstructed 2026 CPU demand.
+The central linear model projects approximately 1.13 billion CPU core-hours in 2027, increasing by 81.01 million core-hours annually to reach 1.37 billion in 2030. This is approximately 10.9% above the reconstructed 2026 demand.
 
-Excluding the 2026 observation reduces the 2030 projection to approximately 1.26 billion core-hours, around 106 million core-hours below the central forecast. This difference indicates that the latest observation has a noticeable influence on the fitted trend. With only 13 annual observations, changes in the latest data can affect projections several years ahead.
+Excluding 2026 reduces the 2030 projection to approximately 1.26 billion core-hours, around 106 million below the central forecast. The difference reflects the influence of the latest observation on the fitted linear trend.
 
-The full-history log-linear model produces a substantially higher projection of approximately 2.48 billion core-hours in 2030. This is approximately 81% higher than the central linear projection for the same year, despite the two models achieving similar accuracy during the one-year-ahead evaluation period. The difference arises because the log-linear model extends proportional growth, while the linear model assumes a constant absolute annual increase.
+The full-history log-linear model projects approximately 2.48 billion core-hours in 2030, around 81% above the central forecast. Although the two models achieved similar one-year-ahead accuracy, their projections differ substantially because log-linear growth compounds over time, while the linear model adds a constant annual amount.
 
-The two log-linear specifications also produce relatively similar projections when 2026 is included or excluded. This contrasts with the linear models, where excluding 2026 has a more noticeable effect on the 2030 projection. The comparison suggests that the log-linear CPU projections are less sensitive to the latest observation, although both depend on the assumption of continued proportional growth.
-
-Unlike overall HPC demand, the log-linear CPU model performed competitively during rolling-origin evaluation. Its RMSE was approximately 1.5% higher than the linear model, while its MAE was approximately 3.5% lower. Therefore, the higher log-linear projection cannot be dismissed on the basis of historical forecast accuracy alone.
-
-However, similar one-year-ahead accuracy does not establish that proportional growth will continue through 2030. The difference between the linear and log-linear projections illustrates how model assumptions become increasingly important over longer forecast horizons.
-
-The linear model was retained as the central planning reference because it achieved the lowest RMSE and provides a more conservative and interpretable projection. The log-linear alternatives were retained to examine the implications of continued proportional growth rather than treated as equally likely outcomes.
+The log-linear models were retained as alternative scenarios because of their competitive evaluation accuracy. However, the available observations do not establish whether proportional growth will continue through 2030. The linear projection remains the central reference, while the alternatives show how the forecast changes under different growth assumptions.
 
 #### CPU Prediction Intervals
 
-The alternative CPU projections illustrate uncertainty associated with model selection and the inclusion of the 2026 observation. Prediction intervals address a different source of uncertainty by estimating how future observations may vary around the selected linear trend, assuming its statistical assumptions remain appropriate.
+The alternative CPU forecasts show the effects of model selection and excluding 2026. Prediction intervals instead describe uncertainty around future annual observations under the selected linear model.
 
 @fig-cpu-forecast-intervals presents the central CPU forecast with 80% and 95% prediction intervals for 2027–2030.
 
@@ -2937,16 +2929,13 @@ ggplot(
   )
 ```
 
-The selected linear model projects approximately 1,369.90 million CPU core-hours in 2030, with a 95% prediction interval of approximately 974.24–1,765.55 million core-hours. The interval is relatively wide compared with the estimated annual increase of 81.01 million core-hours, indicating substantial uncertainty around individual future observations.
+The central model projects approximately 1.37 billion CPU core-hours in 2030, with a 95% prediction interval of 0.97–1.77 billion core-hours. The interval describes uncertainty around an individual annual observation, conditional on the fitted linear model.
 
-These intervals are conditional on the fitted linear model. They do not account for additional uncertainty associated with historical resource conversions, changes in computing infrastructure, reporting practices or alternative growth assumptions.
+The full-history log-linear projection of 2.48 billion core-hours lies above this interval. This is not a contradiction: the interval reflects uncertainty within the linear model, whereas the log-linear projection uses a different growth assumption.
 
-The full-history log-linear projection of approximately 2.48 billion core-hours lies well above the central model's 95% prediction interval. This does not invalidate either model. Instead, it demonstrates that a prediction interval calculated from one model does not capture the different outcomes produced by alternative model specifications.
+The intervals do not account for uncertainty in historical resource conversions, changes in computing systems or alternative model specifications. The residual diagnostics in Section 4.2.4 also showed departures from normality in the CPU residuals. These limitations affect how confidently the intervals can be interpreted.
 
-The residual diagnostics in Section 4.2.4 provide additional information about the fitted model assumptions. However, the limited number of annual observations and historical reporting differences mean that the statistical intervals should be interpreted cautiously.
-
-The central CPU forecast provides a reference for assessing future computing demand, while the alternative trajectories show how projections change under different growth assumptions. The large difference between the linear and log-linear projections indicates that planning decisions should consider more than one possible growth path. These CPU estimates should also be interpreted alongside overall HPC demand, rather than added together, because they represent related measures of computing requirements.
-
+CPU projections should be considered alongside overall HPC demand rather than added to it, because the two series represent related computing requirements.
 
 ### GPU Demand
 
