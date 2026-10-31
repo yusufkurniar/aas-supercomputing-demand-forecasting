@@ -2673,10 +2673,8 @@ Table 3: Analytical FoR grouping rules used for longitudinal comparison across 
 <h1 data-number="3"><span class="header-section-number">3</span> Forecasting Methodology</h1>
 <section id="forecasting-framework" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="forecasting-framework"><span class="header-section-number">3.1</span> Forecasting Framework</h2>
-<p>The forecasting analysis was designed to estimate national research supercomputing demand through 2030 using the historical data prepared in Chapter 2.</p>
-<p>Three quantitative demand measures were examined separately: overall High-Performance Computing (HPC) demand in kilo service units (kSU), CPU demand in core-hours and GPU demand in GPU-hours. These measures have different accounting conventions and historical coverage, so they were not combined into a single physical computing measure.</p>
-<p>A separate approach was used to examine demand across Fields of Research (FoR). Because consistent historical requests by research field were not available, FoR scenarios were developed using observed allocation shares rather than independent forecasts of researcher demand.</p>
-<p>The analysis used relatively simple forecasting methods because the annual datasets contain few observations. These methods provide interpretable benchmarks and allow different growth assumptions to be compared <span class="citation" data-cites="HyndmanAthanasopoulos2021">(<a href="#ref-HyndmanAthanasopoulos2021" role="doc-biblioref">Hyndman and Athanasopoulos 2021</a>)</span>. Model selection considered historical predictive accuracy, the assumptions underlying future growth and the suitability of each model for projections to 2030.</p>
+<p>Overall HPC demand (kSU), CPU demand (core-hours) and GPU demand (GPU-hours) were forecast separately because their measurement conventions and historical coverage differ. Field of Research (FoR) scenarios were developed from historical allocation shares because consistent field-level demand records were unavailable.</p>
+<p>Given the limited annual observations, the analysis used naïve, drift, linear trend and log-linear trend models to compare different growth assumptions. Model selection considered forecast accuracy, interpretability and suitability for projections through 2030 <span class="citation" data-cites="HyndmanAthanasopoulos2021">(<a href="#ref-HyndmanAthanasopoulos2021" role="doc-biblioref">Hyndman and Athanasopoulos 2021</a>)</span>.</p>
 </section>
 <section id="forecasting-models" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="forecasting-models"><span class="header-section-number">3.2</span> Forecasting Models</h2>
@@ -2768,8 +2766,7 @@ Table 4: Forecasting targets and historical coverage.
 </div>
 </figure>
 </div>
-<p>The overall HPC and CPU series cover 13 annual observations. GPU demand required a shorter modelling period because earlier GPU values were constructed using hypothetical conversion scenarios rather than sufficiently supported resource-level demand observations.</p>
-<p>The GPU analysis therefore focused on 2022–2026. These recent values also include derived estimates and working conversion assumptions, which were considered when interpreting forecast reliability.</p>
+<p>The HPC and CPU series contain 13 annual observations covering 2014–2026. GPU modelling was restricted to five observations from 2022–2026 because earlier GPU-hour estimates relied on less-supported conversion assumptions. The recent GPU series also includes derived values, limiting the reliability of model evaluation and forecasts.</p>
 <p>All models were fitted separately for each demand measure. Forecasts were expressed in the corresponding units rather than combining CPU core-hours and GPU hours.</p>
 </section>
 <section id="model-evaluation" class="level2" data-number="3.4">
@@ -2867,16 +2864,13 @@ Table 5: Historical periods used to construct FoR allocation-share scenarios.
 </div>
 </figure>
 </div>
-<p>For each scenario, the relevant historical allocation shares were used to derive a distribution across the harmonised research-field groups.</p>
-<p>Differences in category coverage were considered when preparing the historical averages. Missing research-field observations were not automatically treated as zero allocations, and scenario shares were normalised where required to produce a complete distribution.</p>
-<p>These scenarios illustrate how alternative assumptions about research-field composition affect the distribution of forecast demand. They do not represent independently validated forecasts of future requests by FoR.</p>
+<p>For each scenario, the allocation share of each FoR group was averaged across available years within the selected period, giving equal weight to each year. Missing group-year observations were not automatically assigned zero. The resulting average shares were normalised to sum to 100% before being applied to the overall HPC demand forecast.</p>
+<p>These scenarios show how different historical allocation patterns affect the distribution of projected HPC demand. They are not independently validated forecasts of future requests by research field.</p>
 </section>
 <section id="forecast-horizon-and-interpretation" class="level2" data-number="3.7">
 <h2 data-number="3.7" class="anchored" data-anchor-id="forecast-horizon-and-interpretation"><span class="header-section-number">3.7</span> Forecast Horizon and Interpretation</h2>
-<p>The final forecasting horizon covers 2027–2030.</p>
-<p>After model evaluation and selection, the selected specifications were fitted to the available historical data to generate future projections. Alternative growth assumptions and sensitivity specifications were retained to examine how the forecasts changed under different modelling choices.</p>
-<p>The resulting projections represent extrapolations of historical demand measures under stated assumptions. They are not direct estimates of future computing capacity requirements, and they do not account explicitly for changes in national research policy, future computing architectures or potential constraints on access to HPC resources.</p>
-<p>The limited number of annual observations, differences in historical accounting and the short GPU series restrict the certainty of the projections. These limitations were considered when comparing model results and interpreting the 2030 scenarios.</p>
+<p>Forecasts were generated for 2027–2030 by fitting the selected models to the available historical observations. Alternative growth assumptions and models excluding 2026 were retained for sensitivity analysis.</p>
+<p>The projections extend historical demand trends rather than estimate future infrastructure capacity requirements directly. They do not explicitly account for changes in research policy, computing technology or access to HPC resources. Historical accounting differences and the limited annual observations, particularly for GPU demand, also restrict forecast reliability.</p>
 </section>
 </section>
 <section id="results" class="level1" data-number="4">
