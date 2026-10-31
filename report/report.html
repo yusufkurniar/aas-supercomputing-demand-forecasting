@@ -2345,7 +2345,6 @@ window.Quarto = {
   <li><a href="#variable-definitions-and-measurement-units" id="toc-variable-definitions-and-measurement-units" class="nav-link" data-scroll-target="#variable-definitions-and-measurement-units"><span class="header-section-number">2.3</span> Variable Definitions and Measurement Units</a></li>
   <li><a href="#compute-resource-conversion" id="toc-compute-resource-conversion" class="nav-link" data-scroll-target="#compute-resource-conversion"><span class="header-section-number">2.4</span> Compute Resource Conversion</a></li>
   <li><a href="#field-of-research-classification-alignment" id="toc-field-of-research-classification-alignment" class="nav-link" data-scroll-target="#field-of-research-classification-alignment"><span class="header-section-number">2.5</span> Field of Research Classification Alignment</a></li>
-  <li><a href="#data-quality-assessment" id="toc-data-quality-assessment" class="nav-link" data-scroll-target="#data-quality-assessment"><span class="header-section-number">2.6</span> Data Quality Assessment</a></li>
   </ul></li>
   <li><a href="#forecasting-methodology" id="toc-forecasting-methodology" class="nav-link" data-scroll-target="#forecasting-methodology"><span class="header-section-number">3</span> Forecasting Methodology</a>
   <ul class="collapse">
@@ -2527,7 +2526,7 @@ R_t = \frac{D_t}{A_t}
 </section>
 <section id="system-specific-conversion-rules" class="level3" data-number="2.4.2">
 <h3 data-number="2.4.2" class="anchored" data-anchor-id="system-specific-conversion-rules"><span class="header-section-number">2.4.2</span> System-Specific Conversion Rules</h3>
-<p>Table <a href="#tbl-conversion-factors" class="quarto-xref">Table 2</a> summarises the principal conversion rules documented in the year-by-year conversion worksheet.</p>
+<p><a href="#tbl-conversion-factors" class="quarto-xref">Table 2</a> summarises the principal conversion rules documented in the year-by-year conversion worksheet.</p>
 <div id="tbl-conversion-factors" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-conversion-factors-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -2609,7 +2608,7 @@ Table 2: Main compute-resource conversion rules recorded in the year-by-year co
 <p>The first stage addressed differences between the FoR 2008-based reporting period (2014–2020) and the FoR 2020-based period (2021–2026) <span class="citation" data-cites="ABSANZSRC2020">(<a href="#ref-ABSANZSRC2020" role="doc-biblioref">Australian Bureau of Statistics 2020</a>)</span>. Selected historical fields were combined into broader reporting categories through <code>for_analysis_group</code>, while the existing standardised categories were retained for the later period.</p>
 <p>The second stage established nine analytical groups for longitudinal comparison through <code>for_visual_group</code>. These groups were informed by the broader research-field categories used in NCI and Pawsey annual reporting. Related categories were combined where reporting detail differed across years, rather than assuming that the two FoR classification systems were directly equivalent.</p>
 <p>Original field labels were cleaned by removing numerical prefixes, standardising case, replacing ampersands and removing excess whitespace. The cleaned labels were then assigned to the nine groups using explicit matching rules.</p>
-<p>Table <a href="#tbl-for-alignment" class="quarto-xref">Table 3</a> summarises the analytical grouping applied to the reported research fields.</p>
+<p><a href="#tbl-for-alignment" class="quarto-xref">Table 3</a> summarises the analytical grouping applied to the reported research fields.</p>
 <div id="tbl-for-alignment" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-for-alignment-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -2671,16 +2670,9 @@ Table 3: Analytical FoR grouping rules used for longitudinal comparison across 
 </div>
 <p>Physical Sciences, Chemical Sciences, Earth and Environmental Sciences, and Engineering and Technology were retained as separate analytical groups. Related subfields were combined within these groups where historical reporting differed in detail.</p>
 <p>The groupings were developed for analytical consistency and do not represent official one-to-one conversions between ANZSRC 2008 and ANZSRC 2020. Original research field labels and allocation values were preserved.</p>
+<p>The 2016/17 Pawsey records contain facility-wide usage information, which differs in scope from the NCMAS allocation data used for other years <span class="citation" data-cites="Pawsey201617">(<a href="#ref-Pawsey201617" role="doc-biblioref">Pawsey Supercomputing Research Centre 2017</a>)</span>. This difference was retained when preparing the historical FoR dataset and is considered when comparing allocation shares across years.</p>
 <p>Validation checks confirmed that all 133 FoR records had the required classification and allocation information, all reported fields were assigned to one of the nine analytical groups, and annual allocation shares summed to 100%.</p>
 <p>The complete mapping rules and validation code are available in the technical Quarto documentation.</p>
-</section>
-<section id="data-quality-assessment" class="level2" data-number="2.6">
-<h2 data-number="2.6" class="anchored" data-anchor-id="data-quality-assessment"><span class="header-section-number">2.6</span> Data Quality Assessment</h2>
-<p>Data quality was assessed using source provenance, reporting scope, measurement-unit comparability and the availability of directly observed values.</p>
-<p>The final datasets contain both directly reported observations and reconstructed historical measures. Their reliability therefore varies across reporting years and resource types.</p>
-<p>A specific comparability issue occurs in the 2016/17 Pawsey records, where facility-wide usage information differs in scope from NCMAS allocation data <span class="citation" data-cites="Pawsey201617">(<a href="#ref-Pawsey201617" role="doc-biblioref">Pawsey Supercomputing Research Centre 2017</a>)</span>. This distinction was retained when preparing the historical FoR dataset.</p>
-<p>Historical conversion assumptions, incomplete CPU/GPU breakdowns and differences between FoR reporting classifications introduce additional uncertainty. These issues were documented rather than removed from the analysis.</p>
-<p>The short annual series and limited GPU coverage also constrain the forecasting methods that can be evaluated. These limitations are considered in the model evaluation and sensitivity analysis presented later in the report.</p>
 </section>
 </section>
 <section id="forecasting-methodology" class="level1" data-number="3">

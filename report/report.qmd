@@ -152,7 +152,7 @@ Where values were already reported in CPU core-hours or GPU hours, they were ret
 
 ### System-Specific Conversion Rules
 
-Table @tbl-conversion-factors summarises the principal conversion rules documented in the year-by-year conversion worksheet.
+@tbl-conversion-factors summarises the principal conversion rules documented in the year-by-year conversion worksheet.
 
 | System or resource | Reporting period | SU per resource-hour | Treatment |
 |---|---|---:|---|
@@ -191,7 +191,7 @@ The second stage established nine analytical groups for longitudinal comparison 
 
 Original field labels were cleaned by removing numerical prefixes, standardising case, replacing ampersands and removing excess whitespace. The cleaned labels were then assigned to the nine groups using explicit matching rules.
 
-Table @tbl-for-alignment summarises the analytical grouping applied to the reported research fields.
+@tbl-for-alignment summarises the analytical grouping applied to the reported research fields.
 
 | Analytical group | Reported fields included |
 |---|---|
@@ -211,21 +211,11 @@ Physical Sciences, Chemical Sciences, Earth and Environmental Sciences, and Engi
 
 The groupings were developed for analytical consistency and do not represent official one-to-one conversions between ANZSRC 2008 and ANZSRC 2020. Original research field labels and allocation values were preserved.
 
+The 2016/17 Pawsey records contain facility-wide usage information, which differs in scope from the NCMAS allocation data used for other years [@Pawsey201617]. This difference was retained when preparing the historical FoR dataset and is considered when comparing allocation shares across years.
+
 Validation checks confirmed that all 133 FoR records had the required classification and allocation information, all reported fields were assigned to one of the nine analytical groups, and annual allocation shares summed to 100%.
 
 The complete mapping rules and validation code are available in the technical Quarto documentation.
-
-## Data Quality Assessment
-
-Data quality was assessed using source provenance, reporting scope, measurement-unit comparability and the availability of directly observed values.
-
-The final datasets contain both directly reported observations and reconstructed historical measures. Their reliability therefore varies across reporting years and resource types.
-
-A specific comparability issue occurs in the 2016/17 Pawsey records, where facility-wide usage information differs in scope from NCMAS allocation data [@Pawsey201617]. This distinction was retained when preparing the historical FoR dataset.
-
-Historical conversion assumptions, incomplete CPU/GPU breakdowns and differences between FoR reporting classifications introduce additional uncertainty. These issues were documented rather than removed from the analysis.
-
-The short annual series and limited GPU coverage also constrain the forecasting methods that can be evaluated. These limitations are considered in the model evaluation and sensitivity analysis presented later in the report.
 
 # Forecasting Methodology
 
