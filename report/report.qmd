@@ -1908,13 +1908,9 @@ Section 4.3 presents the exploratory GPU projections through 2030.
 
 ### Residual Diagnostics
 
-The rolling-origin evaluation assessed how accurately the forecasting models predicted observations excluded from their training samples. Residual diagnostics were then conducted on the selected linear trend models for overall HPC and CPU demand, using the complete 2014–2026 historical series.
+Residual diagnostics were conducted on the selected linear trend models fitted to the full 2014–2026 HPC and CPU demand series. The analysis examined residual autocorrelation using ACF plots and Ljung–Box tests, and departures from normality using Q–Q plots. These checks were used to assess the assumptions underlying the model-based prediction intervals.
 
-The purpose was to examine whether the fitted models left systematic patterns in their errors and whether their residual distributions supported the assumptions used to construct statistical prediction intervals.
-
-Residual autocorrelation was examined using the autocorrelation function (ACF) and the Ljung–Box test. Normal Q–Q plots were also examined to assess departures from the normal-error assumption. These diagnostics complement the out-of-sample evaluation presented in Sections 4.2.1 and 4.2.2.
-
-Figure @fig-model-diagnostics presents the residual diagnostics for both selected models.
+@fig-model-diagnostics shows the residual ACF and Q–Q plots for both models.
 
 ```{r}
 #| label: fig-model-diagnostics
@@ -2095,13 +2091,9 @@ p_cpu_qq <- make_qq_plot(
   )
 ```
 
-The residual ACF plots show relatively small correlations for both models. None of the displayed correlations exceeds the approximate reference limits.
+The ACF plots show that none of the displayed residual correlations exceeds the approximate reference limits. HPC residual correlations are generally small, while CPU residuals show negative correlations at lags 1 and 4.
 
-For overall HPC demand, the residual correlations are close to zero across most displayed lags. This suggests that the linear trend captures much of the systematic movement in the historical series, although the short sample limits the strength of this conclusion.
-
-CPU residuals show a more noticeable negative correlation at lag 1 and lag 4. These correlations remain within the approximate reference limits, but they indicate that some year-to-year variation may not be fully captured by a single linear trend.
-
-The Ljung–Box test was used to examine whether the residual autocorrelations were jointly distinguishable from zero over the first three lags. Table @tbl-ljung-box reports the results.
+@tbl-ljung-box reports the Ljung–Box tests using three lags.
 
 ```{r}
 #| label: tbl-ljung-box
@@ -2162,40 +2154,13 @@ knitr::kable(
 )
 ```
 
-The Ljung–Box results do not provide sufficient evidence to reject the null hypothesis of no residual autocorrelation at the tested lags for either selected model, using a 5% significance level.
+Neither test rejected the null hypothesis of no residual autocorrelation at the 5% significance level (HPC: p = 0.965; CPU: p = 0.554). However, with only 13 annual observations, these results do not establish that the residuals are independent.
 
-However, the results should not be interpreted as proof that the residuals are independent. Each model was fitted using only 13 annual observations, and the test has limited power with such a small sample. The ACF reference limits are also approximate.
+The HPC Q–Q plot shows some departures from the normal reference line, particularly in the upper tail. The CPU plot shows more noticeable departures in the lower tail. These departures raise concerns about the normal-error assumption, particularly for CPU demand.
 
-The normal Q–Q plots provide additional information about the distribution of the fitted errors.
-
-For overall HPC demand, most residuals lie reasonably close to the theoretical reference line, although some departures are visible around the centre and upper tail. The plot does not show an obvious severe departure from normality, but the small sample makes the distribution difficult to assess reliably.
-
-The CPU Q–Q plot shows more noticeable departures, particularly in the lower tail. The most negative residual falls substantially below the reference line, suggesting that the normal-error assumption may be less suitable for CPU demand.
-
-These differences matter when interpreting model-based prediction intervals. The intervals depend on assumptions about the fitted error distribution, and departures from those assumptions may affect their coverage. The CPU intervals therefore require particular caution.
-
-Overall, the diagnostics do not reveal strong evidence of residual autocorrelation in the selected linear models. However, they do not establish that the fitted trends or their error distributions will remain unchanged through 2030.
-
-The residual diagnostics support the use of the linear models as interpretable forecasting references, while reinforcing the need to consider alternative growth assumptions and sensitivity to the 2026 observation. These issues are examined in Section 4.3.
-
-### Evaluation Summary
-
-The rolling-origin evaluation identified different forecasting results for overall HPC, CPU and GPU demand. The model selection considered forecast accuracy, historical data coverage, growth assumptions and the reliability of the underlying observations.
-
-For **overall HPC demand**, the linear trend achieved the lowest RMSE (290,898 kSU) and MAE (198,295 kSU) across six evaluation years. Its RMSE was 23.2% lower than the naïve benchmark, although the improvement over drift was smaller at 7.5%. The linear model was therefore selected as the central forecasting model, with drift providing a useful benchmark. The log-linear model was retained as an alternative growth scenario despite its weaker historical accuracy.
-
-For **CPU demand**, the results were less decisive. The linear trend achieved the lowest RMSE (157.72 million core-hours), while the log-linear model achieved the lowest MAE (133.74 million core-hours). The difference in RMSE between the two models was only 1.5%. The linear model was selected for the central projection because it provided competitive accuracy and assumed a constant annual increase rather than continued proportional growth. The log-linear model was retained to examine how this alternative assumption affects demand through 2030.
-
-Both selected linear models were sensitive to the latest observation. Including 2026 increased the estimated annual growth by 12.2% for overall HPC demand and 11.9% for CPU demand. This supported retaining forecasts excluding 2026 as sensitivity comparisons, rather than relying only on models fitted to the complete historical series.
-
-Residual diagnostics provided no strong evidence of autocorrelation in either selected linear model. However, the Ljung–Box tests had limited power with 13 annual observations. The CPU Q–Q plot also showed departures from normality, particularly in the lower tail. These findings indicate that statistical prediction intervals should be interpreted cautiously, especially for CPU demand.
-
-For **GPU demand**, the naïve benchmark achieved the lowest RMSE (0.441 million GPU-hours) and MAE (0.353 million GPU-hours). However, the evaluation used only two forecast years, and the underlying GPU-hour series depended partly on conversion assumptions. These results were insufficient to select a reliable long-term forecasting model. Following the project review, GPU projections were retained for exploratory analysis but excluded from the initial national HPC planning scenarios.
-
-Overall, the evaluation supports using the **linear trend as the central reference for overall HPC and CPU demand**, while retaining alternative growth assumptions and models excluding 2026 to examine forecast sensitivity. The initial national HPC planning scenarios are based on the overall HPC projection and historical Field of Research allocation shares. Section 4.3 presents these projections and examines how the modelling assumptions affect the results through 2030.
+The diagnostics did not identify statistically significant residual autocorrelation at the tested lags, but the small sample and Q–Q plot departures limit confidence in the models' error assumptions. The prediction intervals presented in Section 4.3 should therefore be interpreted cautiously.
 
 ## Demand Forecasts to 2030
-
 
 ### Overall HPC Demand
 
