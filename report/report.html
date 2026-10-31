@@ -2479,30 +2479,28 @@ Table 1: Main data sources and their analytical roles.
 </div>
 </figure>
 </div>
-<p>Research funding, workforce and research activity indicators were also examined as potential explanatory variables. Their suitability for forecasting was assessed according to historical coverage, consistency and relevance.</p>
+<p>Research funding, workforce and research activity indicators were considered as potential predictors but were not included in the final models because sufficiently consistent annual series were unavailable.</p>
 </section>
 <section id="data-integration-standardisation-and-provenance" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="data-integration-standardisation-and-provenance"><span class="header-section-number">2.2</span> Data Integration, Standardisation and Provenance</h2>
 <p>Information from NCI, Pawsey and NCMAS publications was organised into two datasets: an annual demand and allocation summary, and a Field of Research (FoR) allocation composition dataset. Records were aligned by reporting year, computing system and resource type, with detailed observations checked against published annual totals where available.</p>
 <p>Financial years were assigned to their ending year; for example, 2013/14 was recorded as 2014. Computing system names, resource identifiers and research field labels were standardised to support comparisons across reporting periods. CPU, GPU and aggregate computing resources were identified separately, and differences in reporting scope were recorded before aggregation.</p>
 <p>Original values, measurement units and source references were retained alongside standardised fields. Each observation was identified as directly reported, calculated from source information or estimated using documented assumptions. Missing resource breakdowns were not treated as observed values.</p>
-<p>System-specific resource conversions and FoR classification alignment are described in Sections 2.4 and 2.5, respectively.</p>
 </section>
 <section id="variable-definitions-and-measurement-units" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="variable-definitions-and-measurement-units"><span class="header-section-number">2.3</span> Variable Definitions and Measurement Units</h2>
-<p>The main annual variables are requested compute and allocated compute. Their difference is the observed request–allocation gap, not a direct estimate of latent demand. Where both measures are available on a comparable basis, the request-to-allocation ratio is calculated as:</p>
+<p>The main annual variables are requested compute and allocated compute. Where both measures are available on a comparable basis, the request-to-allocation ratio is calculated as:</p>
 <p><span class="math display">\[
 R_t = \frac{D_t}{A_t}
 \]</span></p>
 <p>where <span class="math inline">\(D_t\)</span> represents requested compute and <span class="math inline">\(A_t\)</span> represents allocated compute in year <span class="math inline">\(t\)</span>.</p>
-<p>This ratio indicates pressure on available allocations but does not measure all unmet research demand. The corresponding fulfilment rate is <span class="math inline">\(A_t/D_t\)</span>, and the request–allocation gap is <span class="math inline">\(D_t-A_t\)</span>. All three indicators are calculated only when the values have compatible units and reporting scope <span class="citation" data-cites="HPCInternshipBrief">(<a href="#ref-HPCInternshipBrief" role="doc-biblioref">Australian Academy of Science 2026</a>)</span>.</p>
+<p>The corresponding fulfilment rate is <span class="math inline">\(A_t/D_t\)</span>, and the request–allocation gap is <span class="math inline">\(D_t-A_t\)</span>. All three indicators are calculated only when the values have compatible units and reporting scope <span class="citation" data-cites="HPCInternshipBrief">(<a href="#ref-HPCInternshipBrief" role="doc-biblioref">Australian Academy of Science 2026</a>)</span>.</p>
 <p>Historical records use different measurement units, including service units (SU), kilo service units (kSU), million compute hours, CPU core-hours and GPU hours. Service units are accounting measures that depend on the computing system and resource type. Consequently, values expressed in kSU are not necessarily computationally equivalent across facilities.</p>
-<p>CPU core-hours and GPU hours were treated as separate measures. Their conversion procedures are described in the Compute Resource Conversion section.</p>
+<p>CPU core-hours and GPU hours were treated as separate measures.</p>
 </section>
 <section id="compute-resource-conversion" class="level2" data-number="2.4">
 <h2 data-number="2.4" class="anchored" data-anchor-id="compute-resource-conversion"><span class="header-section-number">2.4</span> Compute Resource Conversion</h2>
-<p>Historical demand and allocation values were reported using different accounting conventions. To improve comparability, compute-resource conversion was undertaken according to the reporting year, computing system, resource type and available accounting documentation <span class="citation" data-cites="NCIGadiTransition PawseySetonixTransition Pawsey2023Services">(<a href="#ref-NCIGadiTransition" role="doc-biblioref">National Computational Infrastructure, n.d.-a</a>; <a href="#ref-PawseySetonixTransition" role="doc-biblioref">Pawsey Supercomputing Research Centre, n.d.-c</a>, <a href="#ref-Pawsey2023Services" role="doc-biblioref">n.d.-b</a>)</span>.</p>
-<p>The conversion process preserved original observations and distinguished directly reported values from derived and assumed estimates. Documented system-specific factors were prioritised, while assumptions were recorded where direct conversion information was unavailable.</p>
+<p>Historical service-unit values were converted using accounting factors specific to each computing system and resource type <span class="citation" data-cites="NCIWhoWeAre PawseyAbout">(<a href="#ref-NCIWhoWeAre" role="doc-biblioref">National Computational Infrastructure, n.d.-b</a>; <a href="#ref-PawseyAbout" role="doc-biblioref">Pawsey Supercomputing Research Centre, n.d.-a</a>)</span>. Original values were retained, and conversions based on assumptions were identified separately from directly reported measures.</p>
 <section id="conversion-formulas" class="level3" data-number="2.4.1">
 <h3 data-number="2.4.1" class="anchored" data-anchor-id="conversion-formulas"><span class="header-section-number">2.4.1</span> Conversion Formulas</h3>
 <p>The general relationship between service units and kilo service units is:</p>
@@ -2526,7 +2524,6 @@ R_t = \frac{D_t}{A_t}
 </section>
 <section id="system-specific-conversion-rules" class="level3" data-number="2.4.2">
 <h3 data-number="2.4.2" class="anchored" data-anchor-id="system-specific-conversion-rules"><span class="header-section-number">2.4.2</span> System-Specific Conversion Rules</h3>
-<p><a href="#tbl-conversion-factors" class="quarto-xref">Table 2</a> summarises the principal conversion rules documented in the year-by-year conversion worksheet.</p>
 <div id="tbl-conversion-factors" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-conversion-factors-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -2596,10 +2593,8 @@ Table 2: Main compute-resource conversion rules recorded in the year-by-year co
 </section>
 <section id="conversion-validation-and-limitations" class="level3" data-number="2.4.3">
 <h3 data-number="2.4.3" class="anchored" data-anchor-id="conversion-validation-and-limitations"><span class="header-section-number">2.4.3</span> Conversion Validation and Limitations</h3>
-<p>Converted values were reviewed against the original reported units, available system-level records and published annual totals where comparable information was available.</p>
-<p>CPU and GPU resources were kept separate because their physical computing hours are not interchangeable. Aggregate service-unit totals were converted into CPU or GPU hours only where the resource breakdown and accounting factors were available, or where a documented working assumption was applied. Conversions based on assumptions were identified separately from directly reported values.</p>
-<p>Missing historical GPU observations were treated as unavailable information rather than evidence of zero demand. Conversion status and supporting assumptions were retained to distinguish reported values, calculated measures and estimates.</p>
-<p>The complete year-by-year conversion worksheet, calculations and validation code are provided in the technical project documentation. Resource-specific FoR estimates produced later in the workflow distribute annual values using historical allocation shares; they are not directly observed field-level CPU or GPU demand.</p>
+<p>Converted values were checked against original units, system-level records and published annual totals where comparable data were available. Aggregate service-unit values were converted into CPU core-hours or GPU hours only when resource breakdowns and accounting factors were available, or when a documented assumption was used.</p>
+<p>Missing GPU observations were not treated as zero demand. Conversion assumptions and estimated values were retained in the technical documentation, together with the year-by-year conversion worksheet and validation code.</p>
 </section>
 </section>
 <section id="field-of-research-classification-alignment" class="level2" data-number="2.5">
@@ -2668,7 +2663,6 @@ Table 3: Analytical FoR grouping rules used for longitudinal comparison across 
 </div>
 </figure>
 </div>
-<p>Physical Sciences, Chemical Sciences, Earth and Environmental Sciences, and Engineering and Technology were retained as separate analytical groups. Related subfields were combined within these groups where historical reporting differed in detail.</p>
 <p>The groupings were developed for analytical consistency and do not represent official one-to-one conversions between ANZSRC 2008 and ANZSRC 2020. Original research field labels and allocation values were preserved.</p>
 <p>The 2016/17 Pawsey records contain facility-wide usage information, which differs in scope from the NCMAS allocation data used for other years <span class="citation" data-cites="Pawsey201617">(<a href="#ref-Pawsey201617" role="doc-biblioref">Pawsey Supercomputing Research Centre 2017</a>)</span>. This difference was retained when preparing the historical FoR dataset and is considered when comparing allocation shares across years.</p>
 <p>Validation checks confirmed that all 133 FoR records had the required classification and allocation information, all reported fields were assigned to one of the nine analytical groups, and annual allocation shares summed to 100%.</p>

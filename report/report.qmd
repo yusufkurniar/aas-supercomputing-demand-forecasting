@@ -88,7 +88,7 @@ The sources provide different levels of detail. Earlier publications mainly cont
 
 : Main data sources and their analytical roles. {#tbl-data-sources}
 
-Research funding, workforce and research activity indicators were also examined as potential explanatory variables. Their suitability for forecasting was assessed according to historical coverage, consistency and relevance.
+Research funding, workforce and research activity indicators were considered as potential predictors but were not included in the final models because sufficiently consistent annual series were unavailable.
 
 ## Data Integration, Standardisation and Provenance
 
@@ -98,11 +98,9 @@ Financial years were assigned to their ending year; for example, 2013/14 was rec
 
 Original values, measurement units and source references were retained alongside standardised fields. Each observation was identified as directly reported, calculated from source information or estimated using documented assumptions. Missing resource breakdowns were not treated as observed values.
 
-System-specific resource conversions and FoR classification alignment are described in Sections 2.4 and 2.5, respectively.
-
 ## Variable Definitions and Measurement Units
 
-The main annual variables are requested compute and allocated compute. Their difference is the observed request–allocation gap, not a direct estimate of latent demand. Where both measures are available on a comparable basis, the request-to-allocation ratio is calculated as:
+The main annual variables are requested compute and allocated compute. Where both measures are available on a comparable basis, the request-to-allocation ratio is calculated as:
 
 $$
 R_t = \frac{D_t}{A_t}
@@ -110,17 +108,15 @@ $$
 
 where $D_t$ represents requested compute and $A_t$ represents allocated compute in year $t$.
 
-This ratio indicates pressure on available allocations but does not measure all unmet research demand. The corresponding fulfilment rate is $A_t/D_t$, and the request–allocation gap is $D_t-A_t$. All three indicators are calculated only when the values have compatible units and reporting scope [@HPCInternshipBrief].
+The corresponding fulfilment rate is $A_t/D_t$, and the request–allocation gap is $D_t-A_t$. All three indicators are calculated only when the values have compatible units and reporting scope [@HPCInternshipBrief].
 
 Historical records use different measurement units, including service units (SU), kilo service units (kSU), million compute hours, CPU core-hours and GPU hours. Service units are accounting measures that depend on the computing system and resource type. Consequently, values expressed in kSU are not necessarily computationally equivalent across facilities.
 
-CPU core-hours and GPU hours were treated as separate measures. Their conversion procedures are described in the Compute Resource Conversion section.
+CPU core-hours and GPU hours were treated as separate measures.
 
 ## Compute Resource Conversion
 
-Historical demand and allocation values were reported using different accounting conventions. To improve comparability, compute-resource conversion was undertaken according to the reporting year, computing system, resource type and available accounting documentation [@NCIGadiTransition; @PawseySetonixTransition; @Pawsey2023Services].
-
-The conversion process preserved original observations and distinguished directly reported values from derived and assumed estimates. Documented system-specific factors were prioritised, while assumptions were recorded where direct conversion information was unavailable.
+Historical service-unit values were converted using accounting factors specific to each computing system and resource type [@NCIWhoWeAre; @PawseyAbout]. Original values were retained, and conversions based on assumptions were identified separately from directly reported measures.
 
 ### Conversion Formulas
 
@@ -152,8 +148,6 @@ Where values were already reported in CPU core-hours or GPU hours, they were ret
 
 ### System-Specific Conversion Rules
 
-@tbl-conversion-factors summarises the principal conversion rules documented in the year-by-year conversion worksheet.
-
 | System or resource | Reporting period | SU per resource-hour | Treatment |
 |---|---|---:|---|
 | Raijin CPU and Magnus CPU | Selected historical years from 2013/14 | 1 | Historical baseline; assumptions apply to some records |
@@ -173,13 +167,9 @@ Historical Fornax GPU records could not be converted reliably using the availabl
 
 ### Conversion Validation and Limitations
 
-Converted values were reviewed against the original reported units, available system-level records and published annual totals where comparable information was available.
+Converted values were checked against original units, system-level records and published annual totals where comparable data were available. Aggregate service-unit values were converted into CPU core-hours or GPU hours only when resource breakdowns and accounting factors were available, or when a documented assumption was used.
 
-CPU and GPU resources were kept separate because their physical computing hours are not interchangeable. Aggregate service-unit totals were converted into CPU or GPU hours only where the resource breakdown and accounting factors were available, or where a documented working assumption was applied. Conversions based on assumptions were identified separately from directly reported values.
-
-Missing historical GPU observations were treated as unavailable information rather than evidence of zero demand. Conversion status and supporting assumptions were retained to distinguish reported values, calculated measures and estimates.
-
-The complete year-by-year conversion worksheet, calculations and validation code are provided in the technical project documentation. Resource-specific FoR estimates produced later in the workflow distribute annual values using historical allocation shares; they are not directly observed field-level CPU or GPU demand.
+Missing GPU observations were not treated as zero demand. Conversion assumptions and estimated values were retained in the technical documentation, together with the year-by-year conversion worksheet and validation code.
 
 ## Field of Research Classification Alignment
 
@@ -206,8 +196,6 @@ Original field labels were cleaned by removing numerical prefixes, standardising
 | Unclassified & Operational | Other, unreported, unclassified and Pawsey operational categories |
 
 : Analytical FoR grouping rules used for longitudinal comparison across 2014–2026. {#tbl-for-alignment}
-
-Physical Sciences, Chemical Sciences, Earth and Environmental Sciences, and Engineering and Technology were retained as separate analytical groups. Related subfields were combined within these groups where historical reporting differed in detail.
 
 The groupings were developed for analytical consistency and do not represent official one-to-one conversions between ANZSRC 2008 and ANZSRC 2020. Original research field labels and allocation values were preserved.
 
