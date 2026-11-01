@@ -225,7 +225,7 @@ knitr::kable(
 
 # Save fitted overall HPC models for reuse in Chapter 10
 dir.create(
-  "assets/models",
+  "../assets/models",
   recursive = TRUE,
   showWarnings = FALSE
 )
@@ -237,7 +237,7 @@ saveRDS(
     overall_loglinear = overall_loglinear,
     overall_loglinear_pre2026 = overall_loglinear_pre2026
   ),
-  "assets/models/overall_hpc_models.rds"
+  "../assets/models/overall_hpc_models.rds"
 )
 ```
 
@@ -379,7 +379,7 @@ knitr::kable(
 
 # Save fitted CPU models for Chapter 10
 dir.create(
-  "assets/models",
+  "../assets/models",
   recursive = TRUE,
   showWarnings = FALSE
 )
@@ -391,7 +391,7 @@ saveRDS(
     cpu_loglinear = cpu_loglinear,
     cpu_loglinear_pre2026 = cpu_loglinear_pre2026
   ),
-  "assets/models/cpu_models.rds"
+  "../assets/models/cpu_models.rds"
 )
 ```
 
@@ -581,7 +581,7 @@ knitr::kable(
 
 # Save fitted GPU models for Chapter 10
 dir.create(
-  "assets/models",
+  "../assets/models",
   recursive = TRUE,
   showWarnings = FALSE
 )
@@ -593,7 +593,7 @@ saveRDS(
     gpu_loglinear = gpu_loglinear,
     gpu_loglinear_pre2026 = gpu_loglinear_pre2026
   ),
-  "assets/models/gpu_models.rds"
+  "../assets/models/gpu_models.rds"
 )
 ```
 

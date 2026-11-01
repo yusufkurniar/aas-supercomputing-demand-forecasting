@@ -72,7 +72,7 @@ All projections are expressed in kSU and represent model-based estimates of the 
 #| include: false
 
 # Load the fitted models saved by Chapter 07
-model_path <- "assets/models/overall_hpc_models.rds"
+model_path <- "../assets/models/overall_hpc_models.rds"
 
 if (!file.exists(model_path)) {
   stop(
@@ -488,7 +488,7 @@ CPU demand is expressed in **millions of CPU core-hours**, consistent with the h
 #| include: false
 
 # Load fitted CPU models from Chapter 07
-cpu_model_path <- "assets/models/cpu_models.rds"
+cpu_model_path <- "../assets/models/cpu_models.rds"
 
 if (!file.exists(cpu_model_path)) {
   stop(
@@ -1003,7 +1003,7 @@ The resulting projections should be interpreted as conditional scenarios rather 
 ```{r load-gpu-models}
 #| include: false
 
-gpu_model_path <- "assets/models/gpu_models.rds"
+gpu_model_path <- "../assets/models/gpu_models.rds"
 
 if (!file.exists(gpu_model_path)) {
   stop(
