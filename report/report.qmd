@@ -31,7 +31,7 @@ format:
     colorlinks: false
     fontsize: 11pt
     geometry:
-      - margin=2.2cm
+      - margin=1.5cm
     linestretch: 1.1
     fig-pos: H
 
@@ -303,7 +303,7 @@ The projections extend historical demand trends rather than estimate future infr
 
 ## Initial Analysis
 
-The initial analysis examined historical HPC demand and allocation, CPU and GPU resources, and the distribution of allocations across Fields of Research (FoR). The results were used to identify trends, assess differences in reporting coverage and determine which series were suitable for forecasting.
+Historical requests and allocations were examined for overall HPC, CPU and GPU resources. Field of Research (FoR) allocation shares were analysed separately. Differences in reporting and conversion methods were considered when interpreting the historical patterns.
 
 ```{r}
 #| label: setup-chapter4
@@ -526,9 +526,9 @@ ggplot(hpc_plot, aes(x = year)) +
   )
 ```
 
-Recorded requests increased from 131,356 kSU in 2014 to 2,242,817 kSU in 2026, while allocations increased from 83,505 to 872,288 kSU. Between 2023 and 2026, requests grew by approximately 68%, compared with 6% for allocations. The request–allocation gap reached 1.37 million kSU in 2026, and the fulfilment rate fell from 56.0% in 2025 to 38.9%.
+Recorded requests increased from 131,356 kSU in 2014 to 2,242,817 kSU in 2026, while allocations increased from 83,505 to 872,288 kSU. Between 2023 and 2026, requests rose by approximately 68%, compared with 6% for allocations. The 2026 request–allocation gap reached 1.37 million kSU, with fulfilment falling from 56.0% in 2025 to 38.9% in 2026.
 
-The 2026 increase in requests was approximately 43.3% relative to the reconstructed 2025 value. Changes in computing systems and accounting practices may also affect historical comparisons, particularly around the Raijin–Gadi and Magnus–Setonix transitions. The 2026 allocation figure excludes 12,000 kSU associated with Setonix Q. The observed gap indicates pressure on allocated resources, but does not measure all unmet national research demand.
+Requests rose by 43.3% between 2025 and 2026, based on the reconstructed 2025 value. Historical comparisons are affected by changes in computing systems and service-unit accounting, particularly around the Raijin–Gadi and Magnus–Setonix transitions. The 2026 allocation total also excludes 12,000 kSU associated with Setonix Q. The request–allocation gap does not account for research demand that was never submitted.
 
 ### CPU Demand and Allocation
 
@@ -696,11 +696,9 @@ ggplot(cpu_plot, aes(x = year)) +
   )
 ```
 
-@fig-historical-cpu shows historical CPU requests and allocations from 2014 to 2026, including converted and estimated values.
+@fig-historical-cpu presents the reconstructed CPU request and allocation series for 2014 to 2026. Estimated CPU requests reached approximately 1.24 billion core-hours in 2026, compared with 519 million core-hours allocated. Requests increased from 775 million core-hours in 2023 to 1,235 million in 2026, while allocations remained close to 500 million core-hours over those years.
 
-Estimated CPU requests reached approximately 1.24 billion core-hours in 2026, compared with allocations of approximately 519 million core-hours. Requests increased substantially after 2022, while allocations changed relatively little between 2023 and 2026.
-
-The reconstructed series contains sharp changes around 2019–2022, when Raijin was replaced by Gadi and Magnus by Setonix. These transitions involved different computing systems and accounting rules, but the available records do not establish them as the causes of the fluctuations. Some 2019/20 observations also relied on a Gadi CPU-equivalent assumption because the CPU/GPU breakdown was unavailable. The long-term increase in estimated CPU requests is therefore more informative than individual year-to-year changes.
+The series also contains substantial fluctuations around 2019–2022, spanning the Raijin–Gadi and Magnus–Setonix transitions. Different accounting factors and incomplete CPU/GPU breakdowns complicate comparisons across these periods. In particular, some 2019/20 values use a Gadi CPU-equivalent assumption rather than an observed resource split. These limitations affect the interpretation of individual annual changes and the reconstructed long-term trend.
 
 ### GPU Demand and Allocation
 
@@ -939,21 +937,21 @@ ggplot() +
   )
 ```
 
-@fig-historical-gpu shows historical GPU requests and allocations, including alternative conversion assumptions for 2014–2021 and the shorter 2022–2026 forecasting sample.
+@fig-historical-gpu distinguishes assumption-based historical GPU estimates for 2014–2021 from the 2022–2026 series used for forecasting.
 
-Earlier GPU records lacked consistent GPU-hour measures and system-specific conversion information. Baseline and low–high estimates were therefore constructed using documented assumptions. The shaded range represents differences between these historical conversion assumptions, not statistical confidence intervals. Because these estimates depend heavily on the assumptions, they were excluded from model evaluation.
+Earlier records did not consistently identify GPU-hours or provide sufficient information for system-specific conversions. Alternative assumptions were therefore used to construct baseline and low–high historical estimates. The shaded ranges in the figure represent differences between conversion assumptions, not statistical confidence intervals. These earlier estimates were excluded from model evaluation.
 
-The 2022–2026 series provides a more consistent, although still partly estimated, basis for forecasting. Estimated GPU requests reached approximately 3.00 million GPU-hours in 2026, compared with allocations of approximately 1.25 million GPU-hours. Official Setonix GPU requests also increased by approximately 123% in service units between 2023 and 2026, although this percentage cannot be interpreted as equivalent growth in GPU-hours.
+Estimated GPU requests fell from approximately 2.66 million GPU-hours in 2022 to 1.35 million in 2023, before increasing to 3.00 million in 2026. Estimated GPU allocations were approximately 1.25 million GPU-hours in 2026.
 
-Estimated GPU requests increased from 2023 to 2026, but the five-year modelling sample and reliance on converted observations limit the reliability of forecasts through 2030.
+Official Setonix GPU requests increased by approximately 123% in service units between 2023 and 2026, but this increase cannot be interpreted directly as growth in GPU-hours. The five-year forecasting sample and reliance on converted observations limit the reliability of projections to 2030.
 
 ### Field of Research Allocation Composition
 
 ```{r}
 #| label: fig-for-composition
 #| fig-cap: "HPC allocation composition by Field of Research, 2014–2026, and changes in average annual shares between 2014–2020 and 2021–2026."
-#| fig-width: 12
-#| fig-height: 7
+#| fig-width: 10.5
+#| fig-height: 5.5
 #| out-width: 100%
 #| echo: false
 #| warning: false
@@ -1083,6 +1081,22 @@ period_comparison <- period_shares |>
     for_visual_group = factor(
       for_visual_group,
       levels = as.character(for_visual_group)
+    ),
+    display_group = case_when(
+      as.character(for_visual_group) ==
+        "Social Sciences, Humanities & Built Environment" ~
+        "Social Sciences & Humanities",
+      as.character(for_visual_group) ==
+        "Biological & Agricultural Sciences" ~
+        "Biological & Agricultural",
+      as.character(for_visual_group) ==
+        "Earth & Environmental Sciences" ~
+        "Earth & Environmental",
+      TRUE ~ as.character(for_visual_group)
+    ),
+    display_group = factor(
+      display_group,
+      levels = unique(display_group)
     )
   )
 
@@ -1127,35 +1141,40 @@ p_annual <- ggplot(
     y = "Allocation share",
     fill = "Research field"
   ) +
-  theme_minimal(base_size = 9) +
+  theme_minimal(base_size = 11) +
   theme(
     axis.text.x = element_text(
       angle = 45,
       hjust = 1,
-      size = 8
+      size = 11
     ),
-    axis.text.y = element_text(size = 8),
+    axis.text.y = element_text(size = 11),
+    axis.title.y = element_text(size = 12),
     panel.grid.minor = element_blank(),
     panel.grid.major.x = element_blank(),
     legend.position = "bottom",
-    legend.text = element_text(size = 8),
+    legend.text = element_text(size = 7.5),
     legend.title = element_blank(),
     legend.key.size = grid::unit(0.25, "cm"),
+    legend.spacing.x = grid::unit(0.08, "cm"),
+    legend.box.just = "center",
+    legend.justification = "center",
+    plot.margin = margin(5, 8, 5, 8),
     plot.title = element_text(
       face = "bold",
-      size = 10
+      size = 13
     ),
-    plot.subtitle = element_text(size = 8)
+    plot.subtitle = element_text(size = 11)
   ) +
   guides(
-    fill = guide_legend(ncol = 2)
+    fill = guide_legend(ncol = 2, byrow = FALSE)
   )
 
 p_change <- ggplot(
   period_comparison,
   aes(
     x = change_pp,
-    y = for_visual_group,
+    y = display_group,
     fill = direction
   )
 ) +
@@ -1172,7 +1191,7 @@ p_change <- ggplot(
       label = change_label,
       hjust = if_else(change_pp >= 0, -0.1, 1.1)
     ),
-    size = 2.6
+    size = 2.8
   ) +
   scale_fill_manual(
     values = c(
@@ -1190,7 +1209,7 @@ p_change <- ggplot(
   scale_x_continuous(
     breaks = seq(-20, 20, 10),
     labels = function(x) paste0(x, " pp"),
-    limits = c(-24, 24)
+    limits = c(-25, 25)
   ) +
   labs(
     title = "B. Change between reporting periods",
@@ -1199,28 +1218,31 @@ p_change <- ggplot(
     y = NULL,
     fill = NULL
   ) +
-  theme_minimal(base_size = 9) +
+  theme_minimal(base_size = 11) +
   theme(
     panel.grid.major.y = element_blank(),
     panel.grid.minor = element_blank(),
-    axis.text.y = element_text(size = 8),
-    axis.text.x = element_text(size = 8),
+    axis.text.y = element_text(size = 11),
+    axis.text.x = element_text(size = 11),
+    axis.title.x = element_text(size = 12),
     plot.title = element_text(
       face = "bold",
-      size = 10
+      size = 13
     ),
-    plot.subtitle = element_text(size = 8),
+    plot.subtitle = element_text(size = 11),
     legend.position = "bottom",
     legend.direction = "horizontal",
     legend.text = element_text(size = 8),
-    legend.key.size = grid::unit(0.3, "cm")
+    legend.key.size = grid::unit(0.25, "cm"),
+    legend.spacing.x = grid::unit(0.08, "cm"),
+    legend.title = element_blank()
   ) +
   guides(
     fill = guide_legend(nrow = 1)
   )
 
 (p_annual | p_change) +
-  plot_layout(widths = c(1.15, 1)) +
+  plot_layout(widths = c(1.05, 1.15)) +
   plot_annotation(
     caption = paste(
       "Analytical FoR groups; 2017 includes Pawsey-wide reporting.",
@@ -1228,20 +1250,268 @@ p_change <- ggplot(
     ),
     theme = theme(
       plot.caption = element_text(
-        size = 8,
+        size = 10,
         hjust = 0
       )
     )
   )
 ```
 
-Figure @fig-for-composition shows the annual distribution of HPC allocations across nine analytical Field of Research (FoR) groups and the changes in average annual shares between 2014–2020 and 2021–2026.
+@fig-for-composition compares annual HPC allocation shares across nine analytical Field of Research (FoR) groups and changes in average annual shares between 2014–2020 and 2021–2026.
 
-Earth and Environmental Sciences was the largest group in most years from 2014 to 2020, reaching 42% of reported allocations in 2014. Engineering and Technology became the largest group from 2022 onwards, accounting for 41% in 2022 and 35% in 2026.
+Earth and Environmental Sciences was the largest group in most years during 2014–2020, accounting for 42% of allocations in 2014. Engineering and Technology was the largest group in 2017 and again from 2021 through 2026, representing 41% in 2022 and 35% in 2026.
 
-Comparing the two periods, Engineering and Technology recorded the largest increase in average annual allocation share, rising by 18.0 percentage points, followed by Physical Sciences (+5.2 percentage points). Earth and Environmental Sciences experienced the largest decline (−17.6 percentage points), while Mathematics and Computing decreased by 2.5 percentage points. Changes in the remaining groups were comparatively small.
+Between the two reporting periods, Engineering and Technology gained 18.0 percentage points in average annual allocation share, followed by Physical Sciences (+5.2 percentage points). Earth and Environmental Sciences declined by 17.6 percentage points, while Mathematics and Computing declined by 2.5 percentage points.
 
-These shifts should be interpreted cautiously because the data span the transition from FoR 2008 to FoR 2020 classifications and include Pawsey-wide reporting in 2016/17. The harmonised groups support historical comparison but do not fully resolve differences in classification or reporting scope. The results describe allocation shares rather than independently observed research-field demand and inform the alternative FoR scenarios in Section 4.4.
+These comparisons are affected by the transition from FoR 2008 to FoR 2020 classifications and the inclusion of Pawsey-wide reporting in 2016/17. The differences describe recorded allocation composition, not independently observed demand by research field. Section 4.4 uses these historical shares to construct alternative distributions of projected HPC demand.
+
+## Forecast Model Evaluation
+
+The naïve, drift, linear trend and log-linear trend models were compared using one-year-ahead rolling-origin forecasts. Overall HPC and CPU accuracy was evaluated over 2021–2026, while GPU accuracy was evaluated over 2025–2026. Results are reported separately because the three demand measures use different units and historical periods.
+
+### Overall HPC Demand
+
+@fig-hpc-cv compares observed HPC demand with one-year-ahead forecasts from the four models. The naïve model generally underestimated demand during periods of growth, while drift and linear trend followed the observed series more closely. The log-linear model tended to overestimate demand, particularly after 2022. However, all four models underestimated the sharp increase in 2026.
+
+```{r}
+#| label: fig-hpc-cv
+#| fig-cap: "Observed overall HPC demand and rolling-origin one-year-ahead forecasts, 2021–2026. All panels use the same vertical scale."
+#| fig-width: 10
+#| fig-height: 5
+#| out-width: 100%
+#| echo: false
+#| warning: false
+#| message: false
+
+# Prepare historical HPC demand
+hpc_cv_data <- annual_analysis |>
+  dplyr::transmute(
+    year = as.integer(year),
+    demand_ksu = as.numeric(demand_ksu)
+  ) |>
+  dplyr::arrange(year)
+
+stopifnot(
+  identical(hpc_cv_data$year, 2014:2026),
+  all(is.finite(hpc_cv_data$demand_ksu)),
+  all(hpc_cv_data$demand_ksu > 0)
+)
+
+# Rolling-origin evaluation
+hpc_cv_predictions <- dplyr::bind_rows(
+  lapply(2021:2026, function(test_year) {
+
+    training <- hpc_cv_data |>
+      dplyr::filter(year < test_year)
+
+    actual <- hpc_cv_data |>
+      dplyr::filter(year == test_year) |>
+      dplyr::pull(demand_ksu)
+
+    first_value <- training$demand_ksu[1]
+    last_value <- dplyr::last(training$demand_ksu)
+    n <- nrow(training)
+
+    # Naïve forecast
+    pred_naive <- last_value
+
+    # Drift forecast
+    pred_drift <- last_value +
+      (last_value - first_value) / (n - 1)
+
+    # Linear trend
+    fit_linear <- lm(
+      demand_ksu ~ year,
+      data = training
+    )
+
+    pred_linear <- as.numeric(
+      predict(
+        fit_linear,
+        newdata = data.frame(year = test_year)
+      )
+    )
+
+    # Log-linear trend
+    fit_loglinear <- lm(
+      log(demand_ksu) ~ year,
+      data = training
+    )
+
+    pred_loglinear <- as.numeric(
+      exp(
+        predict(
+          fit_loglinear,
+          newdata = data.frame(year = test_year)
+        )
+      )
+    )
+
+    tibble::tibble(
+      year = test_year,
+      actual = actual,
+      `Naïve` = pred_naive,
+      `Drift` = pred_drift,
+      `Linear trend` = pred_linear,
+      `Log-linear trend` = pred_loglinear
+    )
+  })
+)
+
+# Reshape predictions for plotting
+hpc_cv_long <- hpc_cv_predictions |>
+  tidyr::pivot_longer(
+    cols = c(
+      `Naïve`,
+      `Drift`,
+      `Linear trend`,
+      `Log-linear trend`
+    ),
+    names_to = "model",
+    values_to = "forecast"
+  ) |>
+  dplyr::mutate(
+    model = factor(
+      model,
+      levels = c(
+        "Naïve",
+        "Drift",
+        "Linear trend",
+        "Log-linear trend"
+      )
+    ),
+    actual_m = actual / 1e6,
+    forecast_m = forecast / 1e6
+  )
+
+# Four-panel forecast comparison
+ggplot(
+  hpc_cv_long,
+  aes(x = year)
+) +
+  geom_line(
+    aes(
+      y = actual_m,
+      colour = "Observed"
+    ),
+    linewidth = 1.2
+  ) +
+  geom_point(
+    aes(
+      y = actual_m,
+      colour = "Observed"
+    ),
+    size = 2.3
+  ) +
+  geom_line(
+    aes(
+      y = forecast_m,
+      colour = "Forecast"
+    ),
+    linewidth = 1,
+    linetype = "dashed"
+  ) +
+  geom_point(
+    aes(
+      y = forecast_m,
+      colour = "Forecast"
+    ),
+    size = 2
+  ) +
+  facet_wrap(
+    ~model,
+    ncol = 2,
+    scales = "fixed"
+  ) +
+  scale_colour_manual(
+    values = c(
+      "Observed" = "#173A5E",
+      "Forecast" = "#E69F00"
+    )
+  ) +
+  scale_x_continuous(
+    breaks = 2021:2026
+  ) +
+  scale_y_continuous(
+    labels = scales::label_number(
+      accuracy = 0.1
+    )
+  ) +
+  labs(
+    x = "Evaluation year",
+    y = "HPC demand (million kSU)",
+    colour = NULL,
+    caption = paste(
+      "Observed values are shown in dark blue.",
+      "Dashed orange lines represent one-year-ahead forecasts",
+      "from expanding training windows."
+    )
+  ) +
+  theme_minimal(base_size = 10) +
+  theme(
+    strip.text = element_text(
+      face = "bold",
+      size = 11
+    ),
+    axis.text.x = element_text(
+      angle = 45,
+      hjust = 1
+    ),
+    legend.position = "bottom",
+    panel.grid.minor = element_blank(),
+    plot.caption = element_text(size = 8)
+  )
+```
+
+@tbl-hpc-accuracy summarises forecast accuracy over 2021–2026. The linear trend achieved the lowest RMSE (290,898 kSU) and MAE (198,295 kSU). Its RMSE was 23.2% lower than naïve and 7.5% lower than drift. The log-linear model performed worst, with an RMSE of 511,614 kSU.
+
+```{r}
+#| label: tbl-hpc-accuracy
+#| tbl-cap: "Rolling-origin forecast accuracy for overall HPC demand, 2021–2026."
+#| echo: false
+#| warning: false
+#| message: false
+
+hpc_accuracy <- hpc_cv_long |>
+  dplyr::group_by(model) |>
+  dplyr::summarise(
+    RMSE = sqrt(mean((actual - forecast)^2)),
+    MAE = mean(abs(actual - forecast)),
+    .groups = "drop"
+  ) |>
+  dplyr::arrange(RMSE) |>
+  dplyr::mutate(
+    `RMSE rank` = dplyr::row_number()
+  )
+
+hpc_accuracy_table <- hpc_accuracy |>
+  dplyr::transmute(
+    Model = as.character(model),
+    `RMSE (kSU)` = format(
+      round(RMSE), big.mark = ",", trim = TRUE,
+      scientific = FALSE
+    ),
+    `MAE (kSU)` = format(
+      round(MAE), big.mark = ",", trim = TRUE,
+      scientific = FALSE
+    ),
+    `RMSE rank` = `RMSE rank`
+  )
+
+knitr::kable(
+  hpc_accuracy_table,
+  align = c("l", "r", "r", "r")
+) |>
+  kableExtra::kable_styling(
+    latex_options = "HOLD_position",
+    font_size = 9,
+    full_width = FALSE
+  )
+```
+
+The linear trend was selected as the central HPC forecasting model because it had the lowest evaluation errors and assumes a constant absolute annual increase. However, including 2026 increased the fitted annual trend from approximately 144,357 to 161,992 kSU (12.2%). The model excluding 2026 was therefore retained for sensitivity analysis, while the log-linear model was retained to examine continued proportional growth.
+
+The evaluation is based on six one-year-ahead forecasts. It does not establish how accurately the selected model will predict demand through 2030. Section 4.3 compares the resulting projections and alternative growth assumptions.
 
 ### CPU Demand
 
