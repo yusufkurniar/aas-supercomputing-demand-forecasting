@@ -87,3 +87,7 @@ figcaption {
 p {
   margin-bottom: 1.1rem;
 }
+
+.small-table table {
+  font-size: 9pt;
+}

@@ -2548,7 +2548,7 @@ window.Quarto = {
 };
 </script>
 
-<style type="text/css">body {font-family: "Segoe UI", Arial, sans-serif;color: #263746;line-height: 1.7;background-color: #ffffff;}.quarto-title h1.title {color: #123B60;font-size: 2.5rem;font-weight: 700;line-height: 1.2;margin-bottom: 0.8rem;}.quarto-title-block {border-bottom: 3px solid #0877B9;padding-bottom: 1.5rem;margin-bottom: 2.5rem;}h1, h2, h3 {color: #123B60;font-weight: 650;}h1 {margin-top: 2.5rem;}h2 {margin-top: 2rem;}#quarto-sidebar-toc-left {background-color: #F3F7FA;border-right: 1px solid #DDE7EF;padding: 1.5rem 1rem;}#TOC a {color: #344F66;text-decoration: none;font-size: 0.92rem;}#TOC a:hover,#TOC a.active {color: #0877B9;font-weight: 600;}a {color: #176A9B;}a:hover {color: #0B456B;}table {font-size: 0.95rem;}table thead {background-color: #EAF3F9;}figure {margin: 2rem 0;}figcaption {color: #536779;font-size: 0.9rem;}p {margin-bottom: 1.1rem;}</style>
+<style type="text/css">body {font-family: "Segoe UI", Arial, sans-serif;color: #263746;line-height: 1.7;background-color: #ffffff;}.quarto-title h1.title {color: #123B60;font-size: 2.5rem;font-weight: 700;line-height: 1.2;margin-bottom: 0.8rem;}.quarto-title-block {border-bottom: 3px solid #0877B9;padding-bottom: 1.5rem;margin-bottom: 2.5rem;}h1, h2, h3 {color: #123B60;font-weight: 650;}h1 {margin-top: 2.5rem;}h2 {margin-top: 2rem;}#quarto-sidebar-toc-left {background-color: #F3F7FA;border-right: 1px solid #DDE7EF;padding: 1.5rem 1rem;}#TOC a {color: #344F66;text-decoration: none;font-size: 0.92rem;}#TOC a:hover,#TOC a.active {color: #0877B9;font-weight: 600;}a {color: #176A9B;}a:hover {color: #0B456B;}table {font-size: 0.95rem;}table thead {background-color: #EAF3F9;}figure {margin: 2rem 0;}figcaption {color: #536779;font-size: 0.9rem;}p {margin-bottom: 1.1rem;}.small-table table {font-size: 9pt;}</style>
 </head>
 
 <body class="quarto-light">
@@ -2588,6 +2588,7 @@ window.Quarto = {
   <li><a href="#forecast-model-evaluation" id="toc-forecast-model-evaluation" class="nav-link" data-scroll-target="#forecast-model-evaluation"><span class="header-section-number">4.2</span> Forecast Model Evaluation</a></li>
   <li><a href="#demand-forecasts-to-2030" id="toc-demand-forecasts-to-2030" class="nav-link" data-scroll-target="#demand-forecasts-to-2030"><span class="header-section-number">4.3</span> Demand Forecasts to 2030</a></li>
   <li><a href="#field-of-research-scenarios" id="toc-field-of-research-scenarios" class="nav-link" data-scroll-target="#field-of-research-scenarios"><span class="header-section-number">4.4</span> Field of Research Scenarios</a></li>
+  <li><a href="#hpc-allocation-sensitivity-scenarios" id="toc-hpc-allocation-sensitivity-scenarios" class="nav-link" data-scroll-target="#hpc-allocation-sensitivity-scenarios"><span class="header-section-number">4.5</span> HPC Allocation Sensitivity Scenarios</a></li>
   </ul></li>
   <li><a href="#discussion" id="toc-discussion" class="nav-link" data-scroll-target="#discussion"><span class="header-section-number">5</span> Discussion</a>
   <ul class="collapse">
@@ -2659,6 +2660,7 @@ window.Quarto = {
 <h2 data-number="2.1" class="anchored" data-anchor-id="data-sources-and-coverage"><span class="header-section-number">2.1</span> Data Sources and Coverage</h2>
 <p>The analysis covers 13 financial years, from 2013/14 to 2025/26, represented by analytical years 2014–2026. Earlier data were assembled primarily from National Computational Infrastructure (NCI) annual reports and Pawsey Supercomputing Research Centre publications <span class="citation" data-cites="NCI201314 NCI201415 NCI201516 NCI201617 Pawsey201617 NCI201718 NCI201819 NCI201920">(<a href="#ref-NCI201314" role="doc-biblioref">National Computational Infrastructure 2014a</a>, <a href="#ref-NCI201415" role="doc-biblioref">2015</a>, <a href="#ref-NCI201516" role="doc-biblioref">2016</a>, <a href="#ref-NCI201617" role="doc-biblioref">2017</a>, <a href="#ref-NCI201718" role="doc-biblioref">2018</a>, <a href="#ref-NCI201819" role="doc-biblioref">2019</a>, <a href="#ref-NCI201920" role="doc-biblioref">2020a</a>; <a href="#ref-Pawsey201617" role="doc-biblioref">Pawsey Supercomputing Research Centre 2017</a>)</span>. More recent data were drawn from National Computational Merit Allocation Scheme (NCMAS) outcomes <span class="citation" data-cites="NCMAS2021 NCMAS2022 NCMAS2023 NCMAS2024 NCMAS2025 NCMAS2026">(<a href="#ref-NCMAS2021" role="doc-biblioref">National Computational Merit Allocation Scheme 2021</a>, <a href="#ref-NCMAS2022" role="doc-biblioref">2022</a>, <a href="#ref-NCMAS2023" role="doc-biblioref">2023</a>, <a href="#ref-NCMAS2024" role="doc-biblioref">2024</a>, <a href="#ref-NCMAS2025" role="doc-biblioref">2025</a>, <a href="#ref-NCMAS2026" role="doc-biblioref">2026</a>)</span>.</p>
 <p>The sources provide different levels of detail. Earlier publications mainly contain annual or facility-level summaries, while more recent NCMAS outcomes include project-level allocations, computing resources and research fields <span class="citation" data-cites="NCMAS2021 NCMAS2024 NCMAS2026">(<a href="#ref-NCMAS2021" role="doc-biblioref">National Computational Merit Allocation Scheme 2021</a>, <a href="#ref-NCMAS2024" role="doc-biblioref">2024</a>, <a href="#ref-NCMAS2026" role="doc-biblioref">2026</a>)</span>. Different documents sometimes supplied requested compute, allocations and FoR information for the same year. Historical applicant guidance was also reviewed to understand changes in allocation rules and resource definitions <span class="citation" data-cites="NCMAS2014Info NCMAS2020Info NCMAS2023Info NCMAS2024Info NCMAS2026Info">(<a href="#ref-NCMAS2014Info" role="doc-biblioref">National Computational Infrastructure 2014b</a>, <a href="#ref-NCMAS2020Info" role="doc-biblioref">2020b</a>, <a href="#ref-NCMAS2023Info" role="doc-biblioref">2022</a>, <a href="#ref-NCMAS2024Info" role="doc-biblioref">2023</a>, <a href="#ref-NCMAS2026Info" role="doc-biblioref">2025</a>)</span>.</p>
+<div class="small-table">
 <div id="tbl-data-sources" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-data-sources-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -2704,6 +2706,7 @@ Table 1: Main data sources and their analytical roles.
 </div>
 </figure>
 </div>
+</div>
 <p>Research funding, workforce and research activity indicators were considered as potential predictors but were not included in the final models because sufficiently consistent annual series were unavailable.</p>
 </section>
 <section id="data-integration-standardisation-and-provenance" class="level2" data-number="2.2">
@@ -2730,6 +2733,7 @@ Table 1: Main data sources and their analytical roles.
 </section>
 <section id="system-specific-conversion-rules" class="level3" data-number="2.4.2">
 <h3 data-number="2.4.2" class="anchored" data-anchor-id="system-specific-conversion-rules"><span class="header-section-number">2.4.2</span> System-Specific Conversion Rules</h3>
+<div class="small-table">
 <div id="tbl-conversion-factors" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-conversion-factors-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -2793,6 +2797,7 @@ Table 2: Main compute-resource conversion rules recorded in the year-by-year co
 </div>
 </figure>
 </div>
+</div>
 <p>The factors were compiled from system-specific documentation and the project’s recorded conversion assumptions <span class="citation" data-cites="NCIGadiTransition PawseySetonixTransition Pawsey2023Services NCMAS2026Info">(<a href="#ref-NCIGadiTransition" role="doc-biblioref">National Computational Infrastructure, n.d.-a</a>, <a href="#ref-NCMAS2026Info" role="doc-biblioref">2025</a>; <a href="#ref-PawseySetonixTransition" role="doc-biblioref">Pawsey Supercomputing Research Centre, n.d.-c</a>, <a href="#ref-Pawsey2023Services" role="doc-biblioref">n.d.-b</a>)</span>. They were applied to the corresponding system and reporting period, rather than indiscriminately to aggregate kSU values without a resource breakdown.</p>
 <p>For the earlier years, a factor of 1 SU per CPU core-hour was used as a baseline assumption where a more specific accounting factor was unavailable. For some 2019/20 records, the original technical conversion used a documented working assumption of 100% Gadi CPU-equivalent at 2 SU per CPU core-hour because a reliable CPU/GPU split was unavailable. This assumption should not be interpreted as a directly observed resource breakdown.</p>
 <p>Historical Fornax GPU records could not be converted reliably using the available information. These observations were retained with their original units rather than assigned an unsupported conversion factor.</p>
@@ -2810,6 +2815,7 @@ Table 2: Main compute-resource conversion rules recorded in the year-by-year co
 <p>The second stage established nine analytical groups for longitudinal comparison through <code>for_visual_group</code>. These groups were informed by the broader research-field categories used in NCI and Pawsey annual reporting. Related categories were combined where reporting detail differed across years, rather than assuming that the two FoR classification systems were directly equivalent.</p>
 <p>Original field labels were cleaned by removing numerical prefixes, standardising case, replacing ampersands and removing excess whitespace. The cleaned labels were then assigned to the nine groups using explicit matching rules.</p>
 <p><a href="#tbl-for-alignment" class="quarto-xref">Table 3</a> summarises the analytical grouping applied to the reported research fields.</p>
+<div class="small-table">
 <div id="tbl-for-alignment" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-for-alignment-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -2869,6 +2875,7 @@ Table 3: Analytical FoR grouping rules used for longitudinal comparison across 
 </div>
 </figure>
 </div>
+</div>
 <p>The groupings were developed for analytical consistency and do not represent official one-to-one conversions between ANZSRC 2008 and ANZSRC 2020. Original research field labels and allocation values were preserved.</p>
 <p>The 2016/17 Pawsey records contain facility-wide usage information, which differs in scope from the NCMAS allocation data used for other years <span class="citation" data-cites="Pawsey201617">(<a href="#ref-Pawsey201617" role="doc-biblioref">Pawsey Supercomputing Research Centre 2017</a>)</span>. This difference was retained when preparing the historical FoR dataset and is considered when comparing allocation shares across years.</p>
 <p>Validation checks confirmed that all 133 FoR records had the required classification and allocation information, all reported fields were assigned to one of the nine analytical groups, and annual allocation shares summed to 100%.</p>
@@ -2912,6 +2919,7 @@ y_t = \beta_0 + \beta_1 t + \varepsilon_t
 <section id="forecasting-targets-and-historical-coverage" class="level2" data-number="3.3">
 <h2 data-number="3.3" class="anchored" data-anchor-id="forecasting-targets-and-historical-coverage"><span class="header-section-number">3.3</span> Forecasting Targets and Historical Coverage</h2>
 <p>The forecasting models were applied separately to the available demand measures.</p>
+<div class="small-table">
 <div id="tbl-forecast-targets" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-forecast-targets-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -2956,6 +2964,7 @@ Table 4: Forecasting targets and historical coverage.
 </table>
 </div>
 </figure>
+</div>
 </div>
 <p>The HPC and CPU series contain 13 annual observations covering 2014–2026. GPU modelling was restricted to five observations from 2022–2026 because earlier GPU-hour estimates relied on less-supported conversion assumptions. The recent GPU series also includes derived values, limiting the reliability of model evaluation and forecasts.</p>
 <p>All models were fitted separately for each demand measure. Forecasts were expressed in the corresponding units rather than combining CPU core-hours and GPU hours.</p>
@@ -3003,6 +3012,7 @@ Table 4: Forecasting targets and historical coverage.
 <h2 data-number="3.7" class="anchored" data-anchor-id="forecast-horizon-and-interpretation"><span class="header-section-number">3.7</span> Forecast Horizon and Interpretation</h2>
 <p>Forecasts were generated for 2027–2030 by fitting the selected models to the available historical observations. Alternative growth assumptions and models excluding 2026 were retained for sensitivity analysis.</p>
 <p>The projections extend historical demand trends rather than estimate future infrastructure capacity requirements directly. They do not explicitly account for changes in research policy, computing technology or access to HPC resources. Historical accounting differences and the limited annual observations, particularly for GPU demand, also restrict forecast reliability.</p>
+<p>An additional allocation sensitivity analysis compared the central 2030 HPC demand forecast with three illustrative allocation levels: the 2026 allocation, 25% above that level and 50% above it. For each scenario, the request–allocation gap and fulfilment rate were calculated. The analysis also estimated the allocation levels required to maintain the 2026 fulfilment rate and achieve 50% fulfilment in 2030. These comparisons were used for planning interpretation rather than forecasting future allocations or infrastructure capacity.</p>
 </section>
 </section>
 <section id="results" class="level1" data-number="4">
@@ -3680,6 +3690,57 @@ Table 10: Illustrative 2030 HPC demand distribution under three historical FoR 
 <p>Earth and Environmental Sciences shows the opposite pattern, with 760,374 kSU under the earlier-period scenario and 334,353 kSU under the recent-period scenario. The full-period scenario produces intermediate values for both groups.</p>
 <p>These differences arise from the historical allocation weights rather than changes in the national forecast. The results illustrate how assumptions about research-field composition affect indicative demand distribution, but they are not confirmed future allocations or independently validated field-level demand forecasts. Chapter 5 discusses their planning implications.</p>
 </section>
+</section>
+<section id="hpc-allocation-sensitivity-scenarios" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="hpc-allocation-sensitivity-scenarios"><span class="header-section-number">4.5</span> HPC Allocation Sensitivity Scenarios</h2>
+<p>The central HPC forecast was used to examine how different allocation levels would affect the request–allocation gap in 2030. Three illustrative scenarios were considered: allocations remaining at the 2026 level, increasing by 25%, or increasing by 50%. These assumptions represent changes in recorded allocations relative to 2026, not independently forecast infrastructure capacity.</p>
+<p>For each scenario, the projected gap was calculated as forecast requests minus assumed allocations, while fulfilment was calculated as assumed allocations divided by forecast requests. The analysis uses the central HPC forecast from Section 4.3.1 and the 2026 allocation baseline reported in Section 4.1.1.</p>
+<div class="cell">
+<div id="tbl-hpc-allocation-sensitivity" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-hpc-allocation-sensitivity-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table 11: Illustrative 2030 HPC allocation scenarios relative to the 2026 allocation baseline.
+</figcaption>
+<div aria-describedby="tbl-hpc-allocation-sensitivity-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table cell caption-top table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Scenario</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Allocation (million kSU)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Gap (million kSU)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Fulfilment (%)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">2026 allocation level</td>
+<td style="text-align: right;">0.87</td>
+<td style="text-align: right;">1.63</td>
+<td style="text-align: right;">34.9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">25% increase</td>
+<td style="text-align: right;">1.09</td>
+<td style="text-align: right;">1.41</td>
+<td style="text-align: right;">43.6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">50% increase</td>
+<td style="text-align: right;">1.31</td>
+<td style="text-align: right;">1.19</td>
+<td style="text-align: right;">52.3</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p><a href="#tbl-hpc-allocation-sensitivity" class="quarto-xref">Table 11</a> shows that maintaining allocations at the 2026 level would leave approximately 1.63 million kSU of projected requests unmet in 2030, with a fulfilment rate of 34.9%. A 50% increase in allocations would reduce the gap to 1.19 million kSU and raise fulfilment to 52.3%.</p>
+<p>To maintain the 2026 fulfilment rate of 38.9%, allocations would need to reach approximately 0.97 million kSU in 2030, an increase of 11.6% from the 2026 level. Achieving 50% fulfilment would require approximately 1.25 million kSU, or 43.5% above 2026 allocations. These comparisons show how different allocation targets affect the scale of unmet requests under the central demand forecast.</p>
+<p>The scenarios are illustrative rather than forecasts of future capacity. Differences in service-unit accounting, computing technology, allocation policies and researcher behaviour could affect future requests and allocations. The results therefore indicate the scale of recorded allocations needed under each assumption, not the physical infrastructure or investment required.</p>
 </section>
 </section>
 <section id="discussion" class="level1" data-number="5">

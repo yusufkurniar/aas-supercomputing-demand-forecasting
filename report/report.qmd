@@ -79,6 +79,8 @@ The analysis covers 13 financial years, from 2013/14 to 2025/26, represented by 
 
 The sources provide different levels of detail. Earlier publications mainly contain annual or facility-level summaries, while more recent NCMAS outcomes include project-level allocations, computing resources and research fields [@NCMAS2021; @NCMAS2024; @NCMAS2026]. Different documents sometimes supplied requested compute, allocations and FoR information for the same year. Historical applicant guidance was also reviewed to understand changes in allocation rules and resource definitions [@NCMAS2014Info; @NCMAS2020Info; @NCMAS2023Info; @NCMAS2024Info; @NCMAS2026Info].
 
+::: {.small-table}
+
 | Source | Information extracted | Use in analysis |
 |---|---|---|
 | NCI annual reports | Historical allocations, computing systems and reported resources | Historical series construction |
@@ -87,6 +89,8 @@ The sources provide different levels of detail. Earlier publications mainly cont
 | Supporting publications | Accounting rules, resource descriptions and contextual indicators | Conversion assumptions and interpretation |
 
 : Main data sources and their analytical roles. {#tbl-data-sources}
+
+:::
 
 Research funding, workforce and research activity indicators were considered as potential predictors but were not included in the final models because sufficiently consistent annual series were unavailable.
 
@@ -123,6 +127,8 @@ The denominators are system- and resource-specific accounting factors and were n
 
 ### System-Specific Conversion Rules
 
+::: {.small-table}
+
 | System or resource | Reporting period | SU per resource-hour | Treatment |
 |---|---|---:|---|
 | Raijin CPU and Magnus CPU | Selected historical years from 2013/14 | 1 | Historical baseline; assumptions apply to some records |
@@ -133,6 +139,8 @@ The denominators are system- and resource-specific accounting factors and were n
 | Previously reported million core-hours | Selected historical years | Not applicable | Multiply by 1,000,000 |
 
 : Main compute-resource conversion rules recorded in the year-by-year conversion worksheet. {#tbl-conversion-factors}
+
+:::
 
 The factors were compiled from system-specific documentation and the project’s recorded conversion assumptions [@NCIGadiTransition; @PawseySetonixTransition; @Pawsey2023Services; @NCMAS2026Info]. They were applied to the corresponding system and reporting period, rather than indiscriminately to aggregate kSU values without a resource breakdown.
 
@@ -158,6 +166,8 @@ Original field labels were cleaned by removing numerical prefixes, standardising
 
 @tbl-for-alignment summarises the analytical grouping applied to the reported research fields.
 
+::: {.small-table}
+
 | Analytical group | Reported fields included |
 |---|---|
 | Physical Sciences | Physical sciences and radioastronomy |
@@ -171,6 +181,8 @@ Original field labels were cleaned by removing numerical prefixes, standardising
 | Unclassified & Operational | Other, unreported, unclassified and Pawsey operational categories |
 
 : Analytical FoR grouping rules used for longitudinal comparison across 2014–2026. {#tbl-for-alignment}
+
+:::
 
 The groupings were developed for analytical consistency and do not represent official one-to-one conversions between ANZSRC 2008 and ANZSRC 2020. Original research field labels and allocation values were preserved.
 
@@ -227,6 +239,8 @@ Unlike the linear model, the log-linear model allows the absolute annual increas
 
 The forecasting models were applied separately to the available demand measures.
 
+::: {.small-table}
+
 | Forecasting target | Historical period | Measurement unit | Main consideration |
 |---|---|---|---|
 | Overall HPC demand | 2014–2026 | kSU | Historical reporting and accounting comparability |
@@ -234,6 +248,8 @@ The forecasting models were applied separately to the available demand measures.
 | GPU demand | 2022–2026 | Million GPU-hours | Shorter series and estimated resource-level values |
 
 : Forecasting targets and historical coverage. {#tbl-forecast-targets}
+
+:::
 
 The HPC and CPU series contain 13 annual observations covering 2014–2026. GPU modelling was restricted to five observations from 2022–2026 because earlier GPU-hour estimates relied on less-supported conversion assumptions. The recent GPU series also includes derived values, limiting the reliability of model evaluation and forecasts.
 
@@ -298,6 +314,8 @@ The scenarios show how different historical allocation patterns affect the indic
 Forecasts were generated for 2027–2030 by fitting the selected models to the available historical observations. Alternative growth assumptions and models excluding 2026 were retained for sensitivity analysis.
 
 The projections extend historical demand trends rather than estimate future infrastructure capacity requirements directly. They do not explicitly account for changes in research policy, computing technology or access to HPC resources. Historical accounting differences and the limited annual observations, particularly for GPU demand, also restrict forecast reliability.
+
+An additional allocation sensitivity analysis compared the central 2030 HPC demand forecast with three illustrative allocation levels: the 2026 allocation, 25% above that level and 50% above it. For each scenario, the request–allocation gap and fulfilment rate were calculated. The analysis also estimated the allocation levels required to maintain the 2026 fulfilment rate and achieve 50% fulfilment in 2030. These comparisons were used for planning interpretation rather than forecasting future allocations or infrastructure capacity.
 
 # Results
 
@@ -3754,6 +3772,78 @@ The central linear model projects approximately 2.50 million kSU of national HPC
 Earth and Environmental Sciences shows the opposite pattern, with 760,374 kSU under the earlier-period scenario and 334,353 kSU under the recent-period scenario. The full-period scenario produces intermediate values for both groups.
 
 These differences arise from the historical allocation weights rather than changes in the national forecast. The results illustrate how assumptions about research-field composition affect indicative demand distribution, but they are not confirmed future allocations or independently validated field-level demand forecasts. Chapter 5 discusses their planning implications.
+
+## HPC Allocation Sensitivity Scenarios
+
+The central HPC forecast was used to examine how different allocation levels would affect the request–allocation gap in 2030. Three illustrative scenarios were considered: allocations remaining at the 2026 level, increasing by 25%, or increasing by 50%. These assumptions represent changes in recorded allocations relative to 2026, not independently forecast infrastructure capacity.
+
+For each scenario, the projected gap was calculated as forecast requests minus assumed allocations, while fulfilment was calculated as assumed allocations divided by forecast requests. The analysis uses the central HPC forecast from Section 4.3.1 and the 2026 allocation baseline reported in Section 4.1.1.
+
+```{r}
+#| label: tbl-hpc-allocation-sensitivity
+#| tbl-cap: "Illustrative 2030 HPC allocation scenarios relative to the 2026 allocation baseline."
+#| echo: false
+#| warning: false
+#| message: false
+
+stopifnot(
+  exists("hpc_forecast"),
+  2030 %in% hpc_forecast$year
+)
+
+allocation_2026 <- 872288
+
+demand_2030 <- hpc_forecast |>
+  dplyr::filter(year == 2030) |>
+  dplyr::pull(national_ksu)
+
+allocation_sensitivity <- tibble::tibble(
+  scenario = c(
+    "2026 allocation level",
+    "25% increase",
+    "50% increase"
+  ),
+  multiplier = c(1, 1.25, 1.50)
+) |>
+  dplyr::mutate(
+    allocation_ksu = allocation_2026 * multiplier,
+    gap_ksu = demand_2030 - allocation_ksu,
+    fulfilment_pct = 100 * allocation_ksu / demand_2030
+  )
+
+stopifnot(
+  length(demand_2030) == 1,
+  is.finite(demand_2030),
+  all(allocation_sensitivity$gap_ksu > 0),
+  all(allocation_sensitivity$fulfilment_pct < 100)
+)
+
+allocation_sensitivity |>
+  dplyr::transmute(
+    Scenario = scenario,
+    `Allocation (million kSU)` =
+      sprintf("%.2f", allocation_ksu / 1e6),
+    `Gap (million kSU)` =
+      sprintf("%.2f", gap_ksu / 1e6),
+    `Fulfilment (%)` =
+      sprintf("%.1f", fulfilment_pct)
+  ) |>
+  knitr::kable(
+    align = c("l", "r", "r", "r")
+  ) |>
+  kableExtra::kable_styling(
+    latex_options = "HOLD_position",
+    font_size = 9,
+    full_width = FALSE
+  )
+```
+
+
+@tbl-hpc-allocation-sensitivity shows that maintaining allocations at the 2026 level would leave approximately 1.63 million kSU of projected requests unmet in 2030, with a fulfilment rate of 34.9%. A 50% increase in allocations would reduce the gap to 1.19 million kSU and raise fulfilment to 52.3%.
+
+To maintain the 2026 fulfilment rate of 38.9%, allocations would need to reach approximately 0.97 million kSU in 2030, an increase of 11.6% from the 2026 level. Achieving 50% fulfilment would require approximately 1.25 million kSU, or 43.5% above 2026 allocations. These comparisons show how different allocation targets affect the scale of unmet requests under the central demand forecast.
+
+The scenarios are illustrative rather than forecasts of future capacity. Differences in service-unit accounting, computing technology, allocation policies and researcher behaviour could affect future requests and allocations. The results therefore indicate the scale of recorded allocations needed under each assumption, not the physical infrastructure or investment required.
 
 # Discussion
 
