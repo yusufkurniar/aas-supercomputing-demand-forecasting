@@ -1267,11 +1267,11 @@ These comparisons are affected by the transition from FoR 2008 to FoR 2020 class
 
 ## Forecast Model Evaluation
 
-The naïve, drift, linear trend and log-linear trend models were compared using one-year-ahead rolling-origin forecasts. Overall HPC and CPU accuracy was evaluated over 2021–2026, while GPU accuracy was evaluated over 2025–2026. Results are reported separately because the three demand measures use different units and historical periods.
+The naïve, drift, linear trend and log-linear trend models were compared using one-year-ahead rolling-origin forecasts. HPC and CPU accuracy was evaluated over 2021–2026, with six forecasts per model. GPU accuracy was evaluated over 2025–2026, with two forecasts per model. Accuracy results are reported separately because the three demand measures use different units.
 
 ### Overall HPC Demand
 
-@fig-hpc-cv compares observed HPC demand with one-year-ahead forecasts from the four models. The naïve model generally underestimated demand during periods of growth, while drift and linear trend followed the observed series more closely. The log-linear model tended to overestimate demand, particularly after 2022. However, all four models underestimated the sharp increase in 2026.
+@fig-hpc-cv compares observed HPC demand with one-year-ahead forecasts from the four models. The naïve model generally underestimated demand when requests increased, while the drift and linear trend models produced forecasts closer to the observed values in several evaluation years. The log-linear model overestimated demand during much of 2023–2025. All four models underestimated the increase in 2026.
 
 ```{r}
 #| label: fig-hpc-cv
@@ -1463,7 +1463,7 @@ ggplot(
   )
 ```
 
-@tbl-hpc-accuracy summarises forecast accuracy over 2021–2026. The linear trend achieved the lowest RMSE (290,898 kSU) and MAE (198,295 kSU). Its RMSE was 23.2% lower than naïve and 7.5% lower than drift. The log-linear model performed worst, with an RMSE of 511,614 kSU.
+@tbl-hpc-accuracy summarises forecast accuracy over 2021–2026. The linear trend achieved the lowest RMSE (290,898 kSU) and MAE (198,295 kSU), outperforming both benchmark methods on these measures. The log-linear model had the highest RMSE (511,614 kSU) and MAE (466,991 kSU).
 
 ```{r}
 #| label: tbl-hpc-accuracy
@@ -1509,13 +1509,13 @@ knitr::kable(
   )
 ```
 
-The linear trend was selected as the central HPC forecasting model because it had the lowest evaluation errors and assumes a constant absolute annual increase. However, including 2026 increased the fitted annual trend from approximately 144,357 to 161,992 kSU (12.2%). The model excluding 2026 was therefore retained for sensitivity analysis, while the log-linear model was retained to examine continued proportional growth.
+The linear trend was selected as the central HPC forecasting model based on its evaluation accuracy and constant absolute-growth assumption. Including 2026 increased the fitted annual trend from approximately 144,357 to 161,992 kSU (12.2%). A model excluding 2026 was therefore retained to assess sensitivity to the latest observation, while the log-linear model was retained to examine continued proportional growth.
 
-The evaluation is based on six one-year-ahead forecasts. It does not establish how accurately the selected model will predict demand through 2030. Section 4.3 compares the resulting projections and alternative growth assumptions.
+These results are based on six one-year-ahead forecasts and do not establish accuracy through 2030. Section 4.3.1 compares the resulting projections.
 
 ### CPU Demand
 
-@fig-cpu-cv compares observed CPU demand with one-year-ahead forecasts from the four models over 2021–2026. The naïve and drift models struggled with changes in demand, particularly the decline in 2022. The linear trend produced forecasts relatively close to observed demand during 2023–2025 but underestimated demand in the later evaluation years. The log-linear model generally overestimated demand from 2022 to 2025, although its 2026 forecast was closer to the observed value.
+@fig-cpu-cv compares observed CPU demand with one-year-ahead forecasts over 2021–2026. The naïve and drift models produced relatively large errors around the decline in 2022. The linear trend forecasts were closer to observed demand during 2023–2025 but underestimated the increase in 2026. The log-linear model generally overestimated demand during 2022–2025, although its 2026 forecast was closer to the observed value.
 
 ```{r}
 #| label: fig-cpu-cv
@@ -1705,7 +1705,7 @@ ggplot(
   )
 ```
 
-@tbl-cpu-accuracy reports forecast accuracy across the six evaluation years. The linear trend achieved the lowest RMSE (157.72 million core-hours), while the log-linear model achieved the lowest MAE (133.74 million core-hours). The difference in RMSE between the two models was approximately 1.5%, compared with 3.5% for MAE. Neither model performed best on both measures.
+@tbl-cpu-accuracy reports forecast accuracy across the six evaluation years. The linear trend achieved the lowest RMSE (157.72 million core-hours), while the log-linear model achieved the lowest MAE (133.74 million core-hours). Linear RMSE was approximately 1.5% lower than log-linear RMSE, whereas log-linear MAE was approximately 3.5% lower than linear MAE. Neither model performed best on both measures.
 
 ```{r}
 #| label: tbl-cpu-accuracy
@@ -1746,13 +1746,13 @@ knitr::kable(
   )
 ```
 
-The linear trend was selected as the central CPU forecasting model because it had the lowest RMSE and assumes a constant annual increase in demand. The log-linear model was retained as an alternative because its MAE was lower and its proportional-growth assumption produces a different forecast trajectory through 2030.
+The linear trend was selected as the central CPU forecasting model because it achieved the lowest RMSE and assumes a constant absolute annual increase. The log-linear model was retained as an alternative because it achieved the lowest MAE and represents continued proportional growth.
 
-Including the 2026 observation increased the estimated annual growth rate in the linear model from 72.41 million to 81.01 million CPU core-hours (11.9%). This shows that the fitted trend is sensitive to the latest observation. The model excluding 2026 was retained to assess how this difference affects the projections through 2030 (Section 4.3).
+Including 2026 increased the fitted linear trend from 72.41 million to 81.01 million CPU core-hours per year (11.9%). The model excluding 2026 was therefore retained to assess how the latest observation affects projections through 2030 (Section 4.3.2).
 
 ### GPU Demand
 
-@fig-gpu-cv compares observed GPU demand with one-year-ahead forecasts for 2025 and 2026. The vertical segments show the forecast errors for each model. All four models underestimated demand in 2026, when estimated GPU requests reached approximately 3.00 million GPU-hours. The naïve model forecast approximately 2.39 million GPU-hours, while the trend models also failed to anticipate the increase.
+@fig-gpu-cv compares observed GPU demand with one-year-ahead forecasts for 2025 and 2026. All four models underestimated demand in 2026, when estimated requests reached approximately 3.00 million GPU-hours. The naïve model forecast approximately 2.39 million GPU-hours, while the trend models also failed to anticipate the increase.
 
 ```{r}
 #| label: fig-gpu-cv
@@ -1944,7 +1944,7 @@ ggplot(
   )
 ```
 
-@tbl-gpu-accuracy reports the accuracy results from the two evaluation years. The naïve model achieved the lowest RMSE (0.441 million GPU-hours) and MAE (0.353 million GPU-hours), followed by drift, log-linear trend and linear trend.
+@tbl-gpu-accuracy reports the results from the two evaluation years. The naïve model achieved the lowest RMSE (0.441 million GPU-hours) and MAE (0.353 million GPU-hours), followed by drift, log-linear trend and linear trend.
 
 ```{r}
 #| label: tbl-gpu-accuracy
@@ -1988,13 +1988,13 @@ knitr::kable(
   )
 ```
 
-These rankings are based on only two forecast errors per model. The GPU series also includes converted and estimated observations, so the results do not establish which method would perform best over a longer period. In particular, the naïve model's lower evaluation errors do not imply that GPU demand will remain constant through 2030.
+These rankings are based on only two forecast errors per model and a series containing converted and estimated observations. Although the naïve model achieved the lowest errors, this does not establish that it would outperform the trend models over a longer evaluation period or that GPU demand will remain constant.
 
-The naïve model was retained as a reference, while linear and log-linear trends were used to examine alternative growth assumptions. No model was selected as a central GPU forecast. GPU projections were therefore treated as exploratory and excluded from the initial national HPC planning scenarios, which use the overall HPC demand forecast and historical Field of Research allocation shares. Section 4.3 presents the exploratory GPU projections through 2030.
+The naïve model was retained as a benchmark alongside linear and log-linear projections under alternative growth assumptions. No central GPU forecasting model was selected. The projections in Section 4.3.3 are exploratory and were not used to distribute national HPC demand across research fields in Section 4.4.
 
 ### Residual Diagnostics
 
-Residual diagnostics were conducted on the selected linear trend models fitted to the full 2014–2026 HPC and CPU demand series. The analysis examined residual autocorrelation using ACF plots and Ljung–Box tests, and departures from normality using Q–Q plots. These checks were used to assess the assumptions underlying the model-based prediction intervals. @fig-model-diagnostics shows the residual ACF and Q–Q plots for both models.
+Residual diagnostics were conducted on the linear trend models fitted to the full 2014–2026 HPC and CPU demand series, separately from the rolling-origin accuracy evaluation. Residual ACF plots and Ljung–Box tests were used to examine autocorrelation, while normal Q–Q plots were used to assess departures from the normal-error assumption underlying the model-based prediction intervals. @fig-model-diagnostics presents these results.
 
 ```{r}
 #| label: fig-model-diagnostics
@@ -2175,7 +2175,7 @@ p_cpu_qq <- make_qq_plot(
   )
 ```
 
-The ACF plots show that none of the displayed residual correlations exceeds the approximate reference limits. HPC residual correlations are generally small, while CPU residuals show negative correlations at lags 1 and 4. @tbl-ljung-box reports the Ljung–Box tests using three lags.
+None of the displayed residual autocorrelations exceeds the approximate ACF reference limits. HPC residual correlations are generally small, while CPU residuals show negative correlations at lags 1 and 4. @tbl-ljung-box reports the Ljung–Box tests using three lags.
 
 ```{r}
 #| label: tbl-ljung-box
@@ -2241,11 +2241,9 @@ knitr::kable(
   )
 ```
 
-Neither test rejected the null hypothesis of no residual autocorrelation at the 5% significance level (HPC: p = 0.965; CPU: p = 0.554). However, with only 13 annual observations, these results do not establish that the residuals are independent.
+The Ljung–Box tests did not reject the null hypothesis of no residual autocorrelation at three lags (HPC: $p = 0.965$; CPU: $p = 0.554$). However, the 13 annual observations provide limited power to detect residual dependence.
 
-The HPC Q–Q plot shows some departures from the normal reference line, particularly in the upper tail. The CPU plot shows more noticeable departures in the lower tail. These departures raise concerns about the normal-error assumption, particularly for CPU demand.
-
-The diagnostics did not identify statistically significant residual autocorrelation at the tested lags, but the small sample and Q–Q plot departures limit confidence in the models' error assumptions. The prediction intervals presented in Section 4.3 should therefore be interpreted cautiously.
+The HPC Q–Q plot shows departures from the normal reference line in the upper tail, while the CPU plot shows more noticeable departures in the lower tail. These findings do not invalidate the linear forecasts, but they limit confidence in the normal-error assumptions used to construct the prediction intervals in Section 4.3.
 
 ## Demand Forecasts to 2030
 

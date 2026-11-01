@@ -3094,10 +3094,10 @@ Figure 4: HPC allocation composition by Field of Research, 2014–2026, and cha
 </section>
 <section id="forecast-model-evaluation" class="level2" data-number="4.2">
 <h2 data-number="4.2" class="anchored" data-anchor-id="forecast-model-evaluation"><span class="header-section-number">4.2</span> Forecast Model Evaluation</h2>
-<p>The naïve, drift, linear trend and log-linear trend models were compared using one-year-ahead rolling-origin forecasts. Overall HPC and CPU accuracy was evaluated over 2021–2026, while GPU accuracy was evaluated over 2025–2026. Results are reported separately because the three demand measures use different units and historical periods.</p>
+<p>The naïve, drift, linear trend and log-linear trend models were compared using one-year-ahead rolling-origin forecasts. HPC and CPU accuracy was evaluated over 2021–2026, with six forecasts per model. GPU accuracy was evaluated over 2025–2026, with two forecasts per model. Accuracy results are reported separately because the three demand measures use different units.</p>
 <section id="overall-hpc-demand" class="level3" data-number="4.2.1">
 <h3 data-number="4.2.1" class="anchored" data-anchor-id="overall-hpc-demand"><span class="header-section-number">4.2.1</span> Overall HPC Demand</h3>
-<p><a href="#fig-hpc-cv" class="quarto-xref">Figure 5</a> compares observed HPC demand with one-year-ahead forecasts from the four models. The naïve model generally underestimated demand during periods of growth, while drift and linear trend followed the observed series more closely. The log-linear model tended to overestimate demand, particularly after 2022. However, all four models underestimated the sharp increase in 2026.</p>
+<p><a href="#fig-hpc-cv" class="quarto-xref">Figure 5</a> compares observed HPC demand with one-year-ahead forecasts from the four models. The naïve model generally underestimated demand when requests increased, while the drift and linear trend models produced forecasts closer to the observed values in several evaluation years. The log-linear model overestimated demand during much of 2023–2025. All four models underestimated the increase in 2026.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-hpc-cv" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -3112,7 +3112,7 @@ Figure 5: Observed overall HPC demand and rolling-origin one-year-ahead forecas
 </div>
 </div>
 </div>
-<p><a href="#tbl-hpc-accuracy" class="quarto-xref">Table 5</a> summarises forecast accuracy over 2021–2026. The linear trend achieved the lowest RMSE (290,898 kSU) and MAE (198,295 kSU). Its RMSE was 23.2% lower than naïve and 7.5% lower than drift. The log-linear model performed worst, with an RMSE of 511,614 kSU.</p>
+<p><a href="#tbl-hpc-accuracy" class="quarto-xref">Table 5</a> summarises forecast accuracy over 2021–2026. The linear trend achieved the lowest RMSE (290,898 kSU) and MAE (198,295 kSU), outperforming both benchmark methods on these measures. The log-linear model had the highest RMSE (511,614 kSU) and MAE (466,991 kSU).</p>
 <div class="cell">
 <div id="tbl-hpc-accuracy" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -3162,12 +3162,12 @@ Table 5: Rolling-origin forecast accuracy for overall HPC demand, 2021–2026.
 </figure>
 </div>
 </div>
-<p>The linear trend was selected as the central HPC forecasting model because it had the lowest evaluation errors and assumes a constant absolute annual increase. However, including 2026 increased the fitted annual trend from approximately 144,357 to 161,992 kSU (12.2%). The model excluding 2026 was therefore retained for sensitivity analysis, while the log-linear model was retained to examine continued proportional growth.</p>
-<p>The evaluation is based on six one-year-ahead forecasts. It does not establish how accurately the selected model will predict demand through 2030. Section 4.3 compares the resulting projections and alternative growth assumptions.</p>
+<p>The linear trend was selected as the central HPC forecasting model based on its evaluation accuracy and constant absolute-growth assumption. Including 2026 increased the fitted annual trend from approximately 144,357 to 161,992 kSU (12.2%). A model excluding 2026 was therefore retained to assess sensitivity to the latest observation, while the log-linear model was retained to examine continued proportional growth.</p>
+<p>These results are based on six one-year-ahead forecasts and do not establish accuracy through 2030. Section 4.3.1 compares the resulting projections.</p>
 </section>
 <section id="cpu-demand" class="level3" data-number="4.2.2">
 <h3 data-number="4.2.2" class="anchored" data-anchor-id="cpu-demand"><span class="header-section-number">4.2.2</span> CPU Demand</h3>
-<p><a href="#fig-cpu-cv" class="quarto-xref">Figure 6</a> compares observed CPU demand with one-year-ahead forecasts from the four models over 2021–2026. The naïve and drift models struggled with changes in demand, particularly the decline in 2022. The linear trend produced forecasts relatively close to observed demand during 2023–2025 but underestimated demand in the later evaluation years. The log-linear model generally overestimated demand from 2022 to 2025, although its 2026 forecast was closer to the observed value.</p>
+<p><a href="#fig-cpu-cv" class="quarto-xref">Figure 6</a> compares observed CPU demand with one-year-ahead forecasts over 2021–2026. The naïve and drift models produced relatively large errors around the decline in 2022. The linear trend forecasts were closer to observed demand during 2023–2025 but underestimated the increase in 2026. The log-linear model generally overestimated demand during 2022–2025, although its 2026 forecast was closer to the observed value.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-cpu-cv" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -3182,7 +3182,7 @@ Figure 6: Observed CPU demand and rolling-origin one-year-ahead forecasts, 2021
 </div>
 </div>
 </div>
-<p><a href="#tbl-cpu-accuracy" class="quarto-xref">Table 6</a> reports forecast accuracy across the six evaluation years. The linear trend achieved the lowest RMSE (157.72 million core-hours), while the log-linear model achieved the lowest MAE (133.74 million core-hours). The difference in RMSE between the two models was approximately 1.5%, compared with 3.5% for MAE. Neither model performed best on both measures.</p>
+<p><a href="#tbl-cpu-accuracy" class="quarto-xref">Table 6</a> reports forecast accuracy across the six evaluation years. The linear trend achieved the lowest RMSE (157.72 million core-hours), while the log-linear model achieved the lowest MAE (133.74 million core-hours). Linear RMSE was approximately 1.5% lower than log-linear RMSE, whereas log-linear MAE was approximately 3.5% lower than linear MAE. Neither model performed best on both measures.</p>
 <div class="cell">
 <div id="tbl-cpu-accuracy" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -3232,12 +3232,12 @@ Table 6: Rolling-origin forecast accuracy for CPU demand, 2021–2026.
 </figure>
 </div>
 </div>
-<p>The linear trend was selected as the central CPU forecasting model because it had the lowest RMSE and assumes a constant annual increase in demand. The log-linear model was retained as an alternative because its MAE was lower and its proportional-growth assumption produces a different forecast trajectory through 2030.</p>
-<p>Including the 2026 observation increased the estimated annual growth rate in the linear model from 72.41 million to 81.01 million CPU core-hours (11.9%). This shows that the fitted trend is sensitive to the latest observation. The model excluding 2026 was retained to assess how this difference affects the projections through 2030 (Section 4.3).</p>
+<p>The linear trend was selected as the central CPU forecasting model because it achieved the lowest RMSE and assumes a constant absolute annual increase. The log-linear model was retained as an alternative because it achieved the lowest MAE and represents continued proportional growth.</p>
+<p>Including 2026 increased the fitted linear trend from 72.41 million to 81.01 million CPU core-hours per year (11.9%). The model excluding 2026 was therefore retained to assess how the latest observation affects projections through 2030 (Section 4.3.2).</p>
 </section>
 <section id="gpu-demand" class="level3" data-number="4.2.3">
 <h3 data-number="4.2.3" class="anchored" data-anchor-id="gpu-demand"><span class="header-section-number">4.2.3</span> GPU Demand</h3>
-<p><a href="#fig-gpu-cv" class="quarto-xref">Figure 7</a> compares observed GPU demand with one-year-ahead forecasts for 2025 and 2026. The vertical segments show the forecast errors for each model. All four models underestimated demand in 2026, when estimated GPU requests reached approximately 3.00 million GPU-hours. The naïve model forecast approximately 2.39 million GPU-hours, while the trend models also failed to anticipate the increase.</p>
+<p><a href="#fig-gpu-cv" class="quarto-xref">Figure 7</a> compares observed GPU demand with one-year-ahead forecasts for 2025 and 2026. All four models underestimated demand in 2026, when estimated requests reached approximately 3.00 million GPU-hours. The naïve model forecast approximately 2.39 million GPU-hours, while the trend models also failed to anticipate the increase.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-gpu-cv" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -3252,7 +3252,7 @@ Figure 7: Observed GPU demand and exploratory one-year-ahead forecasts, 2025–
 </div>
 </div>
 </div>
-<p><a href="#tbl-gpu-accuracy" class="quarto-xref">Table 7</a> reports the accuracy results from the two evaluation years. The naïve model achieved the lowest RMSE (0.441 million GPU-hours) and MAE (0.353 million GPU-hours), followed by drift, log-linear trend and linear trend.</p>
+<p><a href="#tbl-gpu-accuracy" class="quarto-xref">Table 7</a> reports the results from the two evaluation years. The naïve model achieved the lowest RMSE (0.441 million GPU-hours) and MAE (0.353 million GPU-hours), followed by drift, log-linear trend and linear trend.</p>
 <div class="cell">
 <div id="tbl-gpu-accuracy" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -3302,12 +3302,12 @@ Table 7: Exploratory rolling-origin forecast accuracy for GPU demand, 2025–20
 </figure>
 </div>
 </div>
-<p>These rankings are based on only two forecast errors per model. The GPU series also includes converted and estimated observations, so the results do not establish which method would perform best over a longer period. In particular, the naïve model’s lower evaluation errors do not imply that GPU demand will remain constant through 2030.</p>
-<p>The naïve model was retained as a reference, while linear and log-linear trends were used to examine alternative growth assumptions. No model was selected as a central GPU forecast. GPU projections were therefore treated as exploratory and excluded from the initial national HPC planning scenarios, which use the overall HPC demand forecast and historical Field of Research allocation shares. Section 4.3 presents the exploratory GPU projections through 2030.</p>
+<p>These rankings are based on only two forecast errors per model and a series containing converted and estimated observations. Although the naïve model achieved the lowest errors, this does not establish that it would outperform the trend models over a longer evaluation period or that GPU demand will remain constant.</p>
+<p>The naïve model was retained as a benchmark alongside linear and log-linear projections under alternative growth assumptions. No central GPU forecasting model was selected. The projections in Section 4.3.3 are exploratory and were not used to distribute national HPC demand across research fields in Section 4.4.</p>
 </section>
 <section id="residual-diagnostics" class="level3" data-number="4.2.4">
 <h3 data-number="4.2.4" class="anchored" data-anchor-id="residual-diagnostics"><span class="header-section-number">4.2.4</span> Residual Diagnostics</h3>
-<p>Residual diagnostics were conducted on the selected linear trend models fitted to the full 2014–2026 HPC and CPU demand series. The analysis examined residual autocorrelation using ACF plots and Ljung–Box tests, and departures from normality using Q–Q plots. These checks were used to assess the assumptions underlying the model-based prediction intervals. <a href="#fig-model-diagnostics" class="quarto-xref">Figure 8</a> shows the residual ACF and Q–Q plots for both models.</p>
+<p>Residual diagnostics were conducted on the linear trend models fitted to the full 2014–2026 HPC and CPU demand series, separately from the rolling-origin accuracy evaluation. Residual ACF plots and Ljung–Box tests were used to examine autocorrelation, while normal Q–Q plots were used to assess departures from the normal-error assumption underlying the model-based prediction intervals. <a href="#fig-model-diagnostics" class="quarto-xref">Figure 8</a> presents these results.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-model-diagnostics" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -3322,7 +3322,7 @@ Figure 8: Residual diagnostics for the selected linear trend models fitted to 2
 </div>
 </div>
 </div>
-<p>The ACF plots show that none of the displayed residual correlations exceeds the approximate reference limits. HPC residual correlations are generally small, while CPU residuals show negative correlations at lags 1 and 4. <a href="#tbl-ljung-box" class="quarto-xref">Table 8</a> reports the Ljung–Box tests using three lags.</p>
+<p>None of the displayed residual autocorrelations exceeds the approximate ACF reference limits. HPC residual correlations are generally small, while CPU residuals show negative correlations at lags 1 and 4. <a href="#tbl-ljung-box" class="quarto-xref">Table 8</a> reports the Ljung–Box tests using three lags.</p>
 <div class="cell">
 <div id="tbl-ljung-box" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -3363,9 +3363,8 @@ Table 8: Ljung–Box tests of residual autocorrelation for the selected linear 
 </figure>
 </div>
 </div>
-<p>Neither test rejected the null hypothesis of no residual autocorrelation at the 5% significance level (HPC: p = 0.965; CPU: p = 0.554). However, with only 13 annual observations, these results do not establish that the residuals are independent.</p>
-<p>The HPC Q–Q plot shows some departures from the normal reference line, particularly in the upper tail. The CPU plot shows more noticeable departures in the lower tail. These departures raise concerns about the normal-error assumption, particularly for CPU demand.</p>
-<p>The diagnostics did not identify statistically significant residual autocorrelation at the tested lags, but the small sample and Q–Q plot departures limit confidence in the models’ error assumptions. The prediction intervals presented in Section 4.3 should therefore be interpreted cautiously.</p>
+<p>The Ljung–Box tests did not reject the null hypothesis of no residual autocorrelation at three lags (HPC: <span class="math inline">\(p = 0.965\)</span>; CPU: <span class="math inline">\(p = 0.554\)</span>). However, the 13 annual observations provide limited power to detect residual dependence.</p>
+<p>The HPC Q–Q plot shows departures from the normal reference line in the upper tail, while the CPU plot shows more noticeable departures in the lower tail. These findings do not invalidate the linear forecasts, but they limit confidence in the normal-error assumptions used to construct the prediction intervals in Section 4.3.</p>
 </section>
 </section>
 <section id="demand-forecasts-to-2030" class="level2" data-number="4.3">
