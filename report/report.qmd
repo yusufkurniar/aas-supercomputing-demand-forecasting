@@ -1,6 +1,9 @@
 ---
 title: "Forecasting Demand for National Research Supercomputing"
-subtitle: "Australian Academy of Science | Australian HPC Demand to 2030"
+subtitle:  |
+  Australian Academy of Science | Australian HPC Demand to 2030
+
+  [GitHub Repository: https://github.com/yusufkurniar01/aas-supercomputing-demand-forecasting.git](https://github.com/yusufkurniar01/aas-supercomputing-demand-forecasting.git)
 author: "Yusuf Kurnia Romadhon"
 
 bibliography: ../references.bib
@@ -3943,3 +3946,9 @@ The project delivers documented historical datasets, evaluated forecasting model
 
 ::: {#refs}
 :::
+
+# AI Acknowledgement and Supporting Materials {.unnumbered}
+
+**Use of Generative AI**
+
+ChatGPT (OpenAI) was used as a supporting tool throughout this project. It helped me understand technical terms related to supercomputing, explore suitable forecasting methods for limited historical data, and identify repetitive or unclear explanations in the report. I also used it to cross check calculations involving resource conversions, forecast projections and scenario results. All analytical decisions, calculations and final interpretations were reviewed and verified by the author.
