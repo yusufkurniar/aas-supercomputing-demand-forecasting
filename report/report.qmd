@@ -3937,7 +3937,7 @@ Rolling-origin evaluation supported linear trend models for the central HPC and 
 
 The allocation sensitivity analysis further showed that a 50% increase from the 2026 allocation level would fulfil only approximately 52% of projected HPC requests in 2030, under the central demand forecast.
 
-The project delivers documented historical datasets, evaluated forecasting models and demand scenarios through 2030. The results provide the Australian Academy of Science with a reference for national HPC planning, while the accompanying Quarto documentation and Git repository retain the data preparation steps, assumptions and code needed to review and update the analysis.
+The project delivers documented historical datasets, evaluated forecasting models and demand scenarios through 2030. These provide the Australian Academy of Science with a reference for national HPC planning and a basis for updating the analysis as new data become available. However, the findings also show that demand projections need to be considered alongside allocation constraints, computing system performance and changes in resource accounting before they can inform future capacity decisions. The accompanying Quarto documentation and Git repository retain the preparation steps, assumptions and code needed to review and update the results.
 
 # References
 
