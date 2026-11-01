@@ -1,0 +1,1361 @@
+# Initial Analysis
+
+## Purpose
+
+The purpose of this stage is to examine historical demand and allocation patterns for Australian national High-Performance Computing (HPC) resources from 2014 to 2026, using the converted datasets produced in Chapter 05.
+
+The analysis focuses on identifying trends in computational resource demand, allocation levels, and potential differences between requested and allocated resources. CPU core-hours and GPU-hours are examined separately because they represent distinct computational resource types and cannot be directly combined.
+
+The analysis also examines the distribution of HPC allocations across Fields of Research (FoR) to identify how allocated computational resources are distributed among research disciplines and how these patterns have changed over time.
+
+Particular attention is given to historical reporting differences, conversion assumptions, and estimated resource values. These limitations are considered when interpreting trends and assessing the suitability of the data for forecasting.
+
+The findings from this stage will inform subsequent forecasting model development, evaluation, and scenario analysis through 2030.
+
+```{r}
+annual_converted <- readRDS(
+  "../assets/data/data converted/annual_demand_allocation_converted.rds"
+)
+
+for_converted <- readRDS(
+  "../assets/data/data converted/field_of_research_converted.rds"
+)
+
+historical_gpu_scenarios <- readRDS(
+  "../assets/data/data converted/historical_gpu_scenarios.rds"
+)
+```
+
+## Historical Demand and Allocation
+
+Historical HPC demand and allocation are examined across the 2014 - 2026 analytical period to identify changes in requested computational resources, awarded allocations, and the difference between them.
+
+Requested compute is used as an indicator of researcher demand, while allocated compute reflects the resources awarded within available infrastructure and programme constraints. These measures are therefore interpreted separately.
+
+The analysis uses the converted annual kSU series to examine demand and allocation trends, annual growth rates, request allocation gaps, and fulfilment rates. However, historical values include directly reported observations, derived estimates, and capacity-based proxies. Consequently, observed changes may partly reflect reporting differences or changes in infrastructure rather than underlying demand alone.
+
+### Annual Data Validation
+
+```{r}
+library(dplyr)
+library(ggplot2)
+
+# Inspect the annual demand and allocation series
+annual_converted |>
+  select(
+    year,
+    demand_ksu,
+    allocation_ksu,
+    conversion_status,
+    conversion_note
+  ) |>
+  arrange(year) |>
+  print(n = Inf, width = Inf)
+
+# Check coverage and completeness
+stopifnot(
+  nrow(annual_converted) == 13,
+  all(sort(annual_converted$year) == 2014:2026),
+  all(!is.na(annual_converted$demand_ksu)),
+  all(!is.na(annual_converted$allocation_ksu)),
+  all(annual_converted$demand_ksu > 0),
+  all(annual_converted$allocation_ksu >= 0)
+)
+```
+
+### Annual Analytical Indicators
+
+```{r}
+annual_analysis <- annual_converted |>
+  arrange(year) |>
+  mutate(
+    demand_allocation_gap_ksu =
+      demand_ksu - allocation_ksu,
+
+    fulfilment_rate_pct =
+      100 * allocation_ksu / demand_ksu,
+
+    demand_growth_pct =
+      100 * (demand_ksu / lag(demand_ksu) - 1),
+
+    allocation_growth_pct =
+      100 * (allocation_ksu / lag(allocation_ksu) - 1)
+  )
+
+annual_analysis |>
+  select(
+    year,
+    demand_ksu,
+    allocation_ksu,
+    demand_allocation_gap_ksu,
+    fulfilment_rate_pct,
+    demand_growth_pct,
+    allocation_growth_pct
+  ) |>
+  print(n = Inf)
+```
+
+### Annual Demand and Allocation Trends
+
+```{r}
+annual_plot_data <- annual_analysis |>
+  select(
+    year,
+    Demand = demand_ksu,
+    Allocation = allocation_ksu
+  ) |>
+  tidyr::pivot_longer(
+    cols = c(Demand, Allocation),
+    names_to = "measure",
+    values_to = "value_ksu"
+  )
+
+ggplot(
+  annual_plot_data,
+  aes(
+    x = year,
+    y = value_ksu,
+    colour = measure
+  )
+) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 2) +
+  scale_x_continuous(breaks = 2014:2026) +
+  scale_y_continuous(
+    labels = scales::label_comma()
+  ) +
+  labs(
+    title = "Historical HPC Demand and Allocation",
+    subtitle = "Analytical years 2014–2026",
+    x = "Year",
+    y = "Compute (kSU)",
+    colour = NULL
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "bottom"
+  )
+```
+
+### Initial Findings
+
+The annual HPC demand and allocation series show an overall upward trend between 2014 and 2026. Reported or estimated demand increases from approximately 131,356 kSU in 2014 to 2,242,817 kSU in 2026, while allocation increases from approximately 83,505 kSU to 872,288 kSU.
+
+Demand exceeds allocation in every analytical year. The largest absolute gap occurs in 2026, when demand exceeds allocation by approximately 1.37 million kSU. The corresponding fulfilment rate is approximately 38.9%, compared with 56.0% in 2025.
+
+The series also exhibits periods of substantial change, particularly around 2018, 2021, and 2026. However, these changes should not automatically be interpreted as equivalent increases in underlying researcher demand. Historical conversion assumptions, differences in reporting scope, capacity-based allocation proxies, and changes in HPC systems may contribute to the observed variation.
+
+These findings suggest a persistent difference between requested and allocated computational resources. Further analysis of CPU and GPU resources is required to understand whether similar patterns are present across distinct computational resource types.
+
+#### Interpretation of the 2026 Demand Increase
+
+The marked increase in reported demand in 2026 requires particular caution. It is not yet established whether this represents a sustained increase in underlying researcher demand, a temporary change, or an effect of reporting scope and conversion assumptions. Following expert statistical feedback, subsequent forecasting will examine the sensitivity of trend estimates to the inclusion of
+2026 and compare simple linear and log-linear models.
+
+## CPU and GPU Resources
+
+CPU and GPU resources are examined separately to identify historical patterns in computational demand and allocation across the 2014–2026 analytical period.
+
+The analysis uses the converted CPU core-hours and GPU-hours produced in Chapter 05. These measures provide resource-specific perspectives on HPC demand and allocation, although their interpretation remains subject to system-level accounting conventions and historical conversion assumptions.
+
+Historical CPU estimates are influenced by the assumed resource composition and conversion factors applied to earlier observations. GPU estimates for 2014 - 2021 are based on low, baseline, and high scenarios rather than directly observed resource-level demand and allocation. GPU values for 2022 - 2026 use reported system-level allocations and a combination of reported and estimated demand.
+
+CPU core-hours and GPU-hours are therefore analysed independently and are not added together. The objective is to examine trends within each resource category while retaining the distinction between reported observations and modelled estimates.
+
+### Validate the converted CPU and GPU series
+
+```{r}
+# Inspect converted CPU and GPU resources
+annual_converted |>
+  select(
+    year,
+    demand_cpu_core_hours,
+    allocation_cpu_core_hours,
+    demand_gpu_hours,
+    allocation_gpu_hours
+  ) |>
+  arrange(year) |>
+  print(n = Inf)
+
+# Check completeness and non-negative values
+resource_columns <- c(
+  "demand_cpu_core_hours",
+  "allocation_cpu_core_hours",
+  "demand_gpu_hours",
+  "allocation_gpu_hours"
+)
+
+stopifnot(
+  nrow(annual_converted) == 13,
+  all(sort(annual_converted$year) == 2014:2026),
+  all(!is.na(annual_converted[resource_columns])),
+  all(as.matrix(annual_converted[resource_columns]) >= 0)
+)
+```
+
+### Create CPU and GPU trend charts
+
+```{r}
+# CPU demand and allocation trends
+cpu_plot_data <- annual_converted |>
+  select(
+    year,
+    Demand = demand_cpu_core_hours,
+    Allocation = allocation_cpu_core_hours
+  ) |>
+  tidyr::pivot_longer(
+    cols = c(Demand, Allocation),
+    names_to = "measure",
+    values_to = "cpu_core_hours"
+  )
+
+ggplot(
+  cpu_plot_data,
+  aes(
+    x = year,
+    y = cpu_core_hours,
+    colour = measure
+  )
+) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 2) +
+  scale_x_continuous(breaks = 2014:2026) +
+  scale_y_continuous(
+    labels = scales::label_number(
+      scale = 1e-6,
+      accuracy = 1
+    )
+  ) +
+  labs(
+    title = "Historical CPU Demand and Allocation",
+    subtitle = "2014–2026; historical values include estimates",
+    x = "Year",
+    y = "CPU core-hours (millions)",
+    colour = NULL
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "bottom"
+  )
+```
+
+The CPU demand and allocation trends represent converted baseline estimates. Historical CPU values are subject to uncertainty arising from system-specific accounting conventions, assumed CPU/GPU resource composition, and the use of capacity proxies in selected years. Unlike the historical GPU analysis, separate low and high CPU core-hour scenarios have not been established. Therefore, the CPU chart presents the baseline series without uncertainty bands, and historical fluctuations should be interpreted cautiously.
+
+```{r}
+# Validate historical GPU scenario coverage
+stopifnot(
+  nrow(historical_gpu_scenarios) == 8,
+
+  isTRUE(all.equal(
+    sort(as.numeric(historical_gpu_scenarios$year)),
+    as.numeric(2014:2021)
+  )),
+
+  all(
+    historical_gpu_scenarios$demand_gpu_hours_low <=
+      historical_gpu_scenarios$demand_gpu_hours_baseline
+  ),
+
+  all(
+    historical_gpu_scenarios$demand_gpu_hours_baseline <=
+      historical_gpu_scenarios$demand_gpu_hours_high
+  ),
+
+  all(
+    historical_gpu_scenarios$allocation_gpu_hours_low <=
+      historical_gpu_scenarios$allocation_gpu_hours_baseline
+  ),
+
+  all(
+    historical_gpu_scenarios$allocation_gpu_hours_baseline <=
+      historical_gpu_scenarios$allocation_gpu_hours_high
+  ),
+  all(
+    abs(
+      annual_converted$demand_gpu_hours[
+        match(
+          historical_gpu_scenarios$year,
+          annual_converted$year
+        )
+      ] -
+        historical_gpu_scenarios$demand_gpu_hours_baseline
+    ) < 1e-6
+  ),
+  all(
+    abs(
+      annual_converted$allocation_gpu_hours[
+        match(
+          historical_gpu_scenarios$year,
+          annual_converted$year
+        )
+      ] -
+        historical_gpu_scenarios$allocation_gpu_hours_baseline
+    ) < 1e-6
+  )
+)
+```
+
+```{r}
+# Prepare GPU demand and allocation data
+gpu_plot_data <- annual_converted |>
+  dplyr::select(
+    year,
+    Demand = demand_gpu_hours,
+    Allocation = allocation_gpu_hours
+  ) |>
+  tidyr::pivot_longer(
+    cols = c(Demand, Allocation),
+    names_to = "measure",
+    values_to = "gpu_hours"
+  )
+
+# Use the existing historical low/high GPU scenarios
+gpu_uncertainty_data <- historical_gpu_scenarios |>
+  dplyr::select(
+    year,
+    demand_gpu_hours_low,
+    demand_gpu_hours_high,
+    allocation_gpu_hours_low,
+    allocation_gpu_hours_high
+  ) |>
+  tidyr::pivot_longer(
+    cols = -year,
+    names_to = c("measure", ".value"),
+    names_pattern = "(demand|allocation)_(gpu_hours_low|gpu_hours_high)"
+  ) |>
+  dplyr::mutate(
+    measure = dplyr::recode(
+      measure,
+      demand = "Demand",
+      allocation = "Allocation"
+    )
+  )
+
+# Plot baseline trends with historical uncertainty bands
+ggplot() +
+  geom_ribbon(
+    data = gpu_uncertainty_data,
+    aes(
+      x = year,
+      ymin = gpu_hours_low,
+      ymax = gpu_hours_high,
+      fill = measure,
+      group = measure
+    ),
+    alpha = 0.18,
+    colour = NA
+  ) +
+  geom_line(
+    data = gpu_plot_data,
+    aes(
+      x = year,
+      y = gpu_hours,
+      colour = measure
+    ),
+    linewidth = 1
+  ) +
+  geom_point(
+    data = gpu_plot_data,
+    aes(
+      x = year,
+      y = gpu_hours,
+      colour = measure
+    ),
+    size = 2
+  ) +
+  scale_x_continuous(
+    breaks = 2014:2026
+  ) +
+  scale_y_continuous(
+    labels = scales::label_number(
+      scale = 1e-6,
+      accuracy = 0.1
+    )
+  ) +
+  labs(
+    title = "Historical GPU Demand and Allocation",
+    subtitle = "2014 – 2021: low–high scenario bands; 2022 – 2026: mixed reported/estimated",
+    x = "Year",
+    y = "GPU-hours (millions)",
+    colour = NULL,
+    fill = NULL,
+    caption = paste(
+      "Shaded bands represent assumed historical GPU scenarios,",
+      "not statistical confidence intervals."
+    )
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(
+      angle = 45,
+      hjust = 1
+    ),
+    legend.position = "bottom"
+  )
+```
+
+The shaded bands represent the range between the low and high historical GPU estimation scenarios for 2014 - 2021, while the solid lines represent the baseline demand and allocation estimates. These bands illustrate sensitivity to assumed historical GPU resource shares rather than statistical confidence intervals. No equivalent uncertainty bands are shown for 2022 - 2026, although those observations remain subject to conversion assumptions and, for some years, estimated GPU demand.
+
+```{r}
+historical_gpu_scenarios |>
+  select(
+    year,
+    allocation_gpu_hours_low,
+    allocation_gpu_hours_baseline,
+    allocation_gpu_hours_high,
+    demand_gpu_hours_low,
+    demand_gpu_hours_baseline,
+    demand_gpu_hours_high
+  ) |>
+  arrange(year) |>
+  print(n = Inf)
+```
+
+### Initial Findings
+
+The resource-specific analysis indicates an overall increase in estimated CPU and GPU demand between 2014 and 2026, although the two series exhibit different patterns and levels of uncertainty.
+
+**CPU Resources**
+
+Estimated CPU demand increases from approximately 130.0 million CPU core-hours in 2014 to 1,235.0 million CPU core-hours in 2026. Over the same period, CPU allocation increases from approximately 82.7 million to 518.6 million CPU core-hours.
+
+CPU demand remains above allocation throughout the analytical period. Substantial fluctuations are visible around 2018 – 2022, followed by a sustained increase in estimated demand from 2022 to 2026. In contrast, CPU allocation remains relatively stable between 2023 and 2026, at approximately 491 – 528 million CPU core-hours.
+
+The widening difference between CPU demand and allocation in recent years suggests increasing pressure on allocated CPU resources. However, the magnitude of historical changes should be interpreted cautiously because earlier observations include assumed conversion factors, capacity proxies, and estimated CPU/GPU resource shares.
+
+**GPU Resources**
+
+Estimated GPU demand increases from approximately 0.04 million GPU-hours in 2014 to 3.00 million GPU-hours in 2026. GPU allocation increases from approximately 0.02 million to 1.25 million GPU-hours over the same period.
+
+The GPU series shows a pronounced increase between 2021 and 2022, followed by fluctuations in estimated demand and comparatively stable allocations during 2022–2026. By 2026, estimated GPU demand is approximately 2.4 times the allocated GPU-hours.
+
+However, the historical GPU series requires particular caution. Values for 2014–2021 are based on assumed GPU resource shares and a provisional conversion factor rather than directly observed GPU demand and allocation. The low, baseline, and high scenarios demonstrate that historical GPU estimates are sensitive to these assumptions.
+
+Furthermore, GPU allocation from 2022 onward is derived from reported system-level service units using a working conversion factor, while GPU demand includes both directly reported and estimated values. The apparent increase around 2022 may therefore partly reflect changes in reporting coverage, infrastructure, and conversion methodology rather than an equivalent increase in underlying GPU demand.
+
+**Implications for Forecasting**
+
+The CPU and GPU series suggest different historical demand patterns and should be considered separately during forecasting model development. The observed differences between demand and allocation also reinforce the importance of distinguishing researcher demand from computational resources awarded under capacity constraints.
+
+Historical uncertainty, system transitions, and the limited availability of directly observed GPU demand should be considered when selecting modelling periods and evaluating forecast reliability. Scenario analysis will be particularly important for assessing the sensitivity of GPU forecasts to historical conversion assumptions.
+
+## Field of Research
+
+The Field of Research (FoR) analysis examines the distribution of HPC
+allocations across research disciplines during the 2014–2026 analytical period.
+
+For the overall longitudinal analysis, the original `research_field_reported`
+variable is harmonised into broad analytical groups using consistent mapping
+rules across all years. This approach avoids relying on the period-dependent
+`for_analysis_group` variable.
+
+The broad groups are intended for exploratory comparison and do not represent
+official ANZSRC divisions. Original research-field labels and classification
+codes remain unchanged in the underlying datasets.
+
+The analysis examines allocation composition rather than directly observed
+researcher demand. FoR-specific kSU, CPU core-hours and GPU-hours are derived
+using allocation shares and should not be interpreted as independently
+measured resource consumption by each discipline.
+
+The 2017 observation is interpreted cautiously because its Pawsey-wide
+reporting scope differs from the other observations. Other source and
+classification limitations also affect longitudinal comparability.
+
+### Validate the Field of Research series
+
+```{r}
+#| label: validate-for-series
+
+# Inspect the original research-field labels and converted measures
+for_converted |>
+  dplyr::select(
+    year,
+    research_field_reported,
+    allocation_share_for,
+    allocation_for_ksu,
+    allocation_for_cpu_core_hours,
+    allocation_for_gpu_hours,
+    for_resource_scope_flag
+  ) |>
+  dplyr::arrange(
+    year,
+    dplyr::desc(allocation_share_for)
+  ) |>
+  print(n = 20, width = Inf)
+
+# Validate coverage and completeness
+stopifnot(
+  nrow(for_converted) == 133,
+  identical(
+    sort(unique(for_converted$year)),
+    as.numeric(2014:2026)
+  ),
+  all(!is.na(for_converted$research_field_reported)),
+  all(!is.na(for_converted$allocation_share_for)),
+  all(!is.na(for_converted$allocation_for_ksu)),
+  all(!is.na(for_converted$allocation_for_cpu_core_hours)),
+  all(!is.na(for_converted$allocation_for_gpu_hours))
+)
+
+# Check annual allocation shares
+for_share_summary <- for_converted |>
+  dplyr::group_by(year) |>
+  dplyr::summarise(
+    n_fields = dplyr::n(),
+    total_share = sum(allocation_share_for),
+    .groups = "drop"
+  )
+
+print(for_share_summary, n = Inf)
+
+stopifnot(
+  all(abs(for_share_summary$total_share - 1) < 1e-6)
+)
+```
+
+### Research Field Allocation Composition
+
+The original research-field labels are reviewed before harmonisation.
+Reported categories may differ in terminology, granularity and
+classification structure across years.
+
+```{r}
+#| label: review-reported-for
+
+for_category_review <- for_converted |>
+  dplyr::group_by(research_field_reported) |>
+  dplyr::summarise(
+    n_years = dplyr::n_distinct(year),
+    first_year = min(year),
+    last_year = max(year),
+    total_allocation_share = sum(
+      allocation_share_for,
+      na.rm = TRUE
+    ),
+    .groups = "drop"
+  ) |>
+  dplyr::arrange(research_field_reported)
+
+print(for_category_review, n = Inf, width = Inf)
+```
+
+### Harmonise Research Fields for Longitudinal Comparison
+
+For the 2014–2026 comparison, original reported labels are consolidated
+into nine broad analytical groups.
+
+Physical Sciences and Chemical Sciences remain separate. Earth and
+Environmental Sciences are combined where source reporting differs in
+granularity. Engineering and Technology are similarly grouped for
+longitudinal visualisation.
+
+The mappings are analytical decisions, not official one-to-one
+classification conversions.
+
+```{r}
+#| label: prepare-overall-for
+
+# Create broad analytical groups from original reported labels
+for_visual_data <- for_converted |>
+  dplyr::mutate(
+    reported_clean = research_field_reported |>
+      stringr::str_remove("^\\s*\\d{2}\\s+") |>
+      stringr::str_to_lower() |>
+      stringr::str_replace_all("&", " and ") |>
+      stringr::str_squish(),
+
+    for_visual_group = dplyr::case_when(
+
+      # Physical Sciences
+      stringr::str_detect(
+        reported_clean,
+        "physical sciences|radioastronomy|radio astronomy"
+      ) ~ "Physical Sciences",
+
+      # Chemical Sciences - kept separate
+      stringr::str_detect(
+        reported_clean,
+        "chemical sciences"
+      ) ~ "Chemical Sciences",
+
+      # Earth and Environmental Sciences
+      stringr::str_detect(
+        reported_clean,
+        "earth|environmental|geoscien"
+      ) ~ "Earth & Environmental Sciences",
+
+      # Engineering and Technology
+      stringr::str_detect(
+        reported_clean,
+        "engineering|technology"
+      ) ~ "Engineering & Technology",
+
+      # Biological and Agricultural Sciences
+      stringr::str_detect(
+        reported_clean,
+        "biological|agricultural|veterinary|food sciences"
+      ) ~ "Biological & Agricultural Sciences",
+
+      # Medical and Health Sciences
+      stringr::str_detect(
+        reported_clean,
+        "medical|health|biomedical|clinical"
+      ) ~ "Medical & Health Sciences",
+
+      # Mathematics and Computing
+      stringr::str_detect(
+        reported_clean,
+        "mathematical|computing|information"
+      ) ~ "Mathematics & Computing",
+
+      # Social Sciences, Humanities and Built Environment
+      stringr::str_detect(
+        reported_clean,
+        paste0(
+          "psychology|economics|history|archaeology|",
+          "human society|language|communication|culture|",
+          "philosophy|religious|built environment|design"
+        )
+      ) ~ "Social Sciences, Humanities & Built Environment",
+
+      # Unclassified and operational categories
+      stringr::str_detect(
+        reported_clean,
+        "other|unreported|unclassified|pawsey operations"
+      ) ~ "Unclassified & Operational",
+
+      TRUE ~ NA_character_
+    )
+  )
+
+# Review original labels and assigned groups
+for_mapping_review <- for_visual_data |>
+  dplyr::distinct(
+    research_field_reported,
+    for_visual_group
+  ) |>
+  dplyr::arrange(
+    for_visual_group,
+    research_field_reported
+  )
+
+print(for_mapping_review, n = Inf, width = Inf)
+
+# Check for unmapped categories
+unmapped_for <- for_visual_data |>
+  dplyr::filter(is.na(for_visual_group)) |>
+  dplyr::distinct(research_field_reported)
+
+print(unmapped_for, n = Inf)
+
+stopifnot(nrow(unmapped_for) == 0)
+
+# Confirm nine broad groups
+stopifnot(
+  dplyr::n_distinct(for_visual_data$for_visual_group) == 9
+)
+```
+
+### Annual Research Field Allocation Composition, 2014–2026
+
+```{r}
+#| label: plot-overall-for
+#| fig-width: 15
+#| fig-height: 9
+#| out-width: 100%
+
+# Aggregate allocation shares by year and analytical group
+for_plot_data <- for_visual_data |>
+  dplyr::group_by(year, for_visual_group) |>
+  dplyr::summarise(
+    allocation_share = sum(allocation_share_for),
+    .groups = "drop"
+  )
+
+# Validate annual allocation shares
+for_plot_validation <- for_plot_data |>
+  dplyr::group_by(year) |>
+  dplyr::summarise(
+    total_share = sum(allocation_share),
+    .groups = "drop"
+  )
+
+stopifnot(
+  all(abs(for_plot_validation$total_share - 1) < 1e-6)
+)
+
+# Rank groups by average share across all 13 years
+for_group_order <- for_plot_data |>
+  tidyr::complete(
+    year = 2014:2026,
+    for_visual_group,
+    fill = list(allocation_share = 0)
+  ) |>
+  dplyr::group_by(for_visual_group) |>
+  dplyr::summarise(
+    average_share = mean(allocation_share),
+    .groups = "drop"
+  ) |>
+  dplyr::arrange(dplyr::desc(average_share)) |>
+  dplyr::pull(for_visual_group)
+
+for_plot_data <- for_plot_data |>
+  dplyr::mutate(
+    for_visual_group = factor(
+      for_visual_group,
+      levels = for_group_order
+    )
+  )
+
+# Save harmonised FoR shares for longitudinal evaluation
+saveRDS(
+  for_plot_data,
+  "../assets/data/data converted/for_2014_2026_harmonised_shares.rds"
+)
+
+# Plot
+ggplot(
+  for_plot_data,
+  aes(
+    x = factor(year),
+    y = allocation_share,
+    fill = for_visual_group
+  )
+) +
+  geom_col(
+    width = 0.8,
+    position = position_stack(reverse = TRUE)
+  ) +
+  geom_text(
+    aes(
+      label = ifelse(
+        allocation_share >= 0.15,
+        paste0(
+          stringr::str_wrap(
+            as.character(for_visual_group),
+            width = 15
+          ),
+          "\n",
+          scales::percent(
+            allocation_share,
+            accuracy = 1
+          )
+        ),
+        ""
+      )
+    ),
+    position = position_stack(
+      vjust = 0.5,
+      reverse = TRUE
+    ),
+    size = 2.1,
+    colour = "black",
+    fontface = "bold",
+    lineheight = 0.9
+  ) +
+  scale_y_continuous(
+    labels = scales::label_percent(),
+    breaks = seq(0, 1, 0.25)
+  ) +
+  coord_cartesian(ylim = c(0, 1)) +
+  labs(
+    title = "HPC Allocation by Field of Research",
+    subtitle = "Harmonised broad analytical groups, 2014–2026",
+    x = "Year",
+    y = "Share of annual allocation",
+    fill = "Research field",
+    caption = paste(
+      "Groups derived from original reported FoR labels;",
+      "not official ANZSRC divisions.",
+      "2017 reflects Pawsey-wide reporting.",
+      "Allocation shares do not measure unmet research demand."
+    )
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(
+      angle = 45,
+      hjust = 1
+    ),
+    legend.position = "bottom",
+    legend.text = element_text(size = 9),
+    plot.caption = element_text(size = 8)
+  ) +
+  guides(
+    fill = guide_legend(ncol = 3)
+  )
+```
+
+For longitudinal comparison, original reported FoR categories are
+harmonised into nine broad analytical groups. Physical Sciences and
+Chemical Sciences are retained separately to avoid obscuring their
+individual allocation patterns.
+
+These groupings reduce differences in naming and reporting granularity,
+but they do not eliminate all classification or scope inconsistencies.
+In particular, 2017 uses Pawsey-wide reporting, and historical
+Technology categories are grouped with Engineering for analytical
+visualisation without implying a verified official FoR 2020 alignment.
+
+The resulting chart describes changes in the composition of allocated
+HPC resources, not directly observed researcher demand.
+
+### Field of Research Reporting Periods
+
+The 2014–2020 and 2021–2026 periods are examined separately to assess differences in research-field allocation composition.
+
+The earlier period uses FoR 2008 division codes, while the later period uses the existing FoR 2020 mappings. These are analytical reporting periods and do not imply that all source datasets adopted a new classification system in the same year.
+
+Physical Sciences and Chemical Sciences are retained separately in both periods. Combined categories are used where necessary to improve visual consistency, without modifying the original classifications.
+
+Allocation shares represent the distribution of allocated HPC resources, not directly observed researcher demand. The 2017 FoR data have a different Pawsey-wide reporting scope and should be interpreted cautiously.
+
+#### Earlier Reporting Period: 2014–2020
+
+```{r}
+#| label: prepare-for-2008
+
+for_2008_detail <- for_converted |>
+  dplyr::filter(dplyr::between(year, 2014, 2020)) |>
+  dplyr::mutate(
+    for_standard_2008 = dplyr::case_when(
+      for_2008_division_code == "01" ~ "Mathematical Sciences",
+      for_2008_division_code == "02" ~ "Physical Sciences",
+      for_2008_division_code == "03" ~ "Chemical Sciences",
+      for_2008_division_code %in% c(
+        "04", "05", "04 + 05"
+      ) ~ "Earth & Environmental Sciences",
+      for_2008_division_code == "06" ~ "Biological Sciences",
+      for_2008_division_code == "07" ~ "Agricultural & Veterinary Sciences",
+      for_2008_division_code == "08" ~ "Information & Computing Sciences",
+      for_2008_division_code %in% c(
+        "09", "10", "09 + 10"
+      ) ~ "Engineering & Technology",
+      for_2008_division_code == "11" ~ "Medical & Health Sciences",
+      for_2008_division_code == "12" ~ "Built Environment & Design",
+      for_2008_division_code == "21" ~ "History & Archaeology",
+      is.na(for_2008_division_code) ~ "Other / Unclassified",
+      TRUE ~ NA_character_
+    )
+  )
+
+# Check unmatched classifications
+unmapped_2008 <- for_2008_detail |>
+  dplyr::filter(is.na(for_standard_2008)) |>
+  dplyr::distinct(
+    year,
+    research_field_reported,
+    for_2008_division_code
+  )
+
+print(unmapped_2008, n = Inf)
+
+stopifnot(nrow(unmapped_2008) == 0)
+
+# Aggregate allocation shares
+for_2008_plot <- for_2008_detail |>
+  dplyr::group_by(year, for_standard_2008) |>
+  dplyr::summarise(
+    allocation_share = sum(allocation_share_for),
+    .groups = "drop"
+  )
+```
+
+```{r}
+#| label: plot-for-2008
+#| fig-width: 13
+#| fig-height: 8
+#| out-width: 100%
+
+# Order categories by average allocation share
+for_2008_order <- for_2008_plot |>
+  dplyr::group_by(for_standard_2008) |>
+  dplyr::summarise(
+    average_share = sum(allocation_share) / 7,
+    .groups = "drop"
+  ) |>
+  dplyr::arrange(dplyr::desc(average_share)) |>
+  dplyr::pull(for_standard_2008)
+
+for_2008_plot <- for_2008_plot |>
+  dplyr::mutate(
+    for_standard_2008 = factor(
+      for_standard_2008,
+      levels = for_2008_order
+    )
+  )
+
+ggplot(
+  for_2008_plot,
+  aes(
+    x = factor(year),
+    y = allocation_share,
+    fill = for_standard_2008
+  )
+) +
+  geom_col(
+    width = 0.8,
+    position = position_stack(reverse = TRUE)
+  ) +
+  geom_text(
+    aes(
+      label = ifelse(
+        allocation_share >= 0.12,
+        paste0(
+          stringr::str_wrap(
+            as.character(for_standard_2008),
+            width = 15
+          ),
+          "\n",
+          scales::percent(
+            allocation_share,
+            accuracy = 1
+          )
+        ),
+        ""
+      )
+    ),
+    position = position_stack(
+      vjust = 0.5,
+      reverse = TRUE
+    ),
+    size = 2.4,
+    colour = "black",
+    fontface = "bold",
+    lineheight = 0.9
+  ) +
+  scale_y_continuous(
+    labels = scales::label_percent(),
+    breaks = seq(0, 1, 0.25)
+  ) +
+  coord_cartesian(ylim = c(0, 1)) +
+  labs(
+    title = "HPC Allocation by Field of Research",
+    subtitle = "Earlier reporting period, 2014–2020 (FoR 2008-based grouping)",
+    x = "Year",
+    y = "Share of annual allocation",
+    fill = "Research field",
+    caption = paste(
+      "Combined categories are analytical groupings.",
+      "2017 reflects Pawsey-wide FoR reporting."
+    )
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "right",
+    legend.text = element_text(size = 8)
+  )
+```
+
+#### Later Reporting Period: 2021–2026
+
+```{r}
+#| label: prepare-for-2020
+
+for_2020_detail <- for_converted |>
+  dplyr::filter(dplyr::between(year, 2021, 2026)) |>
+  dplyr::mutate(
+    for_2020_visual = dplyr::case_when(
+
+      for_standard_2020 %in% c(
+        "Engineering",
+        "Engineering + Technology",
+        "Technology — no direct FoR 2020 alignment"
+      ) ~ "Engineering & Technology",
+
+      for_standard_2020 == "Physical sciences" ~
+        "Physical Sciences",
+
+      for_standard_2020 == "Chemical sciences" ~
+        "Chemical Sciences",
+
+      for_standard_2020 %in% c(
+        "Earth sciences",
+        "Environmental sciences",
+        "Earth sciences + Environmental sciences"
+      ) ~ "Earth & Environmental Sciences",
+
+      for_standard_2020 %in% c(
+        "Biological sciences",
+        "Agricultural, veterinary and food sciences"
+      ) ~ "Biological & Agricultural Sciences",
+
+      for_standard_2020 %in% c(
+        "Biomedical and clinical sciences",
+        "Health sciences",
+        "Biomedical and clinical sciences + Health sciences"
+      ) ~ "Medical & Health Sciences",
+
+      for_standard_2020 %in% c(
+        "Mathematical sciences",
+        "Information and computing sciences"
+      ) ~ "Mathematics & Computing",
+
+      for_standard_2020 %in% c(
+        "Psychology",
+        "Economics",
+        "History, heritage and archaeology",
+        "Language, communication and culture",
+        "Philosophy and religious studies",
+        "Human society",
+        "Built environment and design"
+      ) ~ "Social Sciences, Humanities & Built Environment",
+
+      for_standard_2020 == "Other / Unclassified" ~
+        "Other / Unclassified",
+
+      TRUE ~ NA_character_
+    )
+  )
+
+# Check unmatched classifications
+unmapped_2020 <- for_2020_detail |>
+  dplyr::filter(is.na(for_2020_visual)) |>
+  dplyr::distinct(
+    year,
+    research_field_reported,
+    for_standard_2020
+  )
+
+print(unmapped_2020, n = Inf)
+
+stopifnot(nrow(unmapped_2020) == 0)
+
+# Aggregate allocation shares
+for_2020_plot <- for_2020_detail |>
+  dplyr::group_by(year, for_2020_visual) |>
+  dplyr::summarise(
+    allocation_share = sum(allocation_share_for),
+    .groups = "drop"
+  )
+
+# Save harmonised FoR 2020 shares for recent-period evaluation
+saveRDS(
+  for_2020_plot,
+  "../assets/data/data converted/for_2020_harmonised_shares.rds"
+)
+```
+
+```{r}
+#| label: plot-for-2020
+#| fig-width: 13
+#| fig-height: 8
+#| out-width: 100%
+
+# Order categories by average allocation share
+for_2020_order <- for_2020_plot |>
+  dplyr::group_by(for_2020_visual) |>
+  dplyr::summarise(
+    average_share = sum(allocation_share) / 6,
+    .groups = "drop"
+  ) |>
+  dplyr::arrange(dplyr::desc(average_share)) |>
+  dplyr::pull(for_2020_visual)
+
+for_2020_plot <- for_2020_plot |>
+  dplyr::mutate(
+    for_2020_visual = factor(
+      for_2020_visual,
+      levels = for_2020_order
+    )
+  )
+
+ggplot(
+  for_2020_plot,
+  aes(
+    x = factor(year),
+    y = allocation_share,
+    fill = for_2020_visual
+  )
+) +
+  geom_col(
+    width = 0.8,
+    position = position_stack(reverse = TRUE)
+  ) +
+  geom_text(
+    aes(
+      label = ifelse(
+        allocation_share >= 0.12,
+        paste0(
+          stringr::str_wrap(
+            as.character(for_2020_visual),
+            width = 15
+          ),
+          "\n",
+          scales::percent(
+            allocation_share,
+            accuracy = 1
+          )
+        ),
+        ""
+      )
+    ),
+    position = position_stack(
+      vjust = 0.5,
+      reverse = TRUE
+    ),
+    size = 2.4,
+    colour = "black",
+    fontface = "bold",
+    lineheight = 0.9
+  ) +
+  scale_y_continuous(
+    labels = scales::label_percent(),
+    breaks = seq(0, 1, 0.25)
+  ) +
+  coord_cartesian(ylim = c(0, 1)) +
+  labs(
+    title = "HPC Allocation by Field of Research",
+    subtitle = "Later reporting period, 2021–2026 (FoR 2020-based grouping)",
+    x = "Year",
+    y = "Share of annual allocation",
+    fill = "Research field",
+    caption = paste(
+      "Broad analytical groups derived from FoR 2020 mappings.",
+      "Technology without direct alignment is grouped with Engineering",
+      "for visualisation only."
+    )
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "right",
+    legend.text = element_text(size = 8)
+  )
+```
+
+#### Validation of Reporting-Period Allocations
+
+```{r}
+#| label: validate-for-periods
+
+for_period_validation <- dplyr::bind_rows(
+  for_2008_plot |>
+    dplyr::transmute(
+      year,
+      allocation_share,
+      period = "2014–2020"
+    ),
+  for_2020_plot |>
+    dplyr::transmute(
+      year,
+      allocation_share,
+      period = "2021–2026"
+    )
+) |>
+  dplyr::group_by(period, year) |>
+  dplyr::summarise(
+    total_share = sum(allocation_share),
+    .groups = "drop"
+  )
+
+print(for_period_validation, n = Inf)
+
+stopifnot(
+  nrow(for_period_validation) == 13,
+  all(abs(for_period_validation$total_share - 1) < 1e-6)
+)
+```
+
+The two reporting-period charts provide complementary views of historical
+FoR allocation composition. The earlier chart uses FoR 2008 division-based
+groupings, while the later chart uses existing FoR 2020 mappings.
+
+These analytical categories are not necessarily equivalent to individual
+official ANZSRC divisions. Physical Sciences and Chemical Sciences are
+kept separate in both periods to improve interpretability.
+
+The 2017 Pawsey-wide observation remains subject to a reporting-scope
+limitation. Changes in allocation composition should therefore not be
+interpreted as changes in researcher demand without further evidence.
+
+### Field of Research: Initial Findings
+
+This section summarises the historical distribution of HPC allocations
+across research disciplines. The analysis focuses on allocation shares,
+rather than treating these shares as direct measures of researcher demand.
+
+#### Dominant Research Fields, 2014–2026
+
+```{r}
+#| label: for-initial-findings
+
+# Calculate average annual allocation shares across all 13 years
+for_overall_findings <- for_plot_data |>
+  dplyr::mutate(
+    for_visual_group = as.character(for_visual_group)
+  ) |>
+  tidyr::complete(
+    year = 2014:2026,
+    for_visual_group,
+    fill = list(allocation_share = 0)
+  ) |>
+  dplyr::group_by(for_visual_group) |>
+  dplyr::summarise(
+    average_share = mean(allocation_share),
+    min_share = min(allocation_share),
+    max_share = max(allocation_share),
+    .groups = "drop"
+  ) |>
+  dplyr::arrange(dplyr::desc(average_share))
+
+for_overall_findings |>
+  dplyr::mutate(
+    dplyr::across(
+      c(average_share, min_share, max_share),
+      ~ scales::percent(.x, accuracy = 0.1)
+    )
+  ) |>
+  print(n = Inf, width = Inf)
+```
+
+The table ranks broad research-field groups by their average annual
+allocation share across 2014–2026. These are unweighted averages of
+annual percentages, not shares of cumulative allocated service units.
+Consequently, they describe the typical annual composition rather than
+each discipline's contribution to total historical allocation volume.
+
+#### Changes in Research Field Composition
+
+```{r}
+#| label: for-composition-change
+
+# Compare the first and final years
+for_composition_change <- for_plot_data |>
+  dplyr::mutate(
+    for_visual_group = as.character(for_visual_group)
+  ) |>
+  dplyr::filter(year %in% c(2014, 2026)) |>
+  tidyr::complete(
+    year = c(2014, 2026),
+    for_visual_group,
+    fill = list(allocation_share = 0)
+  ) |>
+  tidyr::pivot_wider(
+    names_from = year,
+    values_from = allocation_share,
+    names_prefix = "share_"
+  ) |>
+  dplyr::mutate(
+    change_percentage_points =
+      (share_2026 - share_2014) * 100
+  ) |>
+  dplyr::arrange(
+    dplyr::desc(change_percentage_points)
+  )
+
+for_composition_change |>
+  dplyr::mutate(
+    share_2014 = scales::percent(share_2014, accuracy = 0.1),
+    share_2026 = scales::percent(share_2026, accuracy = 0.1),
+    change_percentage_points = round(
+      change_percentage_points, 1
+    )
+  ) |>
+  print(n = Inf, width = Inf)
+```
+
+Changes are expressed in percentage points. A positive change indicates
+that a research-field group accounted for a larger proportion of annual
+HPC allocations in 2026 than in 2014. It does not necessarily indicate
+an increase in absolute allocated resources or unmet researcher demand.
+
+#### Comparison of Reporting Periods
+
+```{r}
+#| label: for-period-findings
+
+# Compare dominant categories within each reporting period
+for_period_findings <- dplyr::bind_rows(
+
+  for_2008_plot |>
+    dplyr::transmute(
+      period = "2014–2020",
+      year,
+      research_field = as.character(for_standard_2008),
+      allocation_share
+    ),
+
+  for_2020_plot |>
+    dplyr::transmute(
+      period = "2021–2026",
+      year,
+      research_field = as.character(for_2020_visual),
+      allocation_share
+    )
+
+) |>
+  dplyr::group_by(period, research_field) |>
+  dplyr::summarise(
+    total_share = sum(allocation_share),
+    .groups = "drop"
+  ) |>
+  dplyr::mutate(
+    average_annual_share = dplyr::if_else(
+      period == "2014–2020",
+      total_share / 7,
+      total_share / 6
+    )
+  ) |>
+  dplyr::group_by(period) |>
+  dplyr::slice_max(
+    order_by = average_annual_share,
+    n = 5,
+    with_ties = FALSE
+  ) |>
+  dplyr::arrange(
+    period,
+    dplyr::desc(average_annual_share),
+    .by_group = TRUE
+  ) |>
+  dplyr::ungroup()
+
+for_period_findings |>
+  dplyr::select(
+    period,
+    research_field,
+    average_annual_share
+  ) |>
+  dplyr::mutate(
+    average_annual_share = scales::percent(
+      average_annual_share,
+      accuracy = 0.1
+    )
+  ) |>
+  print(n = Inf, width = Inf)
+```
+
+The reporting-period comparison identifies the five largest analytical
+research-field categories within each period. Because the earlier
+period uses FoR 2008-based groupings and the later period uses
+FoR 2020-based groupings, their rankings are descriptive rather than
+strictly equivalent classification comparisons.
+
+The 2017 Pawsey-wide observation also introduces a reporting-scope
+difference within the earlier period.
+
+#### Implications for HPC Demand Forecasting
+
+The historical FoR analysis provides evidence about the disciplinary
+composition of allocated HPC resources. It may help identify research
+areas relevant to future capacity planning and provide context for
+forecast scenarios.
+
+However, three limitations must be considered:
+
+1. Allocation shares represent the distribution of available
+   resources, not directly observed unmet researcher demand.
+2. Changes in research-field classification and reporting scope
+   limit direct comparability across all years.
+3. FoR-specific CPU and GPU resource measures are proportionally
+   allocated estimates, rather than directly observed resource
+   consumption by discipline.
+
+Accordingly, the FoR results should primarily inform the
+interpretation of aggregate demand forecasts and the development
+of disciplinary scenarios. They should not be used as independent
+discipline-level demand forecasts without additional evidence.

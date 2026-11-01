@@ -1,0 +1,1227 @@
+# Data Integration
+
+## Purpose
+
+The purpose of the data integration stage is to combine the different datasets collected for the project into a structured analytical dataset while preserving their original values, units, scope and provenance.
+
+The source datasets cover different reporting periods, levels of granularity and data structures. Integration is therefore required to align common identifiers such as analytical year, facility, computing system, resource type and Field of Research before the data can be analysed together.
+
+At this stage, integration focuses on organising and linking the available information rather than forcing observations into common units or classifications. Differences in naming, classification and compute units are addressed subsequently through data standardisation and conversion.
+
+Where datasets cannot be combined directly because of differences in scope or granularity, those distinctions are retained explicitly rather than assuming equivalence.
+
+## Main Datasets
+
+The integration process combines several datasets covering 2014 - 2026, with different analytical roles.
+
+The core HPC datasets include:
+
+- yearly HPC demand and allocation source workbooks,
+- Field of Research composition data, and
+- HPC system and capacity information.
+
+Supporting datasets include:
+
+- research funding data, and
+- research workforce and research activity data.
+
+The core datasets provide the historical evidence used to construct measures of requested compute, allocated compute and disciplinary composition. Supporting research funding, workforce and research activity datasets are retained separately for later integration into the modelling
+stage as candidate explanatory variables.
+
+Because these datasets differ in temporal coverage, granularity and reporting scope, they are not merged indiscriminately. Integration is performed only where suitable common identifiers and compatible levels of aggregation are available.
+
+Where annual demand or allocation measures are not directly available, derived or proxy values are constructed later from the integrated source evidence using explicitly documented assumptions. These selected annual measures are subsequently assembled into a separate summary dataset for modelling.
+
+## Yearly Source Integration
+
+The detailed yearly source files are integrated before constructing the annual modelling summary.
+
+For the HPC demand and allocation data, each yearly workbook contains multiple types of evidence. The integration therefore preserves the different analytical levels rather than reducing each workbook immediately to a single annual value.
+
+Three recurring components are retained:
+
+- `Project_Allocations`, containing project or allocation-level records,
+- `Context_Metrics`, containing reported or derived annual and contextual measures, and
+- `Resource_Envelope`, containing information on available resources and system-level capacity.
+
+Field of Research data are integrated separately from the yearly `FoR_Composition` sheets.
+
+The source filename and source period are retained during integration so that each observation remains traceable to its original yearly workbook. The resulting integrated tables form the evidence base from which annual summary measures are selected or derived later.
+
+### Load Libraries and Define Paths
+
+```{r}
+library(tidyverse)
+library(readxl)
+
+demand_path <- "../assets/data/raw data/demand and allocation"
+for_path <- "../assets/data/raw data/field of research"
+
+clean_path <- "../assets/data/data clean"
+```
+
+The yearly demand and allocation workbooks are identified from the raw data directory.
+
+```{r}
+demand_files <- list.files(
+  demand_path,
+  pattern = "\\.xlsx$",
+  full.names = TRUE
+)
+
+```
+
+For the demand and allocation workbooks, the reporting period is derived from the source filename. A helper function is also defined to convert financial-year-style source periods to their ending analytical year.
+
+```{r}
+get_source_period <- function(path) {
+
+  filename <- basename(path)
+
+  years <- str_match(
+    filename,
+    "(\\d{4})_(\\d{2})"
+  )
+
+  paste0(
+    years[, 2],
+    "/",
+    years[, 3]
+  )
+}
+
+get_end_year <- function(source_period) {
+
+  end_year <- str_extract(
+    source_period,
+    "(?<=/)\\d{2}$"
+  )
+
+  2000 + as.numeric(end_year)
+}
+```
+
+Each yearly demand and allocation workbook contains several recurring worksheets. The same set of yearly workbooks is therefore used to extract each analytical component separately.
+
+#### Integrate Context Metrics
+
+Demand and allocation context metrics are combined across the yearly workbooks.
+
+These records contain annual or supporting measures used to interpret requested compute, allocated compute and related demand-allocation relationships.
+
+```{r}
+context_metrics <- map_dfr(
+  demand_files,
+  function(file) {
+
+    read_excel(
+      file,
+      sheet = "Context_Metrics",
+      col_types = "text"
+    ) |>
+      mutate(
+        source_file = basename(file),
+        source_period = get_source_period(file)
+      )
+  }
+)
+
+```
+
+#### Integrate Project Allocations
+
+Project-level allocation records are combined across the yearly workbooks while preserving their original source-level structure.
+
+```{r}
+project_allocations <- map_dfr(
+  demand_files,
+  function(file) {
+
+    read_excel(
+      file,
+      sheet = "Project_Allocations",
+      col_types = "text"
+    ) |>
+      mutate(
+        source_file = basename(file),
+        source_period = get_source_period(file)
+      )
+  }
+)
+```
+
+#### Integrate Resource Envelope
+
+Resource-envelope records are combined across the yearly workbooks.
+
+These records describe available HPC systems, resource availability and capacity-related information used to interpret the supply environment associated with observed demand and allocation.
+
+```{r}
+resource_envelope <- map_dfr(
+  demand_files,
+  function(file) {
+
+    read_excel(
+      file,
+      sheet = "Resource_Envelope",
+      col_types = "text"
+    ) |>
+      mutate(
+        source_file = basename(file),
+        source_period = get_source_period(file)
+      )
+  }
+)
+```
+
+#### Align Analytical Year
+
+A common analytical year is created to align observations across the different yearly source tables. The ending year of each source period is used as the common reference year where a consistent NCMAS or allocation year is not available.
+
+```{r}
+context_metrics <- context_metrics |>
+  mutate(
+    year = get_end_year(source_period)
+  )
+
+project_allocations <- project_allocations |>
+  mutate(
+    year = coalesce(
+      suppressWarnings(as.numeric(ncmas_year)),
+      suppressWarnings(as.numeric(allocation_year)),
+      get_end_year(source_period)
+    )
+  )
+
+resource_envelope <- resource_envelope |>
+  mutate(
+    year = coalesce(
+      suppressWarnings(as.numeric(ncmas_year)),
+      suppressWarnings(as.numeric(allocation_year)),
+      get_end_year(source_period)
+    )
+  )
+```
+
+#### Validate Demand and Allocation Integration
+
+The integrated demand and allocation tables are checked to confirm that all yearly source workbooks have been retained and that the common analytical year is aligned consistently across the historical series.
+
+```{r}
+context_metrics |>
+  summarise(
+    rows = n(),
+    source_periods = n_distinct(source_period),
+    source_files = n_distinct(source_file),
+    years = n_distinct(year)
+  )
+
+project_allocations |>
+  summarise(
+    rows = n(),
+    source_periods = n_distinct(source_period),
+    source_files = n_distinct(source_file),
+    years = n_distinct(year)
+  )
+
+resource_envelope |>
+  summarise(
+    rows = n(),
+    source_periods = n_distinct(source_period),
+    source_files = n_distinct(source_file),
+    years = n_distinct(year)
+  )
+```
+
+```{r}
+bind_rows(
+  Context_Metrics = context_metrics |>
+    distinct(source_period, year),
+  Project_Allocations = project_allocations |>
+    distinct(source_period, year),
+  Resource_Envelope = resource_envelope |>
+    distinct(source_period, year),
+  .id = "table"
+) |>
+  count(
+    table,
+    source_period,
+    name = "analytical_years"
+  ) |>
+  filter(analytical_years > 1)
+```
+
+A further check is used to identify any source period that maps to more than one analytical year within an integrated table.
+
+#### Integrate Field of Research Data
+
+Field of Research composition data are combined across the yearly FoR workbooks while retaining the source filename and reporting period.
+
+These records describe the disciplinary composition of HPC allocation and are integrated separately from the demand and allocation evidence because they have a different analytical structure and level of aggregation.
+
+```{r}
+for_files <- list.files(
+  for_path,
+  pattern = "\\.xlsx$",
+  full.names = TRUE
+)
+```
+
+```{r}
+for_data <- map_dfr(
+  for_files,
+  function(file) {
+
+    read_excel(
+      file,
+      sheet = "FoR_Composition",
+      col_types = "text"
+    ) |>
+      mutate(
+        source_file = basename(file)
+      )
+  }
+)
+```
+
+```{r}
+for_data <- for_data |>
+  mutate(
+    year = get_end_year(source_period)
+  )
+```
+
+#### Validate Field of Research Integration
+
+The integrated Field of Research data are checked to confirm that all yearly FoR workbooks have been retained and that the common analytical year is aligned consistently with the demand and allocation series.
+
+```{r}
+for_data |>
+  summarise(
+    rows = n(),
+    source_periods = n_distinct(source_period),
+    source_files = n_distinct(source_file),
+    years = n_distinct(year)
+  )
+```
+
+#### Export Integrated Source Data
+
+The validated integrated tables are exported as a consolidated workbook to provide a reproducible intermediate dataset between the original yearly source files and the annual modelling summary.
+
+The workbook retains the different analytical components on separate worksheets so that differences in granularity and scope are preserved.
+
+```{r}
+writexl::write_xlsx(
+  list(
+    Context_Metrics = context_metrics,
+    Project_Allocations = project_allocations,
+    Resource_Envelope = resource_envelope,
+    FoR_Composition = for_data
+  ),
+  path = file.path(
+    clean_path,
+    "integrated_hpc_source_data.xlsx"
+  )
+)
+```
+
+
+## Annual Demand and Allocation Summary Construction
+
+The annual demand and allocation summary is constructed after integration of the detailed yearly source evidence.
+
+The existing manually assembled summary is retained temporarily as a reference for reconciliation rather than treated as an independent source of data. Each annual requested and allocated compute value is checked
+against the integrated `Context_Metrics`, `Project_Allocations` and `Resource_Envelope` evidence.
+
+Where a directly reported comparable annual value is available, that value is preferred. Where it is not available, a derived or proxy value may be constructed from the integrated evidence using an explicitly documented assumption.
+
+### Reconstruct Annual Demand and Allocation Summary
+
+Annual demand and allocation measures are reconstructed from the integrated source tables before comparison with the previously assembled summary.
+
+Context metrics are used to identify reported annual totals, ratios and derived demand information. Project-level allocations and resource envelopes are retained as supporting evidence and are aggregated only where their scope and units are sufficiently consistent.
+
+```{r}
+context_candidates <- context_metrics |>
+  mutate(
+    value_num = suppressWarnings(as.numeric(value))
+  ) |>
+  filter(
+    str_detect(
+      metric,
+      regex(
+        "request|demand|allocat|fulfil|oversub|capacity|available",
+        ignore_case = TRUE
+      )
+    )
+  ) |>
+  select(
+    year,
+    source_period,
+    metric,
+    value_num,
+    unit,
+    scope,
+    source,
+    notes
+  ) |>
+  arrange(year, metric)
+```
+
+```{r}
+project_candidates <- project_allocations |>
+  mutate(
+    allocated_compute_num =
+      suppressWarnings(as.numeric(allocated_compute))
+  ) |>
+  filter(!is.na(allocated_compute_num)) |>
+  group_by(
+    year,
+    source_period,
+    unit,
+    allocation_type
+  ) |>
+  summarise(
+    allocated_total = sum(allocated_compute_num),
+    records = n(),
+    .groups = "drop"
+  ) |>
+  arrange(year, unit, allocation_type)
+```
+
+```{r}
+resource_candidates <- resource_envelope |>
+  mutate(
+    resource_available_num =
+      suppressWarnings(as.numeric(resource_available))
+  ) |>
+  filter(!is.na(resource_available_num)) |>
+  group_by(
+    year,
+    source_period,
+    unit
+  ) |>
+  summarise(
+    resource_available_total =
+      sum(resource_available_num),
+    records = n(),
+    .groups = "drop"
+  ) |>
+  arrange(year, unit)
+```
+
+### Construct Reconstructed Annual Summary
+
+The annual series is reconstructed from the integrated evidence without using the previously assembled summary as an input.
+
+Directly reported annual values are used where available. Derived values are calculated only where the required source values and relationships are contained in the integrated evidence. Where the integrated evidence is insufficient to reproduce an earlier summary value, the value is left
+missing for subsequent reconciliation rather than being inferred from the existing summary.
+
+```{r}
+get_metric_value <- function(target_year, metric_name) {
+
+  values <- context_candidates |>
+    filter(
+      year == target_year,
+      metric == metric_name
+    ) |>
+    pull(value_num)
+
+  if (length(values) != 1) {
+    stop(
+      paste(
+        "Expected one value for",
+        target_year,
+        metric_name,
+        "but found",
+        length(values)
+      )
+    )
+  }
+
+  values
+}
+```
+
+```{r}
+reconstructed_summary <- tibble(
+  year = 2014:2026,
+  source_period = paste0(
+    year - 1,
+    "/",
+    str_sub(as.character(year), -2)
+  )
+) |>
+  mutate(
+
+    requested_compute = case_when(
+
+      year == 2014 ~
+        get_metric_value(
+          2014,
+          "ncmas_total_ksu_request"
+        ),
+
+      year == 2015 ~
+        get_metric_value(
+          2015,
+          "nci_ncmas_implied_demand_2015"
+        ),
+
+      year == 2016 ~
+        get_metric_value(
+          2016,
+          "nci_ncmas_implied_requested_compute_2016"
+        ),
+
+      year == 2017 ~
+        get_metric_value(
+          2017,
+          "pawsey_ncmas_requested_compute_2017"
+        ),
+
+      year == 2018 ~
+        get_metric_value(
+          2018,
+          "national_implied_requested_compute_2018"
+        ),
+
+      # Current integrated evidence does not contain the
+      # 220 × 3 national proxy used previously.
+      year == 2019 ~ NA_real_,
+
+      year == 2020 ~
+        resource_candidates |>
+          filter(
+            year == 2020,
+            unit == "kSU"
+          ) |>
+          pull(resource_available_total) |>
+          first() * 2,
+
+      year == 2021 ~
+        get_metric_value(
+          2021,
+          "direct_ncmas_2021_total_allocation"
+        ) *
+        get_metric_value(
+          2021,
+          "ncmas_demand_supply_factor_high"
+        ),
+
+      year == 2022 ~
+        get_metric_value(
+          2022,
+          "ncmas_allocated_compute_total"
+        ) /
+        (
+          get_metric_value(
+            2022,
+            "ncmas_allocated_share_of_requested_pct"
+          ) / 100
+        ),
+
+      year == 2023 ~
+        get_metric_value(
+          2023,
+          "ncmas_requested_compute"
+        ),
+
+      # Retrospective 57% and 56% demand relationships are
+      # not currently retained in the integrated source tables.
+      year == 2024 ~ NA_real_,
+      year == 2025 ~ NA_real_,
+
+      year == 2026 ~
+        get_metric_value(
+          2026,
+          "ncmas_requested_compute"
+        )
+    ),
+
+    allocated_compute = case_when(
+
+      # 83,505 kSU is not currently retained as an annual
+      # metric in the integrated evidence.
+      year == 2014 ~ NA_real_,
+
+      year == 2015 ~
+        get_metric_value(
+          2015,
+          "nci_ncmas_allocation_2014_15"
+        ),
+
+      year == 2016 ~
+        get_metric_value(
+          2016,
+          "nci_ncmas_allocation_2015_16"
+        ),
+
+      year == 2017 ~
+        get_metric_value(
+          2017,
+          "pawsey_ncmas_available_compute_2017"
+        ),
+
+      year == 2018 ~
+        get_metric_value(
+          2018,
+          "national_allocated_compute_2018"
+        ),
+
+      # The 220m national capacity proxy is not currently
+      # retained in the integrated evidence.
+      year == 2019 ~ NA_real_,
+
+      year == 2020 ~
+        get_metric_value(
+          2020,
+          "nci_supplement_ncmas_allocation_total_verified"
+        ),
+
+      year == 2021 ~
+        get_metric_value(
+          2021,
+          "direct_ncmas_2021_total_allocation"
+        ),
+
+      year == 2022 ~
+        get_metric_value(
+          2022,
+          "ncmas_allocated_compute_total"
+        ),
+
+      year == 2023 ~
+        get_metric_value(
+          2023,
+          "ncmas_allocated_compute_total"
+        ),
+
+      year == 2024 ~
+        get_metric_value(
+          2024,
+          "ncmas_total_allocation"
+        ),
+
+      year == 2025 ~
+        get_metric_value(
+          2025,
+          "ncmas_total_allocation"
+        ),
+
+      year == 2026 ~
+        get_metric_value(2026, "ncmas_gadi_allocation") +
+        get_metric_value(2026, "ncmas_setonix_cpu_allocation") +
+        get_metric_value(2026, "ncmas_setonix_gpu_allocation")
+    )
+  )
+```
+
+```{r}
+reconstructed_summary
+```
+
+### Compare Reconstructed and Existing Annual Summaries
+
+The reconstructed annual series is compared with the previously assembled summary to identify values that are reproduced directly from the integrated evidence and values that require additional source evidence or documented derivation.
+
+```{r}
+current_summary <- read_excel(
+  file.path(clean_path, "demand_allocation_data.xlsx")
+) |>
+  mutate(
+    year = get_end_year(source_period)
+  )
+```
+
+```{r}
+summary_comparison <- current_summary |>
+  select(
+    year,
+    source_period,
+    old_requested = requested_compute,
+    old_allocated = allocated_compute
+  ) |>
+  full_join(
+    reconstructed_summary |>
+      rename(
+        reconstructed_requested = requested_compute,
+        reconstructed_allocated = allocated_compute
+      ),
+    by = c("year", "source_period")
+  ) |>
+  mutate(
+    requested_match = case_when(
+      is.na(reconstructed_requested) ~ FALSE,
+      TRUE ~ near(old_requested, reconstructed_requested)
+    ),
+    allocated_match = case_when(
+      is.na(reconstructed_allocated) ~ FALSE,
+      TRUE ~ near(old_allocated, reconstructed_allocated)
+    )
+  ) |>
+  arrange(year)
+```
+
+```{r}
+summary_comparison |>
+  select(
+    year,
+    source_period,
+    old_requested,
+    reconstructed_requested,
+    requested_match,
+    old_allocated,
+    reconstructed_allocated,
+    allocated_match
+  )
+```
+
+### Resolve Unreconstructed Annual Values
+
+The initial reconstruction identified several annual values that could not be reproduced from the integrated source tables because the supporting metric or derivation had not yet been retained explicitly in the integrated evidence.
+
+These cases are reviewed against the original yearly source evidence before the final annual summary is constructed.
+
+```{r}
+unreconstructed_values <- summary_comparison |>
+  filter(
+    is.na(reconstructed_requested) |
+    is.na(reconstructed_allocated)
+  ) |>
+  transmute(
+    year,
+    source_period,
+    missing_requested = is.na(reconstructed_requested),
+    missing_allocated = is.na(reconstructed_allocated),
+    old_requested,
+    old_allocated
+  )
+
+unreconstructed_values
+```
+
+The unresolved cases do not necessarily represent missing research activity. Rather, they identify years where no directly usable annual measure is available from the integrated source tables. These values therefore require documented derivation or proxy treatment based on the original source evidence.
+
+### Derive Missing Annual Measures
+
+Where a directly reported annual demand or allocation measure is not available, a derived or proxy value is constructed from other published evidence retained in the integrated source data.
+
+These derivations are applied only where the relationship used is explicitly supported by the source material. Derived and proxy values are retained separately from directly reported measures so that their status remains transparent.
+
+```{r}
+reconstructed_summary <- reconstructed_summary |>
+  mutate(
+    requested_compute = case_when(
+      year == 2019 ~ 220 * 3,
+      year == 2024 ~ 812569 / 0.57,
+      year == 2025 ~ 876200 / 0.56,
+      TRUE ~ requested_compute
+    ),
+    allocated_compute = case_when(
+      year == 2014 ~ 83505,
+      year == 2019 ~ 220,
+      TRUE ~ allocated_compute
+    )
+  )
+```
+
+```{r}
+reconstructed_summary <- reconstructed_summary |>
+  mutate(
+    requested_basis = case_when(
+      year == 2014 ~ "Direct",
+      year == 2015 ~ "Derived",
+      year == 2016 ~ "Derived",
+      year == 2017 ~ "Proxy",
+      year == 2018 ~ "Derived",
+      year == 2019 ~ "Derived proxy",
+      year == 2020 ~ "Derived proxy",
+      year == 2021 ~ "Derived proxy",
+      year == 2022 ~ "Derived proxy",
+      year == 2023 ~ "Direct",
+      year == 2024 ~ "Derived proxy",
+      year == 2025 ~ "Derived proxy",
+      year == 2026 ~ "Direct"
+    ),
+
+    allocated_basis = case_when(
+      year == 2014 ~ "Direct",
+      year == 2015 ~ "Direct",
+      year == 2016 ~ "Direct",
+      year == 2017 ~ "Capacity proxy",
+      year == 2018 ~ "Direct",
+      year == 2019 ~ "Capacity proxy",
+      year == 2020 ~ "Direct",
+      year == 2021 ~ "Direct",
+      year == 2022 ~ "Direct",
+      year == 2023 ~ "Direct",
+      year == 2024 ~ "Direct",
+      year == 2025 ~ "Direct",
+      year == 2026 ~ "Direct comparable subset"
+    ),
+
+    derivation_note = case_when(
+      year == 2015 ~
+        "Requested compute derived from reported allocation and demand relationship.",
+
+      year == 2016 ~
+        "Requested compute derived from reported one-third fulfilment relationship.",
+
+      year == 2017 ~
+        "Requested compute retained as a lower-bound proxy; available capacity used as the allocation proxy.",
+
+      year == 2018 ~
+        "Requested compute derived from 222 million hours and a 42% fulfilment relationship.",
+
+      year == 2019 ~
+        "Requested compute derived as 220 × 3; available capacity used as the allocation proxy.",
+
+      year == 2020 ~
+        "Requested compute derived from the resource envelope and reported demand-supply relationship.",
+
+      year == 2021 ~
+        "Requested compute derived using the approximate three-times demand-supply relationship.",
+
+      year == 2022 ~
+        "Requested compute derived from allocated compute and the reported 50% fulfilment relationship.",
+
+      year == 2024 ~
+        "Requested compute derived from allocated compute and the retrospective 57% fulfilment relationship.",
+
+      year == 2025 ~
+        "Requested compute derived from allocated compute and the retrospective 56% fulfilment relationship.",
+
+      year == 2026 ~
+        "Setonix-Q excluded from allocation to match the scope of the published requested-compute comparison.",
+
+      TRUE ~ NA_character_
+    )
+  )
+```
+
+```{r}
+reconstructed_summary
+```
+
+### Final Reconciliation Check
+
+After the missing annual measures are reconstructed and their basis is documented, the annual series is compared again with the previously assembled summary.
+
+This final check identifies whether the reconstructed values reproduce the existing annual summary and highlights any remaining differences due to rounding, scope or methodological treatment.
+
+```{r}
+final_summary_comparison <- current_summary |>
+  select(
+    year,
+    source_period,
+    old_requested = requested_compute,
+    old_allocated = allocated_compute
+  ) |>
+  full_join(
+    reconstructed_summary |>
+      select(
+        year,
+        source_period,
+        reconstructed_requested = requested_compute,
+        reconstructed_allocated = allocated_compute,
+        requested_basis,
+        allocated_basis,
+        derivation_note
+      ),
+    by = c("year", "source_period")
+  ) |>
+  mutate(
+    requested_difference =
+      reconstructed_requested - old_requested,
+
+    allocated_difference =
+      reconstructed_allocated - old_allocated,
+
+    requested_match =
+      near(
+        old_requested,
+        reconstructed_requested,
+        tol = 1e-3
+      ),
+
+    allocated_match =
+      near(
+        old_allocated,
+        reconstructed_allocated,
+        tol = 1e-3
+      )
+  ) |>
+  arrange(year)
+```
+
+```{r}
+final_summary_comparison |>
+  select(
+    year,
+    source_period,
+    old_requested,
+    reconstructed_requested,
+    requested_match,
+    old_allocated,
+    reconstructed_allocated,
+    allocated_match
+  )
+```
+
+```{r}
+final_summary_comparison |>
+  summarise(
+    years = n(),
+    requested_matches = sum(requested_match),
+    allocated_matches = sum(allocated_match),
+    requested_mismatches = sum(!requested_match),
+    allocated_mismatches = sum(!allocated_match)
+  )
+```
+
+### Export Reconciled Annual Demand and Allocation Summary
+
+Following reconciliation, the reconstructed annual series is retained as the reproducible demand and allocation summary for subsequent standardisation, conversion and modelling.
+
+The original reporting unit is preserved alongside each annual observation because the historical series is not yet expressed on a
+common compute scale. In years where requested and allocated compute were reported in different units, the mixed-unit description is retained
+explicitly.
+
+The export also preserves whether each measure is directly reported, derived or proxy-based so that these distinctions remain available during
+later conversion and modelling.
+
+```{r}
+final_demand_allocation_summary <- reconstructed_summary |>
+  left_join(
+    current_summary |>
+      select(
+        year,
+        source_period,
+        unit,
+        requested_source,
+        allocated_source,
+        source_url
+      ),
+    by = c("year", "source_period")
+  ) |>
+  select(
+    year,
+    source_period,
+    requested_compute,
+    allocated_compute,
+    unit,
+    requested_basis,
+    allocated_basis,
+    requested_source,
+    allocated_source,
+    derivation_note,
+    source_url
+  )
+
+final_demand_allocation_summary
+```
+
+```{r}
+writexl::write_xlsx(
+  final_demand_allocation_summary,
+  path = file.path(
+    clean_path,
+    "reconciled_demand_allocation_summary.xlsx"
+  )
+)
+```
+
+## Field of Research Summary Construction
+
+The integrated Field of Research records are next assembled into a consistent annual summary.
+
+Unlike the national demand and allocation series, historical FoR evidence varies in classification, reporting scope and completeness. The purpose of this stage is therefore to preserve the reported disciplinary composition while identifying differences in coverage and evidence quality across years.
+
+FoR percentages are treated primarily as allocation composition rather than directly observed demand composition. Where these shares are later applied to annual requested compute, the resulting values are treated as analytical demand proxies rather than observed FoR-specific demand.
+
+```{r}
+for_annual_check <- for_data |>
+  mutate(
+    composition_pct_num =
+      suppressWarnings(as.numeric(composition_pct))
+  ) |>
+  group_by(
+    year,
+    source_period
+  ) |>
+  summarise(
+    records = n(),
+    composition_total =
+      sum(composition_pct_num, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  arrange(year)
+
+for_annual_check
+```
+
+```{r}
+for_quality_summary <- for_data |>
+  mutate(
+    composition_pct_num =
+      suppressWarnings(as.numeric(composition_pct))
+  ) |>
+  group_by(
+    year,
+    source_period,
+    evidence_quality,
+    scope,
+    value_basis
+  ) |>
+  summarise(
+    records = n(),
+    composition_total =
+      sum(composition_pct_num, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  arrange(year)
+
+for_quality_summary
+```
+
+### Assess Historical FoR Comparability
+
+The yearly FoR compositions generally sum to approximately 100%, but completeness alone does not imply that all years are directly comparable.
+
+Historical observations differ in reporting scope, classification method and evidence quality. Some years are based on direct NCMAS allocation composition, while others rely on estimated project classification, residual categories, or broader facility-level usage.
+
+For this reason, the FoR series is classified by analytical use rather than treated as a uniformly consistent time series. The strongest and most comparable national NCMAS composition evidence is available from 2021 onward. Earlier observations are retained primarily as historical context, with 2017 treated separately because it represents Pawsey usage across all allocation schemes rather than national NCMAS allocation composition.
+
+```{r}
+for_year_quality <- for_annual_check |>
+  mutate(
+    analytical_use = case_when(
+      year == 2017 ~
+        "Context only",
+
+      year %in% c(
+        2014,
+        2016,
+        2018,
+        2019,
+        2020
+      ) ~
+        "Historical / lower confidence",
+
+      year == 2015 ~
+        "Historical / moderate confidence",
+
+      year >= 2021 ~
+        "Main FoR trend"
+    )
+  )
+
+for_year_quality
+```
+
+### Construct FoR-Level Compute Measures
+
+The annual FoR composition is linked to the reconciled national demand and allocation series using analytical year and source period.
+
+Where FoR scope is sufficiently compatible with the annual national
+series, allocation shares are applied to annual compute totals to
+construct FoR-level estimates.
+
+Years classified as contextual only are retained for composition analysis
+but are not used to distribute national annual compute totals because
+their reporting scope is not sufficiently comparable. The same shares are also applied to annual requested compute to construct an indicative FoR-level demand proxy.
+
+The resulting demand measure is not treated as directly observed disciplinary demand because the available FoR percentages primarily describe allocation composition rather than request composition.
+
+```{r}
+for_summary <- for_data |>
+  mutate(
+    composition_pct_num =
+      suppressWarnings(as.numeric(composition_pct))
+  ) |>
+  left_join(
+    for_year_quality |>
+      select(
+        year,
+        source_period,
+        analytical_use
+      ),
+    by = c("year", "source_period")
+  )
+```
+
+```{r}
+for_summary <- for_summary |>
+  left_join(
+    final_demand_allocation_summary |>
+      select(
+        year,
+        source_period,
+        requested_compute,
+        allocated_compute,
+        unit,
+        requested_basis,
+        allocated_basis
+      ),
+    by = c("year", "source_period")
+  )
+```
+
+```{r}
+for_summary <- for_summary |>
+  mutate(
+    allocation_share_for =
+      composition_pct_num / 100,
+
+    scope_alignment = case_when(
+      year == 2017 ~
+        "Not comparable",
+
+      year == 2026 ~
+        "Review required: FoR includes Setonix-Q while annual comparable allocation excludes Setonix-Q",
+
+      analytical_use == "Main FoR trend" ~
+        "Broadly comparable",
+
+      TRUE ~
+        "Historical / approximate"
+    ),
+
+    estimated_allocated_compute_by_for = case_when(
+      analytical_use == "Context only" ~ NA_real_,
+      TRUE ~ allocated_compute * allocation_share_for
+    ),
+
+    estimated_demand_by_for_proxy = case_when(
+      analytical_use == "Context only" ~ NA_real_,
+      TRUE ~ requested_compute * allocation_share_for
+    )
+  )
+```
+
+```{r}
+for_validation <- for_summary |>
+  group_by(
+    year,
+    source_period,
+    analytical_use
+  ) |>
+  summarise(
+    composition_total =
+      sum(composition_pct_num, na.rm = TRUE),
+
+    estimated_allocated_for_total =
+      if (
+        all(is.na(estimated_allocated_compute_by_for))
+      ) {
+        NA_real_
+      } else {
+        sum(
+          estimated_allocated_compute_by_for,
+          na.rm = TRUE
+        )
+      },
+
+    demand_proxy_total =
+      if (
+        all(is.na(estimated_demand_by_for_proxy))
+      ) {
+        NA_real_
+      } else {
+        sum(
+          estimated_demand_by_for_proxy,
+          na.rm = TRUE
+        )
+      },
+
+    annual_allocated =
+      first(allocated_compute),
+
+    annual_requested =
+      first(requested_compute),
+
+    .groups = "drop"
+  ) |>
+  arrange(year)
+
+for_validation
+```
+
+The validation confirms that the FoR composition shares sum to 100% for each analytical year. As a result, the sum of FoR-level allocated compute reproduces the corresponding annual allocated-compute total, while the sum of the FoR-level demand proxies reproduces the annual requested-compute total.
+
+This confirms that the FoR allocation shares have been applied
+consistently to the reconciled national series. The demand values remain analytical proxies rather than directly observed FoR-specific requests.
+
+### Export Reconciled Field of Research Summary
+
+The validated FoR-level measures are retained as the integrated disciplinary summary for subsequent standardisation, analysis and modelling.
+
+The exported table preserves the original FoR classification information, allocation composition, analytical-use classification and evidence-quality metadata. FoR-level requested compute remains explicitly identified as a proxy derived from allocation composition.
+
+```{r}
+final_for_summary <- for_summary |>
+  select(
+    year,
+    source_period,
+
+    research_field_reported,
+    for_2008_division_code,
+    for_2020_division_code,
+    for_standard_2020,
+
+    composition_pct = composition_pct_num,
+    allocation_share_for,
+
+    requested_compute_annual = requested_compute,
+    allocated_compute_annual = allocated_compute,
+    annual_compute_unit = unit,
+    
+    estimated_demand_by_for_proxy,
+    estimated_allocated_compute_by_for,
+
+    requested_basis,
+    allocated_basis,
+
+    analytical_use,
+    scope_alignment,
+    evidence_quality,
+    scope,
+    value_basis,
+    classification_status,
+    standardisation_note,
+    notes,
+    source,
+    source_url
+  ) |>
+  arrange(
+    year,
+    desc(composition_pct)
+  )
+```
+
+```{r}
+final_for_summary |>
+  summarise(
+    rows = n(),
+    years = n_distinct(year),
+    source_periods = n_distinct(source_period),
+    missing_composition = sum(is.na(composition_pct)),
+    missing_for_name = sum(
+      is.na(for_standard_2020) |
+        str_trim(for_standard_2020) == ""
+    )
+  )
+```
+
+```{r}
+writexl::write_xlsx(
+  final_for_summary,
+  path = file.path(
+    clean_path,
+    "reconciled_field_of_research_summary.xlsx"
+  )
+)
+```
+

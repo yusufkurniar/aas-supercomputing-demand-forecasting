@@ -1,7 +1,12 @@
-.Rproj.user
+# RStudio temporary files
+.Rproj.user/
 .Rhistory
 .RData
 .Ruserdata
 
-/.quarto/
+# Quarto caches and generated output
+.quarto/
+_book/
+_output/
+index_files/
 **/*.quarto_ipynb

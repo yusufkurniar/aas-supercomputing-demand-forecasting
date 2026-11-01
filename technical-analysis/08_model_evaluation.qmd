@@ -1,0 +1,1029 @@
+# Model Evaluation
+
+## Purpose
+
+This chapter evaluates the predictive performance and statistical suitability of the candidate forecasting models developed in Chapter 07.
+
+The evaluation considers three distinct measures of Australian national research supercomputing demand:
+
+1. Overall HPC demand, expressed in thousands of service units (kSU).
+2. CPU demand, expressed in millions of CPU core-hours.
+3. GPU demand, expressed in millions of GPU-hours.
+
+The objective is to identify forecasting approaches that provide a defensible basis for estimating researcher demand through 2030,
+while recognising limitations in historical data quality, comparability, and sample size.
+
+Model selection will prioritise predictive accuracy, simplicity, interpretability, and robustness to influential observations, particularly the increase in reported demand in 2026.
+
+## Evaluation Framework
+
+### Candidate Models and Benchmarks
+
+The evaluation considers four forecasting approaches:
+
+1. Naïve benchmark: forecasts future demand using the most recent available observation.
+2. Drift benchmark: extrapolates the average annual change between the first and most recent observations in the training sample.
+3. Linear trend: estimates a constant annual absolute change in demand.
+4. Log-linear trend: estimates approximately constant proportional growth using a regression model fitted to log-transformed demand.
+
+Naïve and drift forecasts provide simple reference points against which the regression-based models can be evaluated.
+
+The linear and log-linear specifications follow the modelling framework established in Chapter 07, including sensitivity analyses excluding the 2026 observation.
+
+More complex models will not be prioritised unless their additional complexity can be justified by the available data and demonstrated predictive performance.
+
+### Time-Series Cross-Validation
+
+Forecast accuracy will be assessed using rolling-origin time-series cross-validation.
+
+At each evaluation origin, models will be estimated using only observations available up to that year. Forecasts will then be compared with subsequent historical observations.
+
+This approach preserves chronological ordering and avoids using future observations to estimate models evaluated on earlier periods.
+
+One-step-ahead evaluation will provide the primary comparison because the historical series are relatively short.
+
+Where sufficient observations are available, additional forecast horizons may be examined to assess the stability of longer-term extrapolations.
+
+The evaluation will distinguish between the longer overall HPC and CPU series covering 2014–2026 and the shorter GPU modelling series covering 2022 - 2026.
+
+For GPU demand, the small number of recent observations severely limits the number of meaningful cross-validation origins. Any accuracy comparisons will therefore be considered exploratory.
+
+### Forecast Accuracy Measures
+
+Forecast errors will be evaluated on the original scale of each demand measure using:
+
+1. Root Mean Squared Error (RMSE), which gives greater weight to larger forecast errors.
+2. Mean Absolute Error (MAE), which measures the average absolute forecast error.
+
+Accuracy measures will be calculated separately for overall HPC, CPU, and GPU demand because their units are different.
+
+For log-linear models, predictions will be back-transformed to the original demand scale before calculating forecast errors. The evaluation will distinguish exponentiated log-scale predictions from bias-adjusted mean forecasts where relevant.
+
+Models will be compared using common evaluation origins within each demand measure to ensure a fair comparison.
+
+### Model Selection Principles
+
+The preferred forecasting approach will not be selected solely on the basis of the lowest numerical error.
+
+Model selection will also consider:
+
+- Stability across evaluation periods and forecast origins.
+- Sensitivity to the inclusion of the 2026 observation.
+- Residual behaviour and evidence of systematic model errors.
+- Interpretability and consistency with historical data provenance.
+- The risks of extrapolating growth patterns through 2030.
+
+Particular caution will be applied to GPU demand because its historical modelling period is short and includes estimates derived from different reporting and conversion methods.
+
+The evaluation results presented in this chapter will provide the statistical evidence for model selection in Chapter 09 and the development of demand scenarios in Chapter 10.
+
+## Rolling-Origin Cross-Validation
+
+### Overall HPC Demand: One-Step-Ahead Evaluation
+
+The initial evaluation focuses on overall HPC demand, measured in thousands of service units (kSU).
+
+Rolling-origin cross-validation is applied using an initial training period of 2014 - 2020. At each subsequent origin, the training sample expands by one year, and a one-step-ahead forecast is generated for the following year.
+
+This produces six evaluation years, from 2021 to 2026.
+
+Four forecasting approaches are evaluated using identical training periods and forecast origins:
+
+1. Naïve benchmark.
+2. Drift benchmark.
+3. Linear trend.
+4. Log-linear trend.
+
+Each model is re-estimated using only the observations available at the corresponding forecast origin. This avoids information leakage from future observations.
+
+```{r overall-cv-predictions}
+# Load harmonised annual demand data
+annual_converted <- readRDS(
+  "../assets/data/data converted/annual_demand_allocation_converted.rds"
+)
+
+# Prepare overall HPC demand series
+overall_cv_data <- annual_converted |>
+  dplyr::transmute(
+    year = as.integer(year),
+    demand_ksu = as.numeric(demand_ksu)
+  ) |>
+  dplyr::arrange(year)
+
+# Validate historical series
+stopifnot(
+  identical(overall_cv_data$year, 2014:2026),
+  all(is.finite(overall_cv_data$demand_ksu)),
+  all(overall_cv_data$demand_ksu > 0)
+)
+
+# Define common one-step-ahead evaluation years
+cv_test_years <- 2021:2026
+
+# Generate forecasts using expanding training windows
+overall_cv_predictions <- dplyr::bind_rows(
+  lapply(cv_test_years, function(test_year) {
+
+    training <- overall_cv_data |>
+      dplyr::filter(year < test_year) |>
+      dplyr::mutate(time = year - 2014)
+
+    actual <- overall_cv_data$demand_ksu[
+      overall_cv_data$year == test_year
+    ]
+
+    future <- data.frame(time = test_year - 2014)
+
+    # Naïve: last observed demand
+    naive_forecast <- tail(training$demand_ksu, 1)
+
+    # Drift: average change from first to last observation
+    drift_forecast <- tail(training$demand_ksu, 1) +
+      (
+        tail(training$demand_ksu, 1) -
+          training$demand_ksu[1]
+      ) / (nrow(training) - 1)
+
+    # Linear trend fitted only to training data
+    linear_fit <- lm(
+      demand_ksu ~ time,
+      data = training
+    )
+
+    linear_forecast <- as.numeric(
+      predict(linear_fit, newdata = future)
+    )
+
+    # Log-linear trend fitted only to training data
+    loglinear_fit <- lm(
+      log(demand_ksu) ~ time,
+      data = training
+    )
+
+    loglinear_forecast <- exp(as.numeric(
+      predict(loglinear_fit, newdata = future)
+    ))
+
+    data.frame(
+      year = test_year,
+      actual = actual,
+      naive = naive_forecast,
+      drift = drift_forecast,
+      linear = linear_forecast,
+      loglinear = loglinear_forecast
+    )
+  })
+)
+
+# Display the predictions for inspection
+knitr::kable(
+  overall_cv_predictions,
+  digits = 0,
+  format.args = list(big.mark = ","),
+  col.names = c(
+    "Year",
+    "Actual (kSU)",
+    "Naïve",
+    "Drift",
+    "Linear",
+    "Log-linear"
+  ),
+  caption = paste(
+    "Rolling-origin one-step-ahead predictions",
+    "for overall HPC demand, 2021–2026 (kSU)"
+  )
+)
+```
+
+All four approaches produce forecasts for the same six test years, allowing their prediction errors to be compared consistently.
+
+The log-linear forecasts are exponentiated predictions from the fitted log-demand models. They are evaluated on the original
+kSU scale and represent back-transformed central predictions, rather than bias-adjusted conditional means.
+
+The resulting predictions will be used to calculate RMSE and MAE in the next stage of the evaluation.
+
+### Overall HPC Forecast Accuracy
+
+Forecast accuracy is evaluated using root mean squared error (RMSE) and mean absolute error (MAE) across the six one-step-ahead predictions for 2021 - 2026.
+
+Both measures are calculated on the original kSU scale. Lower values indicate better historical predictive accuracy over the common evaluation period.
+
+```{r overall-cv-accuracy}
+# Calculate forecast accuracy for each candidate model
+overall_cv_accuracy <- dplyr::bind_rows(
+  lapply(
+    c("naive", "drift", "linear", "loglinear"),
+    function(model_name) {
+
+      errors <- overall_cv_predictions[[model_name]] -
+        overall_cv_predictions$actual
+
+      data.frame(
+        model = model_name,
+        RMSE = sqrt(mean(errors^2)),
+        MAE = mean(abs(errors))
+      )
+    }
+  )
+) |>
+  dplyr::arrange(RMSE)
+
+knitr::kable(
+  overall_cv_accuracy,
+  digits = 0,
+  format.args = list(big.mark = ","),
+  col.names = c("Model", "RMSE (kSU)", "MAE (kSU)"),
+  caption = paste(
+    "One-step-ahead cross-validation accuracy",
+    "for overall HPC demand, 2021–2026"
+  )
+)
+```
+
+The accuracy comparison uses identical test years for all four models, ensuring that differences in RMSE and MAE are not
+caused by different evaluation periods.
+
+RMSE places greater weight on large forecast errors, whereas MAE provides a measure of typical absolute forecast error.
+
+These metrics provide evidence for subsequent model selection in Chapter 09, alongside considerations of model simplicity, data provenance, and sensitivity to influential observations.
+
+### Overall HPC Accuracy Findings
+
+Rolling-origin one-step-ahead cross-validation over 2021–2026 indicates that the linear trend model achieves the lowest forecast errors among the four evaluated approaches.
+
+The linear model records an RMSE of approximately 290,898 kSU and an MAE of 198,295 kSU. The drift benchmark ranks second, with an RMSE of 314,588 kSU and an MAE of 221,778 kSU.
+
+The naïve benchmark produces an RMSE of 378,864 kSU, while the log-linear model records the highest RMSE of 511,614 kSU and MAE of 466,991 kSU.
+
+These findings indicate that the linear trend provides the strongest one-step-ahead predictive performance over the selected evaluation period.
+
+Although the log-linear model exhibited a relatively high in-sample R-squared value in Chapter 07, its weaker cross-validation accuracy demonstrates that in-sample fit alone is insufficient for selecting a forecasting model.
+
+The evaluation is nevertheless based on only six forecast errors and includes the substantial demand increase in 2026. Consequently, the model rankings may be sensitive to the selected evaluation period and individual observations.
+
+Furthermore, one-step-ahead accuracy does not necessarily translate into superior multi-year forecasting performance through 2030.
+
+### CPU Demand: One-Step-Ahead Evaluation
+
+CPU demand is evaluated using expanding-window rolling-origin cross-validation, consistent with the methodology applied to overall HPC demand.
+
+The initial training period covers 2014–2020, with one-step-ahead forecasts generated for each year from 2021 to 2026.
+
+Four approaches are evaluated: naïve, drift, linear trend, and log-linear trend. Each model uses only observations available before its corresponding evaluation year.
+
+CPU demand is expressed in millions of core-hours, consistent with the modelling approach established in Chapter 07.
+
+```{r cpu-cv-predictions}
+# Prepare CPU demand in millions of core-hours
+cpu_cv_data <- annual_converted |>
+  dplyr::transmute(
+    year = as.integer(year),
+    cpu_million_hours = as.numeric(demand_cpu_core_hours) / 1e6
+  ) |>
+  dplyr::arrange(year)
+
+# Validate the CPU demand series
+stopifnot(
+  identical(cpu_cv_data$year, 2014:2026),
+  all(is.finite(cpu_cv_data$cpu_million_hours)),
+  all(cpu_cv_data$cpu_million_hours > 0)
+)
+
+# Use the same evaluation years as overall HPC
+cpu_cv_predictions <- dplyr::bind_rows(
+  lapply(2021:2026, function(test_year) {
+
+    training <- cpu_cv_data |>
+      dplyr::filter(year < test_year) |>
+      dplyr::mutate(time = year - 2014)
+
+    actual <- cpu_cv_data$cpu_million_hours[
+      cpu_cv_data$year == test_year
+    ]
+
+    future <- data.frame(time = test_year - 2014)
+
+    # Naïve benchmark
+    naive_forecast <- tail(training$cpu_million_hours, 1)
+
+    # Drift benchmark
+    drift_forecast <- tail(training$cpu_million_hours, 1) +
+      (
+        tail(training$cpu_million_hours, 1) -
+          training$cpu_million_hours[1]
+      ) / (nrow(training) - 1)
+
+    # Linear trend
+    linear_fit <- lm(
+      cpu_million_hours ~ time,
+      data = training
+    )
+
+    linear_forecast <- as.numeric(
+      predict(linear_fit, newdata = future)
+    )
+
+    # Log-linear trend
+    loglinear_fit <- lm(
+      log(cpu_million_hours) ~ time,
+      data = training
+    )
+
+    loglinear_forecast <- exp(as.numeric(
+      predict(loglinear_fit, newdata = future)
+    ))
+
+    data.frame(
+      year = test_year,
+      actual = actual,
+      naive = naive_forecast,
+      drift = drift_forecast,
+      linear = linear_forecast,
+      loglinear = loglinear_forecast
+    )
+  })
+)
+
+knitr::kable(
+  cpu_cv_predictions,
+  digits = 2,
+  format.args = list(big.mark = ","),
+  col.names = c(
+    "Year",
+    "Actual (million core-hours)",
+    "Naïve",
+    "Drift",
+    "Linear",
+    "Log-linear"
+  ),
+  caption = paste(
+    "Rolling-origin one-step-ahead CPU demand predictions,",
+    "2021–2026 (million core-hours)"
+  )
+)
+```
+
+The evaluation uses identical forecast origins across all four models, allowing a consistent comparison of their predictive performance.
+
+The log-linear forecasts are back-transformed to the original CPU demand scale before evaluation. These exponentiated values represent central predictions rather than bias-adjusted conditional mean forecasts.
+
+The resulting predictions will be used to calculate RMSE and MAE in the next stage.
+
+### CPU Forecast Accuracy
+
+Forecast accuracy is assessed using root mean squared error (RMSE) and mean absolute error (MAE), calculated from the six rolling-origin one-step-ahead predictions for 2021 - 2026.
+
+Both measures are expressed in millions of CPU core-hours.
+
+```{r cpu-cv-accuracy}
+# Calculate CPU forecast accuracy
+cpu_cv_accuracy <- dplyr::bind_rows(
+  lapply(c("naive", "drift", "linear", "loglinear"), function(model) {
+
+    errors <- cpu_cv_predictions[[model]] -
+      cpu_cv_predictions$actual
+
+    data.frame(
+      model = model,
+      RMSE = sqrt(mean(errors^2)),
+      MAE = mean(abs(errors))
+    )
+  })
+) |>
+  dplyr::arrange(RMSE)
+
+knitr::kable(
+  cpu_cv_accuracy,
+  digits = 2,
+  col.names = c(
+    "Model",
+    "RMSE (million core-hours)",
+    "MAE (million core-hours)"
+  ),
+  caption = "CPU demand forecast accuracy, 2021–2026"
+)
+```
+
+Lower RMSE and MAE values indicate better predictive accuracy. RMSE places greater weight on large forecast errors, while MAE represents the average absolute deviation between predicted and actual CPU demand.
+
+### CPU Accuracy Findings
+
+Rolling-origin one-step-ahead cross-validation over 2021 - 2026 indicates that the linear and log-linear trend models provide
+the strongest predictive performance among the four evaluated CPU forecasting approaches.
+
+The linear model achieves the lowest RMSE of 157.72 million CPU core-hours, followed closely by the log-linear model at 160.18 million CPU core-hours.
+
+However, the log-linear model achieves the lowest MAE of 133.74 million CPU core-hours, compared with 138.65 million CPU core-hours for the linear model.
+
+Both trend models outperform the drift and naïve benchmarks under both accuracy measures.
+
+The difference in model rankings indicates that no single CPU trend specification dominates across both evaluation criteria. The linear model performs slightly better under RMSE, which places greater weight on larger errors, while the log-linear model performs slightly better under MAE.
+
+These findings also demonstrate the importance of out-of-sample evaluation rather than relying solely on
+in-sample model fit.
+
+Nevertheless, the evaluation is based on only six one-step-ahead forecast errors. Model rankings may be sensitive to individual observations, particularly the substantial increase in CPU demand observed in 2026.
+
+Furthermore, one-step-ahead predictive accuracy does not necessarily establish superior performance for multi-year
+projections through 2030.
+
+Both linear and log-linear trend models are therefore retained as competitive candidates for CPU demand forecasting. Final model selection will be addressed in Chapter 09.
+
+### GPU Demand: One-Step-Ahead Evaluation
+
+GPU demand is evaluated using expanding-window rolling-origin cross-validation, consistent with the approach applied to overall HPC and CPU demand.
+
+However, the GPU evaluation uses only the 2022–2026 period, as earlier GPU demand estimates were constructed using hypothetical conversion scenarios rather than independently reported GPU demand.
+
+The initial training period covers 2022 - 2024, with one-step-ahead forecasts generated for 2025 and 2026.
+
+Four approaches are evaluated: naïve, drift, linear trend, and log-linear trend.
+
+Each model is estimated using only observations available before the corresponding evaluation year.
+
+GPU demand is expressed in millions of GPU-hours.
+
+```{r gpu-cv-predictions}
+# Prepare the recent GPU demand series
+gpu_cv_data <- annual_converted |>
+  dplyr::transmute(
+    year = as.integer(year),
+    gpu_million_hours = as.numeric(demand_gpu_hours) / 1e6
+  ) |>
+  dplyr::filter(year >= 2022, year <= 2026) |>
+  dplyr::arrange(year)
+
+# Validate recent GPU data
+stopifnot(
+  identical(gpu_cv_data$year, 2022:2026),
+  all(is.finite(gpu_cv_data$gpu_million_hours)),
+  all(gpu_cv_data$gpu_million_hours > 0)
+)
+
+# Generate one-step-ahead predictions
+gpu_cv_predictions <- dplyr::bind_rows(
+  lapply(2025:2026, function(test_year) {
+
+    training <- gpu_cv_data |>
+      dplyr::filter(year < test_year) |>
+      dplyr::mutate(time = year - 2022)
+
+    actual <- gpu_cv_data$gpu_million_hours[
+      gpu_cv_data$year == test_year
+    ]
+
+    future <- data.frame(time = test_year - 2022)
+
+    # Naïve benchmark
+    naive_forecast <- tail(training$gpu_million_hours, 1)
+
+    # Drift benchmark
+    drift_forecast <- tail(training$gpu_million_hours, 1) +
+      (
+        tail(training$gpu_million_hours, 1) -
+          training$gpu_million_hours[1]
+      ) / (nrow(training) - 1)
+
+    # Linear trend
+    linear_fit <- lm(
+      gpu_million_hours ~ time,
+      data = training
+    )
+
+    linear_forecast <- as.numeric(
+      predict(linear_fit, newdata = future)
+    )
+
+    # Log-linear trend
+    loglinear_fit <- lm(
+      log(gpu_million_hours) ~ time,
+      data = training
+    )
+
+    loglinear_forecast <- exp(as.numeric(
+      predict(loglinear_fit, newdata = future)
+    ))
+
+    data.frame(
+      year = test_year,
+      actual = actual,
+      naive = naive_forecast,
+      drift = drift_forecast,
+      linear = linear_forecast,
+      loglinear = loglinear_forecast
+    )
+  })
+)
+
+knitr::kable(
+  gpu_cv_predictions,
+  digits = 3,
+  col.names = c(
+    "Year",
+    "Actual (million GPU-hours)",
+    "Naïve",
+    "Drift",
+    "Linear",
+    "Log-linear"
+  ),
+  caption = paste(
+    "Rolling-origin one-step-ahead GPU demand predictions,",
+    "2025–2026 (million GPU-hours)"
+  )
+)
+```
+
+The evaluation uses the same forecast origins for all fouapproaches, allowing a consistent comparison of their one-step-ahead predictions.
+
+However, the results are based on only two evaluation observations. Furthermore, the historical GPU series combines reported and allocation-share-derived estimates, introducing additional measurement uncertainty.
+
+The resulting predictions will therefore be interpreted as exploratory evidence rather than a reliable basis for selecting a preferred GPU forecasting model.
+
+### GPU Forecast Accuracy
+
+Forecast accuracy is assessed using root mean squared error (RMSE) and mean absolute error (MAE), calculated from the two
+rolling-origin one-step-ahead predictions for 2025 - 2026.
+
+Both measures are expressed in millions of GPU-hours.
+
+```{r gpu-cv-accuracy}
+# Calculate GPU forecast accuracy
+gpu_cv_accuracy <- dplyr::bind_rows(
+  lapply(c("naive", "drift", "linear", "loglinear"), function(model) {
+
+    errors <- gpu_cv_predictions[[model]] -
+      gpu_cv_predictions$actual
+
+    data.frame(
+      model = model,
+      RMSE = sqrt(mean(errors^2)),
+      MAE = mean(abs(errors))
+    )
+  })
+) |>
+  dplyr::arrange(RMSE)
+
+knitr::kable(
+  gpu_cv_accuracy,
+  digits = 3,
+  col.names = c(
+    "Model",
+    "RMSE (million GPU-hours)",
+    "MAE (million GPU-hours)"
+  ),
+  caption = "GPU demand forecast accuracy, 2025–2026"
+)
+```
+
+Lower RMSE and MAE values indicate better predictive accuracy. However, with only two evaluation observations, these metrics
+provide limited evidence of how the models would perform under different historical conditions or over longer forecast horizons.
+
+### GPU Accuracy Findings
+
+Rolling-origin one-step-ahead cross-validation over 2025 - 2026 indicates that the naïve benchmark achieves the lowest forecast errors among the four evaluated GPU forecasting approaches.
+
+The naïve model records an RMSE of approximately 0.441 million GPU-hours and an MAE of 0.353 million GPU-hours.
+
+The drift benchmark ranks second, with an RMSE of 0.537 million GPU-hours and an MAE of 0.490 million GPU-hours.
+
+The log-linear and linear trend models produce higher forecast errors, with RMSE values of approximately 0.719 and 0.729 million GPU-hours, respectively.
+
+These results suggest that simple persistence-based forecasting performs better than trend extrapolation over the selected GPU evaluation period.
+
+However, the evaluation contains only two one-step-ahead forecast errors, substantially fewer than the six observations used for overall HPC and CPU evaluation.
+
+Furthermore, the GPU demand series combines reported and allocation-share-derived estimates, introducing additional measurement uncertainty.
+
+The findings therefore provide insufficient evidence to establish a stable or generalisable ranking of GPU forecasting models.
+
+In particular, the naïve model's superior performance over 2025 - 2026 does not establish that future GPU demand will remain constant or that a naïve forecast will be appropriate for the multi-year horizon through 2030.
+
+The naïve benchmark is therefore identified as the strongest candidate under the current evaluation criteria, rather than selected as the final GPU forecasting model.
+
+Final model selection and consideration of alternative GPU demand scenarios will be addressed in Chapter 09.
+
+## Field of Research Allocation-Share Evaluation
+
+### Purpose and Evaluation Approach
+
+The Field of Research (FoR) evaluation examines the historical distribution and stability of HPC resource allocations across research fields.
+
+Unlike the overall HPC, CPU, and GPU evaluations, this analysis does not assess independently observed FoR-specific researcher demand forecasts.
+
+Instead, it evaluates whether historical allocation shares provide a sufficiently consistent basis for developing indicative FoR demand scenarios through 2030.
+
+The analysis focuses on 2021–2026, corresponding to the FoR 2020 classification period used in Chapter 06.
+
+Three considerations guide the evaluation:
+
+1. Historical stability of FoR allocation shares.
+2. Variation between the latest-year composition and the recent-period average.
+3. Sensitivity to classification, reporting coverage, and allocation-based measurement assumptions.
+
+The results will inform the selection of FoR share assumptions in Chapter 09 and their application to overall HPC demand forecasts in Chapter 10.
+
+### Harmonised FoR Data Preparation
+
+The FoR evaluation reuses the harmonised allocation-share datasets developed in Chapter 06, ensuring consistency between historical analysis and model evaluation.
+
+Two reporting periods are considered:
+
+- The full historical period (2014 - 2026), using broad harmonised analytical groups to examine long-term allocation composition.
+- The recent period (2021–2026), using FoR 2020-based analytical groups to evaluate recent allocation-share stability.
+
+The full-period analysis provides historical context, while the recent-period analysis informs the assumptions used for indicative FoR demand scenarios.
+
+```{r for-harmonised-data}
+# Load the harmonised datasets saved in Chapter 06
+for_longterm <- readRDS(
+  "../assets/data/data converted/for_2014_2026_harmonised_shares.rds"
+)
+
+for_recent <- readRDS(
+  "../assets/data/data converted/for_2020_harmonised_shares.rds"
+)
+
+# Inspect structure and coverage
+cat("Long-term FoR data:\n")
+print(names(for_longterm))
+print(range(for_longterm$year))
+cat("Rows:", nrow(for_longterm), "\n\n")
+
+cat("Recent-period FoR data:\n")
+print(names(for_recent))
+print(range(for_recent$year))
+cat("Rows:", nrow(for_recent), "\n")
+```
+
+These datasets preserve the research-field grouping established
+in Chapter 06. No additional classification mapping is applied
+during model evaluation.
+
+### Historical FoR Allocation-Share Stability
+
+Historical FoR allocation shares are examined over 2021 - 2026 to assess changes in the distribution of HPC resources across research fields.
+
+The analysis uses the harmonised analytical groups established in Chapter 06. These groups provide a consistent reporting structure for comparison but should not be interpreted as perfectly equivalent official FoR classifications.
+
+For each research group, the evaluation calculates:
+
+- Average allocation share over 2021 - 2026.
+- Latest allocation share in 2026.
+- Minimum and maximum annual allocation shares.
+- Difference between the 2026 share and the historical average.
+
+These descriptive measures assess the stability of historical resource allocation composition. They do not directly measure FoR-specific researcher demand.
+
+```{r for-share-validation}
+# Validate long-term allocation shares
+for_longterm_totals <- for_longterm |>
+  dplyr::group_by(year) |>
+  dplyr::summarise(
+    total_share = sum(allocation_share),
+    .groups = "drop"
+  )
+
+# Validate recent-period allocation shares
+for_recent_totals <- for_recent |>
+  dplyr::group_by(year) |>
+  dplyr::summarise(
+    total_share = sum(allocation_share),
+    .groups = "drop"
+  )
+
+knitr::kable(
+  for_longterm_totals,
+  digits = 4,
+  caption = "Annual FoR allocation-share totals, 2014–2026"
+)
+
+knitr::kable(
+  for_recent_totals,
+  digits = 4,
+  caption = "Annual FoR allocation-share totals, 2021–2026"
+)
+```
+
+The difference between the latest-year allocation share and the recent-period average is expressed in percentage points.
+
+Large differences may indicate changing research-field composition, reporting effects, or variation in allocation practices. They should not automatically be interpreted as changes in underlying researcher demand.
+
+```{r for-share-stability}
+# Summarise recent FoR allocation-share stability (2021–2026)
+for_share_stability <- for_recent |>
+  dplyr::group_by(for_2020_visual) |>
+  dplyr::summarise(
+    years_observed = dplyr::n_distinct(year),
+    average_share = mean(allocation_share),
+    latest_share = allocation_share[year == 2026][1],
+    minimum_share = min(allocation_share),
+    maximum_share = max(allocation_share),
+    .groups = "drop"
+  ) |>
+  dplyr::mutate(
+    change_percentage_points =
+      (latest_share - average_share) * 100
+  ) |>
+  dplyr::arrange(dplyr::desc(average_share))
+
+knitr::kable(
+  for_share_stability |>
+    dplyr::mutate(
+      dplyr::across(
+        c(average_share, latest_share, minimum_share, maximum_share),
+        ~ .x * 100
+      )
+    ),
+  digits = 2,
+  col.names = c(
+    "FoR Group",
+    "Years",
+    "Average (%)",
+    "2026 (%)",
+    "Minimum (%)",
+    "Maximum (%)",
+    "2026 vs Average (pp)"
+  ),
+  caption = "FoR allocation-share stability, 2021–2026"
+)
+```
+
+Engineering & Technology accounted for the largest average allocation share during 2021–2026 (34.88%), followed by Physical Sciences (22.13%) and Chemical Sciences (17.84%). Compared with their recent-period averages, the 2026 shares were higher for Biological & Agricultural Sciences (+2.29 percentage points) and Mathematics & Computing (+2.09 percentage points). Two categories were not represented in the 2026 summary and therefore have no calculated latest-year difference. These results describe changes in allocation composition rather than directly observed FoR-specific researcher demand.
+
+```{r for-category-coverage}
+for_recent |>
+  dplyr::group_by(for_2020_visual) |>
+  dplyr::summarise(
+    years_present = paste(sort(unique(year)), collapse = ", "),
+    years_observed = dplyr::n_distinct(year),
+    .groups = "drop"
+  ) |>
+  knitr::kable(
+    caption = "FoR category coverage, 2021–2026"
+  )
+```
+
+Seven harmonised FoR groups have allocation-share observations for all six years from 2021 to 2026. Two additional groups have incomplete coverage: Other / Unclassified appears in 2021 and 2024, while Social Sciences, Humanities & Built Environment appears from 2022 to 2025.
+
+Consequently, the latest-year comparisons are restricted to groups with observed 2026 allocation shares. The incomplete categories are retained for transparency, but their absence in particular years is not automatically interpreted as zero allocation or zero researcher demand.
+
+```{r}
+print(for_longterm_totals, n = Inf)
+```
+
+### Long-Term FoR Allocation-Share Variation, 2014–2026
+
+The harmonised historical dataset is examined to assess variation
+in research-field allocation composition across 2014–2026.
+
+Unlike the recent-period evaluation, this analysis covers both
+FoR reporting standards. The harmonised analytical groups
+support broad historical comparison, but classification and
+reporting-coverage differences remain important limitations.
+
+```{r for-longterm-stability}
+# Summarise long-term allocation-share variation
+for_longterm_stability <- for_longterm |>
+  dplyr::group_by(for_visual_group) |>
+  dplyr::summarise(
+    years_observed = dplyr::n_distinct(year),
+    average_share = mean(allocation_share),
+    minimum_share = min(allocation_share),
+    maximum_share = max(allocation_share),
+    share_range_pp = (maximum_share - minimum_share) * 100,
+    .groups = "drop"
+  ) |>
+  dplyr::arrange(dplyr::desc(average_share))
+
+knitr::kable(
+  for_longterm_stability |>
+    dplyr::mutate(
+      dplyr::across(
+        c(average_share, minimum_share, maximum_share),
+        ~ .x * 100
+      )
+    ),
+  digits = 2,
+  col.names = c(
+    "FoR Group",
+    "Years",
+    "Average (%)",
+    "Minimum (%)",
+    "Maximum (%)",
+    "Range (pp)"
+  ),
+  caption = "Long-term FoR allocation-share variation, 2014–2026"
+)
+```
+
+The range is measured in percentage points and describes the
+difference between the highest and lowest observed annual
+allocation shares within each harmonised group.
+
+These measures provide descriptive historical context rather
+than a direct assessment of FoR-specific researcher demand.
+
+The long-term evaluation shows substantial variation in allocation
+composition across several harmonised research-field groups.
+
+Engineering & Technology recorded the largest average allocation
+share (25.20%), followed by Earth & Environmental Sciences (23.49%),
+Physical Sciences (19.33%), and Chemical Sciences (18.48%).
+
+Engineering & Technology and Earth & Environmental Sciences
+each exhibited a range of 29.65 percentage points, while
+Mathematics & Computing varied by 23.42 percentage points.
+In contrast, Chemical Sciences showed a narrower range
+of 4.69 percentage points.
+
+These historical differences should be interpreted cautiously.
+The series spans changes in FoR classification standards and
+reporting coverage, while several categories have incomplete
+annual observations. Consequently, the full historical period
+provides contextual evidence of allocation-composition variation
+rather than a directly comparable basis for extrapolating
+FoR-specific demand.
+
+The recent FoR 2020 reporting period (2021–2026) therefore
+provides the more relevant basis for evaluating allocation-share
+assumptions for subsequent scenario development.
+
+
+### Earlier FoR Allocation-Share Variation, 2014–2020
+
+The earlier reporting period is evaluated separately to examine historical HPC allocation composition under the FoR 2008 classification framework.
+
+The analysis uses the harmonised analytical groups developed in Chapter 06. For each group, the average, minimum, maximum, and range of annual allocation shares are calculated over 2014–2020. These measures provide descriptive evidence of allocation-share variation within the earlier reporting period.
+
+```{r for-earlier-stability}
+for_earlier <- for_longterm |>
+  dplyr::filter(dplyr::between(year, 2014, 2020))
+
+for_earlier_stability <- for_earlier |>
+  dplyr::group_by(for_visual_group) |>
+  dplyr::summarise(
+    years_observed = dplyr::n_distinct(year),
+    average_share = mean(allocation_share),
+    minimum_share = min(allocation_share),
+    maximum_share = max(allocation_share),
+    share_range_pp = (maximum_share - minimum_share) * 100,
+    .groups = "drop"
+  ) |>
+  dplyr::arrange(dplyr::desc(average_share))
+
+knitr::kable(
+  for_earlier_stability |>
+    dplyr::mutate(
+      dplyr::across(
+        c(average_share, minimum_share, maximum_share),
+        ~ .x * 100
+      )
+    ),
+  digits = 2,
+  col.names = c(
+    "FoR Group",
+    "Years",
+    "Average (%)",
+    "Minimum (%)",
+    "Maximum (%)",
+    "Range (pp)"
+  ),
+  caption = "FoR allocation-share variation, 2014–2020"
+)
+```
+
+The analysis retains groups with incomplete annual coverage rather than assuming that missing records represent zero allocation. Historical variation may also reflect differences in reporting scope and allocation practices.
+
+The earlier reporting period (2014–2020) was characterised by the largest average allocation share in Earth & Environmental Sciences (31.62%), followed by Chemical Sciences (19.02%), Physical Sciences (16.92%), and Engineering & Technology (16.90%).
+
+Allocation-share variation differed across research fields. Earth & Environmental Sciences exhibited a range of 23.91 percentage points, while Physical Sciences and Engineering & Technology varied by 21.57 and 20.50 percentage points, respectively. Chemical Sciences showed a narrower range of 4.00 percentage points across all seven years.
+
+Several groups had incomplete annual coverage, including Mathematics & Computing (six years), Medical & Health Sciences (four years), and Social Sciences, Humanities & Built Environment (one year). Consequently, ranges calculated from limited observations should not be interpreted as evidence of stable allocation composition.
+
+These results describe historical resource allocation patterns under the earlier FoR reporting framework, rather than directly observed research-field demand.
+
+
+### Comparison of FoR Reporting Periods, 2014–2020 and 2021–2026
+
+The earlier and recent reporting periods are compared using the harmonised analytical groups established in Chapter 06.
+
+The comparison examines differences in average annual allocation shares between 2014–2020 and 2021–2026. Using a common analytical grouping supports broad longitudinal comparison, although it does not eliminate differences between FoR classification standards or reporting coverage.
+
+```{r for-period-comparison}
+# Calculate average allocation shares within each reporting period
+for_period_summary <- for_longterm |>
+  dplyr::mutate(
+    reporting_period = dplyr::if_else(
+      year <= 2020,
+      "2014–2020",
+      "2021–2026"
+    )
+  ) |>
+  dplyr::group_by(for_visual_group, reporting_period) |>
+  dplyr::summarise(
+    years_observed = dplyr::n_distinct(year),
+    average_share = mean(allocation_share),
+    .groups = "drop"
+  )
+
+# Compare period averages for each harmonised FoR group
+for_period_comparison <- for_period_summary |>
+  tidyr::pivot_wider(
+    names_from = reporting_period,
+    values_from = c(average_share, years_observed),
+    names_glue = "{.value}_{reporting_period}"
+  ) |>
+  dplyr::mutate(
+    change_pp =
+      (`average_share_2021–2026` -
+       `average_share_2014–2020`) * 100
+  ) |>
+  dplyr::arrange(dplyr::desc(
+    `average_share_2021–2026`
+  ))
+
+# Display percentage shares and percentage-point differences
+knitr::kable(
+  for_period_comparison |>
+    dplyr::transmute(
+      `FoR Group` = for_visual_group,
+      `Earlier Years` = `years_observed_2014–2020`,
+      `Recent Years` = `years_observed_2021–2026`,
+      `2014–2020 Average (%)` =
+        `average_share_2014–2020` * 100,
+      `2021–2026 Average (%)` =
+        `average_share_2021–2026` * 100,
+      `Difference (pp)` = change_pp
+    ),
+  digits = 2,
+  caption = "Comparison of harmonised FoR allocation shares across reporting periods"
+)
+```
+
+A positive percentage-point difference indicates a higher average recorded allocation share in 2021–2026 than in 2014–2020; a negative difference indicates a lower average share. These differences should not automatically be interpreted as changes in researcher demand, particularly where classification, category coverage, or reporting scope differs between periods.
+
+
+The comparison indicates substantial differences in recorded allocation composition between the two FoR reporting periods.
+
+Engineering & Technology increased from an average allocation share of 16.90% in 2014–2020 to 34.88% in 2021–2026, a difference of +17.98 percentage points. In contrast, Earth & Environmental Sciences decreased from 31.62% to 14.00%, a difference of −17.61 percentage points. Physical Sciences also recorded a higher average share in the recent period (+5.21 percentage points), while Mathematics & Computing recorded a lower average (−2.46 percentage points).
+
+These differences should not be interpreted as directly observed changes in research-field demand. The comparison spans different FoR classification standards and potentially different reporting scopes. Although the analytical grouping supports broad longitudinal comparison, it does not establish complete equivalence between research fields across periods.
+
+Furthermore, period averages are calculated across available annual observations, and some categories have incomplete coverage. For these groups, differences may partly reflect the number and timing of recorded observations rather than sustained changes in allocation composition.
+
+Overall, the results demonstrate the importance of evaluating the two reporting periods separately. The 2014–2020 data provide historical context, while the more recent 2021–2026 allocation composition provides a more relevant reference for assessing potential FoR share assumptions for the 2030 scenarios.
+
+
+### FoR Evaluation Findings and Limitations
+
+The Field of Research (FoR) evaluation provides evidence on the historical composition and variability of HPC resource allocations across research fields. Unlike the overall HPC, CPU, and GPU evaluations, which assess forecasting performance against historical resource measures, the FoR evaluation is descriptive. Its purpose is to assess the stability and comparability of allocation shares rather than to establish predictive accuracy for research-field demand.
+
+**Historical allocation-share patterns**
+
+The 2021 - 2026 evaluation shows that Engineering & Technology accounted for the largest average allocation share (34.88%), followed by Physical Sciences (22.13%), Chemical Sciences (17.84%), and Earth & Environmental Sciences (14.00%). These categories were observed in all six years, although their shares varied over time.
+
+The longer 2014 - 2026 evaluation indicates that allocation composition was not constant across the historical period. Engineering & Technology and Earth & Environmental Sciences each exhibited a range of 29.65 percentage points, while Physical Sciences exhibited a range of 26.63 percentage points. Chemical Sciences was comparatively stable, with a range of 4.69 percentage points.
+
+The separate 2014 - 2020 evaluation provides additional context. Earth & Environmental Sciences accounted for the largest average allocation share (31.62%), followed by Chemical Sciences (19.02%), Physical Sciences (16.92%), and Engineering & Technology (16.90%). Several categories exhibited substantial variation during this earlier period.
+
+**Differences between reporting periods**
+
+Comparing the two periods using harmonised analytical categories reveals substantial differences in average allocation composition. Engineering & Technology increased from 16.90% in 2014 - 2020 to 34.88% in 2021 - 2026, a difference of +17.98 percentage points. Conversely, Earth & Environmental Sciences decreased from 31.62% to 14.00%, a difference of -17.61 percentage points. Physical Sciences recorded a higher average share (+5.21 percentage points), while Mathematics & Computing recorded a lower average (-2.46 percentage points).
+
+These differences indicate changes in the recorded distribution of HPC allocations across research fields. They do not, however, establish equivalent changes in underlying researcher demand.
+
+**Data and interpretation limitations**
+
+Several limitations affect the interpretation of these findings:
+
+1. **Allocation versus demand:** The FoR dataset represents allocated HPC resources, not directly observed research-field requests or unconstrained computational needs. Allocation shares may therefore reflect resource availability, allocation decisions, and reporting practices as well as researcher activity.
+
+2. **Classification comparability:** The historical analysis spans FoR 2008 and FoR 2020 reporting frameworks. Although the categories were harmonised for analytical purposes in Chapter 06, they are not necessarily equivalent to official classifications across all years.
+
+3. **Incomplete category coverage:** Not all research-field groups are observed in every year. Missing observations were not automatically interpreted as zero allocations. Consequently, averages and ranges for categories with limited coverage are less informative than those for consistently reported categories.
+
+4. **Reporting scope:** Historical differences in facility coverage, resource accounting, and reporting conventions may influence the recorded allocation shares. Apparent changes in research-field composition cannot be attributed exclusively to changes in research priorities.
+
+5. **Period-average interpretation:** The comparison uses unweighted averages of available annual allocation shares. These describe the typical recorded composition within each period but do not represent shares of the total HPC resources allocated across all years combined.
+
+6. **Limited predictive validation:** The available FoR allocation-share series does not provide a consistent, directly observed research-field demand target suitable for evaluating field-specific demand forecasts using the same rolling-origin procedure applied to the overall HPC, CPU, and GPU series.
+
+**Implications for model selection and scenarios**
+
+The FoR evaluation supports the use of historical allocation composition as a reference for developing research-field scenarios, but not as a direct forecast of field-specific researcher demand.
+
+The more recent 2021 - 2026 shares provide a relevant reference for a baseline allocation-composition assumption, subject to their observed variability and reporting limitations. The earlier period and the full historical series provide additional context for examining alternative compositions and assessing sensitivity to changes in research-field allocation patterns.
+
+Accordingly, Chapter 09 will distinguish models selected through quantitative forecast-error evaluation from FoR assumptions supported by descriptive historical evidence. Any subsequent application of FoR shares to projected overall HPC demand will be presented as a scenario-based allocation of projected demand, rather than an independently validated forecast of demand within each research field.
+
+## Overall Evaluation Conclusions and Forecast-Horizon Limitations
+
+The rolling-origin evaluation provides a consistent basis for comparing candidate forecasting models using historical one-step-ahead prediction errors. For overall HPC and CPU demand, six forecast errors are available for 2021–2026. For GPU demand, only two forecast errors are available for 2025–2026.
+
+The results support the selection of a linear trend as the central forecasting approach for overall HPC and CPU demand. However, the evaluation does not directly establish the accuracy of forecasts two, three, or four years ahead. The relative performance of alternative models may change over longer horizons.
+
+The GPU evaluation is particularly limited by its short historical series. Although the naïve benchmark performs best in the available one-step-ahead comparison, this does not establish that GPU demand will remain constant through 2030.
+
+The FoR analysis evaluates historical allocation-share composition and variability rather than independently testing future demand forecasts by research field.
+
+Consequently, the 2027–2030 projections should be interpreted as planning scenarios informed by historical predictive performance, not as forecasts with independently validated four-year-ahead accuracy. The alternative growth specifications, 2026-exclusion sensitivity analyses, and conditional prediction intervals in Chapter 10 provide additional perspectives on uncertainty but do not replace direct multi-horizon validation.
