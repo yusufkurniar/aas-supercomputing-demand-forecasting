@@ -100,15 +100,10 @@ Original values, measurement units and source references were retained alongside
 
 ## Variable Definitions and Measurement Units
 
-The main annual variables are requested compute and allocated compute. Where both measures are available on a comparable basis, the request-to-allocation ratio is calculated as:
 
-$$
-R_t = \frac{D_t}{A_t}
-$$
+The main annual variables are requested compute and allocated compute. Where both measures are available on a comparable basis, the request-to-allocation ratio is calculated as $R_t = D_t/A_t$, where $D_t$ represents requested compute and $A_t$ represents allocated compute in year $t$.
 
-where $D_t$ represents requested compute and $A_t$ represents allocated compute in year $t$.
-
-The corresponding fulfilment rate is $A_t/D_t$, and the request–allocation gap is $D_t-A_t$. All three indicators are calculated only when the values have compatible units and reporting scope [@HPCInternshipBrief].
+The corresponding fulfilment rate is $A_t/D_t$, and the request–allocation gap is $D_t - A_t$. All three indicators are calculated only when the values have compatible units and reporting scope [@HPCInternshipBrief].
 
 Historical records use different measurement units, including service units (SU), kilo service units (kSU), million compute hours, CPU core-hours and GPU hours. Service units are accounting measures that depend on the computing system and resource type. Consequently, values expressed in kSU are not necessarily computationally equivalent across facilities.
 
@@ -120,31 +115,11 @@ Historical service-unit values were converted using accounting factors specific 
 
 ### Conversion Formulas
 
-The general relationship between service units and kilo service units is:
+Service units were converted to kilo service units using $\text{SU} = \text{kSU} \times 1{,}000$.
 
-$$
-\text{SU} = \text{kSU} \times 1{,}000
-$$
+For CPU resources reported in kSU, core-hours were calculated as $\text{CPU core-hours} = (\text{CPU kSU} \times 1{,}000)/(\text{SU per CPU core-hour})$. Similarly, GPU hours were calculated as $\text{GPU hours} = (\text{GPU kSU} \times 1{,}000)/(\text{SU per GPU hour})$.
 
-For CPU resources reported in kSU, CPU core-hours were calculated as:
-
-$$
-\text{CPU core-hours} =
-\frac{\text{CPU kSU} \times 1{,}000}
-{\text{SU per CPU core-hour}}
-$$
-
-For GPU resources reported in kSU, GPU hours were calculated as:
-
-$$
-\text{GPU hours} =
-\frac{\text{GPU kSU} \times 1{,}000}
-{\text{SU per GPU hour}}
-$$
-
-The denominators represent the accounting factors applicable to each computing system and resource type. These factors were not assumed to be constant across all systems or reporting periods.
-
-Where values were already reported in CPU core-hours or GPU hours, they were retained without additional service-unit conversion. Values reported in millions of hours were multiplied by 1,000,000, subject to confirmation of the original resource definition.
+The denominators are system- and resource-specific accounting factors and were not assumed to remain constant across systems or reporting periods. Values already reported in CPU core-hours or GPU hours were retained without conversion. Values reported in millions of hours were multiplied by 1,000,000 after confirming the original resource definition.
 
 ### System-Specific Conversion Rules
 
@@ -213,62 +188,40 @@ Overall HPC demand (kSU), CPU demand (core-hours) and GPU demand (GPU-hours) wer
 
 Given the limited annual observations, the analysis used naïve, drift, linear trend and log-linear trend models to compare different growth assumptions. Model selection considered forecast accuracy, interpretability and suitability for projections through 2030 [@HyndmanAthanasopoulos2021].
 
+
 ## Forecasting Models
 
-Four forecasting approaches were considered: naïve forecasting, drift, linear trend and log-linear trend. These are established approaches to time series forecasting and regression-based trend modelling [@HyndmanAthanasopoulos2021]. The naïve and drift methods provided benchmarks against which the trend models could be evaluated.
+Four methods were evaluated: naïve, drift, linear trend and log-linear trend [@HyndmanAthanasopoulos2021]. Naïve and drift served as benchmarks for assessing the trend models.
 
 ### Naïve and Drift Benchmarks
 
-The naïve method assumes that the next observation will equal the latest observed value [@HyndmanAthanasopoulos2021]:
+The naïve method uses the latest observation as the forecast, $\hat{y}_{T+h} = y_T$, where $y_T$ is the last observed value and $h$ is the forecast horizon.
 
-$$
-\hat{y}_{T+h} = y_T
-$$
-
-where $y_T$ is the most recent observation and $h$ is the forecast horizon.
-
-The drift method extends the average annual change observed between the first and last training observations [@HyndmanAthanasopoulos2021]:
-
-$$
-\hat{y}_{T+h} =
-y_T + h\left(\frac{y_T-y_1}{T-1}\right)
-$$
-
-These benchmarks provided a comparison with methods that explicitly estimate a trend from the full training sample.
+The drift method extends the average annual change between the first and last training observations: $\hat{y}_{T+h} = y_T + h(y_T-y_1)/(T-1)$, where $y_1$ is the first observation and $T$ is the number of training observations [@HyndmanAthanasopoulos2021].
 
 ### Linear Trend Model
 
-The linear trend model assumes that demand changes by a constant absolute amount each year [@HyndmanAthanasopoulos2021]:
+The linear trend model assumes a constant absolute annual change in demand [@HyndmanAthanasopoulos2021]:
 
 $$
 y_t = \beta_0 + \beta_1 t + \varepsilon_t
 $$
 
-where $y_t$ represents demand in year $t$, $\beta_0$ is the intercept, $\beta_1$ is the estimated annual change and $\varepsilon_t$ is the error term.
+Here, $y_t$ is demand in year $t$, $\beta_0$ is the intercept, $\beta_1$ is the estimated annual change and $\varepsilon_t$ is the error term. For CPU demand measured in millions of core-hours, $\beta_1$ represents the estimated annual change in millions of core-hours.
 
-This specification is straightforward to interpret. For example, when CPU demand is expressed in millions of core-hours, the estimated trend coefficient represents the average annual increase in that unit.
-
-However, a linear trend assumes that the historical absolute change continues over the forecast period. It does not account directly for future changes in computing technology, allocation policies or research funding.
+The model extends the historical linear trend through 2030 without explicitly accounting for future changes in computing technology, allocation policies or research funding.
 
 ### Log-Linear Trend Model
 
-The log-linear model assumes approximately constant proportional growth [@HyndmanAthanasopoulos2021]:
+The log-linear model assumes a constant proportional growth rate [@HyndmanAthanasopoulos2021]:
 
 $$
 \log(y_t) = \beta_0 + \beta_1 t + \varepsilon_t
 $$
 
-The corresponding growth rate is:
+The implied annual percentage growth rate is $g = (e^{\beta_1}-1)\times100\%$.
 
-$$
-g = \left(e^{\beta_1}-1\right)\times100\%
-$$
-
-where $g$ is the implied annual percentage growth rate.
-
-Unlike the linear model, the log-linear specification allows the absolute annual increase to grow as demand rises. This can produce substantially higher long-term projections when historical growth is strong.
-
-The model requires positive demand observations and assumes that proportional growth remains relevant over the forecast horizon. Its projections were therefore considered alongside the linear model rather than accepted solely on the basis of historical fit.
+Unlike the linear model, the log-linear model allows the absolute annual increase to grow over time. It requires positive demand observations and assumes that historical proportional growth continues through the forecast period. Its projections were compared with the linear model to assess the effect of different growth assumptions.
 
 ## Forecasting Targets and Historical Coverage
 
@@ -302,35 +255,19 @@ For GPU demand, the initial training period covered 2022–2024, with forecasts 
 
 ### Forecast Accuracy Measures
 
-Model accuracy was assessed using Root Mean Squared Error (RMSE) and Mean Absolute Error (MAE), two commonly used measures of forecast accuracy [@HyndmanKoehler2006; @HyndmanAthanasopoulos2021].
-
-RMSE was calculated as:
+Forecast accuracy was assessed using Root Mean Squared Error (RMSE) and Mean Absolute Error (MAE) [@HyndmanKoehler2006; @HyndmanAthanasopoulos2021]:
 
 $$
-\text{RMSE} =
-\sqrt{
-\frac{1}{n}
-\sum_{t=1}^{n}
-(y_t-\hat{y}_t)^2
-}
+\text{RMSE} = \sqrt{\frac{1}{n}\sum_{t=1}^{n}(y_t-\hat{y}_t)^2},
+\qquad
+\text{MAE} = \frac{1}{n}\sum_{t=1}^{n}|y_t-\hat{y}_t|
 $$
 
-MAE was calculated as:
+where $y_t$ is the observed value, $\hat{y}_t$ is the forecast and $n$ is the number of evaluated forecasts.
 
-$$
-\text{MAE} =
-\frac{1}{n}
-\sum_{t=1}^{n}
-|y_t-\hat{y}_t|
-$$
+Both measures use the same units as the forecasting target, with lower values indicating better accuracy. RMSE gives greater weight to larger errors, while MAE measures the average absolute error. Both were used because individual errors can strongly affect results over a short evaluation period.
 
-where $y_t$ is the observed value, $\hat{y}_t$ is the forecast value and $n$ is the number of evaluated forecasts.
-
-Both measures are expressed in the same units as the forecasting target. Lower values indicate better predictive accuracy.
-
-RMSE gives greater weight to larger errors, while MAE measures the average absolute error. Both were considered because individual observations can have a substantial influence on accuracy measures when the evaluation period is short.
-
-Model performance was compared within each demand measure. RMSE and MAE values were not compared directly across HPC, CPU and GPU series because their measurement units differ.
+Model accuracy was compared separately for HPC, CPU and GPU demand because their measurement units differ.
 
 ## Model Selection and Sensitivity Analysis
 
@@ -348,33 +285,13 @@ Forecast trajectories derived from different model specifications were treated a
 
 ## Field of Research Scenario Development
 
-FoR scenarios were developed separately from the overall HPC, CPU and GPU forecasting models.
+The FoR scenarios were developed separately from the HPC, CPU and GPU forecasting models because the available research-field data describe allocated resources rather than independently observed demand.
 
-The available FoR data describe the distribution of allocated computing resources across research fields. They do not provide a consistent historical series of independently observed demand for every research field.
+A top-down approach was used to distribute the selected overall HPC demand forecast across nine harmonised FoR groups. For research field $i$ and forecast year $t$, the indicative demand was calculated as $\hat{D}_{i,t} = \hat{D}_t \times s_i$, where $\hat{D}_t$ is the overall HPC demand forecast and $s_i$ is the assumed allocation share for field $i$.
 
-A top-down approach was therefore used. The selected overall HPC demand projection was distributed across the nine harmonised FoR groups using alternative assumptions about future allocation shares.
+Three historical periods were used to calculate alternative shares: recent (2021–2026), full period (2014–2026) and earlier (2014–2020). Within each period, allocation shares were averaged across available years, giving each year equal weight. Missing group-year observations were not treated as zero, and the resulting average shares were normalised to sum to 100%.
 
-For research field $i$ and forecast year $t$, the indicative allocation-share-based demand was calculated as:
-
-$$
-\hat{D}_{i,t} = \hat{D}_t \times s_i
-$$
-
-where $\hat{D}_t$ is the overall forecast HPC demand and $s_i$ is the assumed share for research field $i$.
-
-Three historical periods were examined to construct alternative share assumptions:
-
-| Scenario | Historical basis | Purpose |
-|---|---|---|
-| Recent composition | 2021–2026 | Reflect the more recent FoR reporting period |
-| Full-period composition | 2014–2026 | Reflect the broader historical allocation pattern |
-| Earlier composition | 2014–2020 | Examine sensitivity to the earlier research-field distribution |
-
-: Historical periods used to construct FoR allocation-share scenarios. {#tbl-for-scenarios}
-
-For each scenario, the allocation share of each FoR group was averaged across available years within the selected period, giving equal weight to each year. Missing group-year observations were not automatically assigned zero. The resulting average shares were normalised to sum to 100% before being applied to the overall HPC demand forecast.
-
-These scenarios show how different historical allocation patterns affect the distribution of projected HPC demand. They are not independently validated forecasts of future requests by research field.
+The scenarios show how different historical allocation patterns affect the indicative distribution of projected HPC demand. They are not independently validated forecasts of future demand by research field.
 
 ## Forecast Horizon and Interpretation
 
@@ -1034,16 +951,19 @@ Estimated GPU requests increased from 2023 to 2026, but the five-year modelling 
 
 ```{r}
 #| label: fig-for-composition
-#| fig-cap: "HPC allocation composition by Field of Research, 2014–2026. The lower panel compares average annual shares across two reporting periods."
-#| fig-width: 10
+#| fig-cap: "HPC allocation composition by Field of Research, 2014–2026, and changes in average annual shares between 2014–2020 and 2021–2026."
+#| fig-width: 12
 #| fig-height: 7
 #| out-width: 100%
 #| echo: false
 #| warning: false
 
+library(dplyr)
+library(tidyr)
+library(ggplot2)
 library(patchwork)
+library(scales)
 
-# Prepare and validate annual FoR shares
 for_chart <- for_plot_data |>
   mutate(
     year = as.integer(as.character(year)),
@@ -1051,19 +971,17 @@ for_chart <- for_plot_data |>
   ) |>
   filter(!is.na(allocation_share))
 
-stopifnot(
-  all(
-    abs(
-      for_chart |>
-        group_by(year) |>
-        summarise(total = sum(allocation_share),
-                  .groups = "drop") |>
-        pull(total) - 1
-    ) < 1e-6
+annual_totals <- for_chart |>
+  group_by(year) |>
+  summarise(
+    total = sum(allocation_share),
+    .groups = "drop"
   )
+
+stopifnot(
+  all(abs(annual_totals$total - 1) < 1e-6)
 )
 
-# Consistent group ordering
 group_order <- for_chart |>
   group_by(for_visual_group) |>
   summarise(
@@ -1081,7 +999,45 @@ for_chart <- for_chart |>
     )
   )
 
-# Period-specific average annual shares
+for_colours <- setNames(
+  grDevices::hcl.colors(
+    length(group_order),
+    palette = "Dark 3"
+  ),
+  group_order
+)
+
+short_labels <- c(
+  "Engineering & Technology" = "Eng.",
+  "Earth & Environmental Sciences" = "Earth",
+  "Physical Sciences" = "Physical",
+  "Chemical Sciences" = "Chemical",
+  "Unclassified & Operational" = "Other",
+  "Biological & Agricultural Sciences" = "Biology",
+  "Mathematics & Computing" = "Maths",
+  "Medical & Health Sciences" = "Medical",
+  "Social Sciences, Humanities & Built Environment" = "Social"
+)
+
+annual_top <- for_chart |>
+  group_by(year) |>
+  slice_max(
+    allocation_share,
+    n = 1,
+    with_ties = FALSE
+  ) |>
+  ungroup() |>
+  mutate(
+    short_name = unname(
+      short_labels[as.character(for_visual_group)]
+    ),
+    label = paste0(
+      short_name,
+      "\n",
+      percent(allocation_share, accuracy = 1)
+    )
+  )
+
 period_shares <- for_chart |>
   mutate(
     period = if_else(
@@ -1097,36 +1053,39 @@ period_shares <- for_chart |>
   ) |>
   complete(
     period,
-    for_visual_group,
-    fill = list(average_share = 0)
+    for_visual_group
   )
 
-# Identify the largest group in each year
-annual_top <- for_chart |>
-  group_by(year) |>
-  slice_max(
-    allocation_share,
-    n = 1,
-    with_ties = FALSE
+period_comparison <- period_shares |>
+  pivot_wider(
+    names_from = period,
+    values_from = average_share
   ) |>
-  ungroup() |>
+  filter(
+    !is.na(`2014–2020`),
+    !is.na(`2021–2026`)
+  ) |>
   mutate(
-    label = percent(
-      allocation_share,
-      accuracy = 1
+    change_pp = 100 * (`2021–2026` - `2014–2020`),
+    direction = case_when(
+      change_pp >= 0.05 ~ "Increased share",
+      change_pp <= -0.05 ~ "Decreased share",
+      TRUE ~ "Little change"
+    ),
+    change_label = if_else(
+      abs(change_pp) < 0.05,
+      "0.0 pp",
+      sprintf("%+.1f pp", change_pp)
+    )
+  ) |>
+  arrange(change_pp) |>
+  mutate(
+    for_visual_group = factor(
+      for_visual_group,
+      levels = as.character(for_visual_group)
     )
   )
 
-# Use consistent colours across both panels
-for_colours <- setNames(
-  grDevices::hcl.colors(
-    length(group_order),
-    palette = "Dark 3"
-  ),
-  group_order
-)
-
-# Panel A: annual composition
 p_annual <- ggplot(
   for_chart,
   aes(
@@ -1136,367 +1095,153 @@ p_annual <- ggplot(
   )
 ) +
   geom_col(
-    width = 0.78,
+    width = 0.82,
     position = position_stack(reverse = TRUE)
   ) +
   geom_text(
     data = annual_top,
     aes(
       x = factor(year),
-      y = NA_real_,
+      y = 1.045,
       label = label
     ),
     inherit.aes = FALSE,
-    colour = "black",
-    size = 2.7,
-    vjust = -0.3
+    size = 2.2,
+    lineheight = 0.9,
+    colour = "grey20"
   ) +
-  scale_fill_manual(values = for_colours) +
+  scale_fill_manual(
+    values = for_colours,
+    drop = FALSE
+  ) +
   scale_y_continuous(
     labels = label_percent(),
     breaks = seq(0, 1, 0.25),
-    limits = c(0, 1.08)
+    limits = c(0, 1.14),
+    expand = expansion(mult = c(0, 0))
   ) +
   labs(
     title = "A. Annual allocation composition",
-    subtitle = "Each column represents 100% of reported annual allocation",
+    subtitle = "Largest field labelled for each year",
     x = NULL,
     y = "Allocation share",
     fill = "Research field"
   ) +
-  theme_minimal(base_size = 10) +
+  theme_minimal(base_size = 9) +
   theme(
     axis.text.x = element_text(
       angle = 45,
-      hjust = 1
+      hjust = 1,
+      size = 8
     ),
+    axis.text.y = element_text(size = 8),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_blank(),
     legend.position = "bottom",
     legend.text = element_text(size = 8),
-    panel.grid.minor = element_blank()
+    legend.title = element_blank(),
+    legend.key.size = grid::unit(0.25, "cm"),
+    plot.title = element_text(
+      face = "bold",
+      size = 10
+    ),
+    plot.subtitle = element_text(size = 8)
   ) +
   guides(
-    fill = guide_legend(ncol = 3)
+    fill = guide_legend(ncol = 2)
   )
 
-# Panel B: compare historical periods
-p_period <- ggplot(
-  period_shares,
+p_change <- ggplot(
+  period_comparison,
   aes(
-    x = average_share,
-    y = forcats::fct_rev(for_visual_group),
-    fill = for_visual_group
+    x = change_pp,
+    y = for_visual_group,
+    fill = direction
   )
 ) +
+  geom_vline(
+    xintercept = 0,
+    colour = "grey40",
+    linewidth = 0.4
+  ) +
   geom_col(
-    width = 0.7,
-    show.legend = FALSE
+    width = 0.65
   ) +
   geom_text(
     aes(
-      label = percent(
-        average_share,
-        accuracy = 0.1
-      )
+      label = change_label,
+      hjust = if_else(change_pp >= 0, -0.1, 1.1)
     ),
-    hjust = -0.1,
-    size = 2.8
+    size = 2.6
   ) +
-  facet_wrap(
-    ~period,
-    ncol = 2
+  scale_fill_manual(
+    values = c(
+      "Increased share" = "#0072B2",
+      "Decreased share" = "#D18A43",
+      "Little change" = "#9299A2"
+    ),
+    breaks = c(
+      "Increased share",
+      "Decreased share",
+      "Little change"
+    ),
+    drop = TRUE
   ) +
-  scale_fill_manual(values = for_colours) +
   scale_x_continuous(
-    labels = label_percent(),
-    limits = c(0, 0.50),
-    breaks = seq(0, 0.5, 0.1)
+    breaks = seq(-20, 20, 10),
+    labels = function(x) paste0(x, " pp"),
+    limits = c(-24, 24)
   ) +
   labs(
-    title = "B. Average annual allocation share by period",
-    subtitle = "Equal weight given to each year within its period",
-    x = "Average annual allocation share",
-    y = NULL
+    title = "B. Change between reporting periods",
+    subtitle = "2021–2026 minus 2014–2020",
+    x = "Percentage-point change",
+    y = NULL,
+    fill = NULL
   ) +
-  theme_minimal(base_size = 10) +
+  theme_minimal(base_size = 9) +
   theme(
     panel.grid.major.y = element_blank(),
     panel.grid.minor = element_blank(),
-    strip.text = element_text(face = "bold")
+    axis.text.y = element_text(size = 8),
+    axis.text.x = element_text(size = 8),
+    plot.title = element_text(
+      face = "bold",
+      size = 10
+    ),
+    plot.subtitle = element_text(size = 8),
+    legend.position = "bottom",
+    legend.direction = "horizontal",
+    legend.text = element_text(size = 8),
+    legend.key.size = grid::unit(0.3, "cm")
+  ) +
+  guides(
+    fill = guide_legend(nrow = 1)
   )
 
-# Combined figure
-(p_annual / p_period) +
-  plot_layout(heights = c(1.05, 1.3)) +
+(p_annual | p_change) +
+  plot_layout(widths = c(1.15, 1)) +
   plot_annotation(
     caption = paste(
-      "Analytical FoR groups, not official ANZSRC divisions.",
-      "The 2017 data include Pawsey-wide reporting.",
-      "Shares represent allocations, not independently observed demand."
+      "Analytical FoR groups; 2017 includes Pawsey-wide reporting.",
+      "Shares reflect allocations, not demand."
+    ),
+    theme = theme(
+      plot.caption = element_text(
+        size = 8,
+        hjust = 0
+      )
     )
   )
 ```
 
-@fig-for-composition shows the annual distribution of HPC allocations across nine analytical Field of Research (FoR) groups and compares average annual shares between 2014–2020 and 2021–2026.
+Figure @fig-for-composition shows the annual distribution of HPC allocations across nine analytical Field of Research (FoR) groups and the changes in average annual shares between 2014–2020 and 2021–2026.
 
-During 2014–2020, Earth and Environmental Sciences accounted for approximately 32% of average annual allocations, followed by Chemical Sciences at 19%. Physical Sciences and Engineering and Technology each represented approximately 17%. In 2021–2026, Engineering and Technology became the largest group at approximately 35%, followed by Physical Sciences at 22%, Chemical Sciences at 18%, and Earth and Environmental Sciences at 14%.
+Earth and Environmental Sciences was the largest group in most years from 2014 to 2020, reaching 42% of reported allocations in 2014. Engineering and Technology became the largest group from 2022 onwards, accounting for 41% in 2022 and 35% in 2026.
 
-These differences should be interpreted alongside the change from FoR 2008 to FoR 2020 classifications and the inclusion of Pawsey-wide reporting in 2016/17. The nine analytical groups support comparison but cannot eliminate differences in classification or reporting scope.
+Comparing the two periods, Engineering and Technology recorded the largest increase in average annual allocation share, rising by 18.0 percentage points, followed by Physical Sciences (+5.2 percentage points). Earth and Environmental Sciences experienced the largest decline (−17.6 percentage points), while Mathematics and Computing decreased by 2.5 percentage points. Changes in the remaining groups were comparatively small.
 
-The results describe allocation shares rather than independently observed demand by research field. The earlier and recent distributions are used to construct alternative FoR scenarios in Section 4.4.
-
-## Forecast Model Evaluation
-
-The naïve, drift, linear trend and log-linear trend models were compared using one-year-ahead rolling-origin forecasts. Overall HPC and CPU accuracy was evaluated over 2021–2026, while GPU accuracy was evaluated over 2025–2026. Results are reported separately because the three demand measures use different units and historical periods.
-
-
-### Overall HPC Demand
-
-@fig-hpc-cv compares observed HPC demand with one-year-ahead forecasts from the four models. The naïve model generally underestimated demand during periods of growth, while drift and linear trend followed the observed series more closely. The log-linear model tended to overestimate demand, particularly after 2022. However, all four models underestimated the sharp increase in 2026.
-
-```{r}
-#| label: fig-hpc-cv
-#| fig-cap: "Observed overall HPC demand and rolling-origin one-year-ahead forecasts, 2021–2026. All panels use the same vertical scale."
-#| fig-width: 10
-#| fig-height: 5
-#| out-width: 100%
-#| echo: false
-#| warning: false
-#| message: false
-
-# Prepare historical HPC demand
-hpc_cv_data <- annual_analysis |>
-  dplyr::transmute(
-    year = as.integer(year),
-    demand_ksu = as.numeric(demand_ksu)
-  ) |>
-  dplyr::arrange(year)
-
-stopifnot(
-  identical(hpc_cv_data$year, 2014:2026),
-  all(is.finite(hpc_cv_data$demand_ksu)),
-  all(hpc_cv_data$demand_ksu > 0)
-)
-
-# Rolling-origin evaluation
-hpc_cv_predictions <- dplyr::bind_rows(
-  lapply(2021:2026, function(test_year) {
-
-    training <- hpc_cv_data |>
-      dplyr::filter(year < test_year)
-
-    actual <- hpc_cv_data |>
-      dplyr::filter(year == test_year) |>
-      dplyr::pull(demand_ksu)
-
-    first_value <- training$demand_ksu[1]
-    last_value <- dplyr::last(training$demand_ksu)
-    n <- nrow(training)
-
-    # Naïve forecast
-    pred_naive <- last_value
-
-    # Drift forecast
-    pred_drift <- last_value +
-      (last_value - first_value) / (n - 1)
-
-    # Linear trend
-    fit_linear <- lm(
-      demand_ksu ~ year,
-      data = training
-    )
-
-    pred_linear <- as.numeric(
-      predict(
-        fit_linear,
-        newdata = data.frame(year = test_year)
-      )
-    )
-
-    # Log-linear trend
-    fit_loglinear <- lm(
-      log(demand_ksu) ~ year,
-      data = training
-    )
-
-    pred_loglinear <- as.numeric(
-      exp(
-        predict(
-          fit_loglinear,
-          newdata = data.frame(year = test_year)
-        )
-      )
-    )
-
-    tibble::tibble(
-      year = test_year,
-      actual = actual,
-      `Naïve` = pred_naive,
-      `Drift` = pred_drift,
-      `Linear trend` = pred_linear,
-      `Log-linear trend` = pred_loglinear
-    )
-  })
-)
-
-# Reshape predictions for plotting
-hpc_cv_long <- hpc_cv_predictions |>
-  tidyr::pivot_longer(
-    cols = c(
-      `Naïve`,
-      `Drift`,
-      `Linear trend`,
-      `Log-linear trend`
-    ),
-    names_to = "model",
-    values_to = "forecast"
-  ) |>
-  dplyr::mutate(
-    model = factor(
-      model,
-      levels = c(
-        "Naïve",
-        "Drift",
-        "Linear trend",
-        "Log-linear trend"
-      )
-    ),
-    actual_m = actual / 1e6,
-    forecast_m = forecast / 1e6
-  )
-
-# Four-panel forecast comparison
-ggplot(
-  hpc_cv_long,
-  aes(x = year)
-) +
-  geom_line(
-    aes(
-      y = actual_m,
-      colour = "Observed"
-    ),
-    linewidth = 1.2
-  ) +
-  geom_point(
-    aes(
-      y = actual_m,
-      colour = "Observed"
-    ),
-    size = 2.3
-  ) +
-  geom_line(
-    aes(
-      y = forecast_m,
-      colour = "Forecast"
-    ),
-    linewidth = 1,
-    linetype = "dashed"
-  ) +
-  geom_point(
-    aes(
-      y = forecast_m,
-      colour = "Forecast"
-    ),
-    size = 2
-  ) +
-  facet_wrap(
-    ~model,
-    ncol = 2,
-    scales = "fixed"
-  ) +
-  scale_colour_manual(
-    values = c(
-      "Observed" = "#173A5E",
-      "Forecast" = "#E69F00"
-    )
-  ) +
-  scale_x_continuous(
-    breaks = 2021:2026
-  ) +
-  scale_y_continuous(
-    labels = scales::label_number(
-      accuracy = 0.1
-    )
-  ) +
-  labs(
-    x = "Evaluation year",
-    y = "HPC demand (million kSU)",
-    colour = NULL,
-    caption = paste(
-      "Observed values are shown in dark blue.",
-      "Dashed orange lines represent one-year-ahead forecasts",
-      "from expanding training windows."
-    )
-  ) +
-  theme_minimal(base_size = 10) +
-  theme(
-    strip.text = element_text(
-      face = "bold",
-      size = 11
-    ),
-    axis.text.x = element_text(
-      angle = 45,
-      hjust = 1
-    ),
-    legend.position = "bottom",
-    panel.grid.minor = element_blank(),
-    plot.caption = element_text(size = 8)
-  )
-```
-
-@tbl-hpc-accuracy summarises forecast accuracy over 2021–2026. The linear trend achieved the lowest RMSE (290,898 kSU) and MAE (198,295 kSU). Its RMSE was 23.2% lower than naïve and 7.5% lower than drift. The log-linear model performed worst, with an RMSE of 511,614 kSU.
-
-```{r}
-#| label: tbl-hpc-accuracy
-#| tbl-cap: "Rolling-origin forecast accuracy for overall HPC demand, 2021–2026."
-#| echo: false
-#| warning: false
-#| message: false
-
-hpc_accuracy <- hpc_cv_long |>
-  dplyr::group_by(model) |>
-  dplyr::summarise(
-    RMSE = sqrt(mean((actual - forecast)^2)),
-    MAE = mean(abs(actual - forecast)),
-    .groups = "drop"
-  ) |>
-  dplyr::arrange(RMSE) |>
-  dplyr::mutate(
-    `RMSE rank` = dplyr::row_number()
-  )
-
-hpc_accuracy_table <- hpc_accuracy |>
-  dplyr::transmute(
-    Model = as.character(model),
-    `RMSE (kSU)` = format(
-      round(RMSE),
-      big.mark = ",",
-      scientific = FALSE,
-      trim = TRUE
-    ),
-    `MAE (kSU)` = format(
-      round(MAE),
-      big.mark = ",",
-      scientific = FALSE,
-      trim = TRUE
-    ),
-    `RMSE rank` = `RMSE rank`
-  )
-
-
-knitr::kable(
-  hpc_accuracy_table,
-  align = c("l", "r", "r", "r")
-) |>
-  kableExtra::kable_styling(
-    latex_options = "HOLD_position",
-    font_size = 9,
-    full_width = FALSE
-  )
-```
-
-The linear trend was selected as the central HPC forecasting model because it had the lowest evaluation errors and assumes a constant absolute annual increase. However, including 2026 increased the fitted annual trend from approximately 144,357 to 161,992 kSU (12.2%). The model excluding 2026 was therefore retained for sensitivity analysis, while the log-linear model was retained to examine continued proportional growth.
-
-The evaluation is based on six one-year-ahead forecasts. It does not establish how accurately the selected model will predict demand through 2030. Section 4.3 compares the resulting projections and alternative growth assumptions.
+These shifts should be interpreted cautiously because the data span the transition from FoR 2008 to FoR 2020 classifications and include Pawsey-wide reporting in 2016/17. The harmonised groups support historical comparison but do not fully resolve differences in classification or reporting scope. The results describe allocation shares rather than independently observed research-field demand and inform the alternative FoR scenarios in Section 4.4.
 
 ### CPU Demand
 
@@ -3338,11 +3083,11 @@ GPU projections were excluded from the initial national HPC planning scenarios b
 
 ## Field of Research Scenarios
 
-Historical Field of Research (FoR) allocation shares were used to distribute the selected national HPC demand forecast across nine research-field groups. Three reference periods were compared: 2014–2020, 2021–2026 and 2014–2026. Because consistent field-level request data were unavailable, the resulting distributions represent allocation-share scenarios rather than independent forecasts of demand by research field.
+Historical Field of Research (FoR) allocation shares were used to distribute the national HPC demand forecast across nine research-field groups for 2027–2030. Three reference periods were compared: 2014–2020, 2021–2026 and 2014–2026. Because consistent field-level request data were unavailable, these distributions represent allocation-share scenarios rather than independent forecasts of demand by research field.
 
 ### Scenario Construction
 
-For each reference period, the mean allocation share of each research-field group was calculated using its available annual observations. These means were normalised so that the nine groups accounted for 100% of the projected national demand:
+For each reference period, the mean annual allocation share of each research-field group was calculated from its available observations and normalised so that the nine groups accounted for 100% of the national forecast:
 
 $$
 w_f^{(s)} =
@@ -3350,34 +3095,22 @@ w_f^{(s)} =
 {\sum_j \overline{a}_j^{(s)}}
 $$
 
-where $w_f^{(s)}$ is the normalised weight for research field $f$ under scenario $s$, and $\overline{a}_f^{(s)}$ is its mean annual allocation share during the selected period.
+Here, $w_f^{(s)}$ is the normalised weight for research field $f$ under scenario $s$, and $\overline{a}_f^{(s)}$ is its mean annual allocation share during the reference period.
 
-Each available year received equal weight. Missing observations were not treated as zero, and the resulting weights were held constant for 2027–2030. The calculations therefore compare historical allocation compositions without assuming future changes in research-field shares.
-
-### Historical Allocation Assumptions
-
-@fig-for-scenario-comparison compares the normalised allocation shares for the three reference periods. All nine research-field groups are included.
-
+Each available year received equal weight. Missing observations were not treated as zero, so some group weights are based on fewer years than others. The resulting weights were held constant for 2027–2030. The scenarios therefore reflect alternative historical allocation patterns rather than changes in future research-field shares.
 
 ```{r}
-#| label: fig-for-scenario-comparison
-#| fig-cap: "Normalised Field of Research allocation shares across three historical reference periods."
-#| fig-width: 11
-#| fig-height: 5.5
-#| out-width: 100%
-#| echo: false
-#| warning: false
-#| message: false
+#| label: for-scenario-data
+#| include: false
 
 library(dplyr)
 library(tidyr)
 library(ggplot2)
 library(scales)
 
-# Prepare historical FoR allocation data
 for_scenario_source <- for_plot_data |>
   transmute(
-    year = as.integer(year),
+    year = as.integer(as.character(year)),
     for_group = as.character(for_visual_group),
     allocation_share = as.numeric(allocation_share)
   ) |>
@@ -3396,7 +3129,6 @@ stopifnot(
   all(for_scenario_source$allocation_share >= 0)
 )
 
-# Calculate normalised allocation weights
 make_for_weights <- function(data, start_year, end_year,
                              period_label) {
   data |>
@@ -3416,55 +3148,50 @@ make_for_weights <- function(data, start_year, end_year,
     )
 }
 
-# Three historical reference periods
+scenario_levels <- c(
+  "Earlier (2014–2020)",
+  "Recent (2021–2026)",
+  "Full period (2014–2026)"
+)
+
 for_scenario_weights <- bind_rows(
   make_for_weights(
     for_scenario_source, 2014, 2020,
-    "Earlier (2014–2020)"
+    scenario_levels[1]
   ),
   make_for_weights(
     for_scenario_source, 2021, 2026,
-    "Recent (2021–2026)"
+    scenario_levels[2]
   ),
   make_for_weights(
     for_scenario_source, 2014, 2026,
-    "Full period (2014–2026)"
+    scenario_levels[3]
   )
-)
+) |>
+  mutate(
+    period = factor(period, levels = scenario_levels)
+  )
 
-# Verify that each scenario sums to 100%
 for_weight_check <- for_scenario_weights |>
   group_by(period) |>
   summarise(
     total_share = sum(scenario_share),
+    n_groups = n_distinct(for_group),
     .groups = "drop"
   )
 
 stopifnot(
-  all(abs(for_weight_check$total_share - 1) < 1e-10)
+  all(abs(for_weight_check$total_share - 1) < 1e-10),
+  all(for_weight_check$n_groups == 9)
 )
 
-# Set the order of historical periods
-for_scenario_weights <- for_scenario_weights |>
-  mutate(
-    period = factor(
-      period,
-      levels = c(
-        "Earlier (2014–2020)",
-        "Recent (2021–2026)",
-        "Full period (2014–2026)"
-      )
-    )
-  )
-
-# Order research fields by their largest allocation share
 for_group_order <- for_scenario_weights |>
   group_by(for_group) |>
   summarise(
     max_share = max(scenario_share),
     .groups = "drop"
   ) |>
-  arrange(max_share) |>
+  arrange(desc(max_share)) |>
   pull(for_group)
 
 for_scenario_weights <- for_scenario_weights |>
@@ -3475,59 +3202,68 @@ for_scenario_weights <- for_scenario_weights |>
     )
   )
 
-# Create the revised chart
-ggplot(
+stopifnot(exists("overall_linear"))
+
+forecast_years <- 2027:2030
+
+hpc_forecast <- tibble(
+  year = forecast_years,
+  time = forecast_years - 2014
+) |>
+  mutate(
+    national_ksu = as.numeric(
+      predict(
+        overall_linear,
+        newdata = data.frame(
+          year = year,
+          time = time
+        )
+      )
+    )
+  )
+
+stopifnot(
+  nrow(hpc_forecast) == 4,
+  all(is.finite(hpc_forecast$national_ksu)),
+  all(hpc_forecast$national_ksu > 0)
+)
+
+for_annual_results <- tidyr::crossing(
   for_scenario_weights,
-  aes(
-    x = scenario_share,
-    y = for_group,
-    fill = period
+  hpc_forecast
+) |>
+  mutate(
+    projected_ksu = national_ksu * scenario_share
   )
-) +
-  geom_col(
-    position = position_dodge(width = 0.8),
-    width = 0.72
-  ) +
-  scale_fill_manual(
-    values = c(
-      "Earlier (2014–2020)" = "#64748B",
-      "Recent (2021–2026)" = "#0077A8",
-      "Full period (2014–2026)" = "#D97706"
-    )
-  ) +
-  scale_x_continuous(
-    labels = label_percent(accuracy = 1),
-    expand = expansion(mult = c(0, 0.08))
-  ) +
-  labs(
-    x = "Normalised historical allocation share",
-    y = NULL,
-    fill = NULL,
-    caption = paste(
-      "Weights use observed-year means.",
-      "Historical category coverage and reporting differ."
-    )
-  ) +
-  theme_minimal(base_size = 11) +
-  theme(
-    legend.position = "bottom",
-    legend.text = element_text(size = 10),
-    legend.key.width = grid::unit(1.5, "cm"),
-    axis.text.y = element_text(size = 10),
-    axis.text.x = element_text(size = 10),
-    axis.title.x = element_text(size = 11),
-    panel.grid.major.y = element_blank(),
-    panel.grid.minor = element_blank(),
-    plot.caption = element_text(size = 9)
+
+for_annual_check <- for_annual_results |>
+  group_by(period, year) |>
+  summarise(
+    projected_total = sum(projected_ksu),
+    national_total = first(national_ksu),
+    n_groups = n_distinct(for_group),
+    .groups = "drop"
   )
+
+stopifnot(
+  nrow(for_annual_results) == 108,
+  all(for_annual_check$n_groups == 9),
+  all(
+    abs(
+      for_annual_check$projected_total -
+        for_annual_check$national_total
+    ) < 1e-6
+  )
+)
 ```
 
+### Historical Allocation Assumptions
 
-@tbl-for-weights reports the normalised scenario weights for all nine research-field groups. The number of reported years is also included to show where the historical coverage differs.
+The three scenarios use different historical allocation compositions. @tbl-for-weights reports the normalised weights for all nine research-field groups, together with the number of years used to calculate each weight.
 
 ```{r}
 #| label: tbl-for-weights
-#| tbl-cap: "Normalised FoR allocation weights and reporting coverage across the three historical reference periods."
+#| tbl-cap: "Normalised FoR allocation weights and reporting coverage across three historical reference periods."
 #| echo: false
 #| warning: false
 #| message: false
@@ -3535,24 +3271,36 @@ ggplot(
 for_weights_table <- for_scenario_weights |>
   mutate(
     for_group = as.character(for_group),
-    period = as.character(period),
-    share_label = sprintf(
-      "%.2f%% (%d)",
-      100 * scenario_share,
-      years_reported
-    )
+    period = as.character(period)
   ) |>
   select(
     for_group,
     period,
-    share_label
+    scenario_share,
+    years_reported
   ) |>
   pivot_wider(
     names_from = period,
-    values_from = share_label
+    values_from = c(scenario_share, years_reported)
   ) |>
-  arrange(
-    for_group
+  arrange(desc(`scenario_share_Recent (2021–2026)`)) |>
+  transmute(
+    for_group,
+    `Earlier (2014–2020)` = sprintf(
+      "%.2f%% (%d)",
+      100 * `scenario_share_Earlier (2014–2020)`,
+      `years_reported_Earlier (2014–2020)`
+    ),
+    `Recent (2021–2026)` = sprintf(
+      "%.2f%% (%d)",
+      100 * `scenario_share_Recent (2021–2026)`,
+      `years_reported_Recent (2021–2026)`
+    ),
+    `Full period (2014–2026)` = sprintf(
+      "%.2f%% (%d)",
+      100 * `scenario_share_Full period (2014–2026)`,
+      `years_reported_Full period (2014–2026)`
+    )
   )
 
 knitr::kable(
@@ -3571,27 +3319,114 @@ knitr::kable(
   )
 ```
 
-*Note: Each cell shows the normalised allocation weight followed by the number of years with reported observations in parentheses. The reference periods contain seven, six and thirteen years respectively. Percentages are normalised within each period.*
+*Note: Each cell reports the normalised allocation weight and the number of years with observations in parentheses. The three reference periods contain seven, six and thirteen years, respectively.*
 
-The earlier-period scenario gives the largest allocation weight to Earth and Environmental Sciences at approximately 30.38%. Chemical Sciences follows at 18.28%, with Physical Sciences and Engineering and Technology accounting for 16.26% and 16.24% respectively.
+Under the earlier-period scenario, Earth and Environmental Sciences has the largest weight (30.38%), followed by Chemical Sciences (18.28%). In the recent-period scenario, Engineering and Technology becomes the largest group (33.28%), while Earth and Environmental Sciences falls to 13.36%. The full-period weights generally lie between the earlier and recent compositions for the major research fields.
 
-The recent-period composition differs considerably. Engineering and Technology becomes the largest group at 33.28%, followed by Physical Sciences (21.11%), Chemical Sciences (17.02%) and Earth and Environmental Sciences (13.36%).
+Reporting coverage also varies. Unclassified and Operational has only two reported years in the recent period, while Social Sciences, Humanities and Built Environment has five across the full period. Differences in FoR classifications and the inclusion of Pawsey-wide reporting in 2016/17 further limit direct historical comparisons.
 
-Engineering and Technology therefore gains approximately 17.04 percentage points between the earlier and recent scenarios. Over the same comparison, Earth and Environmental Sciences loses approximately 17.02 percentage points.
+These weights provide alternative assumptions for distributing national HPC demand. They do not establish changes in underlying research-field demand.
 
-The full-period weights lie between these two compositions for the major research fields. Engineering and Technology accounts for approximately 24.19%, Earth and Environmental Sciences for 22.55%, Physical Sciences for 18.55% and Chemical Sciences for 17.74%.
+### Illustrative Distribution of HPC Demand, 2027–2030
 
-Reporting coverage also differs across research fields. For example, the recent-period weight for Unclassified and Operational is based on only two reported years, while most major research fields have observations for all six years. Social Sciences, Humanities and Built Environment has only five reported years across the full period. Because the weights are calculated from available observations, groups with incomplete coverage may not represent the entire reference period.
+The three historical allocation compositions were applied to the central linear HPC demand forecast for each year from 2027 to 2030. The projected demand for field $f$ in year $t$ under scenario $s$ was calculated as $\hat{D}_{f,t}^{(s)} = \hat{D}_t w_f^{(s)}$, where $\hat{D}_t$ is the national HPC demand forecast and $w_f^{(s)}$ is the fixed allocation weight.
 
-These differences should not automatically be interpreted as changes in underlying research demand. The historical records span the FoR 2008 and FoR 2020 classification systems. In addition, the 2017 Pawsey-wide reporting scope differs from other observations, while the completeness of category reporting varies across years.
+@fig-for-annual-scenarios shows the resulting annual distributions. Each panel uses the same national demand forecast, but applies a different historical allocation pattern.
 
-The normalised weights therefore provide a consistent calculation method for comparing the constructed scenarios, but they do not remove differences in classification, facility coverage or reporting completeness. Nor do they establish that research priorities or computing requirements changed by the same percentages.
+```{r}
+#| label: fig-for-annual-scenarios
+#| fig-cap: "Illustrative HPC demand distribution by Field of Research, 2027–2030. All scenarios use the same national forecast; differences reflect the historical allocation weights applied to each research field."
+#| fig-width: 11
+#| fig-height: 5
+#| out-width: 100%
+#| echo: false
+#| warning: false
+#| message: false
 
-### Illustrative Distribution of Demand in 2030
+for_colours <- setNames(
+  grDevices::hcl.colors(
+    length(for_group_order),
+    palette = "Dark 3"
+  ),
+  for_group_order
+)
 
-The three historical allocation compositions were applied to the same selected national HPC demand projection.
+for_annual_plot <- for_annual_results |>
+  mutate(
+    year = factor(year, levels = 2027:2030),
+    for_group = factor(
+      for_group,
+      levels = for_group_order
+    )
+  )
 
-The central linear model projects approximately 2.50 million kSU in 2030. Each scenario distributes this national total across the nine research-field groups using its corresponding normalised weights. @tbl-for-2030 presents the resulting distributions. Calculations use the unrounded national forecast.
+ggplot(
+  for_annual_plot,
+  aes(
+    x = year,
+    y = projected_ksu / 1e6,
+    fill = for_group
+  )
+) +
+  geom_col(
+    width = 0.72,
+    position = position_stack(reverse = TRUE)
+  ) +
+  facet_wrap(
+    ~period,
+    nrow = 1
+  ) +
+  scale_fill_manual(
+    values = for_colours,
+    drop = FALSE
+  ) +
+  scale_y_continuous(
+    labels = label_number(
+      accuracy = 0.1
+    ),
+    expand = expansion(mult = c(0, 0.06))
+  ) +
+  labs(
+    x = NULL,
+    y = "Projected HPC demand (million kSU)",
+    fill = "Research field",
+    caption = paste(
+      "Each scenario uses the same national linear forecast.",
+      "Historical allocation weights remain fixed through 2030."
+    )
+  ) +
+  theme_minimal(base_size = 10) +
+  theme(
+    strip.text = element_text(
+      face = "bold",
+      size = 9
+    ),
+    axis.text.x = element_text(size = 8),
+    axis.text.y = element_text(size = 8),
+    axis.title.y = element_text(size = 9),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank(),
+    legend.position = "bottom",
+    legend.title = element_blank(),
+    legend.text = element_text(size = 7),
+    legend.key.size = grid::unit(0.3, "cm"),
+    plot.caption = element_text(
+      size = 8,
+      hjust = 0
+    )
+  ) +
+  guides(
+    fill = guide_legend(ncol = 3)
+  )
+```
+
+Projected HPC demand rises from 2027 to 2030 under all three scenarios, following the same national linear trend. The distribution differs according to the historical reference period. Engineering and Technology accounts for a larger share under the recent-period scenario, while Earth and Environmental Sciences has a larger share under the earlier-period scenario.
+
+The allocation weights remain constant throughout the forecast horizon. These scenarios therefore illustrate alternative distributions of national demand, rather than separate growth forecasts for individual research fields.
+
+### Comparison of Projected Demand in 2030
+
+The 2030 endpoint provides a direct comparison of the three allocation assumptions. @tbl-for-2030 reports the projected demand for each research-field group, calculated using the unrounded national forecast.
 
 ```{r}
 #| label: tbl-for-2030
@@ -3600,43 +3435,8 @@ The central linear model projects approximately 2.50 million kSU in 2030. Each s
 #| warning: false
 #| message: false
 
-stopifnot(exists("overall_linear"))
-
-hpc_2030_ksu <- as.numeric(
-  predict(
-    overall_linear,
-    newdata = data.frame(
-      year = 2030,
-      time = 2030 - 2014
-    )
-  )
-)
-
-stopifnot(
-  length(hpc_2030_ksu) == 1,
-  is.finite(hpc_2030_ksu),
-  hpc_2030_ksu > 0
-)
-
-for_2030_results <- for_scenario_weights |>
-  mutate(
-    projected_ksu = hpc_2030_ksu * scenario_share
-  )
-
-for_2030_check <- for_2030_results |>
-  group_by(period) |>
-  summarise(
-    scenario_total = sum(projected_ksu),
-    .groups = "drop"
-  )
-
-stopifnot(
-  all(
-    abs(
-      for_2030_check$scenario_total - hpc_2030_ksu
-    ) < 1e-6
-  )
-)
+for_2030_results <- for_annual_results |>
+  filter(year == 2030)
 
 for_2030_table <- for_2030_results |>
   mutate(
@@ -3651,6 +3451,10 @@ for_2030_table <- for_2030_results |>
   pivot_wider(
     names_from = period,
     values_from = projected_ksu
+  ) |>
+  select(
+    for_group,
+    all_of(scenario_levels)
   ) |>
   arrange(
     desc(`Recent (2021–2026)`)
@@ -3683,17 +3487,11 @@ knitr::kable(
   )
 ```
 
-The choice of historical reference period produces substantial differences in the indicative distribution of national HPC demand. The national forecast remains unchanged between scenarios; only the assumed distribution differs.
+The central linear model projects approximately 2.50 million kSU of national HPC demand in 2030. Under the recent-period scenario, Engineering and Technology accounts for approximately 832,908 kSU, compared with 406,401 kSU under the earlier-period scenario. This difference of 426,507 kSU arises solely from the choice of historical allocation weights.
 
-Under the recent-period scenario, Engineering and Technology accounts for approximately 832,908 kSU in 2030, compared with 406,401 kSU under the earlier-period scenario. This is a difference of 426,507 kSU, even though both scenarios use the same national demand projection.
+Earth and Environmental Sciences shows the opposite pattern, declining from approximately 760,374 kSU under the earlier-period scenario to 334,353 kSU under the recent-period scenario. The full-period scenario provides an intermediate allocation pattern for these major groups.
 
-Earth and Environmental Sciences shows the opposite pattern. Its indicative allocation decreases from 760,374 kSU under the earlier-period scenario to 334,353 kSU under the recent-period scenario, a difference of 426,021 kSU.
-
-Under the recent-period scenario, Physical Sciences accounts for approximately 528,466 kSU, while Chemical Sciences accounts for 425,998 kSU. The corresponding full-period estimates are 464,339 kSU and 443,903 kSU, respectively.
-
-The differences arise from applying alternative historical allocation weights to the same national HPC forecast. The choice of reference period is therefore an important modelling assumption, with Engineering and Technology showing a difference of approximately 426,500 kSU between the earlier and recent scenarios.
-
-These estimates do not represent confirmed future allocations or independently forecast research-field demand. They illustrate how a fixed national forecast would be distributed under different historical allocation assumptions. The implications for infrastructure planning are discussed in Chapter 5.
+The differences between scenarios demonstrate the sensitivity of indicative research-field requirements to the historical allocation period selected. These estimates are not confirmed future allocations or independently validated field-level demand forecasts. Their implications for infrastructure planning are discussed in Chapter 5.
 
 # Discussion
 
