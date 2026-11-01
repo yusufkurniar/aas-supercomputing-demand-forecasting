@@ -2479,7 +2479,7 @@ ggplot() +
   ) +
   labs(
     x = "Year",
-    y = "HPC demand (million kSU)",
+    y = "Million kSU",
     colour = NULL,
     linetype = NULL,
     caption = paste(
@@ -2502,11 +2502,11 @@ ggplot() +
   )
 ```
 
-The central linear model projects HPC demand of approximately 2.02 million kSU in 2027 and 2.50 million kSU in 2030, increasing by 161,992 kSU annually. Excluding 2026 reduces the 2030 projection to approximately 2.29 million kSU, or 210,000 kSU below the central estimate.
+The central linear model projects HPC demand of approximately 2.02 million kSU in 2027 and 2.50 million kSU in 2030, increasing by 161,992 kSU annually. Excluding 2026 reduces the 2030 projection to 2.29 million kSU, approximately 210,000 kSU below the central estimate.
 
-The full-history log-linear model projects approximately 6.48 million kSU in 2030. This substantially higher estimate reflects its assumption of continued proportional growth rather than a constant annual increase. However, the log-linear model had the highest forecast errors in Section 4.2.1 and was retained as a sensitivity scenario rather than a central forecast or validated upper bound.
+The full-history log-linear model projects 6.48 million kSU in 2030, compared with 6.96 million kSU when 2026 is excluded. These substantially higher projections reflect continued proportional growth. However, the log-linear model had the highest forecast errors in Section 4.2.1 and was retained for sensitivity analysis rather than as a central forecast.
 
-The results show that the choice between linear and proportional growth has a greater effect on the 2030 projection than excluding the 2026 observation. The linear model remains the central reference, while the alternatives illustrate uncertainty arising from model assumptions. All projections represent recorded HPC requests, not precise future infrastructure capacity requirements.
+The growth assumption has a greater effect on the 2030 projection than excluding 2026. The central linear forecast provides the main reference for national HPC planning, while the alternatives show how projections change under different assumptions. These estimates represent recorded requests rather than direct measures of future infrastructure capacity requirements.
 
 #### Prediction Intervals and Forecast Uncertainty
 
@@ -2629,7 +2629,7 @@ ggplot(
   ) +
   labs(
     x = "Forecast year",
-    y = "HPC demand (million kSU)",
+    y = "Million kSU",
     caption = paste(
       "Darker band: 80% prediction interval.",
       "Lighter band: 95% prediction interval.",
@@ -2645,9 +2645,9 @@ ggplot(
   )
 ```
 
-The central model projects approximately 2.50 million kSU in 2030, with a 95% prediction interval of 1.98–3.03 million kSU. This interval reflects uncertainty around an individual future annual observation, conditional on the fitted linear trend.
+The central model projects 2.50 million kSU in 2030, with a 95% prediction interval of approximately 1.98–3.03 million kSU. This interval describes uncertainty around an individual future annual observation, conditional on the fitted linear model.
 
-The intervals do not account for alternative growth models, changes in computing technology or reporting practices, or demand that is not captured by recorded requests. The residual diagnostics in Section 4.2.4 also identified limitations in assessing the model's error assumptions using only 13 annual observations. The intervals should therefore not be treated as definitive bounds on future national HPC demand.
+The intervals do not account for alternative growth models, changes in computing technology or reporting practices, or demand not captured by recorded requests. The residual diagnostics in Section 4.2.4 also showed departures from the normal-error assumption. These intervals should therefore not be treated as definitive bounds on future national HPC demand.
 
 ### CPU Demand
 
@@ -2857,7 +2857,7 @@ ggplot() +
   ) +
   labs(
     x = "Year",
-    y = "CPU demand (million core-hours)",
+    y = "Million CPU core-hours",
     colour = NULL,
     linetype = NULL,
     caption = paste(
@@ -2879,13 +2879,11 @@ ggplot() +
   )
 ```
 
-The central linear model projects approximately 1.13 billion CPU core-hours in 2027, increasing by 81.01 million core-hours annually to reach 1.37 billion in 2030. This is approximately 10.9% above the reconstructed 2026 demand.
+The central linear model projects approximately 1.13 billion CPU core-hours in 2027, increasing by 81.01 million core-hours annually to reach 1.37 billion in 2030. Excluding 2026 reduces the 2030 projection to approximately 1.26 billion core-hours, around 106 million below the central forecast.
 
-Excluding 2026 reduces the 2030 projection to approximately 1.26 billion core-hours, around 106 million below the central forecast. The difference reflects the influence of the latest observation on the fitted linear trend.
+The full-history log-linear model projects 2.48 billion core-hours in 2030, approximately 81% above the central forecast. The log-linear model excluding 2026 produces a similar projection of approximately 2.50 billion core-hours. Despite comparable one-year-ahead accuracy in Section 4.2.2, the linear and log-linear forecasts diverge because they assume constant absolute and proportional growth, respectively.
 
-The full-history log-linear model projects approximately 2.48 billion core-hours in 2030, around 81% above the central forecast. Although the two models achieved similar one-year-ahead accuracy, their projections differ substantially because log-linear growth compounds over time, while the linear model adds a constant annual amount.
-
-The log-linear models were retained as alternative scenarios because of their competitive evaluation accuracy. However, the available observations do not establish whether proportional growth will continue through 2030. The linear projection remains the central reference, while the alternatives show how the forecast changes under different growth assumptions.
+The linear model remains the central reference because it achieved the lowest RMSE. The log-linear projections are retained as alternative growth scenarios, although the available observations do not establish whether proportional growth will continue through 2030.
 
 #### CPU Prediction Intervals
 
@@ -2994,7 +2992,7 @@ ggplot(
   ) +
   labs(
     x = "Forecast year",
-    y = "CPU demand (million core-hours)",
+    y = "Million CPU core-hours",
     caption = paste(
       "Darker band: 80% prediction interval.",
       "Lighter band: 95% prediction interval.",
@@ -3008,11 +3006,11 @@ ggplot(
   )
 ```
 
-The central model projects approximately 1.37 billion CPU core-hours in 2030, with a 95% prediction interval of 0.97–1.77 billion core-hours. The interval describes uncertainty around an individual annual observation, conditional on the fitted linear model.
+The central model projects approximately 1.37 billion CPU core-hours in 2030, with a 95% prediction interval of 0.97–1.77 billion core-hours. This interval describes uncertainty around an individual annual observation under the fitted linear model.
 
-The full-history log-linear projection of 2.48 billion core-hours lies above this interval. This is not a contradiction: the interval reflects uncertainty within the linear model, whereas the log-linear projection uses a different growth assumption.
+The full-history log-linear projection of 2.48 billion core-hours lies above this interval because it assumes a different growth pattern. The interval does not capture uncertainty from alternative models, historical resource conversions or changes in computing systems. Departures from normality in the CPU residuals, discussed in Section 4.2.4, also limit confidence in the model-based interval.
 
-The intervals do not account for uncertainty in historical resource conversions, changes in computing systems or alternative model specifications. The residual diagnostics in Section 4.2.4 also showed departures from normality in the CPU residuals. These limitations affect how confidently the intervals can be interpreted. CPU projections should be considered alongside overall HPC demand rather than added to it, because the two series represent related computing requirements.
+CPU projections should be considered alongside overall HPC demand rather than added to it, because the two series represent related computing requirements.
 
 ### GPU Demand
 
@@ -3318,7 +3316,7 @@ ggplot() +
   ) +
   labs(
     x = "Year",
-    y = "GPU demand (million GPU-hours)",
+    y = "Million GPU-hours",
     colour = NULL,
     linetype = NULL,
     caption = paste(
@@ -3343,11 +3341,11 @@ ggplot() +
   )
 ```
 
-The naïve benchmark projects approximately 3.00 million GPU-hours in 2030. The full-history linear and log-linear models project 3.37 million and 3.68 million GPU-hours, respectively. Excluding 2026 reduces these projections to 2.25 million GPU-hours for the linear model and 2.41 million for the log-linear model.
+The naïve benchmark projects approximately 3.00 million GPU-hours in 2030. The linear and log-linear models fitted through 2026 project 3.37 million and 3.68 million GPU-hours, respectively. Excluding 2026 reduces these projections to 2.25 million and 2.41 million GPU-hours.
 
-The difference between the two linear projections is approximately 1.12 million GPU-hours in 2030, with the model including 2026 producing a 49.7% higher estimate. Across all five scenarios, projected demand ranges from 2.25 to 3.68 million GPU-hours. These values reflect differences in model assumptions and historical coverage, not validated lower and upper bounds on future demand.
+The difference between the two linear projections is approximately 1.12 million GPU-hours, with the model including 2026 producing a 49.7% higher estimate. Across all five scenarios, projected demand ranges from 2.25 to 3.68 million GPU-hours. This range reflects alternative assumptions rather than validated prediction bounds.
 
-GPU projections were excluded from the initial national HPC planning scenarios because the available data do not support a reliable central GPU forecast. The results are retained to show how strongly the projections depend on the inclusion of 2026 and the assumed growth pattern.
+Given the short historical series and estimated observations, these projections remain exploratory. They were not used to distribute the national HPC forecast across research fields in Section 4.4.
 
 ## Field of Research Scenarios
 
