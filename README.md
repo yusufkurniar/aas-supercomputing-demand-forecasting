@@ -18,7 +18,7 @@ The project covers data collection and integration, resource conversion, forecas
 
 | Output | Link |
 |---|---|
-| Final report (HTML) | [Read online](https://yusufkurniar01.github.io/aas-supercomputing-demand-forecasting/) |
+| Final report (HTML) | [Read online](https://yusufkurniar.github.io/aas-supercomputing-demand-forecasting/) |
 | Final report (PDF) | [Download PDF](report/report.pdf) |
 | Project presentation (PDF) | [Download PDF](presentation/presentation.pdf) |
 | Detailed technical analysis | [View Quarto source](technical-analysis/index.qmd) |
