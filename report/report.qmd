@@ -67,7 +67,7 @@ The project has five objectives:
 
 4. **Develop and evaluate forecasting models** using the available annual observations, comparing forecast accuracy, model assumptions and sensitivity to recent data.
 
-5. **Develop demand scenarios through 2030** and examine how different growth assumptions and historical FoR allocation patterns affect the results.
+5. **Develop demand scenarios through 2030** and examine how different growth assumptions, historical FoR allocation patterns and illustrative allocation levels affect the results.
 
 These objectives are consistent with the data analysis, forecasting and scenario development requirements in the internship brief [@HPCInternshipBrief].
 
@@ -3877,9 +3877,11 @@ These differences reflect the historical allocation periods used to construct th
 
 ### Planning for Growth and Uncertainty
 
-The central HPC forecast provides a reference for assessing future demand, but it should be considered alongside the alternative projections. The differences between linear and log-linear results are substantial by 2030, particularly for overall HPC demand. Planning based on the central forecast alone would not account for the consequences of different growth assumptions.
+The central HPC forecast provides a reference for national planning, but the alternative projections show how strongly the 2030 estimate depends on the assumed growth pattern. Planning should therefore consider the central forecast alongside the sensitivity scenarios rather than relying on a single demand estimate.
 
-Forecast demand also cannot be translated directly into required infrastructure capacity. Requested kSU measures the resources sought through allocation processes, while actual capacity requirements depend on utilisation, workload characteristics and system performance. Further assessment would be needed to determine how much additional infrastructure could meet the projected requests.
+The allocation sensitivity analysis in Section 4.5 provides a further comparison. If allocations remained at the 2026 level, approximately 1.63 million kSU of projected requests would remain unmet in 2030, with fulfilment of 34.9%. Even a 50% increase in allocations would leave a gap of approximately 1.19 million kSU, with a fulfilment rate of 52.3%. Maintaining the 2026 fulfilment rate of 38.9% would require allocations to increase by approximately 11.6% under the central forecast.
+
+These results provide indicative allocation levels for planning discussions, not estimates of infrastructure capacity or investment requirements. Translating them into capacity decisions would require evidence on resource utilisation, workload characteristics, system performance and future allocation policies.
 
 ### Accounting for Changes in Computing Technology
 
@@ -3907,6 +3909,8 @@ The selected linear models also assume that historical absolute growth continues
 
 The FoR scenarios were based on historical allocation shares rather than independently observed demand within each field. Differences between FoR 2008 and FoR 2020 classifications, together with changes in reporting scope, limit the comparability of these shares. Normalising them to 100% does not remove those differences.
 
+The allocation sensitivity scenarios also assume that the 2026 allocation baseline is comparable with the projected 2030 demand measure. They do not model changes in allocation policy, researcher application behaviour or available computing capacity. Their results are therefore conditional comparisons rather than forecasts of future unmet demand.
+
 ### Recommendations for Future Work
 
 Further analysis should prioritise the following improvements:
@@ -3930,6 +3934,8 @@ This project examined Australian national research HPC demand from 2014 to 2026 
 Recorded HPC requests reached approximately 2.24 million kSU in 2026, compared with allocations of 872,288 kSU, giving a fulfilment rate of 38.9%. The difference indicates that recorded requests substantially exceeded allocations, although it does not measure all unmet research demand.
 
 Rolling-origin evaluation supported linear trend models for the central HPC and CPU projections. By 2030, these models project approximately 2.50 million kSU of HPC demand and 1.37 billion CPU core-hours. The projections remain sensitive to the inclusion of 2026 and the assumed growth pattern. GPU projections were retained as exploratory because only five annual modelling observations were available. The FoR scenarios showed how different historical allocation distributions affect the estimated composition of future demand.
+
+The allocation sensitivity analysis further showed that a 50% increase from the 2026 allocation level would fulfil only approximately 52% of projected HPC requests in 2030, under the central demand forecast.
 
 The project delivers documented historical datasets, evaluated forecasting models and demand scenarios through 2030. The results provide the Australian Academy of Science with a reference for national HPC planning, while the accompanying Quarto documentation and Git repository retain the data preparation steps, assumptions and code needed to review and update the analysis.
 
