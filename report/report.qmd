@@ -45,7 +45,7 @@ execute:
   message: false
 ---
 
-# Abstract
+# Abstract {.unnumbered}
 
 This project examines historical demand for Australian national research high-performance computing (HPC) resources and develops forecasts through 2030 to support infrastructure planning. Publicly available records from the National Computational Infrastructure, Pawsey Supercomputing Research Centre and National Computational Merit Allocation Scheme were integrated to examine computing requests, allocations and their distribution across Fields of Research. Differences in reporting periods, computing systems and measurement units were addressed through documented standardisation and conversion procedures.
 
@@ -57,7 +57,7 @@ The findings provide a reference for national HPC planning, although changes in 
 
 ## Project Background and Forecasting Problem
 
-High-performance computing (HPC) supports research that requires substantial computing resources, including scientific simulations and large scale data analysis [@AAS2024FutureComputing]. In Australia, the National Computational Infrastructure (NCI) and the Pawsey Supercomputing Research Centre operate the two national Tier 1 HPC facilities available to researchers [@NCIWhoWeAre; @PawseyAbout].
+High-performance computing (HPC), commonly known as supercomputing, uses many processors working together to perform complex calculations. It supports research in areas such as climate modelling, weather forecasting, drug discovery and engineering simulations. HPC systems use central processing units (CPUs) for general computing tasks and graphics processing units (GPUs) to accelerate calculations that can run in parallel [@ibm_hpc; @AAS2024FutureComputing]. In Australia, the National Computational Infrastructure (NCI) and the Pawsey Supercomputing Research Centre operate the two national Tier-1 HPC facilities available to researchers [@NCIWhoWeAre; @PawseyAbout].
 
 This project was undertaken with the Australian Academy of Science to examine historical research computing demand and forecast national HPC demand through 2030. It uses publicly available records from NCI, Pawsey, and the National Computational Merit Allocation Scheme (NCMAS) to analyse requested and allocated computing resources. The results are intended to inform discussions about future national computing infrastructure and public investment [@HPCInternshipBrief].
 
@@ -106,7 +106,7 @@ Research funding, workforce and research activity indicators were considered as 
 
 Information from NCI, Pawsey and NCMAS publications was organised into two datasets: an annual demand and allocation summary, and a Field of Research (FoR) allocation composition dataset. Records were aligned by reporting year, computing system and resource type, with detailed observations checked against published annual totals where available.
 
-Financial years were assigned to their ending year. For example, 2013/14 was recorded as 2014. Computing system names, resource identifiers and research field labels were standardised to support comparisons across reporting periods. CPU, GPU and aggregate computing resources were identified separately, and differences in reporting scope were recorded before aggregation.
+Financial years were assigned to their ending year. For example, 2013/14 was recorded as 2014. CPU, GPU and aggregate computing resources were identified separately, and differences in reporting scope were recorded before aggregation.
 
 Original values, measurement units and source references were retained alongside standardised fields. Each observation was identified as directly reported, calculated from source information or estimated using documented assumptions. Missing resource breakdowns were not treated as observed values.
 
@@ -117,8 +117,6 @@ The main annual variables are requested compute and allocated compute. Where bot
 The corresponding fulfilment rate is $A_t/D_t$, and the request–allocation gap is $D_t - A_t$. All three indicators are calculated only when the values have compatible units and reporting scope [@HPCInternshipBrief].
 
 Historical records use different measurement units, including service units (SU), kilo service units (kSU), million compute hours, CPU core-hours and GPU-hours. Service units are accounting measures that depend on the computing system and resource type. Consequently, values expressed in kSU are not necessarily computationally equivalent across facilities.
-
-CPU core-hours and GPU-hours were treated as separate measures.
 
 ## Compute Resource Conversion
 
@@ -137,9 +135,9 @@ The denominators are system and resource specific accounting factors and were no
 | System or resource | Reporting period | SU per resource-hour | Treatment |
 |-----------------|-----------------|--------------------:|-----------------|
 | Raijin CPU and Magnus CPU | Selected historical years from 2013/14 | 1 | Historical baseline; assumptions apply to some records |
-| Gadi CPU | 2020/21–2025/26 | 2 | System-specific accounting factor |
-| Setonix CPU | 2021/22–2025/26 | 1 | System-specific accounting factor |
-| Setonix GPU | 2021/22–2025/26 | 128 | GPU accounting factor |
+| Gadi CPU | 2020/21-2025/26 | 2 | System-specific accounting factor |
+| Setonix CPU | 2021/22-2025/26 | 1 | System-specific accounting factor |
+| Setonix GPU | 2021/22-2025/26 | 128 | GPU accounting factor |
 | Setonix Q | 2025/26 | 256 | GH200 GPU-hour conversion |
 | Previously reported million core-hours | Selected historical years | Not applicable | Multiply by 1,000,000 |
 
@@ -161,7 +159,7 @@ Missing GPU observations were not treated as zero demand. Conversion assumptions
 
 The FoR data were standardised in two stages to support comparisons across 2014-2026.
 
-The first stage addressed differences between the FoR 2008-based reporting period (2014-2020) and the FoR 2020 based period (2021-2026) [@ABSANZSRC2020]. Selected historical fields were combined into broader reporting categories through `for_analysis_group`, while the existing standardised categories were retained for the later period.
+The first stage addressed differences between the FoR 2008-based reporting period (2014-2020) and the FoR 2020-based period (2021-2026) [@ABSANZSRC2020]. Selected historical fields were combined into broader reporting categories through `for_analysis_group`, while the existing standardised categories were retained for the later period.
 
 The second stage established nine analytical groups for longitudinal comparison through `for_visual_group`. These groups were informed by the broader research field categories used in NCI and Pawsey annual reporting. Related categories were combined where reporting detail differed across years, rather than assuming that the two FoR classification systems were directly equivalent.
 
@@ -197,7 +195,7 @@ The complete mapping rules and validation code are available in the technical Qu
 
 Overall HPC demand (kSU), CPU demand (core hours) and GPU demand (GPU-hours) were forecast separately because their measurement conventions and historical coverage differ. Field of Research (FoR) scenarios were developed from historical allocation shares because consistent field-level demand records were unavailable.
 
-Given the limited annual observations, the analysis used naïve, drift, linear trend and log-linear trend models to compare different growth assumptions. Model selection considered forecast accuracy, interpretability and suitability for projections through 2030 [@HyndmanAthanasopoulos2021].
+Given the limited annual observations, four forecasting methods were evaluated using forecast accuracy and the suitability of their assumptions for projections through 2030 [@HyndmanAthanasopoulos2021].
 
 ## Forecasting Models
 
@@ -235,8 +233,6 @@ Unlike the linear model, the log-linear model allows the absolute annual increas
 
 ## Forecasting Targets and Historical Coverage
 
-The forecasting models were applied separately to the available demand measures.
-
 | Forecasting target | Historical period | Measurement unit | Main consideration |
 |------------------|------------------|------------------|------------------|
 | Overall HPC demand | 2014-2026 | kSU | Historical reporting and accounting comparability |
@@ -245,9 +241,7 @@ The forecasting models were applied separately to the available demand measures.
 
 : Forecasting targets and historical coverage. {#tbl-forecast-targets}
 
-The HPC and CPU series contain 13 annual observations covering 2014-2026. GPU modelling was restricted to five observations from 2022–2026 because earlier GPU-hour estimates relied on less-supported conversion assumptions. The recent GPU series also includes derived values, limiting the reliability of model evaluation and forecasts.
-
-All models were fitted separately for each demand measure. Forecasts were expressed in the corresponding units rather than combining CPU core-hours and GPU-hours.
+The HPC and CPU series contain 13 annual observations covering 2014-2026. GPU modelling was restricted to five observations from 2022–2026 because earlier GPU-hour estimates relied on less-supported conversion assumptions. The recent GPU series also includes derived values, limiting the reliability of model evaluation and forecasts. All models were fitted separately for each demand measure.
 
 ## Model Evaluation
 
@@ -257,11 +251,9 @@ Forecasting performance was assessed using expanding window, one step ahead roll
 
 Under this approach, a model was fitted using the observations available up to a particular year and then used to predict the following year. The training window was expanded by one observation for each subsequent evaluation.
 
-This approach preserves the chronological order of the data and avoids using future observations to estimate earlier forecasts.
-
 For overall HPC and CPU demand, the initial training period covered 2014-2020. One step ahead forecasts were evaluated for 2021-2026, producing six forecast errors for each model.
 
-For GPU demand, the initial training period covered 2022 - 2024, with forecasts evaluated for 2025 and 2026. This provided only two forecast errors, making GPU model comparisons less reliable than those for overall HPC and CPU demand. Because evaluation used one-step-ahead forecasts, the accuracy measures do not directly establish performance over the full four-year projection horizon.
+For GPU demand, the initial training period covered 2022-2024, with forecasts evaluated for 2025 and 2026. This provided only two forecast errors, making GPU model comparisons less reliable than those for overall HPC and CPU demand. Because evaluation used one-step-ahead forecasts, the accuracy measures do not directly establish performance over the full four-year projection horizon.
 
 ### Forecast Accuracy Measures
 
@@ -285,7 +277,7 @@ Model selection considered predictive accuracy, interpretability and the assumpt
 
 A model with the lowest historical error was not automatically selected if its growth assumptions produced projections that were difficult to justify from the available evidence.
 
-The linear and log-linear specifications were compared particularly closely because they represent different future growth patterns. Linear models assume a constant absolute annual increase, while log-linear models imply compounded proportional growth.
+Linear and log-linear models were compared to assess how absolute and proportional growth assumptions affected projections through 2030.
 
 A sensitivity analysis was also conducted by fitting trend models with and without the 2026 observation. This examined how strongly the latest reported year influenced estimated growth and the resulting projections.
 
@@ -307,7 +299,7 @@ The scenarios show how different historical allocation patterns affect the indic
 
 Forecasts were generated for 2027 - 2030 by fitting the selected models to the available historical observations. Alternative growth assumptions and models excluding 2026 were retained for sensitivity analysis.
 
-The projections extend historical demand trends rather than estimate future infrastructure capacity requirements directly. They do not explicitly account for changes in research policy, computing technology or access to HPC resources. Historical accounting differences and the limited annual observations, particularly for GPU demand, also restrict forecast reliability.
+The projections extend historical demand trends rather than estimate future infrastructure capacity directly. They do not explicitly account for changes in research policy, computing technology or access to HPC resources.
 
 An additional allocation sensitivity analysis compared the central 2030 HPC demand forecast with three illustrative allocation levels: the 2026 allocation, 25% above that level and 50% above it. For each scenario, the request–allocation gap and fulfilment rate were calculated. The analysis also estimated the allocation levels required to maintain the 2026 fulfilment rate and achieve 50% fulfilment in 2030. These comparisons were used for planning interpretation rather than forecasting future allocations or infrastructure capacity.
 
@@ -3960,6 +3952,6 @@ The project delivers documented historical datasets, evaluated forecasting model
 ::: {#refs}
 :::
 
-# AI Acknowledgement
+# AI Acknowledgement {.unnumbered}
 
 ChatGPT (OpenAI) was used as a supporting tool throughout this project. It helped me understand technical terms related to supercomputing, explore suitable forecasting methods for limited historical data, and identify repetitive or unclear explanations in the report. I also used it to cross check calculations involving resource conversions, forecast projections and scenario results. All analytical decisions, calculations and final interpretations were reviewed and verified by the author. [AI Link](https://chatgpt.com/share/6ae7edc4-aeec-83ec-b79b-f54367119ca7)
