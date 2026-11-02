@@ -83,19 +83,24 @@ The technical documentation explains the assumptions, measurement units and clas
 
 ## Repository Structure
 
-
-## Repository Structure
-
 ```text
 aas-supercomputing-demand-forecasting/
 ├── assets/
 │   ├── data/
 │   │   ├── raw data/
+│   │   │   ├── demand and allocation/
+│   │   │   ├── field of research/
+│   │   │   └── supporting data/
 │   │   ├── data clean/
 │   │   ├── data standardised/
 │   │   └── data converted/
 │   ├── models/
+│   │   ├── cpu_models.rds
+│   │   ├── gpu_models.rds
+│   │   └── overall_hpc_models.rds
 │   └── progress/
+│       ├── Internship Progress.xlsx
+│       └── Yearly Conversion.xlsx
 ├── report/
 │   ├── report.qmd
 │   └── styles.css
@@ -129,48 +134,43 @@ The `renv/library/` directory contains locally installed packages and is not com
 
 ### Folder Descriptions
 
+**`assets/data/`**
+
+The data folders follow the preparation stages used in the technical analysis:
+
+| Folder | Contents and purpose |
+|---|---|
+| `raw data/demand and allocation/` | Thirteen annual source workbooks (2013/14–2025/26) containing historical HPC demand and allocation records. |
+| `raw data/field of research/` | Thirteen annual source workbooks (2014–2026) containing Field of Research (FoR) information. |
+| `raw data/supporting data/` | Three supplementary or earlier working workbooks retained for reference: `demand_allocation_all_years_v2.xlsx`, `ncmas_data.xlsx`, and `yearly_field_of_research_data.xlsx`. These are not identified as direct inputs in the reviewed technical-analysis chapters. |
+| `data clean/` | Cleaned and reconciled workbooks used during data integration and standardisation, including `demand_allocation_data.xlsx`, `integrated_hpc_source_data.xlsx`, `reconciled_demand_allocation_summary.xlsx`, and `reconciled_field_of_research_summary.xlsx`. |
+| `data standardised/` | Two RDS datasets, `annual_demand_allocation.rds` and `field_of_research.rds`, containing standardised annual records. |
+| `data converted/` | Five RDS datasets containing converted computing measures, harmonised FoR shares, and historical GPU scenarios for subsequent analysis. |
+
+The raw source files are retained to make it possible to trace processed values back to the underlying records. The cleaned, standardised, and converted files represent successive stages of the analysis; they should not be treated as interchangeable.
+
+**`assets/models/`**
+
+Contains saved R forecasting model objects for overall HPC demand, CPU, and GPU analyses: `overall_hpc_models.rds`, `cpu_models.rds`, and `gpu_models.rds`. These can be inspected without refitting every model.
+
+**`assets/progress/`**
+
+Contains two supporting workbooks:
+
+- `Internship Progress.xlsx`: Internship progress tracking and project documentation.
+- `Yearly Conversion.xlsx`: Year-by-year resource conversion calculations supporting the data preparation and conversion assumptions.
+
 **`report/`**
 
 Contains the final internship report source and styling. Published HTML and PDF versions are available under `docs/`.
 
 **`presentation/`**
 
-Contains the project presentation PDF, presentation source files and supporting theme resources.
+Contains the project presentation PDF, presentation source files, and supporting theme resources.
 
 **`technical-analysis/`**
 
-Contains the detailed Quarto book documenting the analytical workflow. Its chapters cover:
-
-1.  Data collection
-2.  Variable definitions
-3.  Data integration
-4.  Data standardisation
-5.  Resource conversion
-6.  Initial analysis
-7.  Model development
-8.  Model evaluation
-9.  Model selection
-10. Scenario forecasting
-11. References and acknowledgements
-
-This material provides additional technical detail beyond the final internship report.
-
-**`assets/data/`**
-
-Contains the datasets used in the project:
-
--   `raw data/`: Original source workbooks and historical records.
--   `data clean/`: Integrated, cleaned and reconciled records.
--   `data standardised/`: Standardised datasets.
--   `data converted/`: Converted datasets prepared for analysis.
-
-**`assets/models/`**
-
-Contains saved R model objects used in forecasting and scenario analysis.
-
-**`assets/progress/`**
-
-Contains supporting workbooks and working materials produced during the internship. These materials are retained for project documentation and review.
+Contains the detailed Quarto book documenting the analytical workflow. Its chapters cover data collection, variable definitions, data integration, data standardisation, resource conversion, initial analysis, model development, model evaluation, model selection, scenario forecasting, and references. This material provides additional technical detail beyond the final internship report.
 
 **`references.bib`**
 
