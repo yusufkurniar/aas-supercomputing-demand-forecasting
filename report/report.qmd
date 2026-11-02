@@ -10,6 +10,7 @@ bibliography: ../references.bib
 
 format:
   html:
+    output-file: index.html
     theme: cosmo
     css: styles.css
     toc: true

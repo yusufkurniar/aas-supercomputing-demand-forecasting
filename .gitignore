@@ -10,3 +10,5 @@ _book/
 _output/
 index_files/
 **/*.quarto_ipynb
+
+/.quarto/
