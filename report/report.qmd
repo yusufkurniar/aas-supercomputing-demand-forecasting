@@ -3952,3 +3952,7 @@ The project delivers documented historical datasets, evaluated forecasting model
 
 ::: {#refs}
 :::
+
+# AI Acknowledgement
+
+ChatGPT (OpenAI) was used as a supporting tool throughout this project. It helped me understand technical terms related to supercomputing, explore suitable forecasting methods for limited historical data, and identify repetitive or unclear explanations in the report. I also used it to cross check calculations involving resource conversions, forecast projections and scenario results. All analytical decisions, calculations and final interpretations were reviewed and verified by the author. [AI Link](https://chatgpt.com/share/6ae7edc4-aeec-83ec-b79b-f54367119ca7)
