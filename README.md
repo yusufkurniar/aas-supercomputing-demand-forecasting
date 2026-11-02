@@ -17,13 +17,13 @@ The project covers data collection and integration, resource conversion, forecas
 ## Project Outputs
 
 | Output | Link |
-|---|---|
+|------------------------------------|------------------------------------|
 | Final report (HTML) | [Read online](https://yusufkurniar.github.io/aas-supercomputing-demand-forecasting/) |
-| Final report (PDF) | [Download PDF](report/report.pdf) |
+| Final report (PDF) | [Download PDF](docs/report.pdf) |
 | Project presentation (PDF) | [Download PDF](presentation/presentation.pdf) |
 | Detailed technical analysis | [View Quarto source](technical-analysis/index.qmd) |
 
-The technical analysis will also be available as a GitHub Pages website once publishing is configured.
+The technical analysis is provided as a Quarto book source under `technical-analysis/`. The final report is published through GitHub Pages.
 
 ## Key Findings
 
@@ -169,41 +169,140 @@ Contains bibliography records used by the Quarto documents.
 
 ## Reproducing the Analysis
 
-The analysis was developed using R and Quarto.
+The repository contains the Quarto source, intermediate datasets, and saved R models. The technical chapters document the processing and modelling decisions. A complete clean-environment rebuild has **not yet been verified**; the steps below provide a practical starting point for reproducing and inspecting the work.
 
-### Requirements
+### Software and R packages
 
--   R
--   Quarto
--   R packages referenced in the Quarto source files
+Install [R](https://cran.r-project.org/), [RStudio](https://posit.co/download/rstudio-desktop/) (optional), and [Quarto](https://quarto.org/docs/get-started/).
 
-### Steps
+The Quarto source uses these R packages:
 
-1.  Clone or download this repository.
-2.  Open `aas-supercomputing-demand-forecasting.Rproj` in RStudio.
-3.  Install the R packages required by the technical chapters.
-4.  Confirm the datasets and model files are available under `assets/`.
-5.  Render the technical analysis from the repository root:
+``` r
+install.packages(c(
+  "dplyr", "ggplot2", "scales", "tidyr", "knitr",
+  "stringr", "readxl", "here", "patchwork",
+  "tibble", "tidyverse"
+))
+```
+
+This list is based on explicit package-loading calls in the source files. Package versions are not yet locked; a future `renv.lock` file would make the software environment easier to reproduce exactly.
+
+### Get started
+
+Clone the repository and open the RStudio project:
+
+``` bash
+git clone https://github.com/yusufkurniar/aas-supercomputing-demand-forecasting.git
+cd aas-supercomputing-demand-forecasting
+```
+
+Open `aas-supercomputing-demand-forecasting.Rproj` in RStudio, or work from a terminal. The clone URL above reflects the repository's current owner; update it if ownership changes.
+
+### Example 1: Load and inspect the prepared annual dataset
+
+Run from the repository root in R:
+
+``` r
+annual <- readRDS("assets/data/data standardised/annual_demand_allocation.rds")
+
+names(annual)
+head(annual)
+summary(annual)
+```
+
+This example loads the prepared annual data without re-running the earlier data-cleaning steps.
+
+### Example 2: Plot historical demand and allocation
+
+``` r
+library(ggplot2)
+
+annual <- readRDS("assets/data/data standardised/annual_demand_allocation.rds")
+
+# Inspect column names first; the standardised dataset retains
+# requested_compute and allocated_compute.
+stopifnot(all(c("year", "requested_compute", "allocated_compute") %in% names(annual)))
+
+ggplot(annual, aes(x = year)) +
+  geom_line(aes(y = requested_compute, colour = "Requested")) +
+  geom_line(aes(y = allocated_compute, colour = "Allocated")) +
+  labs(
+    title = "Historical reported HPC requests and allocations",
+    x = "Reporting year",
+    y = "Original reported values (check unit before comparing)",
+    colour = NULL
+  ) +
+  theme_minimal()
+```
+
+**Interpretation caution:** Historical reporting units differ across periods and systems. This is a *data-inspection example*, not a harmonised trend comparison. Use the conversion chapter and converted datasets for unit-aware comparisons.
+
+### Example 3: Inspect a saved model object
+
+``` r
+models <- readRDS("assets/models/overall_hpc_models.rds")
+
+class(models)
+names(models)
+str(models, max.level = 1)
+```
+
+The model objects are provided for inspection. See Chapters 07–10 for model specifications, evaluation, selection, and forecasting scenarios.
+
+### Technical workflow and execution order
+
+The Quarto book is organised in the following sequence:
+
+| Stage | Source | Purpose |
+|------------------------|------------------------|------------------------|
+| 1 | `01_data_collection.qmd` | Identify and document source records |
+| 2 | `02_variable_definition.qmd` | Define analytical variables |
+| 3 | `03_data_integration.qmd` | Integrate and reconcile historical records |
+| 4 | `04_data_standardisation.qmd` | Standardise periods, fields, and datasets |
+| 5 | `05_data_conversion.qmd` | Document and apply resource conversions |
+| 6 | `06_initial_analysis.qmd` | Explore historical patterns |
+| 7 | `07_model_development.qmd` | Fit and save forecasting models |
+| 8 | `08_model_evaluation.qmd` | Evaluate model performance |
+| 9 | `09_model_selection.qmd` | Select reference specifications |
+| 10 | `10_scenario_forecasting.qmd` | Produce 2027–2030 scenarios |
+| 11 | `11_references_acknowledgement.qmd` | References and acknowledgements |
+
+**Dependencies between stages:** Chapter 05 reads the standardised RDS files created in Chapter 04. Later chapters use converted datasets and saved model objects, including models written in Chapter 07. Run the chapters in order when regenerating intermediate outputs. Existing processed datasets and models are included for inspection without rebuilding everything.
+
+### Render the technical documentation
+
+From the repository root:
 
 ``` bash
 quarto render technical-analysis --to html
 ```
 
-Alternatively, open a terminal inside `technical-analysis/` and run:
+The technical book has its own configuration in `technical-analysis/_quarto.yml`. Its rendered output is normally written to `technical-analysis/_book/`.
+
+### Render the final report
+
+From the repository root:
 
 ``` bash
-quarto render --to html
+quarto render report/report.qmd --to html
 ```
 
-The rendered technical book is generated in `technical-analysis/_book/` under the current configuration.
+The root `_quarto.yml` currently sends project output to `docs/` and invokes `sync-docs.R` after rendering. This updates the local published HTML homepage at `docs/index.html`. To publish changes to GitHub Pages, commit and push the changed files.
 
-To render the final report separately:
+For the PDF, render separately:
 
 ``` bash
-quarto render report/report.qmd
+quarto render report/report.qmd --to pdf
 ```
 
-The source files and documented assumptions are provided to support review, reproduction and future updates.
+The post-render script copies `docs/report/report.pdf` to `docs/report.pdf` **if that generated file exists**. Verify the PDF's modification date after rendering.
+
+### Reproducibility scope
+
+-   **Provided:** Quarto source chapters, cleaned and processed datasets, saved model objects, conversion documentation, and report outputs.
+-   **To verify:** A complete end-to-end rebuild in a fresh R environment, exact package versions, and whether every chapter executes without manual intervention.
+-   **Data provenance:** Source workbooks, reconciliation summaries, and conversion assumptions are documented in the repository and technical chapters.
+-   **Important:** The dataset files were assembled for this project; they are not an official, consolidated national HPC demand dataset.
 
 ## Limitations
 

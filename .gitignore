@@ -12,3 +12,7 @@ index_files/
 **/*.quarto_ipynb
 
 /.quarto/
+
+# Generated README output
+/README.html
+/README_files/
