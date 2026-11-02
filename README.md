@@ -14,11 +14,23 @@ The analysis uses publicly available records from the National Computational Inf
 
 The project covers data collection and integration, resource conversion, forecasting model evaluation, and scenario analysis. It also examines historical allocation patterns and the distribution of computing resources across Fields of Research (FoR).
 
+## Individual Contributions
+
+My work focused on preparing historical Australian research computing data and developing forecasts of HPC demand through 2030. The main contributions were:
+
+-   **Data integration:** Compiled historical demand, allocation and Field of Research (FoR) records from NCI, Pawsey and NCMAS publications into consistent annual datasets.
+-   **Data preparation:** Reconciled reporting periods, computing systems, measurement units and resource definitions. Documented the original values, conversion assumptions and reconstructed observations.
+-   **Forecasting:** Developed and evaluated naïve, drift, linear trend and log-linear trend models for overall HPC, CPU and GPU demand using rolling-origin cross-validation.
+-   **Scenario analysis:** Examined the effects of alternative growth assumptions, historical FoR allocation shares and illustrative future allocation levels.
+-   **Reporting and reproducibility:** Prepared the final report, technical Quarto analysis, visualisations, intermediate datasets and supporting documentation.
+
+The original source publications were produced by their respective organisations. The integration, conversions, forecasting analysis and interpretation were undertaken for this internship project.
+
 ## Project Deliverables
 
 | Output | Link |
-|----|----|
-| **Final report (HTML) — main deliverable** | **[Read the final report online](https://yusufkurniar.github.io/aas-supercomputing-demand-forecasting/)** |
+|------------------------------------|------------------------------------|
+| **Final report (HTML): main deliverable** | [**Read the final report online**](https://yusufkurniar.github.io/aas-supercomputing-demand-forecasting/) |
 | **Final report (PDF)** | [Download the report](docs/report.pdf) |
 | Project presentation (PDF) | [Download PDF](presentation/presentation.pdf) |
 | Detailed technical analysis | [View Quarto source](technical-analysis/index.qmd) |
@@ -43,14 +55,14 @@ The repository contains original, cleaned, standardised and converted datasets u
 ### Standardised Datasets
 
 | Dataset | Description | Download |
-|----|----|----|
+|------------------------|------------------------|------------------------|
 | `annual_demand_allocation.rds` | Standardised annual demand and allocation records | [Download](assets/data/data%20standardised/annual_demand_allocation.rds) |
 | `field_of_research.rds` | Standardised FoR allocation records | [Download](assets/data/data%20standardised/field_of_research.rds) |
 
 ### Converted Datasets
 
 | Dataset | Description | Download |
-|----|----|----|
+|------------------------|------------------------|------------------------|
 | `annual_demand_allocation_converted.rds` | Annual computing resource data after the documented conversions | [Download](assets/data/data%20converted/annual_demand_allocation_converted.rds) |
 | `field_of_research_converted.rds` | FoR data prepared for the subsequent analysis | [Download](assets/data/data%20converted/field_of_research_converted.rds) |
 
@@ -71,7 +83,7 @@ The datasets were compiled and processed for this project. They are not official
 The following workbooks provide supporting information on the original records, data integration and conversion process.
 
 | Workbook | Purpose |
-|----|----|
+|------------------------------------|------------------------------------|
 | [Integrated HPC Source Data](assets/data/data%20clean/integrated_hpc_source_data.xlsx) | Historical source data integration |
 | [Yearly Conversion](assets/progress/Yearly%20Conversion.xlsx) | Year-by-year resource conversion calculations |
 | [Reconciled Demand and Allocation Summary](assets/data/data%20clean/reconciled_demand_allocation_summary.xlsx) | Reconciliation of annual demand and allocation records |
@@ -83,7 +95,7 @@ The technical documentation explains the assumptions, measurement units and clas
 
 ## Repository Structure
 
-```text
+``` text
 aas-supercomputing-demand-forecasting/
 ├── assets/
 │   ├── data/
@@ -139,10 +151,10 @@ The `renv/library/` directory contains locally installed packages and is not com
 The data folders follow the preparation stages used in the technical analysis:
 
 | Folder | Contents and purpose |
-|---|---|
+|------------------------------------|------------------------------------|
 | `raw data/demand and allocation/` | Thirteen annual source workbooks (2013/14–2025/26) containing historical HPC demand and allocation records. |
 | `raw data/field of research/` | Thirteen annual source workbooks (2014–2026) containing Field of Research (FoR) information. |
-| `raw data/supporting data/` | Three supplementary or earlier working workbooks retained for reference: `demand_allocation_all_years_v2.xlsx`, `ncmas_data.xlsx`, and `yearly_field_of_research_data.xlsx`. These are not identified as direct inputs in the reviewed technical-analysis chapters. |
+| `raw data/supporting data/` | Contains three supplementary working datasets: `demand_allocation_all_years_v2.xlsx`, `ncmas_data.xlsx`, and `yearly_field_of_research_data.xlsx`. These files are retained as supporting project records and are not identified as direct inputs in the documented technical-analysis workflow. |
 | `data clean/` | Cleaned and reconciled workbooks used during data integration and standardisation, including `demand_allocation_data.xlsx`, `integrated_hpc_source_data.xlsx`, `reconciled_demand_allocation_summary.xlsx`, and `reconciled_field_of_research_summary.xlsx`. |
 | `data standardised/` | Two RDS datasets, `annual_demand_allocation.rds` and `field_of_research.rds`, containing standardised annual records. |
 | `data converted/` | Five RDS datasets containing converted computing measures, harmonised FoR shares, and historical GPU scenarios for subsequent analysis. |
@@ -157,8 +169,8 @@ Contains saved R forecasting model objects for overall HPC demand, CPU, and GPU 
 
 Contains two supporting workbooks:
 
-- `Internship Progress.xlsx`: Internship progress tracking and project documentation.
-- `Yearly Conversion.xlsx`: Year-by-year resource conversion calculations supporting the data preparation and conversion assumptions.
+-   `Internship Progress.xlsx`: Internship progress tracking and project documentation.
+-   `Yearly Conversion.xlsx`: Year-by-year resource conversion calculations supporting the data preparation and conversion assumptions.
 
 **`report/`**
 
@@ -178,15 +190,15 @@ Contains bibliography records used by the Quarto documents.
 
 ## Reproducibility and Technical Analysis
 
-The repository contains the Quarto source, intermediate datasets, saved R models, and a versioned R package environment. The three examples below were tested successfully after clearing the R workspace. The complete technical Quarto book was rendered successfully in the configured R 4.5.3 environment on 2 November 2026. Reproduction on a separate, freshly configured computer has **not yet been verified**.
+The repository contains the Quarto source, intermediate datasets, saved R models, and a versioned R package environment. Three examples were tested successfully after clearing the R workspace in the development environment. The complete technical Quarto book was rendered successfully in the configured R 4.5.3 environment on 2 November 2026. Reproduction on a separate, freshly configured computer has **not yet been verified**.
 
-### Software and R packages
+### Software and R Packages
 
 The project was developed using **R 4.5.3** and Quarto. R package versions are recorded in `renv.lock`, and the repository includes the `renv` activation files. You do **not** need to download or commit an R package library: `renv` restores the dependencies on each user's computer.
 
 Install [R](https://cran.r-project.org/), [Quarto](https://quarto.org/docs/get-started/), and optionally [RStudio](https://posit.co/download/rstudio-desktop/). RStudio is recommended for opening the project.
 
-### Get started
+### Get Started
 
 Clone the repository:
 
@@ -214,12 +226,14 @@ Restoring packages requires an internet connection and can take several minutes.
 
 **Do not commit `renv/library/`.** That directory is machine-specific; the files `renv.lock`, `renv/activate.R`, `renv/settings.json`, and `.Rprofile` are the reproducibility configuration that belongs in version control.
 
-### Example 1: Load and inspect the prepared annual dataset
+### Example 1: Load and Inspect the Prepared Annual Dataset
 
 Run from the repository root in R:
 
 ``` r
-annual <- readRDS("assets/data/data standardised/annual_demand_allocation.rds")
+annual <- readRDS(
+  "assets/data/data standardised/annual_demand_allocation.rds"
+)
 
 names(annual)
 head(annual)
@@ -228,35 +242,44 @@ summary(annual)
 
 This example loads the prepared annual data without re-running the earlier data-cleaning steps.
 
-### Example 2: Plot historical demand and allocation
+### Example 2: Inspect Historical Demand and Allocation Records
+
+The standardised annual dataset contains historical demand and allocation records before all resource conversions have been applied. The following example checks the available variables, reporting years and missing values.
 
 ``` r
-library(ggplot2)
+annual <- readRDS(
+  "assets/data/data standardised/annual_demand_allocation.rds"
+)
 
-annual <- readRDS("assets/data/data standardised/annual_demand_allocation.rds")
+# Inspect the dataset structure
+str(annual)
 
-# Inspect column names first; the standardised dataset retains
-# requested_compute and allocated_compute.
-stopifnot(all(c("year", "requested_compute", "allocated_compute") %in% names(annual)))
+# Check reporting years
+sort(unique(annual$year))
 
-ggplot(annual, aes(x = year)) +
-  geom_line(aes(y = requested_compute, colour = "Requested")) +
-  geom_line(aes(y = allocated_compute, colour = "Allocated")) +
-  labs(
-    title = "Historical reported HPC requests and allocations",
-    x = "Reporting year",
-    y = "Original reported values (check unit before comparing)",
-    colour = NULL
-  ) +
-  theme_minimal()
+# Check the completeness of key variables
+key_vars <- c(
+  "year",
+  "requested_compute",
+  "allocated_compute"
+)
+
+stopifnot(all(key_vars %in% names(annual)))
+
+colSums(is.na(annual[key_vars]))
+
+# Inspect the recorded values
+head(annual[key_vars])
 ```
 
-**Interpretation caution:** Historical reporting units differ across periods and systems. This is a *data-inspection example*, not a harmonised trend comparison. Use the conversion chapter and converted datasets for unit-aware comparisons.
+Historical reporting units and resource definitions differ across computing systems and periods. The standardised dataset is therefore intended for inspecting the recorded information, rather than directly comparing demand trends across all years. The converted datasets and the resource conversion methodology in Chapter 05 of the technical analysis should be used for harmonised comparisons.
 
-### Example 3: Inspect a saved model object
+### Example 3: Inspect a Saved Model Object
 
 ``` r
-models <- readRDS("assets/models/overall_hpc_models.rds")
+models <- readRDS(
+  "assets/models/overall_hpc_models.rds"
+)
 
 class(models)
 names(models)
@@ -265,22 +288,22 @@ str(models, max.level = 1)
 
 The model objects are provided for inspection. See Chapters 07–10 for model specifications, evaluation, selection, and forecasting scenarios.
 
-### Reproduce the technical analysis (supporting material)
+### Reproduce the Technical Analysis (Supporting Material)
 
 The final report is the main project deliverable. The technical Quarto book provides supporting code and detailed documentation for assessing reproducibility. After restoring the packages, run this command from the repository root:
 
-```bash
+``` bash
 quarto render technical-analysis --to html
 ```
 
 This command was successfully tested on 2 November 2026 using R 4.5.3 on Windows. It processed the book index and all 11 technical chapters, generating `technical-analysis/_book/index.html`. This verifies rendering in the configured development environment, not a fresh-machine rebuild. Rendering may regenerate datasets and saved model files.
 
-### Technical workflow and execution order
+### Technical Workflow and Execution Order
 
 The Quarto book is organised in the following sequence:
 
 | Stage | Source | Purpose |
-|----|----|----|
+|------------------------|------------------------|------------------------|
 | 1 | `01_data_collection.qmd` | Identify and document source records |
 | 2 | `02_variable_definition.qmd` | Define analytical variables |
 | 3 | `03_data_integration.qmd` | Integrate and reconcile historical records |
@@ -295,7 +318,7 @@ The Quarto book is organised in the following sequence:
 
 **Dependencies between stages:** Chapter 05 reads the standardised RDS files created in Chapter 04. Later chapters use converted datasets and saved model objects, including models written in Chapter 07. Run the chapters in order when regenerating intermediate outputs. Existing processed datasets and models are included for inspection without rebuilding everything.
 
-### Render the final report (main deliverable)
+### Render the Final Report (Main Deliverable)
 
 The published HTML and PDF links above are the easiest way to read the report. To regenerate them locally, run from the repository root:
 
@@ -313,7 +336,7 @@ quarto render report/report.qmd --to pdf
 
 The post-render script copies `docs/report/report.pdf` to `docs/report.pdf` **if that generated file exists**. Verify the PDF's modification date after rendering.
 
-### Reproducibility scope
+### Reproducibility Scope
 
 -   **Provided:** Quarto source chapters, cleaned and processed datasets, saved model objects, conversion documentation, and report outputs.
 -   **Verified locally:** All 11 technical chapters rendered successfully on 2 November 2026 using the configured R 4.5.3 environment. **Still to verify:** Restoration and end-to-end execution on another computer or a clean installation. Package versions are recorded in `renv.lock`.
