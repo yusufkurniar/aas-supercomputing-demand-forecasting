@@ -63,15 +63,15 @@ The main objective is to forecast Australian national research computing demand 
 
 The project has five objectives:
 
-1. **Construct a historical dataset** of HPC demand and allocation from publicly available NCI, Pawsey and NCMAS records, with documented sources and reporting limitations.
+1.  **Construct a historical dataset** of HPC demand and allocation from publicly available NCI, Pawsey and NCMAS records, with documented sources and reporting limitations.
 
-2. **Standardise historical measures** by examining changes in computing systems, resource units and reporting practices, and applying conversion methods where necessary.
+2.  **Standardise historical measures** by examining changes in computing systems, resource units and reporting practices, and applying conversion methods where necessary.
 
-3. **Analyse demand and allocation patterns**, including requested and allocated resources, the gap between them, CPU and GPU demand, and FoR allocation composition.
+3.  **Analyse demand and allocation patterns**, including requested and allocated resources, the gap between them, CPU and GPU demand, and FoR allocation composition.
 
-4. **Develop and evaluate forecasting models** using the available annual observations, comparing forecast accuracy, model assumptions and sensitivity to recent data.
+4.  **Develop and evaluate forecasting models** using the available annual observations, comparing forecast accuracy, model assumptions and sensitivity to recent data.
 
-5. **Develop demand scenarios through 2030** and examine how different growth assumptions, historical FoR allocation patterns and illustrative allocation levels affect the results.
+5.  **Develop demand scenarios through 2030** and examine how different growth assumptions, historical FoR allocation patterns and illustrative allocation levels affect the results.
 
 These objectives are consistent with the data analysis, forecasting and scenario development requirements in the internship brief [@HPCInternshipBrief].
 
@@ -84,7 +84,7 @@ The analysis covers 13 financial years, from 2013/14 to 2025/26, represented by 
 The sources provide different levels of detail. Earlier publications mainly contain annual or facility-level summaries, while more recent NCMAS outcomes include project-level allocations, computing resources and research fields [@NCMAS2021; @NCMAS2024; @NCMAS2026]. Different documents sometimes supplied requested compute, allocations and FoR information for the same year. Historical applicant guidance was also reviewed to understand changes in allocation rules and resource definitions [@NCMAS2014Info; @NCMAS2020Info; @NCMAS2023Info; @NCMAS2024Info; @NCMAS2026Info].
 
 | Source | Information extracted | Use in analysis |
-|---|---|---|
+|------------------------|------------------------|------------------------|
 | NCI annual reports | Historical allocations, computing systems and reported resources | Historical series construction |
 | Pawsey publications | Allocation information, computing systems and resource usage | Supplementary facility evidence and cross-checks |
 | NCMAS outcomes | Requested and allocated resources, projects and research fields | Demand, allocation and FoR analysis |
@@ -127,7 +127,7 @@ The denominators are system and resource specific accounting factors and were no
 ### System Specific Conversion Rules
 
 | System or resource | Reporting period | SU per resource-hour | Treatment |
-|---|---|---:|---|
+|-----------------|-----------------|--------------------:|-----------------|
 | Raijin CPU and Magnus CPU | Selected historical years from 2013/14 | 1 | Historical baseline; assumptions apply to some records |
 | Gadi CPU | 2020/21–2025/26 | 2 | System-specific accounting factor |
 | Setonix CPU | 2021/22–2025/26 | 1 | System-specific accounting factor |
@@ -162,7 +162,7 @@ Original field labels were cleaned by removing numerical prefixes, standardising
 @tbl-for-alignment summarises the analytical grouping applied to the reported research fields.
 
 | Analytical group | Reported fields included |
-|---|---|
+|------------------------------------|------------------------------------|
 | Physical Sciences | Physical sciences and radioastronomy |
 | Chemical Sciences | Chemical sciences |
 | Earth & Environmental Sciences | Earth sciences, environmental sciences and geosciences |
@@ -230,7 +230,7 @@ Unlike the linear model, the log-linear model allows the absolute annual increas
 The forecasting models were applied separately to the available demand measures.
 
 | Forecasting target | Historical period | Measurement unit | Main consideration |
-|---|---|---|---|
+|------------------|------------------|------------------|------------------|
 | Overall HPC demand | 2014-2026 | kSU | Historical reporting and accounting comparability |
 | CPU demand | 2014-2026 | Million CPU core-hours | System-specific conversion assumptions |
 | GPU demand | 2022-2026 | Million GPU-hours | Shorter series and estimated resource-level values |
@@ -950,7 +950,6 @@ Estimated GPU requests fell from approximately 2.66 million GPU-hours in 2022 to
 Official Setonix GPU requests increased by approximately 123% in service units between 2023 and 2026, but this increase cannot be interpreted directly as growth in GPU-hours. The five-year forecasting sample and reliance on converted observations limit the reliability of projections to 2030.
 
 ### Field of Research Allocation Composition
-
 
 ```{r}
 #| label: setup-for-composition
@@ -3848,7 +3847,6 @@ allocation_sensitivity |>
   )
 ```
 
-
 @tbl-hpc-allocation-sensitivity shows that maintaining allocations at the 2026 level would leave approximately 1.63 million kSU of projected requests unmet in 2030, with a fulfilment rate of 34.9%. A 50% increase in allocations would reduce the gap to 1.19 million kSU and raise fulfilment to 52.3%.
 
 To maintain the 2026 fulfilment rate of 38.9%, allocations would need to reach approximately 0.97 million kSU in 2030, an increase of 11.6% from the 2026 level. Achieving 50% fulfilment would require approximately 1.25 million kSU, or 43.5% above 2026 allocations. These comparisons show how different allocation targets affect the scale of unmet requests under the central demand forecast.
@@ -3925,17 +3923,17 @@ The allocation sensitivity scenarios also assume that the 2026 allocation baseli
 
 Further analysis should prioritise the following improvements:
 
-1. **Standardise and integrate national HPC reporting.** Establish consistent annual reporting across NCI, Pawsey and NCMAS, including requested, allocated and used resources, reporting periods, computing systems and measurement units. Common definitions and documented conversion factors would reduce the need to reconstruct historical observations and improve the reliability of future demand forecasts.
+1.  **Standardise and integrate national HPC reporting.** Establish consistent annual reporting across NCI, Pawsey and NCMAS, including requested, allocated and used resources, reporting periods, computing systems and measurement units. Common definitions and documented conversion factors would reduce the need to reconstruct historical observations and improve the reliability of future demand forecasts.
 
-2. **Validate resource conversion factors.** Consultation with facility operators could help confirm historical accounting factors, particularly where computing systems or resource definitions changed.
+2.  **Validate resource conversion factors.** Consultation with facility operators could help confirm historical accounting factors, particularly where computing systems or resource definitions changed.
 
-3. **Extend the GPU demand series.** More detailed GPU request, allocation and usage records would allow forecasting methods to be evaluated over a longer period and reduce reliance on estimated observations.
+3.  **Extend the GPU demand series.** More detailed GPU request, allocation and usage records would allow forecasting methods to be evaluated over a longer period and reduce reliance on estimated observations.
 
-4. **Improve FoR-level demand information.** Consistent research-field request records and validated classification mappings would support direct field-level forecasting instead of distributing national projections using historical allocation shares.
+4.  **Improve FoR-level demand information.** Consistent research-field request records and validated classification mappings would support direct field-level forecasting instead of distributing national projections using historical allocation shares.
 
-5. **Update and evaluate forecasts annually.** Re-estimating the models as new observations become available would allow forecast errors, growth assumptions and sensitivity to recent years to be reassessed.
+5.  **Update and evaluate forecasts annually.** Re-estimating the models as new observations become available would allow forecast errors, growth assumptions and sensitivity to recent years to be reassessed.
 
-6. **Connect demand projections with infrastructure characteristics.** Information on hardware performance, utilisation, workload requirements and expected system changes would help translate projected demand into practical capacity assessments.
+6.  **Connect demand projections with infrastructure characteristics.** Information on hardware performance, utilisation, workload requirements and expected system changes would help translate projected demand into practical capacity assessments.
 
 # Conclusion
 
