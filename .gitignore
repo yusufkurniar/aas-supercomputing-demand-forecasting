@@ -16,3 +16,6 @@ index_files/
 # Generated README output
 /README.html
 /README_files/
+
+# Locally installed R packages (managed by renv)
+renv/library/
