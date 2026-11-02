@@ -6,6 +6,14 @@ author: "Yusuf Kurnia Romadhon"
 
 # Introduction
 
+## About This Technical Analysis
+
+This Quarto book serves as the technical documentation and collection of analytical vignettes for the HPC demand forecasting project.
+
+Each chapter documents a stage of the analysis, including the data sources, preparation steps, R implementation, modelling decisions and outputs. The chapters are arranged in execution order because some stages use datasets or model objects generated in earlier chapters.
+
+The book complements the final internship report by providing the code and technical details needed to examine and reproduce the analysis.
+
 ## Project Background
 
 High-performance computing (HPC) is an important component of
