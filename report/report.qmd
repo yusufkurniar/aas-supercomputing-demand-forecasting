@@ -45,6 +45,14 @@ execute:
   message: false
 ---
 
+# Abstract
+
+This project examines historical demand for Australian national research high-performance computing (HPC) resources and develops forecasts through 2030 to support infrastructure planning. Publicly available records from the National Computational Infrastructure, Pawsey Supercomputing Research Centre and National Computational Merit Allocation Scheme were integrated to examine computing requests, allocations and their distribution across Fields of Research. Differences in reporting periods, computing systems and measurement units were addressed through documented standardisation and conversion procedures.
+
+Linear and log-linear trend models were evaluated against naïve and drift benchmarks using rolling-origin cross-validation. Recorded HPC requests reached approximately 2.24 million kSU in 2026, compared with allocations of 872,288 kSU. The selected linear model projects approximately 2.50 million kSU of HPC requests and 1.37 billion CPU core-hours by 2030. GPU projections remain exploratory because of limited historical observations. Field of Research and allocation sensitivity scenarios illustrate how alternative assumptions affect the distribution of projected demand and the gap between requests and allocations.
+
+The findings provide a reference for national HPC planning, although changes in resource accounting, computing technology and allocation constraints limit their interpretation as direct infrastructure capacity requirements.
+
 # Introduction and Objectives
 
 ## Project Background and Forecasting Problem
