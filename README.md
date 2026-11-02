@@ -1,9 +1,10 @@
+
 # Forecasting Demand for National Research Supercomputing
 
-**Australian Academy of Science \| HPC Demand Forecasting to 2030**
+**Australian Academy of Science | HPC Demand Forecasting to 2030**
 
-**Author:** Yusuf Kurnia Romadhon\
-**Program:** Master of Business Analytics, Monash University\
+**Author:** Yusuf Kurnia Romadhon  
+**Program:** Master of Business Analytics, Monash University  
 **Project:** Industry internship, 2026
 
 ## Project Overview
@@ -18,33 +19,33 @@ The project covers data collection and integration, resource conversion, forecas
 
 My work focused on preparing historical Australian research computing data and developing forecasts of HPC demand through 2030. The main contributions were:
 
--   **Data integration:** Compiled historical demand, allocation and Field of Research (FoR) records from NCI, Pawsey and NCMAS publications into consistent annual datasets.
--   **Data preparation:** Reconciled reporting periods, computing systems, measurement units and resource definitions. Documented the original values, conversion assumptions and reconstructed observations.
--   **Forecasting:** Developed and evaluated naïve, drift, linear trend and log-linear trend models for overall HPC, CPU and GPU demand using rolling-origin cross-validation.
--   **Scenario analysis:** Examined the effects of alternative growth assumptions, historical FoR allocation shares and illustrative future allocation levels.
--   **Reporting and reproducibility:** Prepared the final report, technical Quarto analysis, visualisations, intermediate datasets and supporting documentation.
+- **Data integration:** Compiled historical demand, allocation and Field of Research (FoR) records from NCI, Pawsey and NCMAS publications into consistent annual datasets.
+- **Data preparation:** Reconciled reporting periods, computing systems, measurement units and resource definitions. Documented the original values, conversion assumptions and reconstructed observations.
+- **Forecasting:** Developed and evaluated naïve, drift, linear trend and log-linear trend models for overall HPC, CPU and GPU demand using rolling-origin cross-validation.
+- **Scenario analysis:** Examined the effects of alternative growth assumptions, historical FoR allocation shares and illustrative future allocation levels.
+- **Reporting and reproducibility:** Prepared the final report, technical Quarto analysis, visualisations, intermediate datasets and supporting documentation.
 
 The original source publications were produced by their respective organisations. The integration, conversions, forecasting analysis and interpretation were undertaken for this internship project.
 
 ## Project Deliverables
 
 | Output | Link |
-|------------------------------------|------------------------------------|
+|---|---|
 | **Final report (HTML): main deliverable** | [**Read the final report online**](https://yusufkurniar.github.io/aas-supercomputing-demand-forecasting/) |
 | **Final report (PDF)** | [Download the report](docs/report.pdf) |
 | Project presentation (PDF) | [Download PDF](presentation/presentation.pdf) |
-| Detailed technical analysis | [View Quarto source](technical-analysis/index.qmd) |
+| Technical analysis and analytical vignettes | [View Quarto source](technical-analysis/index.qmd) |
 
-**Start with the final report.** It presents the findings, projections to 2030, limitations, and planning implications. The technical analysis, datasets, and saved models are supporting materials for readers who want to inspect or reproduce the work. The final report is published through GitHub Pages.
+**Start with the final report.** It presents the findings, projections to 2030, limitations, and planning implications. The technical analysis also serves as a collection of project-level analytical vignettes, showing the R code and decisions behind each stage of the workflow. The datasets and saved models support inspection and reproduction of the work. The final report is published through GitHub Pages.
 
 ## Key Findings
 
--   Recorded HPC requests reached approximately **2.24 million kSU in 2026**, compared with allocations of approximately **872,000 kSU**.
--   The selected linear trend model projects approximately **2.50 million kSU** of recorded HPC requests by 2030.
--   The central CPU projection reaches approximately **1.37 billion core-hours** by 2030.
--   GPU projections remain exploratory because of the limited historical data.
--   FoR scenarios show how different historical allocation patterns affect the distribution of projected HPC demand.
--   Allocation sensitivity scenarios illustrate how different allocation levels affect the gap between projected requests and allocations.
+- Recorded HPC requests reached approximately **2.24 million kSU in 2026**, compared with allocations of approximately **872,000 kSU**.
+- The selected linear trend model projects approximately **2.50 million kSU** of recorded HPC requests by 2030.
+- The central CPU projection reaches approximately **1.37 billion core-hours** by 2030.
+- GPU projections remain exploratory because of the limited historical data.
+- FoR scenarios show how different historical allocation patterns affect the distribution of projected HPC demand.
+- Allocation sensitivity scenarios illustrate how different allocation levels affect the gap between projected requests and allocations.
 
 These results provide a reference for planning discussions. They should not be interpreted as direct estimates of physical infrastructure requirements or total unmet national research demand.
 
@@ -55,14 +56,14 @@ The repository contains original, cleaned, standardised and converted datasets u
 ### Standardised Datasets
 
 | Dataset | Description | Download |
-|------------------------|------------------------|------------------------|
+|---|---|---|
 | `annual_demand_allocation.rds` | Standardised annual demand and allocation records | [Download](assets/data/data%20standardised/annual_demand_allocation.rds) |
 | `field_of_research.rds` | Standardised FoR allocation records | [Download](assets/data/data%20standardised/field_of_research.rds) |
 
 ### Converted Datasets
 
 | Dataset | Description | Download |
-|------------------------|------------------------|------------------------|
+|---|---|---|
 | `annual_demand_allocation_converted.rds` | Annual computing resource data after the documented conversions | [Download](assets/data/data%20converted/annual_demand_allocation_converted.rds) |
 | `field_of_research_converted.rds` | FoR data prepared for the subsequent analysis | [Download](assets/data/data%20converted/field_of_research_converted.rds) |
 
@@ -70,7 +71,7 @@ The `.rds` files can be loaded in R using `readRDS()`.
 
 For example:
 
-``` r
+```r
 hpc_data <- readRDS(
   "assets/data/data standardised/annual_demand_allocation.rds"
 )
@@ -83,7 +84,7 @@ The datasets were compiled and processed for this project. They are not official
 The following workbooks provide supporting information on the original records, data integration and conversion process.
 
 | Workbook | Purpose |
-|------------------------------------|------------------------------------|
+|---|---|
 | [Integrated HPC Source Data](assets/data/data%20clean/integrated_hpc_source_data.xlsx) | Historical source data integration |
 | [Yearly Conversion](assets/progress/Yearly%20Conversion.xlsx) | Year-by-year resource conversion calculations |
 | [Reconciled Demand and Allocation Summary](assets/data/data%20clean/reconciled_demand_allocation_summary.xlsx) | Reconciliation of annual demand and allocation records |
@@ -95,7 +96,7 @@ The technical documentation explains the assumptions, measurement units and clas
 
 ## Repository Structure
 
-``` text
+```text
 aas-supercomputing-demand-forecasting/
 ├── assets/
 │   ├── data/
@@ -151,7 +152,7 @@ The `renv/library/` directory contains locally installed packages and is not com
 The data folders follow the preparation stages used in the technical analysis:
 
 | Folder | Contents and purpose |
-|------------------------------------|------------------------------------|
+|---|---|
 | `raw data/demand and allocation/` | Thirteen annual source workbooks (2013/14–2025/26) containing historical HPC demand and allocation records. |
 | `raw data/field of research/` | Thirteen annual source workbooks (2014–2026) containing Field of Research (FoR) information. |
 | `raw data/supporting data/` | Contains three supplementary working datasets: `demand_allocation_all_years_v2.xlsx`, `ncmas_data.xlsx`, and `yearly_field_of_research_data.xlsx`. These files are retained as supporting project records and are not identified as direct inputs in the documented technical-analysis workflow. |
@@ -169,8 +170,8 @@ Contains saved R forecasting model objects for overall HPC demand, CPU, and GPU 
 
 Contains two supporting workbooks:
 
--   `Internship Progress.xlsx`: Internship progress tracking and project documentation.
--   `Yearly Conversion.xlsx`: Year-by-year resource conversion calculations supporting the data preparation and conversion assumptions.
+- `Internship Progress.xlsx`: Internship progress tracking and project documentation.
+- `Yearly Conversion.xlsx`: Year-by-year resource conversion calculations supporting the data preparation and conversion assumptions.
 
 **`report/`**
 
@@ -182,7 +183,11 @@ Contains the project presentation PDF, presentation source files, and supporting
 
 **`technical-analysis/`**
 
-Contains the detailed Quarto book documenting the analytical workflow. Its chapters cover data collection, variable definitions, data integration, data standardisation, resource conversion, initial analysis, model development, model evaluation, model selection, scenario forecasting, and references. This material provides additional technical detail beyond the final internship report.
+Contains an 11-chapter Quarto book that serves as both technical documentation and a collection of project-level analytical vignettes. Each chapter explains a stage of the workflow and includes the relevant R code, methods and outputs.
+
+Together, the chapters cover data collection, variable definitions, integration, standardisation, resource conversion, initial analysis, model development, evaluation, selection, scenario forecasting and references.
+
+Unlike formal R package vignettes, these chapters document this project rather than demonstrate functions from an installable package. Some chapters depend on outputs generated by earlier chapters, so the book should be rendered in the documented order.
 
 **`references.bib`**
 
@@ -202,7 +207,7 @@ Install [R](https://cran.r-project.org/), [Quarto](https://quarto.org/docs/get-s
 
 Clone the repository:
 
-``` bash
+```bash
 git clone https://github.com/yusufkurniar/aas-supercomputing-demand-forecasting.git
 cd aas-supercomputing-demand-forecasting
 ```
@@ -211,7 +216,7 @@ Open `aas-supercomputing-demand-forecasting.Rproj` in RStudio. The GitHub URL ab
 
 From the **repository root**, restore the recorded packages in the R Console:
 
-``` r
+```r
 # Install renv if it is not available
 if (!requireNamespace("renv", quietly = TRUE)) install.packages("renv")
 
@@ -230,7 +235,7 @@ Restoring packages requires an internet connection and can take several minutes.
 
 Run from the repository root in R:
 
-``` r
+```r
 annual <- readRDS(
   "assets/data/data standardised/annual_demand_allocation.rds"
 )
@@ -246,7 +251,7 @@ This example loads the prepared annual data without re-running the earlier data-
 
 The standardised annual dataset contains historical demand and allocation records before all resource conversions have been applied. The following example checks the available variables, reporting years and missing values.
 
-``` r
+```r
 annual <- readRDS(
   "assets/data/data standardised/annual_demand_allocation.rds"
 )
@@ -276,7 +281,7 @@ Historical reporting units and resource definitions differ across computing syst
 
 ### Example 3: Inspect a Saved Model Object
 
-``` r
+```r
 models <- readRDS(
   "assets/models/overall_hpc_models.rds"
 )
@@ -288,11 +293,15 @@ str(models, max.level = 1)
 
 The model objects are provided for inspection. See Chapters 07–10 for model specifications, evaluation, selection, and forecasting scenarios.
 
-### Reproduce the Technical Analysis (Supporting Material)
+### Reproduce the Technical Analysis and Analytical Vignettes
 
-The final report is the main project deliverable. The technical Quarto book provides supporting code and detailed documentation for assessing reproducibility. After restoring the packages, run this command from the repository root:
+The final report is the main project deliverable. The technical Quarto book provides the project's analytical vignettes: worked explanations of the data preparation, resource conversions, forecasting and scenario analysis, with the corresponding R code and outputs.
 
-``` bash
+These are not formal R package vignettes, because the repository is an analysis project rather than an installable R package.
+
+After restoring the packages, render the book from the repository root:
+
+```bash
 quarto render technical-analysis --to html
 ```
 
@@ -300,10 +309,10 @@ This command was successfully tested on 2 November 2026 using R 4.5.3 on Windows
 
 ### Technical Workflow and Execution Order
 
-The Quarto book is organised in the following sequence:
+The analytical vignettes are organised as a single Quarto book in the following sequence:
 
 | Stage | Source | Purpose |
-|------------------------|------------------------|------------------------|
+|---|---|---|
 | 1 | `01_data_collection.qmd` | Identify and document source records |
 | 2 | `02_variable_definition.qmd` | Define analytical variables |
 | 3 | `03_data_integration.qmd` | Integrate and reconcile historical records |
@@ -322,7 +331,7 @@ The Quarto book is organised in the following sequence:
 
 The published HTML and PDF links above are the easiest way to read the report. To regenerate them locally, run from the repository root:
 
-``` bash
+```bash
 quarto render report/report.qmd --to html
 ```
 
@@ -330,7 +339,7 @@ The root `_quarto.yml` currently sends project output to `docs/` and invokes `sy
 
 For the PDF, render separately:
 
-``` bash
+```bash
 quarto render report/report.qmd --to pdf
 ```
 
@@ -338,10 +347,10 @@ The post-render script copies `docs/report/report.pdf` to `docs/report.pdf` **if
 
 ### Reproducibility Scope
 
--   **Provided:** Quarto source chapters, cleaned and processed datasets, saved model objects, conversion documentation, and report outputs.
--   **Verified locally:** All 11 technical chapters rendered successfully on 2 November 2026 using the configured R 4.5.3 environment. **Still to verify:** Restoration and end-to-end execution on another computer or a clean installation. Package versions are recorded in `renv.lock`.
--   **Data provenance:** Source workbooks, reconciliation summaries, and conversion assumptions are documented in the repository and technical chapters.
--   **Important:** The dataset files were assembled for this project; they are not an official, consolidated national HPC demand dataset.
+- **Provided:** Quarto source chapters, cleaned and processed datasets, saved model objects, conversion documentation, and report outputs.
+- **Verified locally:** All 11 technical chapters rendered successfully on 2 November 2026 using the configured R 4.5.3 environment. **Still to verify:** Restoration and end-to-end execution on another computer or a clean installation. Package versions are recorded in `renv.lock`.
+- **Data provenance:** Source workbooks, reconciliation summaries, and conversion assumptions are documented in the repository and technical chapters.
+- **Important:** The dataset files were assembled for this project; they are not an official, consolidated national HPC demand dataset.
 
 ## Limitations
 
@@ -357,10 +366,10 @@ Further details are provided in the final report and technical documentation.
 
 The analysis draws on publicly available information from:
 
--   National Computational Infrastructure (NCI)
--   Pawsey Supercomputing Research Centre
--   National Computational Merit Allocation Scheme (NCMAS)
--   Australian Bureau of Statistics (ABS), for Field of Research classification documentation
+- National Computational Infrastructure (NCI)
+- Pawsey Supercomputing Research Centre
+- National Computational Merit Allocation Scheme (NCMAS)
+- Australian Bureau of Statistics (ABS), for Field of Research classification documentation
 
 Individual publications and sources are acknowledged in the report bibliography.
 
