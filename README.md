@@ -83,7 +83,10 @@ The technical documentation explains the assumptions, measurement units and clas
 
 ## Repository Structure
 
-``` text
+
+## Repository Structure
+
+```text
 aas-supercomputing-demand-forecasting/
 ├── assets/
 │   ├── data/
@@ -117,6 +120,7 @@ aas-supercomputing-demand-forecasting/
 ├── sync-docs.R                   # Post-render publishing script
 ├── references.bib
 ├── .gitignore
+├── LICENSE                       # MIT License for original project code
 ├── aas-supercomputing-demand-forecasting.Rproj
 └── README.md
 ```
@@ -336,6 +340,12 @@ The analysis draws on publicly available information from:
 -   Australian Bureau of Statistics (ABS), for Field of Research classification documentation
 
 Individual publications and sources are acknowledged in the report bibliography.
+
+## Licence
+
+The original code developed for this project is available under the MIT License. See [LICENSE](LICENSE).
+
+The underlying datasets and third-party materials remain subject to their original sources' terms and conditions. The MIT License does not grant additional rights to those materials.
 
 ## Acknowledgement
 
