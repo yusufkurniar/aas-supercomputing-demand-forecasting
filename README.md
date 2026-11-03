@@ -36,7 +36,6 @@ The original source publications were produced by their respective organisations
 | Project presentation (PDF) | [Download PDF](presentation/presentation.pdf) |
 | Technical analysis and analytical vignettes | [View Quarto source](technical-analysis/index.qmd) |
 | Automated tests | [View test files](tests/testthat/) |
-| Generative AI acknowledgement | [View acknowledgement in final report PDF](docs/report.pdf#page=30) |
 
 **Start with the final report.** It presents the findings, projections to 2030, limitations and planning implications.
 
@@ -505,11 +504,13 @@ Individual publications and sources are acknowledged in the report bibliography.
 
 ## Generative AI Acknowledgement
 
-The use of generative AI tools is acknowledged at the end of the final internship report. The acknowledgement describes how these tools were used during the preparation of the project.
+ChatGPT (OpenAI) was used as a supporting tool throughout this project. It helped me understand technical terms related to supercomputing, explore suitable forecasting methods for limited historical data, and identify repetitive or unclear explanations in the report. I also used it to cross-check calculations involving resource conversions, forecast projections and scenario results, and to help clean up and organise the GitHub repository and its documentation.
 
-The data preparation, analytical decisions, forecasting results, interpretations and final submitted work remain my responsibility.
+All analytical decisions, calculations and final interpretations were reviewed and verified by the author.
 
-The complete statement is available in the [Generative AI Acknowledgement section of the final report (PDF, page 30)](docs/report.pdf#page=30).
+[AI Link](https://chatgpt.com/share/6ae960a1-5a08-83ec-bb12-5dffa2c53dc3)
+
+The same acknowledgement is included at the end of the [final internship report](docs/report.pdf).
 
 ## Licence
 
